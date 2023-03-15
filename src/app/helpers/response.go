@@ -1,6 +1,9 @@
 package helpers
 
-import "time"
+import (
+	"net/http"
+	"time"
+)
 
 type ResponseStateEnum string
 
@@ -21,39 +24,39 @@ type ResponseMethods[T interface{}] interface {
 }
 
 type Response[T interface{}] struct {
-	Code      string            `json:"code"`
+	Code      int               `json:"code"`
 	State     ResponseStateEnum `json:"state"`
 	Message   string            `json:"message"`
 	Timestamp time.Time         `json:"timestamp"`
 }
 
 type SingleResponse[T interface{}] struct {
-	Response Response[T] `json:"-"`
-	Data     T           `json:"data,omitempty"`
-	List     []T         `json:"list,omitempty"`
+	Response Response[T]
+	Data     T   `json:"data,omitempty"`
+	List     []T `json:"list,omitempty"`
 }
 
 type PaginationResponse[T interface{}] struct {
-	Response Response[T] `json:"-"`
-	List     []T         `json:"list,omitempty"`
-	Page     int32       `json:"page,omitempty"`
-	PageSize int32       `json:"page_size,omitempty"`
-	Total    int32       `json:"total,omitempty"`
-	LastPage int32       `json:"last_page,omitempty"`
+	Response Response[T]
+	List     []T   `json:"list,omitempty"`
+	Page     int32 `json:"page,omitempty"`
+	PageSize int32 `json:"page_size,omitempty"`
+	Total    int32 `json:"total,omitempty"`
+	LastPage int32 `json:"last_page,omitempty"`
 }
 
-func (r *Response[T]) SetCode(code string) *Response[T] {
+func (r *Response[T]) SetCode(code int) *Response[T] {
 	r.Code = code
 
 	return r
 }
 
-func (r *Response[T]) GetCode() string {
-	if r.Code != "" {
+func (r *Response[T]) GetCode() int {
+	if r.Code != 0 {
 		return r.Code
 	}
 
-	return "200"
+	return http.StatusOK
 }
 
 func (r *Response[T]) SetMessage(message string) *Response[T] {
