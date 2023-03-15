@@ -9,5 +9,8 @@ database:
   username: root
   password: root
   database: root
+  config:
+    maxOpenConns: 100
+    maxIdleConns: 50
 logger:
   encoding: "console"
