@@ -2,59 +2,83 @@ package system
 
 import (
 	"context"
-	"entgo.io/ent/dialect"
-	"entgo.io/ent/dialect/sql"
-	"entgo.io/ent/dialect/sql/postgres"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v4/pgxpool"
+	"go.uber.org/zap"
+
+	"entgo.io/ent/cmd"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
 	"entgo.io/ent/entc/load"
-	"entgo.io/ent/schema/field"
-	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/go-pg/pg/v10"
-	"github.com/go-pg/pg/v10/orm"
-	"go.uber.org/zap"
-	"time"
 )
 
 type DatabaseService struct {
 	service
 }
 
-func (d *Database) Handle(r *gin.Engine, cfg ConfigService) {
+func (d *DatabaseService) Handle(r *gin.Engine, cfg ConfigService) {
 	dbConfig := cfg.GetDatabase()
 
-	path := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s", dbConfig.Host, dbConfig.Port, dbConfig.Username, dbConfig.Database, dbConfig.Password)
-	client, err := ent.Open(cfg.config.Database.Type, path)
+	d.connect(dbConfig)
+}
+
+// 链接
+func (d DatabaseService) connect(cfg Database) {
+	pool, err := pgxpool.ConnectConfig(context.Background(), d.parseConfig(cfg))
 	if err != nil {
-		zap.S().Fatalf("failed opening connection to postgres: %v", err)
+		zap.S().Fatalf("Error connecting to database, %s", err)
 	}
-	defer client.Close()
-}
 
-func (d *DatabaseService) DbPool(cfg Database, pgConnect *pg.DB) {
+	driverConfig := &driver.Config{
+		DriverName: dialect.Postgres,
+		Conn:       pool.Acquire,
+		Dialect:    sql.Postgres,
+	}
 
-	// 创建数据库链接池
-	pool := pg.NewConnPool(&pg.ConnPoolConfig{
-		MaxSize: dbCfg.MaxConn,
-		MinSize: dbCfg.MaxConn / 2,
-	})
-}
-
-func (d *DatabaseService) DbConnect(cfg Database, gin *gin.Engine) *pg.DB {
-	pg := pg.Connect(&pg.Options{
-		Addr:         fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
-		User:         cfg.Username,
-		Password:     cfg.Password,
-		Database:     cfg.Database,
-		MaxRetries:   5,
-		MinIdleConns: int(cfg.Config.MaxOpenConns) / 2,
-		MaxConnAge:   time.Hour * 4,
-		PoolSize:     int(cfg.Config.MaxOpenConns),
-		IdleTimeout:  time.Minute * 2,
+	err = entc.Generate("./src/app/models/schema", &gen.Config{
+		NamingStrategy: func(s string) string {
+			return "qy_" + s
+		},
+		Driver: driverConfig,
 	})
 
-	defer pg.Close()
+	if err != nil {
+		panic(err)
+	}
 
-	return pg
+}
+
+// func (d *DatabaseService) migrate() {
+// 	cfg, err := load.Config("./src/app/models/schema")
+// 	if err != nil {
+// 		zap().S().Fatalf("failed loading config: %v", err)
+// 	}
+// 	genCfg := &gen.Config{
+// 		Schema: cfg,
+// 	}
+// 	err = entc.Generate("./src/database/migrate", genCfg, entc.TemplateDir("template"))
+// 	if err != nil {
+// 		zap().S().Fatalf("failed running ent codegen: %v", err)
+// 	}
+// }
+
+// 解析配置
+
+func (d DatabaseService) parseConfig(cfg Database) *pgxpool.Config {
+	// Initialize database connection pool
+	config, err := pgxpool.ParseConfig(fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		cfg.Host,
+		cfg.Port,
+		cfg.Username,
+		cfg.Password,
+		cfg.Database,
+	))
+
+	if err != nil {
+		zap.S().Fatalf("Error parsing database configuration, %s", err)
+	}
+
+	return config
 }
