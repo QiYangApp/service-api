@@ -2,83 +2,96 @@ package system
 
 import (
 	"context"
+	"database/sql"
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql/schema"
 	"fmt"
+	"log"
+	"os"
+	"service-api/src/ent"
+	"service-api/src/ent/migrate"
+	"time"
 
+	entsql "entgo.io/ent/dialect/sql"
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"go.uber.org/zap"
 
-	"entgo.io/ent/cmd"
-	"entgo.io/ent/entc"
-	"entgo.io/ent/entc/gen"
-	"entgo.io/ent/entc/load"
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 type DatabaseService struct {
 	service
+	cfg Database
 }
 
 func (d *DatabaseService) Handle(r *gin.Engine, cfg ConfigService) {
-	dbConfig := cfg.GetDatabase()
+	d.cfg = cfg.GetDatabase()
 
-	d.connect(dbConfig)
+	d.connect()
 }
 
 // 链接
-func (d DatabaseService) connect(cfg Database) {
-	pool, err := pgxpool.ConnectConfig(context.Background(), d.parseConfig(cfg))
+func (d DatabaseService) connect() {
+	db := d.pool()
+
+	driver := entsql.OpenDB(dialect.Postgres, db)
+
+	client := ent.NewClient(ent.Driver(driver))
+
+	// 自定义初始化 schema 和 migrate 文件夹位置
+	// schemaPath := "app/database/migrate"
+	// migratePath := "app/modules/schema"
+
+	err := client.Schema.Create(
+		context.Background(),
+		schema.WithGlobalUniqueID(true),
+		migrate.WithForeignKeys(false),
+		migrate.WithDropIndex(true),  // 删除索引
+		migrate.WithDropColumn(true), // 删除列
+	)
+
 	if err != nil {
-		zap.S().Fatalf("Error connecting to database, %s", err)
+		zap.S().Fatalf("failed creating schema resources: %v", err)
 	}
 
-	driverConfig := &driver.Config{
-		DriverName: dialect.Postgres,
-		Conn:       pool.Acquire,
-		Dialect:    sql.Postgres,
-	}
-
-	err = entc.Generate("./src/app/models/schema", &gen.Config{
-		NamingStrategy: func(s string) string {
-			return "qy_" + s
-		},
-		Driver: driverConfig,
-	})
-
-	if err != nil {
-		panic(err)
-	}
-
+	d.write(client)
 }
 
-// func (d *DatabaseService) migrate() {
-// 	cfg, err := load.Config("./src/app/models/schema")
-// 	if err != nil {
-// 		zap().S().Fatalf("failed loading config: %v", err)
-// 	}
-// 	genCfg := &gen.Config{
-// 		Schema: cfg,
-// 	}
-// 	err = entc.Generate("./src/database/migrate", genCfg, entc.TemplateDir("template"))
-// 	if err != nil {
-// 		zap().S().Fatalf("failed running ent codegen: %v", err)
-// 	}
-// }
+func (d DatabaseService) write(client *ent.Client) {
+	f, err := os.Create("./src/database/migrate.sql")
+	if err != nil {
+		zap.S().Fatalf("create migrate file: %v", err)
+	}
+
+	defer f.Close()
+
+	if err := client.Schema.WriteTo(context.Background(), f); err != nil {
+		log.Fatalf("failed printing schema changes: %v", err)
+	}
+}
+
+func (d DatabaseService) pool() *sql.DB {
+	db, err := sql.Open(d.cfg.Type, d.parseConfig())
+	if err != nil {
+		zap.S().Fatalf("failed connecting to the database: %v", err)
+	}
+
+	// 设置数据库连接池相关配置
+	db.SetMaxIdleConns(int(d.cfg.Config.MaxIdleConns))
+	db.SetMaxOpenConns(int(d.cfg.Config.MaxOpenConns))
+	db.SetConnMaxLifetime(time.Hour)
+
+	return db
+}
 
 // 解析配置
 
-func (d DatabaseService) parseConfig(cfg Database) *pgxpool.Config {
-	// Initialize database connection pool
-	config, err := pgxpool.ParseConfig(fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		cfg.Host,
-		cfg.Port,
-		cfg.Username,
-		cfg.Password,
-		cfg.Database,
-	))
-
-	if err != nil {
-		zap.S().Fatalf("Error parsing database configuration, %s", err)
-	}
-
-	return config
+func (d DatabaseService) parseConfig() string {
+	return fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%d sslmode=disable",
+		d.cfg.Username,
+		d.cfg.Password,
+		d.cfg.Database,
+		d.cfg.Host,
+		d.cfg.Port,
+	)
 }

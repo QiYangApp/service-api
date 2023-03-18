@@ -23,4 +23,5 @@ type Database struct {
 
 type DatabaseConfig struct {
 	MaxOpenConns int32 `mapstructure:"maxOpenConns"`
+	MaxIdleConns int32 `mapstructure:"maxIdleConns"`
 }

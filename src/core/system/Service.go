@@ -32,11 +32,14 @@ func beforeStart(r *gin.Engine, cfg ConfigService) {
 
 	(new(LoggerService)).Handle(r, cfg)
 
+	(new(DatabaseService)).Handle(r, cfg)
+
 	// 注册路由
 	middleware.SetupMiddleware(r)
 
 	// 注册路由
 	routes.SetupRoutes(r)
+
 }
 
 func afterStart(r *gin.Engine, cfg ConfigService) {
