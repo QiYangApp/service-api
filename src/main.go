@@ -9,5 +9,4 @@ func main() {
 	var gin = gin.Default()
 
 	system.Start(gin)
-
 }

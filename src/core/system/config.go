@@ -2,25 +2,11 @@ package system
 
 import (
 	"fmt"
+	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
-
-type Config struct {
-	Server struct {
-		Host string `mapstructure:"host"`
-		Port int    `mapstructure:"port"`
-		Env  string `mapstructure:"env"`
-	} `mapstructure:"server"`
-	Database struct {
-		Type     string `mapstructure:"type"`
-		Host     string `mapstructure:"host"`
-		Port     int    `mapstructure:"port"`
-		Username string `mapstructure:"username"`
-		Password string `mapstructure:"password"`
-		Database string `mapstructure:"database"`
-	} `mapstructure:"database"`
-}
 
 var config Config
 
@@ -50,10 +36,26 @@ func (c *ConfigService) initConfig() {
 	if err := viper.Unmarshal(&config); err != nil {
 		panic(err)
 	}
+
+	// 监听配置文件
+	viper.WatchConfig()
+	viper.OnConfigChange(func(in fsnotify.Event) {
+		zap.S().Info("config file changed: ", in.Name)
+		// 重载配置
+		if err := viper.Unmarshal(&config); err != nil {
+			fmt.Println(err)
+		}
+
+		c.config = config
+	})
 }
 
 func (c ConfigService) GetAllConfig() Config {
 	return config
+}
+
+func (c ConfigService) GetDatabase() Database {
+	return c.config.Database
 }
 
 func (c ConfigService) startServiceAddress() string {

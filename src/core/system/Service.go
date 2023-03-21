@@ -27,17 +27,28 @@ func Start(r *gin.Engine) {
 }
 
 func beforeStart(r *gin.Engine, cfg ConfigService) {
+
+	// 日志颜色
+	if cfg.runMode() == gin.DebugMode {
+		gin.ForceConsoleColor()
+	} else {
+		gin.DisableConsoleColor()
+	}
+
 	gin.SetMode(cfg.runMode())
 
 	r.Static("./src/resources/assets", "./assets")
 
 	(new(LoggerService)).Handle(r, cfg)
 
+	(new(DatabaseService)).Handle(r, cfg)
+
 	// 注册路由
 	middleware.SetupMiddleware(r)
 
 	// 注册路由
 	routes.SetupRoutes(r)
+
 }
 
 func afterStart(r *gin.Engine, cfg ConfigService) {

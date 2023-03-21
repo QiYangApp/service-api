@@ -3,11 +3,14 @@ server:
   port: 8000
   env: debug
 database:
-  type: pag
-  host: 0.0.0.0
-  port: 12
-  username: root
-  password: root
-  database: root
+  type: pgx
+  host: 124.222.87.100
+  port: 5402
+  username: qi_yang
+  password: qi_yang
+  database: qi_yang
+  config:
+    maxOpenConns: 100
+    maxIdleConns: 50
 logger:
   encoding: "console"
