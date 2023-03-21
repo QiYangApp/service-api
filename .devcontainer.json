@@ -1,0 +1,36 @@
+{
+    "dockerFile": "Dockerfile", 
+    "appPort": [
+        "8000:8000"    
+    ],
+    "extensions": [
+		"ms-vscode.go",
+		"golang.go",
+		"aaron-bond.better-comments",
+		"streetsidesoftware.code-spell-checker",
+		"waderyan.gitblame",
+		"mhutchie.git-graph",
+		"donjayamanne.githistory",
+		"GitHub.github-vscode-theme",
+		"codezombiech.gitignore",
+		"eamodio.gitlens",
+		"windmilleng.vscode-go-autotest",
+		"msyrus.go-doc",
+		"golang.go-nightly",
+		"766b.go-outliner",
+		"xiaoxin-technology.goctl",
+		"honnamkuan.golang-snippets",
+		"neonxp.gotools",
+		"premparihar.gotestexplorer",
+		"k--kato.intellij-idea-keybindings",
+		"PKief.material-icon-theme",
+		"christian-kohler.path-intellisense",
+		"pnp.polacode",
+		"esbenp.prettier-vscode",
+		"wayou.vscode-todo-highlight",
+		"TabNine.tabnine-vscode"
+	],
+	"runArgs":[
+        "--network=personal_backend"
+    ]
+}

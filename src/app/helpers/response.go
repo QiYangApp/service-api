@@ -3,6 +3,7 @@ package helpers
 import (
 	"net/http"
 	"time"
+	ginI18n "github.com/gin-contrib/i18n"
 )
 
 type ResponseStateEnum string
@@ -67,7 +68,7 @@ func (r *Response[T]) SetMessage(message string) *Response[T] {
 
 func (r *Response[T]) GetMessage() string {
 	if r.Message != "" {
-		return r.Message
+		return ginI18n.MustGetMessage(r.Message)
 	}
 
 	return ""

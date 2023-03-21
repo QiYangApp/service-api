@@ -1,0 +1,33 @@
+package middleware
+
+import (
+	"log"
+	"net/http"
+
+	ginI18n "github.com/gin-contrib/i18n"
+	"github.com/gin-gonic/gin"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
+)
+
+func lang() {
+	return func(c *gin.Context) {
+		ginI18n.Localize(
+			ginI18n.WithBundle(&ginI18n.BundleCfg{
+				RootPath:         "./src/resources/lang",
+				AcceptLanguage:   []language.Tag{language.German, language.English},
+				DefaultLanguage:  language.English,
+				UnmarshalFunc:    json.Unmarshal,
+				FormatBundleFile: "json",
+			}),
+			ginI18n.WithGetLngHandle(
+				func(context *gin.Context, defaultLng string) string {
+					lng := context.Query("lng")
+					if lng == "" {
+						return defaultLng
+					}
+					return lng
+				},
+			),
+		)
+	}
+}
