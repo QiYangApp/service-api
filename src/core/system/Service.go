@@ -29,6 +29,8 @@ func Start(r *gin.Engine) {
 func beforeStart(r *gin.Engine, cfg ConfigService) {
 	gin.SetMode(cfg.runMode())
 
+	r.Static("./src/resources/assets", "./assets")
+
 	(new(LoggerService)).Handle(r, cfg)
 
 	// 注册路由
