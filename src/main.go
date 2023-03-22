@@ -6,7 +6,5 @@ import (
 )
 
 func main() {
-	var gin = gin.Default()
-
-	system.Start(gin)
+	system.Start(gin.Default())
 }

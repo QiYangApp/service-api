@@ -58,6 +58,10 @@ func (c ConfigService) GetDatabase() Database {
 	return c.config.Database
 }
 
+func (c ConfigService) GetService() Server {
+	return c.config.Server
+}
+
 func (c ConfigService) startServiceAddress() string {
 	return fmt.Sprintf("%s:%d", config.Server.Host, config.Server.Port)
 }

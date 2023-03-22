@@ -55,6 +55,8 @@ func afterStart(r *gin.Engine, cfg ConfigService) {
 
 func run(r *gin.Engine, cfg ConfigService) {
 
+	r.Static("./src/resources/assets", "./assets")
+
 	srv := &http.Server{
 		Addr:    cfg.startServiceAddress(),
 		Handler: r,
@@ -71,7 +73,6 @@ func run(r *gin.Engine, cfg ConfigService) {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
-
 	zap.S().Info("Shutdown Server ...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

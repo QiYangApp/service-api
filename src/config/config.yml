@@ -4,8 +4,8 @@ server:
   env: debug
 database:
   type: pgx
-  host: 124.222.87.100
-  port: 5402
+  host: localhost
+  port: 5432
   username: qi_yang
   password: qi_yang
   database: qi_yang

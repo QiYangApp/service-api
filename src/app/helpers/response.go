@@ -3,6 +3,8 @@ package helpers
 import (
 	"net/http"
 	"time"
+
+	"github.com/gin-contrib/i18n"
 )
 
 type ResponseStateEnum string
@@ -66,11 +68,11 @@ func (r *Response[T]) SetMessage(message string) *Response[T] {
 }
 
 func (r *Response[T]) GetMessage() string {
-	if r.Message != "" {
-		return r.Message
+	if r.Message == "" {
+		return ""
 	}
 
-	return ""
+	return i18n.MustGetMessage(r.Message)
 }
 
 func (r *Response[T]) SetState(state ResponseStateEnum) *Response[T] {
@@ -116,6 +118,7 @@ func (r *Response[T]) Multiple(list []T) SingleResponse[T] {
 
 func (r *Response[T]) getDefaultResponse() Response[T] {
 	return Response[T]{
+		Timestamp: r.Timestamp,
 		Message: r.GetMessage(),
 		Code:    r.GetCode(),
 		State:   r.GetState(),
