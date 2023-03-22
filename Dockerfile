@@ -20,7 +20,8 @@ RUN go install github.com/go-delve/delve/cmd/dlv@latest \
 
 
         # Clean up.
-RUN  apt-get autoremove -y \
+RUN  apt-get install -y  inetutils-ping net-tools\
+    && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 

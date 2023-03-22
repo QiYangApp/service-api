@@ -27,8 +27,7 @@
 		"christian-kohler.path-intellisense",
 		"pnp.polacode",
 		"esbenp.prettier-vscode",
-		"wayou.vscode-todo-highlight",
-		"TabNine.tabnine-vscode"
+		"wayou.vscode-todo-highlight"
 	],
 	"runArgs":[
         "--network=personal_backend"

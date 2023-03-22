@@ -1,0 +1,4 @@
+[state]
+success = "成功"
+error = "错误"
+fail = "系统异常"

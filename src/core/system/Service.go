@@ -41,6 +41,8 @@ func beforeStart(r *gin.Engine, cfg ConfigService) {
 
 	(new(DatabaseService)).Handle(r, cfg)
 
+	(new(LanguageService)).Handle(r, cfg)
+
 	// 注册路由
 	middleware.SetupMiddleware(r)
 
