@@ -14,3 +14,10 @@ database:
     maxIdleConns: 50
 logger:
   encoding: "console"
+redis:
+  PORT: 6379
+  PADDWORD: 
+  MaxIdle: 30
+  MaxActive: 30
+  IdleTimeout: 200
+  Host: 127.0.0.1
