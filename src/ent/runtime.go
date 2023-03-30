@@ -2,8 +2,26 @@
 
 package ent
 
+import (
+	"service-api/src/ent/member"
+	"service-api/src/ent/schema"
+	"time"
+
+	"github.com/google/uuid"
+)
+
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	memberFields := schema.Member{}.Fields()
+	_ = memberFields
+	// memberDescCreatedAt is the schema descriptor for created_at field.
+	memberDescCreatedAt := memberFields[7].Descriptor()
+	// member.DefaultCreatedAt holds the default value on creation for the created_at field.
+	member.DefaultCreatedAt = memberDescCreatedAt.Default.(func() time.Time)
+	// memberDescID is the schema descriptor for id field.
+	memberDescID := memberFields[0].Descriptor()
+	// member.DefaultID holds the default value on creation for the id field.
+	member.DefaultID = memberDescID.Default.(func() uuid.UUID)
 }

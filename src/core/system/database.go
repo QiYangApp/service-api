@@ -3,14 +3,16 @@ package system
 import (
 	"context"
 	"database/sql"
-	"entgo.io/ent/dialect"
-	"entgo.io/ent/dialect/sql/schema"
 	"fmt"
 	"log"
 	"os"
+	"service-api/src/app/helpers"
 	"service-api/src/ent"
 	"service-api/src/ent/migrate"
 	"time"
+
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql/schema"
 
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/gin-gonic/gin"
@@ -58,7 +60,7 @@ func (d DatabaseService) connect() {
 }
 
 func (d DatabaseService) write(client *ent.Client) {
-	f, err := os.Create("./src/database/migrate.sql")
+	f, err := os.Create(helpers.NewPathMange().JoinCurrentRunPath("/ent/migrate/migrate.sql"))
 	if err != nil {
 		zap.S().Fatalf("create migrate file: %v", err)
 	}
