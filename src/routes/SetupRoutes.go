@@ -1,15 +1,19 @@
 package routes
 
 import (
-	"service-api/src/app/helpers"
-
 	"github.com/gin-gonic/gin"
+	"service-api/src/routes/admin"
 )
+
+type RouterRegisterMange interface {
+	Handle(r *gin.Engine)
+}
+
+type RouterRegister interface {
+	Handle(r *gin.RouterGroup)
+}
 
 func SetupRoutes(router *gin.Engine) {
 	// 定义路由
-	router.GET("/", func(c *gin.Context) {
-		res := helpers.NewResponse[string]()
-		c.JSON(200, res.Single(""))
-	})
+	(new(admin.AdminRouteRegister)).Handle(router)
 }

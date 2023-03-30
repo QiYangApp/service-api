@@ -2,6 +2,7 @@ package system
 
 import (
 	"fmt"
+	"service-api/src/app/helpers"
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -25,7 +26,8 @@ func (c *ConfigService) Handle(r *gin.Engine, cfg ConfigService) {
 
 func (c *ConfigService) initConfig() {
 	viper.SetConfigName("config")
-	viper.AddConfigPath("./src/config")
+	viper.AddConfigPath(helpers.NewPathMange().JoinCurrentRunPath("config"))
+	viper.SetConfigType("toml")
 
 	// 读取配置文件
 	if err := viper.ReadInConfig(); err != nil {

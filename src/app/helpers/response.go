@@ -18,11 +18,11 @@ const (
 
 type ResponseMethods[T interface{}] interface {
 	// Single 单个返回
-	Single(data T) SingleResponse[T]
+	Single(data T) Response[T]
 	// Pagination 分页
-	Pagination(list []T) PaginationResponse[T]
+	Pagination(list []T) Response[T]
 	// Multiple 多个返回
-	Multiple(data []T) SingleResponse[T]
+	Multiple(data []T) Response[T]
 }
 
 type Response[T interface{}] struct {
@@ -30,17 +30,8 @@ type Response[T interface{}] struct {
 	State     ResponseStateEnum `json:"state"`
 	Message   string            `json:"message"`
 	Timestamp time.Time         `json:"timestamp"`
-}
-
-type SingleResponse[T interface{}] struct {
-	Response Response[T]
 	Data     T   `json:"data,omitempty"`
 	List     []T `json:"list,omitempty"`
-}
-
-type PaginationResponse[T interface{}] struct {
-	Response Response[T]
-	List     []T   `json:"list,omitempty"`
 	Page     int32 `json:"page,omitempty"`
 	PageSize int32 `json:"page_size,omitempty"`
 	Total    int32 `json:"total,omitempty"`
@@ -95,34 +86,31 @@ func (r *Response[T]) GetState() ResponseStateEnum {
 	return Success
 }
 
-func (r *Response[T]) Single(data T) SingleResponse[T] {
-	return SingleResponse[T]{
-		Response: r.getDefaultResponse(),
-		Data:     data,
-	}
+func (r *Response[T]) Single(data T) Response[T] {
+	r.Data = data;
+
+	return r.toStruct();
 }
 
-func (r *Response[T]) Pagination(list []T) PaginationResponse[T] {
-	return PaginationResponse[T]{
-		Response: r.getDefaultResponse(),
-		List:     list,
-	}
+func (r *Response[T]) Pagination(list []T) Response[T] {
+	r.List = list;
+
+	return r.toStruct();
 }
 
-func (r *Response[T]) Multiple(list []T) SingleResponse[T] {
-	return SingleResponse[T]{
-		Response: r.getDefaultResponse(),
-		List:     list,
-	}
+func (r *Response[T]) Multiple(list []T) Response[T] {
+	r.List = list;
+
+	return r.toStruct();
 }
 
-func (r *Response[T]) getDefaultResponse() Response[T] {
-	return Response[T]{
-		Timestamp: r.Timestamp,
-		Message: r.GetMessage(),
-		Code:    r.GetCode(),
-		State:   r.GetState(),
-	}
+func (r *Response[T]) toStruct() Response[T] {
+	resp := *r
+	resp.Message = r.GetMessage()
+	resp.Code = r.GetCode()
+	resp.State = r.GetState()
+
+	return resp
 }
 
 func NewResponse[T interface{}]() *Response[T] {
