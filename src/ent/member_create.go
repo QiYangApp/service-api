@@ -21,6 +21,34 @@ type MemberCreate struct {
 	hooks    []Hook
 }
 
+// SetCreateTime sets the "create_time" field.
+func (mc *MemberCreate) SetCreateTime(t time.Time) *MemberCreate {
+	mc.mutation.SetCreateTime(t)
+	return mc
+}
+
+// SetNillableCreateTime sets the "create_time" field if the given value is not nil.
+func (mc *MemberCreate) SetNillableCreateTime(t *time.Time) *MemberCreate {
+	if t != nil {
+		mc.SetCreateTime(*t)
+	}
+	return mc
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (mc *MemberCreate) SetUpdateTime(t time.Time) *MemberCreate {
+	mc.mutation.SetUpdateTime(t)
+	return mc
+}
+
+// SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
+func (mc *MemberCreate) SetNillableUpdateTime(t *time.Time) *MemberCreate {
+	if t != nil {
+		mc.SetUpdateTime(*t)
+	}
+	return mc
+}
+
 // SetAccount sets the "account" field.
 func (mc *MemberCreate) SetAccount(s string) *MemberCreate {
 	mc.mutation.SetAccount(s)
@@ -51,31 +79,9 @@ func (mc *MemberCreate) SetNickname(s string) *MemberCreate {
 	return mc
 }
 
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (mc *MemberCreate) SetNillableNickname(s *string) *MemberCreate {
-	if s != nil {
-		mc.SetNickname(*s)
-	}
-	return mc
-}
-
 // SetState sets the "state" field.
 func (mc *MemberCreate) SetState(s string) *MemberCreate {
 	mc.mutation.SetState(s)
-	return mc
-}
-
-// SetCreatedAt sets the "created_at" field.
-func (mc *MemberCreate) SetCreatedAt(t time.Time) *MemberCreate {
-	mc.mutation.SetCreatedAt(t)
-	return mc
-}
-
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (mc *MemberCreate) SetNillableCreatedAt(t *time.Time) *MemberCreate {
-	if t != nil {
-		mc.SetCreatedAt(*t)
-	}
 	return mc
 }
 
@@ -128,9 +134,13 @@ func (mc *MemberCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (mc *MemberCreate) defaults() {
-	if _, ok := mc.mutation.CreatedAt(); !ok {
-		v := member.DefaultCreatedAt()
-		mc.mutation.SetCreatedAt(v)
+	if _, ok := mc.mutation.CreateTime(); !ok {
+		v := member.DefaultCreateTime()
+		mc.mutation.SetCreateTime(v)
+	}
+	if _, ok := mc.mutation.UpdateTime(); !ok {
+		v := member.DefaultUpdateTime()
+		mc.mutation.SetUpdateTime(v)
 	}
 	if _, ok := mc.mutation.ID(); !ok {
 		v := member.DefaultID()
@@ -140,11 +150,22 @@ func (mc *MemberCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (mc *MemberCreate) check() error {
+	if _, ok := mc.mutation.CreateTime(); !ok {
+		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "Member.create_time"`)}
+	}
+	if _, ok := mc.mutation.UpdateTime(); !ok {
+		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "Member.update_time"`)}
+	}
 	if _, ok := mc.mutation.Account(); !ok {
 		return &ValidationError{Name: "account", err: errors.New(`ent: missing required field "Member.account"`)}
 	}
 	if _, ok := mc.mutation.Email(); !ok {
 		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "Member.email"`)}
+	}
+	if v, ok := mc.mutation.Email(); ok {
+		if err := member.EmailValidator(v); err != nil {
+			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "Member.email": %w`, err)}
+		}
 	}
 	if _, ok := mc.mutation.Avatar(); !ok {
 		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "Member.avatar"`)}
@@ -152,11 +173,26 @@ func (mc *MemberCreate) check() error {
 	if _, ok := mc.mutation.Mobile(); !ok {
 		return &ValidationError{Name: "mobile", err: errors.New(`ent: missing required field "Member.mobile"`)}
 	}
+	if v, ok := mc.mutation.Mobile(); ok {
+		if err := member.MobileValidator(v); err != nil {
+			return &ValidationError{Name: "mobile", err: fmt.Errorf(`ent: validator failed for field "Member.mobile": %w`, err)}
+		}
+	}
+	if _, ok := mc.mutation.Nickname(); !ok {
+		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "Member.nickname"`)}
+	}
+	if v, ok := mc.mutation.Nickname(); ok {
+		if err := member.NicknameValidator(v); err != nil {
+			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "Member.nickname": %w`, err)}
+		}
+	}
 	if _, ok := mc.mutation.State(); !ok {
 		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "Member.state"`)}
 	}
-	if _, ok := mc.mutation.CreatedAt(); !ok {
-		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Member.created_at"`)}
+	if v, ok := mc.mutation.State(); ok {
+		if err := member.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Member.state": %w`, err)}
+		}
 	}
 	return nil
 }
@@ -193,6 +229,14 @@ func (mc *MemberCreate) createSpec() (*Member, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
+	if value, ok := mc.mutation.CreateTime(); ok {
+		_spec.SetField(member.FieldCreateTime, field.TypeTime, value)
+		_node.CreateTime = value
+	}
+	if value, ok := mc.mutation.UpdateTime(); ok {
+		_spec.SetField(member.FieldUpdateTime, field.TypeTime, value)
+		_node.UpdateTime = value
+	}
 	if value, ok := mc.mutation.Account(); ok {
 		_spec.SetField(member.FieldAccount, field.TypeString, value)
 		_node.Account = value
@@ -211,15 +255,11 @@ func (mc *MemberCreate) createSpec() (*Member, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := mc.mutation.Nickname(); ok {
 		_spec.SetField(member.FieldNickname, field.TypeString, value)
-		_node.Nickname = &value
+		_node.Nickname = value
 	}
 	if value, ok := mc.mutation.State(); ok {
 		_spec.SetField(member.FieldState, field.TypeString, value)
 		_node.State = value
-	}
-	if value, ok := mc.mutation.CreatedAt(); ok {
-		_spec.SetField(member.FieldCreatedAt, field.TypeTime, value)
-		_node.CreatedAt = value
 	}
 	return _node, _spec
 }

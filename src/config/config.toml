@@ -22,3 +22,8 @@ maxIdleConns = 50
 maxActive = 30
 idleTimeout = 200
 
+[token]
+privateKey = "a"
+publicKey = "a"
+method= "RS512"
+signing = "signing"

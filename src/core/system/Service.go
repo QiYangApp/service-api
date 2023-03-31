@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"service-api/src/api/middleware"
+	"service-api/src/app/helpers"
 	"service-api/src/routes"
 	"time"
 
@@ -57,7 +58,7 @@ func afterStart(r *gin.Engine, cfg ConfigService) {
 
 func run(r *gin.Engine, cfg ConfigService) {
 
-	r.Static("./src/resources/assets", "./assets")
+	r.Static("/resources/assets", helpers.NewPathMange().JoinCurrentRunPath("resources/assets"))
 
 	srv := &http.Server{
 		Addr:    cfg.startServiceAddress(),

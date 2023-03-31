@@ -12,12 +12,17 @@ import (
 	"github.com/google/uuid"
 )
 
-// Member is the model entity for the Member schema.
+// 会员
 type Member struct {
 	config `json:"-"`
 	// ID of the ent.
+	// UUID of the
 	ID uuid.UUID `json:"id,omitempty"`
-	// Account holds the value of the "account" field.
+	// CreateTime holds the value of the "create_time" field.
+	CreateTime time.Time `json:"create_time,omitempty"`
+	// UpdateTime holds the value of the "update_time" field.
+	UpdateTime time.Time `json:"update_time,omitempty"`
+	// login account
 	Account string `json:"account,omitempty"`
 	// Email holds the value of the "email" field.
 	Email string `json:"email,omitempty"`
@@ -26,11 +31,9 @@ type Member struct {
 	// Mobile holds the value of the "mobile" field.
 	Mobile string `json:"mobile,omitempty"`
 	// Nickname holds the value of the "nickname" field.
-	Nickname *string `json:"nickname,omitempty"`
+	Nickname string `json:"nickname,omitempty"`
 	// State holds the value of the "state" field.
 	State string `json:"state,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -40,7 +43,7 @@ func (*Member) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case member.FieldAccount, member.FieldEmail, member.FieldAvatar, member.FieldMobile, member.FieldNickname, member.FieldState:
 			values[i] = new(sql.NullString)
-		case member.FieldCreatedAt:
+		case member.FieldCreateTime, member.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
 		case member.FieldID:
 			values[i] = new(uuid.UUID)
@@ -64,6 +67,18 @@ func (m *Member) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
 				m.ID = *value
+			}
+		case member.FieldCreateTime:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field create_time", values[i])
+			} else if value.Valid {
+				m.CreateTime = value.Time
+			}
+		case member.FieldUpdateTime:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field update_time", values[i])
+			} else if value.Valid {
+				m.UpdateTime = value.Time
 			}
 		case member.FieldAccount:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -93,20 +108,13 @@ func (m *Member) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field nickname", values[i])
 			} else if value.Valid {
-				m.Nickname = new(string)
-				*m.Nickname = value.String
+				m.Nickname = value.String
 			}
 		case member.FieldState:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field state", values[i])
 			} else if value.Valid {
 				m.State = value.String
-			}
-		case member.FieldCreatedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field created_at", values[i])
-			} else if value.Valid {
-				m.CreatedAt = value.Time
 			}
 		}
 	}
@@ -136,6 +144,12 @@ func (m *Member) String() string {
 	var builder strings.Builder
 	builder.WriteString("Member(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", m.ID))
+	builder.WriteString("create_time=")
+	builder.WriteString(m.CreateTime.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("update_time=")
+	builder.WriteString(m.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(", ")
 	builder.WriteString("account=")
 	builder.WriteString(m.Account)
 	builder.WriteString(", ")
@@ -148,16 +162,11 @@ func (m *Member) String() string {
 	builder.WriteString("mobile=")
 	builder.WriteString(m.Mobile)
 	builder.WriteString(", ")
-	if v := m.Nickname; v != nil {
-		builder.WriteString("nickname=")
-		builder.WriteString(*v)
-	}
+	builder.WriteString("nickname=")
+	builder.WriteString(m.Nickname)
 	builder.WriteString(", ")
 	builder.WriteString("state=")
 	builder.WriteString(m.State)
-	builder.WriteString(", ")
-	builder.WriteString("created_at=")
-	builder.WriteString(m.CreatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

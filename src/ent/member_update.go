@@ -28,6 +28,12 @@ func (mu *MemberUpdate) Where(ps ...predicate.Member) *MemberUpdate {
 	return mu
 }
 
+// SetUpdateTime sets the "update_time" field.
+func (mu *MemberUpdate) SetUpdateTime(t time.Time) *MemberUpdate {
+	mu.mutation.SetUpdateTime(t)
+	return mu
+}
+
 // SetAccount sets the "account" field.
 func (mu *MemberUpdate) SetAccount(s string) *MemberUpdate {
 	mu.mutation.SetAccount(s)
@@ -58,37 +64,9 @@ func (mu *MemberUpdate) SetNickname(s string) *MemberUpdate {
 	return mu
 }
 
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (mu *MemberUpdate) SetNillableNickname(s *string) *MemberUpdate {
-	if s != nil {
-		mu.SetNickname(*s)
-	}
-	return mu
-}
-
-// ClearNickname clears the value of the "nickname" field.
-func (mu *MemberUpdate) ClearNickname() *MemberUpdate {
-	mu.mutation.ClearNickname()
-	return mu
-}
-
 // SetState sets the "state" field.
 func (mu *MemberUpdate) SetState(s string) *MemberUpdate {
 	mu.mutation.SetState(s)
-	return mu
-}
-
-// SetCreatedAt sets the "created_at" field.
-func (mu *MemberUpdate) SetCreatedAt(t time.Time) *MemberUpdate {
-	mu.mutation.SetCreatedAt(t)
-	return mu
-}
-
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (mu *MemberUpdate) SetNillableCreatedAt(t *time.Time) *MemberUpdate {
-	if t != nil {
-		mu.SetCreatedAt(*t)
-	}
 	return mu
 }
 
@@ -99,6 +77,7 @@ func (mu *MemberUpdate) Mutation() *MemberMutation {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (mu *MemberUpdate) Save(ctx context.Context) (int, error) {
+	mu.defaults()
 	return withHooks[int, MemberMutation](ctx, mu.sqlSave, mu.mutation, mu.hooks)
 }
 
@@ -124,7 +103,43 @@ func (mu *MemberUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (mu *MemberUpdate) defaults() {
+	if _, ok := mu.mutation.UpdateTime(); !ok {
+		v := member.UpdateDefaultUpdateTime()
+		mu.mutation.SetUpdateTime(v)
+	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (mu *MemberUpdate) check() error {
+	if v, ok := mu.mutation.Email(); ok {
+		if err := member.EmailValidator(v); err != nil {
+			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "Member.email": %w`, err)}
+		}
+	}
+	if v, ok := mu.mutation.Mobile(); ok {
+		if err := member.MobileValidator(v); err != nil {
+			return &ValidationError{Name: "mobile", err: fmt.Errorf(`ent: validator failed for field "Member.mobile": %w`, err)}
+		}
+	}
+	if v, ok := mu.mutation.Nickname(); ok {
+		if err := member.NicknameValidator(v); err != nil {
+			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "Member.nickname": %w`, err)}
+		}
+	}
+	if v, ok := mu.mutation.State(); ok {
+		if err := member.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Member.state": %w`, err)}
+		}
+	}
+	return nil
+}
+
 func (mu *MemberUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := mu.check(); err != nil {
+		return n, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(member.Table, member.Columns, sqlgraph.NewFieldSpec(member.FieldID, field.TypeUUID))
 	if ps := mu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -132,6 +147,9 @@ func (mu *MemberUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := mu.mutation.UpdateTime(); ok {
+		_spec.SetField(member.FieldUpdateTime, field.TypeTime, value)
 	}
 	if value, ok := mu.mutation.Account(); ok {
 		_spec.SetField(member.FieldAccount, field.TypeString, value)
@@ -148,14 +166,8 @@ func (mu *MemberUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.Nickname(); ok {
 		_spec.SetField(member.FieldNickname, field.TypeString, value)
 	}
-	if mu.mutation.NicknameCleared() {
-		_spec.ClearField(member.FieldNickname, field.TypeString)
-	}
 	if value, ok := mu.mutation.State(); ok {
 		_spec.SetField(member.FieldState, field.TypeString, value)
-	}
-	if value, ok := mu.mutation.CreatedAt(); ok {
-		_spec.SetField(member.FieldCreatedAt, field.TypeTime, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, mu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -175,6 +187,12 @@ type MemberUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *MemberMutation
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (muo *MemberUpdateOne) SetUpdateTime(t time.Time) *MemberUpdateOne {
+	muo.mutation.SetUpdateTime(t)
+	return muo
 }
 
 // SetAccount sets the "account" field.
@@ -207,37 +225,9 @@ func (muo *MemberUpdateOne) SetNickname(s string) *MemberUpdateOne {
 	return muo
 }
 
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (muo *MemberUpdateOne) SetNillableNickname(s *string) *MemberUpdateOne {
-	if s != nil {
-		muo.SetNickname(*s)
-	}
-	return muo
-}
-
-// ClearNickname clears the value of the "nickname" field.
-func (muo *MemberUpdateOne) ClearNickname() *MemberUpdateOne {
-	muo.mutation.ClearNickname()
-	return muo
-}
-
 // SetState sets the "state" field.
 func (muo *MemberUpdateOne) SetState(s string) *MemberUpdateOne {
 	muo.mutation.SetState(s)
-	return muo
-}
-
-// SetCreatedAt sets the "created_at" field.
-func (muo *MemberUpdateOne) SetCreatedAt(t time.Time) *MemberUpdateOne {
-	muo.mutation.SetCreatedAt(t)
-	return muo
-}
-
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (muo *MemberUpdateOne) SetNillableCreatedAt(t *time.Time) *MemberUpdateOne {
-	if t != nil {
-		muo.SetCreatedAt(*t)
-	}
 	return muo
 }
 
@@ -261,6 +251,7 @@ func (muo *MemberUpdateOne) Select(field string, fields ...string) *MemberUpdate
 
 // Save executes the query and returns the updated Member entity.
 func (muo *MemberUpdateOne) Save(ctx context.Context) (*Member, error) {
+	muo.defaults()
 	return withHooks[*Member, MemberMutation](ctx, muo.sqlSave, muo.mutation, muo.hooks)
 }
 
@@ -286,7 +277,43 @@ func (muo *MemberUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (muo *MemberUpdateOne) defaults() {
+	if _, ok := muo.mutation.UpdateTime(); !ok {
+		v := member.UpdateDefaultUpdateTime()
+		muo.mutation.SetUpdateTime(v)
+	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (muo *MemberUpdateOne) check() error {
+	if v, ok := muo.mutation.Email(); ok {
+		if err := member.EmailValidator(v); err != nil {
+			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "Member.email": %w`, err)}
+		}
+	}
+	if v, ok := muo.mutation.Mobile(); ok {
+		if err := member.MobileValidator(v); err != nil {
+			return &ValidationError{Name: "mobile", err: fmt.Errorf(`ent: validator failed for field "Member.mobile": %w`, err)}
+		}
+	}
+	if v, ok := muo.mutation.Nickname(); ok {
+		if err := member.NicknameValidator(v); err != nil {
+			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "Member.nickname": %w`, err)}
+		}
+	}
+	if v, ok := muo.mutation.State(); ok {
+		if err := member.StateValidator(v); err != nil {
+			return &ValidationError{Name: "state", err: fmt.Errorf(`ent: validator failed for field "Member.state": %w`, err)}
+		}
+	}
+	return nil
+}
+
 func (muo *MemberUpdateOne) sqlSave(ctx context.Context) (_node *Member, err error) {
+	if err := muo.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(member.Table, member.Columns, sqlgraph.NewFieldSpec(member.FieldID, field.TypeUUID))
 	id, ok := muo.mutation.ID()
 	if !ok {
@@ -312,6 +339,9 @@ func (muo *MemberUpdateOne) sqlSave(ctx context.Context) (_node *Member, err err
 			}
 		}
 	}
+	if value, ok := muo.mutation.UpdateTime(); ok {
+		_spec.SetField(member.FieldUpdateTime, field.TypeTime, value)
+	}
 	if value, ok := muo.mutation.Account(); ok {
 		_spec.SetField(member.FieldAccount, field.TypeString, value)
 	}
@@ -327,14 +357,8 @@ func (muo *MemberUpdateOne) sqlSave(ctx context.Context) (_node *Member, err err
 	if value, ok := muo.mutation.Nickname(); ok {
 		_spec.SetField(member.FieldNickname, field.TypeString, value)
 	}
-	if muo.mutation.NicknameCleared() {
-		_spec.ClearField(member.FieldNickname, field.TypeString)
-	}
 	if value, ok := muo.mutation.State(); ok {
 		_spec.SetField(member.FieldState, field.TypeString, value)
-	}
-	if value, ok := muo.mutation.CreatedAt(); ok {
-		_spec.SetField(member.FieldCreatedAt, field.TypeTime, value)
 	}
 	_node = &Member{config: muo.config}
 	_spec.Assign = _node.assignValues

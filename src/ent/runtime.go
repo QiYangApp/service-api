@@ -14,12 +14,93 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	memberMixin := schema.Member{}.Mixin()
+	memberMixinFields0 := memberMixin[0].Fields()
+	_ = memberMixinFields0
 	memberFields := schema.Member{}.Fields()
 	_ = memberFields
-	// memberDescCreatedAt is the schema descriptor for created_at field.
-	memberDescCreatedAt := memberFields[7].Descriptor()
-	// member.DefaultCreatedAt holds the default value on creation for the created_at field.
-	member.DefaultCreatedAt = memberDescCreatedAt.Default.(func() time.Time)
+	// memberDescCreateTime is the schema descriptor for create_time field.
+	memberDescCreateTime := memberMixinFields0[0].Descriptor()
+	// member.DefaultCreateTime holds the default value on creation for the create_time field.
+	member.DefaultCreateTime = memberDescCreateTime.Default.(func() time.Time)
+	// memberDescUpdateTime is the schema descriptor for update_time field.
+	memberDescUpdateTime := memberMixinFields0[1].Descriptor()
+	// member.DefaultUpdateTime holds the default value on creation for the update_time field.
+	member.DefaultUpdateTime = memberDescUpdateTime.Default.(func() time.Time)
+	// member.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	member.UpdateDefaultUpdateTime = memberDescUpdateTime.UpdateDefault.(func() time.Time)
+	// memberDescEmail is the schema descriptor for email field.
+	memberDescEmail := memberFields[2].Descriptor()
+	// member.EmailValidator is a validator for the "email" field. It is called by the builders before save.
+	member.EmailValidator = func() func(string) error {
+		validators := memberDescEmail.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(email string) error {
+			for _, fn := range fns {
+				if err := fn(email); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// memberDescMobile is the schema descriptor for mobile field.
+	memberDescMobile := memberFields[4].Descriptor()
+	// member.MobileValidator is a validator for the "mobile" field. It is called by the builders before save.
+	member.MobileValidator = func() func(string) error {
+		validators := memberDescMobile.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(mobile string) error {
+			for _, fn := range fns {
+				if err := fn(mobile); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// memberDescNickname is the schema descriptor for nickname field.
+	memberDescNickname := memberFields[5].Descriptor()
+	// member.NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
+	member.NicknameValidator = func() func(string) error {
+		validators := memberDescNickname.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(nickname string) error {
+			for _, fn := range fns {
+				if err := fn(nickname); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// memberDescState is the schema descriptor for state field.
+	memberDescState := memberFields[6].Descriptor()
+	// member.StateValidator is a validator for the "state" field. It is called by the builders before save.
+	member.StateValidator = func() func(string) error {
+		validators := memberDescState.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(state string) error {
+			for _, fn := range fns {
+				if err := fn(state); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// memberDescID is the schema descriptor for id field.
 	memberDescID := memberFields[0].Descriptor()
 	// member.DefaultID holds the default value on creation for the id field.

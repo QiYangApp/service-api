@@ -55,6 +55,16 @@ func IDLTE(id uuid.UUID) predicate.Member {
 	return predicate.Member(sql.FieldLTE(FieldID, id))
 }
 
+// CreateTime applies equality check predicate on the "create_time" field. It's identical to CreateTimeEQ.
+func CreateTime(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldEQ(FieldCreateTime, v))
+}
+
+// UpdateTime applies equality check predicate on the "update_time" field. It's identical to UpdateTimeEQ.
+func UpdateTime(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldEQ(FieldUpdateTime, v))
+}
+
 // Account applies equality check predicate on the "account" field. It's identical to AccountEQ.
 func Account(v string) predicate.Member {
 	return predicate.Member(sql.FieldEQ(FieldAccount, v))
@@ -85,9 +95,84 @@ func State(v string) predicate.Member {
 	return predicate.Member(sql.FieldEQ(FieldState, v))
 }
 
-// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
-func CreatedAt(v time.Time) predicate.Member {
-	return predicate.Member(sql.FieldEQ(FieldCreatedAt, v))
+// CreateTimeEQ applies the EQ predicate on the "create_time" field.
+func CreateTimeEQ(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldEQ(FieldCreateTime, v))
+}
+
+// CreateTimeNEQ applies the NEQ predicate on the "create_time" field.
+func CreateTimeNEQ(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldNEQ(FieldCreateTime, v))
+}
+
+// CreateTimeIn applies the In predicate on the "create_time" field.
+func CreateTimeIn(vs ...time.Time) predicate.Member {
+	return predicate.Member(sql.FieldIn(FieldCreateTime, vs...))
+}
+
+// CreateTimeNotIn applies the NotIn predicate on the "create_time" field.
+func CreateTimeNotIn(vs ...time.Time) predicate.Member {
+	return predicate.Member(sql.FieldNotIn(FieldCreateTime, vs...))
+}
+
+// CreateTimeGT applies the GT predicate on the "create_time" field.
+func CreateTimeGT(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldGT(FieldCreateTime, v))
+}
+
+// CreateTimeGTE applies the GTE predicate on the "create_time" field.
+func CreateTimeGTE(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldGTE(FieldCreateTime, v))
+}
+
+// CreateTimeLT applies the LT predicate on the "create_time" field.
+func CreateTimeLT(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldLT(FieldCreateTime, v))
+}
+
+// CreateTimeLTE applies the LTE predicate on the "create_time" field.
+func CreateTimeLTE(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldLTE(FieldCreateTime, v))
+}
+
+// UpdateTimeEQ applies the EQ predicate on the "update_time" field.
+func UpdateTimeEQ(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldEQ(FieldUpdateTime, v))
+}
+
+// UpdateTimeNEQ applies the NEQ predicate on the "update_time" field.
+func UpdateTimeNEQ(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldNEQ(FieldUpdateTime, v))
+}
+
+// UpdateTimeIn applies the In predicate on the "update_time" field.
+func UpdateTimeIn(vs ...time.Time) predicate.Member {
+	return predicate.Member(sql.FieldIn(FieldUpdateTime, vs...))
+}
+
+// UpdateTimeNotIn applies the NotIn predicate on the "update_time" field.
+func UpdateTimeNotIn(vs ...time.Time) predicate.Member {
+	return predicate.Member(sql.FieldNotIn(FieldUpdateTime, vs...))
+}
+
+// UpdateTimeGT applies the GT predicate on the "update_time" field.
+func UpdateTimeGT(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldGT(FieldUpdateTime, v))
+}
+
+// UpdateTimeGTE applies the GTE predicate on the "update_time" field.
+func UpdateTimeGTE(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldGTE(FieldUpdateTime, v))
+}
+
+// UpdateTimeLT applies the LT predicate on the "update_time" field.
+func UpdateTimeLT(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldLT(FieldUpdateTime, v))
+}
+
+// UpdateTimeLTE applies the LTE predicate on the "update_time" field.
+func UpdateTimeLTE(v time.Time) predicate.Member {
+	return predicate.Member(sql.FieldLTE(FieldUpdateTime, v))
 }
 
 // AccountEQ applies the EQ predicate on the "account" field.
@@ -405,16 +490,6 @@ func NicknameHasSuffix(v string) predicate.Member {
 	return predicate.Member(sql.FieldHasSuffix(FieldNickname, v))
 }
 
-// NicknameIsNil applies the IsNil predicate on the "nickname" field.
-func NicknameIsNil() predicate.Member {
-	return predicate.Member(sql.FieldIsNull(FieldNickname))
-}
-
-// NicknameNotNil applies the NotNil predicate on the "nickname" field.
-func NicknameNotNil() predicate.Member {
-	return predicate.Member(sql.FieldNotNull(FieldNickname))
-}
-
 // NicknameEqualFold applies the EqualFold predicate on the "nickname" field.
 func NicknameEqualFold(v string) predicate.Member {
 	return predicate.Member(sql.FieldEqualFold(FieldNickname, v))
@@ -488,46 +563,6 @@ func StateEqualFold(v string) predicate.Member {
 // StateContainsFold applies the ContainsFold predicate on the "state" field.
 func StateContainsFold(v string) predicate.Member {
 	return predicate.Member(sql.FieldContainsFold(FieldState, v))
-}
-
-// CreatedAtEQ applies the EQ predicate on the "created_at" field.
-func CreatedAtEQ(v time.Time) predicate.Member {
-	return predicate.Member(sql.FieldEQ(FieldCreatedAt, v))
-}
-
-// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
-func CreatedAtNEQ(v time.Time) predicate.Member {
-	return predicate.Member(sql.FieldNEQ(FieldCreatedAt, v))
-}
-
-// CreatedAtIn applies the In predicate on the "created_at" field.
-func CreatedAtIn(vs ...time.Time) predicate.Member {
-	return predicate.Member(sql.FieldIn(FieldCreatedAt, vs...))
-}
-
-// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
-func CreatedAtNotIn(vs ...time.Time) predicate.Member {
-	return predicate.Member(sql.FieldNotIn(FieldCreatedAt, vs...))
-}
-
-// CreatedAtGT applies the GT predicate on the "created_at" field.
-func CreatedAtGT(v time.Time) predicate.Member {
-	return predicate.Member(sql.FieldGT(FieldCreatedAt, v))
-}
-
-// CreatedAtGTE applies the GTE predicate on the "created_at" field.
-func CreatedAtGTE(v time.Time) predicate.Member {
-	return predicate.Member(sql.FieldGTE(FieldCreatedAt, v))
-}
-
-// CreatedAtLT applies the LT predicate on the "created_at" field.
-func CreatedAtLT(v time.Time) predicate.Member {
-	return predicate.Member(sql.FieldLT(FieldCreatedAt, v))
-}
-
-// CreatedAtLTE applies the LTE predicate on the "created_at" field.
-func CreatedAtLTE(v time.Time) predicate.Member {
-	return predicate.Member(sql.FieldLTE(FieldCreatedAt, v))
 }
 
 // And groups predicates with the AND operator between them.

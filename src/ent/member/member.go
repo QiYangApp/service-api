@@ -13,6 +13,10 @@ const (
 	Label = "member"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCreateTime holds the string denoting the create_time field in the database.
+	FieldCreateTime = "create_time"
+	// FieldUpdateTime holds the string denoting the update_time field in the database.
+	FieldUpdateTime = "update_time"
 	// FieldAccount holds the string denoting the account field in the database.
 	FieldAccount = "account"
 	// FieldEmail holds the string denoting the email field in the database.
@@ -25,8 +29,6 @@ const (
 	FieldNickname = "nickname"
 	// FieldState holds the string denoting the state field in the database.
 	FieldState = "state"
-	// FieldCreatedAt holds the string denoting the created_at field in the database.
-	FieldCreatedAt = "created_at"
 	// Table holds the table name of the member in the database.
 	Table = "members"
 )
@@ -34,13 +36,14 @@ const (
 // Columns holds all SQL columns for member fields.
 var Columns = []string{
 	FieldID,
+	FieldCreateTime,
+	FieldUpdateTime,
 	FieldAccount,
 	FieldEmail,
 	FieldAvatar,
 	FieldMobile,
 	FieldNickname,
 	FieldState,
-	FieldCreatedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -54,8 +57,20 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
-	DefaultCreatedAt func() time.Time
+	// DefaultCreateTime holds the default value on creation for the "create_time" field.
+	DefaultCreateTime func() time.Time
+	// DefaultUpdateTime holds the default value on creation for the "update_time" field.
+	DefaultUpdateTime func() time.Time
+	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
+	UpdateDefaultUpdateTime func() time.Time
+	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
+	EmailValidator func(string) error
+	// MobileValidator is a validator for the "mobile" field. It is called by the builders before save.
+	MobileValidator func(string) error
+	// NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
+	NicknameValidator func(string) error
+	// StateValidator is a validator for the "state" field. It is called by the builders before save.
+	StateValidator func(string) error
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

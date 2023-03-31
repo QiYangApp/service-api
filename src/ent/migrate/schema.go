@@ -3,6 +3,7 @@
 package migrate
 
 import (
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/dialect/sql/schema"
 	"entgo.io/ent/schema/field"
 )
@@ -10,20 +11,29 @@ import (
 var (
 	// MembersColumns holds the columns for the "members" table.
 	MembersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
-		{Name: "account", Type: field.TypeString},
-		{Name: "email", Type: field.TypeString, Unique: true},
+		{Name: "id", Type: field.TypeUUID, Comment: "UUID of the"},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "account", Type: field.TypeString, Comment: "login account"},
+		{Name: "email", Type: field.TypeString, Size: 128},
 		{Name: "avatar", Type: field.TypeString},
-		{Name: "mobile", Type: field.TypeString},
-		{Name: "nickname", Type: field.TypeString, Nullable: true},
-		{Name: "state", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeTime},
+		{Name: "mobile", Type: field.TypeString, Size: 32},
+		{Name: "nickname", Type: field.TypeString, Size: 32},
+		{Name: "state", Type: field.TypeString, Size: 32},
 	}
 	// MembersTable holds the schema information for the "members" table.
 	MembersTable = &schema.Table{
 		Name:       "members",
+		Comment:    "会员",
 		Columns:    MembersColumns,
 		PrimaryKey: []*schema.Column{MembersColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "member_mobile_mobile",
+				Unique:  true,
+				Columns: []*schema.Column{MembersColumns[6], MembersColumns[6]},
+			},
+		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
@@ -32,4 +42,5 @@ var (
 )
 
 func init() {
+	MembersTable.Annotation = &entsql.Annotation{}
 }

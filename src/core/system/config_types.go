@@ -25,3 +25,12 @@ type DatabaseConfig struct {
 	MaxOpenConns int32 `mapstructure:"maxOpenConns"`
 	MaxIdleConns int32 `mapstructure:"maxIdleConns"`
 }
+
+// token 签名
+
+type TokenConfig struct {
+	PrivateKey string `mapstructure:"privateKey"`
+	PublicKey  string `mapstructure:"publicKey"`
+	Method     string `mapstructure:"method"`
+	Signing    string `mapstructure:"signing"`
+}

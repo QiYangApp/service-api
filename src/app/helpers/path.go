@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 
 	"go.uber.org/zap"
 )
+
+var once sync.Once
+var pathInstance *Path
 
 type Path struct {
 	rootPath string
@@ -53,5 +57,9 @@ func (p Path) JoinCurrentRunPath(path string) string {
 }
 
 func NewPathMange() Path {
-	return *new(Path).init()
+	once.Do(func() {
+		pathInstance = new(Path).init()
+	})
+
+	return *pathInstance
 }

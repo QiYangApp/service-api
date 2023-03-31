@@ -34,13 +34,14 @@ type MemberMutation struct {
 	op            Op
 	typ           string
 	id            *uuid.UUID
+	create_time   *time.Time
+	update_time   *time.Time
 	account       *string
 	email         *string
 	avatar        *string
 	mobile        *string
 	nickname      *string
 	state         *string
-	created_at    *time.Time
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Member, error)
@@ -149,6 +150,78 @@ func (m *MemberMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *MemberMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *MemberMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the Member entity.
+// If the Member object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MemberMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *MemberMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (m *MemberMutation) SetUpdateTime(t time.Time) {
+	m.update_time = &t
+}
+
+// UpdateTime returns the value of the "update_time" field in the mutation.
+func (m *MemberMutation) UpdateTime() (r time.Time, exists bool) {
+	v := m.update_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateTime returns the old "update_time" field's value of the Member entity.
+// If the Member object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MemberMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
+	}
+	return oldValue.UpdateTime, nil
+}
+
+// ResetUpdateTime resets all changes to the "update_time" field.
+func (m *MemberMutation) ResetUpdateTime() {
+	m.update_time = nil
 }
 
 // SetAccount sets the "account" field.
@@ -312,7 +385,7 @@ func (m *MemberMutation) Nickname() (r string, exists bool) {
 // OldNickname returns the old "nickname" field's value of the Member entity.
 // If the Member object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MemberMutation) OldNickname(ctx context.Context) (v *string, err error) {
+func (m *MemberMutation) OldNickname(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldNickname is only allowed on UpdateOne operations")
 	}
@@ -326,22 +399,9 @@ func (m *MemberMutation) OldNickname(ctx context.Context) (v *string, err error)
 	return oldValue.Nickname, nil
 }
 
-// ClearNickname clears the value of the "nickname" field.
-func (m *MemberMutation) ClearNickname() {
-	m.nickname = nil
-	m.clearedFields[member.FieldNickname] = struct{}{}
-}
-
-// NicknameCleared returns if the "nickname" field was cleared in this mutation.
-func (m *MemberMutation) NicknameCleared() bool {
-	_, ok := m.clearedFields[member.FieldNickname]
-	return ok
-}
-
 // ResetNickname resets all changes to the "nickname" field.
 func (m *MemberMutation) ResetNickname() {
 	m.nickname = nil
-	delete(m.clearedFields, member.FieldNickname)
 }
 
 // SetState sets the "state" field.
@@ -380,42 +440,6 @@ func (m *MemberMutation) ResetState() {
 	m.state = nil
 }
 
-// SetCreatedAt sets the "created_at" field.
-func (m *MemberMutation) SetCreatedAt(t time.Time) {
-	m.created_at = &t
-}
-
-// CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *MemberMutation) CreatedAt() (r time.Time, exists bool) {
-	v := m.created_at
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreatedAt returns the old "created_at" field's value of the Member entity.
-// If the Member object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MemberMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
-	}
-	return oldValue.CreatedAt, nil
-}
-
-// ResetCreatedAt resets all changes to the "created_at" field.
-func (m *MemberMutation) ResetCreatedAt() {
-	m.created_at = nil
-}
-
 // Where appends a list predicates to the MemberMutation builder.
 func (m *MemberMutation) Where(ps ...predicate.Member) {
 	m.predicates = append(m.predicates, ps...)
@@ -450,7 +474,13 @@ func (m *MemberMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *MemberMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
+	if m.create_time != nil {
+		fields = append(fields, member.FieldCreateTime)
+	}
+	if m.update_time != nil {
+		fields = append(fields, member.FieldUpdateTime)
+	}
 	if m.account != nil {
 		fields = append(fields, member.FieldAccount)
 	}
@@ -469,9 +499,6 @@ func (m *MemberMutation) Fields() []string {
 	if m.state != nil {
 		fields = append(fields, member.FieldState)
 	}
-	if m.created_at != nil {
-		fields = append(fields, member.FieldCreatedAt)
-	}
 	return fields
 }
 
@@ -480,6 +507,10 @@ func (m *MemberMutation) Fields() []string {
 // schema.
 func (m *MemberMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case member.FieldCreateTime:
+		return m.CreateTime()
+	case member.FieldUpdateTime:
+		return m.UpdateTime()
 	case member.FieldAccount:
 		return m.Account()
 	case member.FieldEmail:
@@ -492,8 +523,6 @@ func (m *MemberMutation) Field(name string) (ent.Value, bool) {
 		return m.Nickname()
 	case member.FieldState:
 		return m.State()
-	case member.FieldCreatedAt:
-		return m.CreatedAt()
 	}
 	return nil, false
 }
@@ -503,6 +532,10 @@ func (m *MemberMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *MemberMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case member.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	case member.FieldUpdateTime:
+		return m.OldUpdateTime(ctx)
 	case member.FieldAccount:
 		return m.OldAccount(ctx)
 	case member.FieldEmail:
@@ -515,8 +548,6 @@ func (m *MemberMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldNickname(ctx)
 	case member.FieldState:
 		return m.OldState(ctx)
-	case member.FieldCreatedAt:
-		return m.OldCreatedAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown Member field %s", name)
 }
@@ -526,6 +557,20 @@ func (m *MemberMutation) OldField(ctx context.Context, name string) (ent.Value, 
 // type.
 func (m *MemberMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case member.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	case member.FieldUpdateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateTime(v)
+		return nil
 	case member.FieldAccount:
 		v, ok := value.(string)
 		if !ok {
@@ -568,13 +613,6 @@ func (m *MemberMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetState(v)
 		return nil
-	case member.FieldCreatedAt:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreatedAt(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Member field %s", name)
 }
@@ -604,11 +642,7 @@ func (m *MemberMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *MemberMutation) ClearedFields() []string {
-	var fields []string
-	if m.FieldCleared(member.FieldNickname) {
-		fields = append(fields, member.FieldNickname)
-	}
-	return fields
+	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -621,11 +655,6 @@ func (m *MemberMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *MemberMutation) ClearField(name string) error {
-	switch name {
-	case member.FieldNickname:
-		m.ClearNickname()
-		return nil
-	}
 	return fmt.Errorf("unknown Member nullable field %s", name)
 }
 
@@ -633,6 +662,12 @@ func (m *MemberMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *MemberMutation) ResetField(name string) error {
 	switch name {
+	case member.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	case member.FieldUpdateTime:
+		m.ResetUpdateTime()
+		return nil
 	case member.FieldAccount:
 		m.ResetAccount()
 		return nil
@@ -650,9 +685,6 @@ func (m *MemberMutation) ResetField(name string) error {
 		return nil
 	case member.FieldState:
 		m.ResetState()
-		return nil
-	case member.FieldCreatedAt:
-		m.ResetCreatedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown Member field %s", name)
