@@ -15,7 +15,7 @@ type LoggerService struct {
 	service
 }
 
-func (l *LoggerService) Handle(r *gin.Engine, cfg ConfigService) {
+func (l *LoggerService) Handle(r *gin.Engine, cfg *ConfigService) {
 
 	hook := lumberjack.Logger{
 		Filename:   fmt.Sprintf("./src/storage/logs/%s/%s.log", time.Now().Format("2006-01-02"), "default"), // 日志文件路径

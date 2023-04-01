@@ -11,7 +11,7 @@ type LanguageService struct {
 	service
 }
 
-func (d *LanguageService) Handle(r *gin.Engine, cfg ConfigService) {
+func (d *LanguageService) Handle(r *gin.Engine, cfg *ConfigService) {
 
 	r.Use(i18n.Localize(
 		i18n.WithBundle(&i18n.BundleCfg{

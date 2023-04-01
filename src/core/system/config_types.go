@@ -3,6 +3,8 @@ package system
 type Config struct {
 	Server   `mapstructure:"server"`
 	Database `mapstructure:"database"`
+	Token    `mapstructure:"token"`
+	Cache    `mapstructure:"cache"`
 }
 
 type Server struct {
@@ -11,7 +13,7 @@ type Server struct {
 	Env  string `mapstructure:"env"`
 }
 
-type Database struct {
+type DatabasePgx struct {
 	Type     string         `mapstructure:"type"`
 	Host     string         `mapstructure:"host"`
 	Port     int            `mapstructure:"port"`
@@ -21,16 +23,37 @@ type Database struct {
 	Config   DatabaseConfig `mapstructure:"config"`
 }
 
+type DatabaseRedis struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Password string `mapstructure:"password"`
+	Database int    `mapstructure:"database"`
+}
+
+type Database struct {
+	Redis DatabaseRedis
+	Pgx   DatabasePgx
+}
+
 type DatabaseConfig struct {
 	MaxOpenConns int32 `mapstructure:"maxOpenConns"`
 	MaxIdleConns int32 `mapstructure:"maxIdleConns"`
 }
 
 // token 签名
+type Token struct {
+	PrivateKey  string `mapstructure:"privateKey"`
+	PublicKey   string `mapstructure:"publicKey"`
+	Signing     string `mapstructure:"signing"`
+	ExpiresTime int    `mapstructure:"expiresTime"`
+}
 
-type TokenConfig struct {
-	PrivateKey string `mapstructure:"privateKey"`
-	PublicKey  string `mapstructure:"publicKey"`
-	Method     string `mapstructure:"method"`
-	Signing    string `mapstructure:"signing"`
+type Cache struct {
+	Driver  string `mapstructure:"driver"`
+	Expires int    `mapstructure:"expires"`
+	Redis   CacheRedis
+}
+
+type CacheRedis struct {
+	Database int `mapstructure:"database"`
 }

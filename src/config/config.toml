@@ -4,6 +4,8 @@ port = 3000
 env = "debug"
 
 [database]
+
+[database.pg]
 type = "pgx"
 host = "localhost"
 port = 5432
@@ -11,19 +13,26 @@ username = "qi_yang"
 password = "qi_yang"
 database = "qi_yang"
 
-[database.config]
+[database.pg.config]
 maxOpenConns = 100
 maxIdleConns = 50
 
-[redis]
+[database.redis]
 host = "redis"
 password = ""
 maxIdleConns = 50
 maxActive = 30
 idleTimeout = 200
 
+[cache]
+drive = "redis"
+expires = 60
+
+[cache.redis]
+database = 0
+
 [token]
 privateKey = "a"
 publicKey = "a"
-method= "RS512"
 signing = "signing"
+expiresTime = 60

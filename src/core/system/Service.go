@@ -15,28 +15,29 @@ import (
 )
 
 type service interface {
-	Handle(r *gin.Engine, cfg ConfigService)
+	Handle(r *gin.Engine, cfg *ConfigService)
+}
+
+func init() {
+	ConfigInstance = (new(ConfigService)).initConfig()
 }
 
 func Start(r *gin.Engine) {
-	cfg := ConfigService{}
-	cfg.Handle(r, ConfigService{})
-
-	beforeStart(r, cfg)
-	run(r, cfg)
-	afterStart(r, cfg)
+	beforeStart(r, ConfigInstance)
+	run(r, ConfigInstance)
+	afterStart(r, ConfigInstance)
 }
 
-func beforeStart(r *gin.Engine, cfg ConfigService) {
+func beforeStart(r *gin.Engine, cfg *ConfigService) {
 
 	// 日志颜色
-	if cfg.runMode() == gin.DebugMode {
+	if cfg.RunMode() == gin.DebugMode {
 		gin.ForceConsoleColor()
 	} else {
 		gin.DisableConsoleColor()
 	}
 
-	gin.SetMode(cfg.runMode())
+	gin.SetMode(cfg.RunMode())
 
 	(new(LoggerService)).Handle(r, cfg)
 
@@ -52,11 +53,11 @@ func beforeStart(r *gin.Engine, cfg ConfigService) {
 
 }
 
-func afterStart(r *gin.Engine, cfg ConfigService) {
+func afterStart(r *gin.Engine, cfg *ConfigService) {
 
 }
 
-func run(r *gin.Engine, cfg ConfigService) {
+func run(r *gin.Engine, cfg *ConfigService) {
 
 	r.Static("/resources/assets", helpers.NewPathMange().JoinCurrentRunPath("resources/assets"))
 

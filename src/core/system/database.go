@@ -26,7 +26,7 @@ type DatabaseService struct {
 	cfg Database
 }
 
-func (d *DatabaseService) Handle(r *gin.Engine, cfg ConfigService) {
+func (d *DatabaseService) Handle(r *gin.Engine, cfg *ConfigService) {
 	d.cfg = cfg.GetDatabase()
 
 	d.connect()
@@ -39,10 +39,6 @@ func (d DatabaseService) connect() {
 	driver := entsql.OpenDB(dialect.Postgres, db)
 
 	client := ent.NewClient(ent.Driver(driver))
-
-	// 自定义初始化 schema 和 migrate 文件夹位置
-	// schemaPath := "app/database/migrate"
-	// migratePath := "app/modules/schema"
 
 	err := client.Schema.Create(
 		context.Background(),
@@ -73,14 +69,14 @@ func (d DatabaseService) write(client *ent.Client) {
 }
 
 func (d DatabaseService) pool() *sql.DB {
-	db, err := sql.Open(d.cfg.Type, d.parseConfig())
+	db, err := sql.Open(d.cfg.Pgx.Type, d.parseConfig())
 	if err != nil {
 		zap.S().Fatalf("failed connecting to the database: %v", err)
 	}
 
 	// 设置数据库连接池相关配置
-	db.SetMaxIdleConns(int(d.cfg.Config.MaxIdleConns))
-	db.SetMaxOpenConns(int(d.cfg.Config.MaxOpenConns))
+	db.SetMaxIdleConns(int(d.cfg.Pgx.Config.MaxIdleConns))
+	db.SetMaxOpenConns(int(d.cfg.Pgx.Config.MaxOpenConns))
 	db.SetConnMaxLifetime(time.Hour)
 
 	return db
@@ -90,10 +86,10 @@ func (d DatabaseService) pool() *sql.DB {
 
 func (d DatabaseService) parseConfig() string {
 	return fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%d sslmode=disable",
-		d.cfg.Username,
-		d.cfg.Password,
-		d.cfg.Database,
-		d.cfg.Host,
-		d.cfg.Port,
+		d.cfg.Pgx.Username,
+		d.cfg.Pgx.Password,
+		d.cfg.Pgx.Database,
+		d.cfg.Pgx.Host,
+		d.cfg.Pgx.Port,
 	)
 }
