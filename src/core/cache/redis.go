@@ -15,16 +15,17 @@ type CacheRedisDrive struct {
 }
 
 func (c *CacheRedisDrive) Connect(cfg interface{}, cCfg interface{}) error {
+	ctx := context.Background()
 	config := cfg.(system.DatabaseRedis)
 	cacheConfig := cCfg.(system.CacheRedis)
 
 	c.storage = redis.NewClient(&redis.Options{
-		Addr:	  fmt.Sprintf("%s,%d", config.Host, config.Port),
-		Password: config.Password, // no password set
-		DB:		  cacheConfig.Database,  // use default DB
+		Addr:     fmt.Sprintf("%s,%d", config.Host, config.Port),
+		Password: config.Password,      // no password set
+		DB:       cacheConfig.Database, // use default DB
 	})
 
-	c.storage.Ping() {
-
+	if c.storage.Ping(ctx).Err() != nil {
+		return c.storage.Ping(ctx).Err()
 	}
 }
