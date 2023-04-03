@@ -4,6 +4,8 @@ import (
 	"crypto/rsa"
 	"errors"
 	"github.com/imdario/mergo"
+	"os"
+	"service-api/src/app/helpers"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -14,7 +16,9 @@ type GeneratorMethodInterface interface {
 	init() GeneratorMethodInterface
 	generate(claims *Claims) (string, error)
 	parser(token string) (*jwt.Token, error)
+	parserClaim(token string) (*Claims, error)
 	refresh(tokenString string) (string, error)
+	exists(tokenString string) bool
 }
 
 type Generator struct {
@@ -43,14 +47,31 @@ type TokenGenerator struct {
 
 func (t *TokenGenerator) formantKey() {
 	var err error
-	t.PrivateKeyRsa, err = jwt.ParseRSAPrivateKeyFromPEM([]byte(t.PrivateKey))
-	if err == nil {
-		zap.S().Fatalf("parse rsa private key failed: %v", err)
+
+	// Load RSA private key
+	privKey, err := os.ReadFile(helpers.NewPathMange().JoinCurrentRunPath(t.PrivateKey))
+	if err != nil {
+		zap.S().Fatalf("Failed to load RSA private key: %v", err)
+		return
 	}
 
-	t.PublicKeyRsa, err = jwt.ParseRSAPublicKeyFromPEM([]byte(t.PublicKey))
+	// Load RSA private key
+	pubKey, err := os.ReadFile(helpers.NewPathMange().JoinCurrentRunPath(t.PublicKey))
 	if err != nil {
-		panic(err)
+		zap.S().Fatalf("Failed to load RSA private key: %v", err)
+		return
+	}
+
+	t.PrivateKeyRsa, err = jwt.ParseRSAPrivateKeyFromPEM(privKey)
+	if err != nil {
+		zap.S().Fatalf("parse rsa private key failed: %v", err)
+		return
+	}
+
+	t.PublicKeyRsa, err = jwt.ParseRSAPublicKeyFromPEM(pubKey)
+	if err != nil {
+		zap.S().Fatalf("parse rsa public key failed: %v", err)
+		return
 	}
 }
 
@@ -79,8 +100,11 @@ func (t TokenGenerator) generate(claims *Claims) (string, error) {
 		return "", err
 	}
 
+	t.Claims.ExpiresAt = jwt.NewNumericDate(time.Now().Add(time.Duration(t.ExpiresTime) * time.Minute))
+	t.Claims.IssuedAt = jwt.NewNumericDate(time.Now())
+	t.Claims.NotBefore = jwt.NewNumericDate(time.Now())
 	token := jwt.NewWithClaims(jwt.SigningMethodRS512, t.Claims)
-	return token.SignedString(t.PrivateKey)
+	return token.SignedString(t.PrivateKeyRsa)
 }
 func (t TokenGenerator) parser(tokenString string) (*jwt.Token, error) {
 	// 解析 JWT
@@ -98,6 +122,26 @@ func (t TokenGenerator) parser(tokenString string) (*jwt.Token, error) {
 
 	return token, nil
 }
+
+func (t TokenGenerator) exists(tokenString string) bool {
+	_, err := t.parser(tokenString)
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+func (t TokenGenerator) parserClaim(token string) (*Claims, error) {
+	parser, err := t.parser(token)
+	if err != nil {
+		return new(Claims), err
+	}
+
+	// 修改 JWT 的有效期。
+	return parser.Claims.(*Claims), nil
+}
+
 func (t TokenGenerator) refresh(tokenString string) (string, error) {
 	token, err := t.parser(tokenString)
 	if err != nil {

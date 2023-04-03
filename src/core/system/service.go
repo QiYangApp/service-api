@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"service-api/src/api/middleware"
 	"service-api/src/app/helpers"
+	"service-api/src/core/config"
 	"service-api/src/routes"
 	"time"
 
@@ -15,20 +16,16 @@ import (
 )
 
 type service interface {
-	Handle(r *gin.Engine, cfg *ConfigService)
-}
-
-func init() {
-	ConfigInstance = (new(ConfigService)).initConfig()
+	Handle(r *gin.Engine, cfg *config.ConfigService)
 }
 
 func Start(r *gin.Engine) {
-	beforeStart(r, ConfigInstance)
-	run(r, ConfigInstance)
-	afterStart(r, ConfigInstance)
+	beforeStart(r, config.Instance)
+	run(r, config.Instance)
+	afterStart(r, config.Instance)
 }
 
-func beforeStart(r *gin.Engine, cfg *ConfigService) {
+func beforeStart(r *gin.Engine, cfg *config.ConfigService) {
 
 	// 日志颜色
 	if cfg.RunMode() == gin.DebugMode {
@@ -45,6 +42,8 @@ func beforeStart(r *gin.Engine, cfg *ConfigService) {
 
 	(new(LanguageService)).Handle(r, cfg)
 
+	(new(CacheService)).Handle(r, cfg)
+
 	// 注册路由
 	middleware.SetupMiddleware(r)
 
@@ -53,16 +52,16 @@ func beforeStart(r *gin.Engine, cfg *ConfigService) {
 
 }
 
-func afterStart(r *gin.Engine, cfg *ConfigService) {
+func afterStart(r *gin.Engine, cfg *config.ConfigService) {
 
 }
 
-func run(r *gin.Engine, cfg *ConfigService) {
+func run(r *gin.Engine, cfg *config.ConfigService) {
 
 	r.Static("/resources/assets", helpers.NewPathMange().JoinCurrentRunPath("resources/assets"))
 
 	srv := &http.Server{
-		Addr:    cfg.startServiceAddress(),
+		Addr:    cfg.StartServiceAddress(),
 		Handler: r,
 	}
 

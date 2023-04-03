@@ -1,39 +1,31 @@
 package token
 
 import (
-	"github.com/golang-jwt/jwt/v5"
-	"service-api/src/app/helpers"
-	"service-api/src/core/system"
+	"go.uber.org/zap"
 )
-
-var Instance *Token[GeneratorMethodInterface, CacheMethodInterface]
-
-func init() {
-	NewTokenService()
-}
 
 type Token[G GeneratorMethodInterface, C CacheMethodInterface] struct {
 	generator    G
 	cacheStorage C
 }
 
-func (t *Token[G, C]) setGenerator(generator G) *Token[G, C] {
+func (t *Token[G, C]) SetGenerator(generator G) *Token[G, C] {
 	t.generator = generator
 
 	return t
 }
 
-func (t *Token[G, C]) setCacheStorage(cache C) *Token[G, C] {
+func (t *Token[G, C]) SetCacheStorage(cache C) *Token[G, C] {
 	t.cacheStorage = cache
 
 	return t
 }
 
-func (t *Token[G, C]) exists(token string) bool {
+func (t *Token[G, C]) Exists(token string) bool {
 	return t.cacheStorage.exists(token)
 }
 
-func (t *Token[G, C]) generate(claims *Claims) (string, error) {
+func (t *Token[G, C]) Generate(claims *Claims) (string, error) {
 	token, err := t.generator.generate(claims)
 	if err != nil {
 		return "", err
@@ -47,38 +39,43 @@ func (t *Token[G, C]) generate(claims *Claims) (string, error) {
 	return token, nil
 }
 
-func (t *Token[G, C]) remove(token string) bool {
+func (t *Token[G, C]) Remove(token string) bool {
 	return t.cacheStorage.remove(token)
 }
 
-func (t *Token[G, C]) parser(token string) (Claims, error) {
-	return t.cacheStorage.parser(token)
-}
-
-func NewTokenService() *Token[GeneratorMethodInterface, CacheMethodInterface] {
-	if helpers.IsEmpty(Instance) == true {
-		tokenConfig := system.ConfigInstance.GetToken()
-
-		Instance = &Token[GeneratorMethodInterface, CacheMethodInterface]{
-			generator: &TokenGenerator{
-				Generator: &Generator{
-					ExpiresTime: tokenConfig.ExpiresTime,
-					Subject:     "default",
-					Audience:    jwt.ClaimStrings{"default", "system"},
-					PrivateKey:  tokenConfig.PrivateKey,
-					PublicKey:   tokenConfig.PublicKey,
-				},
-			},
-			cacheStorage: &CacheRedis{
-				Cache: &Cache{
-					ExpiresTime: tokenConfig.ExpiresTime,
-				},
-			},
-		}
-
-		Instance.generator.init()
-		Instance.cacheStorage.init()
+func (t *Token[G, C]) Parser(token string) (*Claims, error) {
+	token, err := t.cacheStorage.get(token)
+	if err != nil {
+		return new(Claims), err
 	}
 
-	return Instance
+	claims, err := t.generator.parserClaim(token)
+	if err != nil {
+		return new(Claims), err
+	}
+
+	return claims, err
+}
+
+func (t *Token[G, C]) Refresh(token string) bool {
+	if t.cacheStorage.exists(token) == false {
+		return false
+	}
+
+	if t.generator.exists(token) == false {
+		return false
+	}
+
+	newTokenString, err := t.generator.refresh(token)
+	if err != nil {
+		zap.S().Warnf("token refresh store failed key %s", token)
+		return false
+	}
+
+	if t.cacheStorage.refresh(token, newTokenString) == false {
+		zap.S().Warnf("token refresh cache store failed key %s", token)
+		return false
+	}
+
+	return true
 }

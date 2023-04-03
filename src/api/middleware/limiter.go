@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/time/rate"
 	"net/http"
-	"service-api/src/app/helpers"
+	"service-api/src/app/helpers/response"
 	"time"
 )
 
@@ -14,12 +14,12 @@ func Limiter(maxRequests int64, duration time.Duration) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 限流逻辑
 		if limiter.Allow() == false {
-			response := helpers.NewResponse[string]()
-			response.SetCode(http.StatusTooManyRequests)
-			response.SetMessage("too many requests")
-			response.SetState(helpers.Fail)
-
-			c.AbortWithStatusJSON(http.StatusTooManyRequests, response.Single(""))
+			c.AbortWithStatusJSON(http.StatusTooManyRequests, response.SingleCustom(
+				"TOO MANY REQUESTS",
+				http.StatusTooManyRequests,
+				"REQUESTS.TOO_MANY_REQUESTS",
+			),
+			)
 			return
 		}
 

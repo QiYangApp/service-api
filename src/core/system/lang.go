@@ -5,13 +5,14 @@ import (
 	"github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/text/language"
+	"service-api/src/core/config"
 )
 
 type LanguageService struct {
 	service
 }
 
-func (d *LanguageService) Handle(r *gin.Engine, cfg *ConfigService) {
+func (d *LanguageService) Handle(r *gin.Engine, cfg *config.ConfigService) {
 
 	r.Use(i18n.Localize(
 		i18n.WithBundle(&i18n.BundleCfg{

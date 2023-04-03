@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"service-api/src/app/helpers"
+	"service-api/src/app/helpers/response"
 )
 
 func recovery() gin.HandlerFunc {
@@ -13,12 +13,7 @@ func recovery() gin.HandlerFunc {
 			if err := recover(); err != nil {
 				// 自定义输出内容
 				errMsg := fmt.Sprintf("panic error: %v", err)
-
-				resp := helpers.NewResponse[string]()
-				resp.SetCode(http.StatusInternalServerError)
-				resp.SetMessage(errMsg)
-
-				c.AbortWithStatusJSON(http.StatusInternalServerError, resp.Single(""))
+				c.AbortWithStatusJSON(http.StatusInternalServerError, response.SingleCustom(errMsg, http.StatusInternalServerError, "FAIL"))
 			}
 		}()
 		c.Next()

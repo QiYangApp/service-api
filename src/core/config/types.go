@@ -1,4 +1,4 @@
-package system
+package config
 
 type Config struct {
 	Server   `mapstructure:"server"`
@@ -14,7 +14,6 @@ type Server struct {
 }
 
 type DatabasePgx struct {
-	Type     string         `mapstructure:"type"`
 	Host     string         `mapstructure:"host"`
 	Port     int            `mapstructure:"port"`
 	Username string         `mapstructure:"username"`
@@ -24,15 +23,19 @@ type DatabasePgx struct {
 }
 
 type DatabaseRedis struct {
-	Host     string `mapstructure:"host"`
-	Port     int    `mapstructure:"port"`
-	Password string `mapstructure:"password"`
-	Database int    `mapstructure:"database"`
+	Host         string `mapstructure:"host"`
+	Port         int    `mapstructure:"port"`
+	Password     string `mapstructure:"password"`
+	Database     int    `mapstructure:"database"`
+	MaxIdleConns int    `mapstructure:"maxIdleConns"`
+	MaxActive    int    `mapstructure:"maxActive"`
+	IdleTimeout  int    `mapstructure:"idleTimeout"`
 }
 
 type Database struct {
-	Redis DatabaseRedis
-	Pgx   DatabasePgx
+	Type  string        `mapstructure:"type"`
+	Redis DatabaseRedis `mapstructure:"redis"`
+	Pgx   DatabasePgx   `mapstructure:"pgx"`
 }
 
 type DatabaseConfig struct {
@@ -49,9 +52,9 @@ type Token struct {
 }
 
 type Cache struct {
-	Driver  string `mapstructure:"driver"`
-	Expires int    `mapstructure:"expires"`
-	Redis   CacheRedis
+	Driver  string     `mapstructure:"driver"`
+	Expires int        `mapstructure:"expires"`
+	Redis   CacheRedis `mapstructure:"redis"`
 }
 
 type CacheRedis struct {

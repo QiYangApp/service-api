@@ -1,16 +1,13 @@
-package system
+package config
 
 import (
 	"fmt"
-	"service-api/src/app/helpers"
-
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"service-api/src/app/helpers"
 )
-
-var ConfigInstance *ConfigService
 
 type ConfigService struct {
 	config *Config
@@ -60,7 +57,7 @@ func (c ConfigService) GetToken() Token {
 	return c.config.Token
 }
 
-func (c ConfigService) startServiceAddress() string {
+func (c ConfigService) StartServiceAddress() string {
 	return fmt.Sprintf("%s:%d", c.config.Server.Host, c.config.Server.Port)
 }
 

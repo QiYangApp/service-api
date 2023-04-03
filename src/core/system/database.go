@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"service-api/src/app/helpers"
+	"service-api/src/core/config"
 	"service-api/src/ent"
 	"service-api/src/ent/migrate"
 	"time"
@@ -23,10 +24,10 @@ import (
 
 type DatabaseService struct {
 	service
-	cfg Database
+	cfg config.Database
 }
 
-func (d *DatabaseService) Handle(r *gin.Engine, cfg *ConfigService) {
+func (d *DatabaseService) Handle(r *gin.Engine, cfg *config.ConfigService) {
 	d.cfg = cfg.GetDatabase()
 
 	d.connect()
@@ -69,7 +70,7 @@ func (d DatabaseService) write(client *ent.Client) {
 }
 
 func (d DatabaseService) pool() *sql.DB {
-	db, err := sql.Open(d.cfg.Pgx.Type, d.parseConfig())
+	db, err := sql.Open(d.cfg.Type, d.parseConfig())
 	if err != nil {
 		zap.S().Fatalf("failed connecting to the database: %v", err)
 	}

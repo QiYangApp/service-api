@@ -2,19 +2,9 @@ package cache
 
 import (
 	"errors"
-	"github.com/eko/gocache/lib/v4/cache"
 	"go.uber.org/zap"
-	"service-api/src/app/helpers"
-	"service-api/src/core/system"
+	"service-api/src/core/config"
 )
-
-func Set(key string, val interface{}, exp int) bool {
-	return Instance.GetDefaultCacheDrive().Set(key, val, exp)
-}
-
-func Get(key string) interface{} {
-	return Instance.GetDefaultCacheDrive().Get(key)
-}
 
 const (
 	REDIS   = "redis"
@@ -23,21 +13,28 @@ const (
 )
 
 type CacheDrive interface {
-	Connect(config interface{}) error
-	Set(key string, val interface{}, exp int) bool
-	Get(key string) interface{}
+	Connect(cfg interface{}, cCfg interface{}) error
+	SetNx(key string, val interface{}, exp int) (bool, error)
+	SetEx(key string, val interface{}, exp int) (string, error)
+	Get(key string) (string, error)
 	Exists(key string) bool
+	Refresh(key string, exp int) bool
+	Del(key string) bool
 }
 
-var Instance *CacheManage
-
 type CacheManage struct {
-	drive  string
-	config system.Cache
-	drives map[string]CacheDrive
+	drive          string
+	cacheConfig    config.Cache
+	databaseConfig config.Database
+	drives         map[string]CacheDrive
 }
 
 func (c *CacheManage) init() *CacheManage {
+
+	if c.drives == nil {
+		c.drives = map[string]CacheDrive{}
+	}
+
 	_, err := c.setDefaultDrive(c.drive)
 	if err != nil {
 		zap.S().Fatalf("register default cache drive fail: %v", err)
@@ -81,7 +78,7 @@ func (c *CacheManage) Register(key string) (CacheDrive, error) {
 		return c.drives[key], nil
 	}
 	if key == REDIS {
-		c.drives[key], err = c.Connect(key, c.config.Redis)
+		c.drives[key], err = c.Connect(key, c.databaseConfig.Redis, c.cacheConfig.Redis)
 	} else {
 		err = errors.New("register cache drive not exist")
 	}
@@ -93,7 +90,7 @@ func (c *CacheManage) Register(key string) (CacheDrive, error) {
 	return c.drives[key], nil
 }
 
-func (c *CacheManage) Connect(key string, config interface{}) (CacheDrive, error) {
+func (c *CacheManage) Connect(key string, cfg interface{}, cCfg interface{}) (CacheDrive, error) {
 	var storage CacheDrive
 	var err error
 
@@ -104,9 +101,7 @@ func (c *CacheManage) Connect(key string, config interface{}) (CacheDrive, error
 	switch key {
 	case REDIS:
 		storage = &CacheRedisDrive{}
-		err = storage.Connect(config)
-
-		storage = cache.New[string](storage)
+		err = storage.Connect(cfg, cCfg)
 		break
 	default:
 		storage = nil
@@ -122,17 +117,4 @@ func (c *CacheManage) GetCacheDriver(key string) (CacheDrive, error) {
 	}
 
 	return nil, errors.New("cache driver not exists")
-}
-
-func NewCacheManageInstance(drive string) CacheManage {
-	if helpers.IsEmpty(Instance) {
-		Instance = &CacheManage{
-			drive:  drive,
-			config: system.ConfigInstance.GetCache(),
-		}
-
-		Instance.init()
-	}
-
-	return *Instance
 }
