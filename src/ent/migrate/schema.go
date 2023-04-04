@@ -24,7 +24,7 @@ var (
 	// MembersTable holds the schema information for the "members" table.
 	MembersTable = &schema.Table{
 		Name:       "members",
-		Comment:    "会员",
+		Comment:    "member",
 		Columns:    MembersColumns,
 		PrimaryKey: []*schema.Column{MembersColumns[0]},
 		Indexes: []*schema.Index{
@@ -35,9 +35,184 @@ var (
 			},
 		},
 	}
+	// MemberAuthorizeLogsColumns holds the columns for the "member_authorize_logs" table.
+	MemberAuthorizeLogsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "member_id", Type: field.TypeUUID},
+		{Name: "channel", Type: field.TypeString},
+		{Name: "device", Type: field.TypeString, Size: 64},
+		{Name: "device_detail", Type: field.TypeString, Size: 64},
+		{Name: "ipv4", Type: field.TypeString, Size: 32},
+		{Name: "ipv6", Type: field.TypeString, Size: 32},
+		{Name: "snapshot", Type: field.TypeString, Size: 254},
+	}
+	// MemberAuthorizeLogsTable holds the schema information for the "member_authorize_logs" table.
+	MemberAuthorizeLogsTable = &schema.Table{
+		Name:       "member_authorize_logs",
+		Columns:    MemberAuthorizeLogsColumns,
+		PrimaryKey: []*schema.Column{MemberAuthorizeLogsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "memberauthorizelog_member_id_channel_device",
+				Unique:  false,
+				Columns: []*schema.Column{MemberAuthorizeLogsColumns[3], MemberAuthorizeLogsColumns[4], MemberAuthorizeLogsColumns[5]},
+			},
+		},
+	}
+	// MemberRelatedRolesColumns holds the columns for the "member_related_roles" table.
+	MemberRelatedRolesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "member_id", Type: field.TypeUUID},
+		{Name: "role_id", Type: field.TypeUUID},
+	}
+	// MemberRelatedRolesTable holds the schema information for the "member_related_roles" table.
+	MemberRelatedRolesTable = &schema.Table{
+		Name:       "member_related_roles",
+		Columns:    MemberRelatedRolesColumns,
+		PrimaryKey: []*schema.Column{MemberRelatedRolesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "memberrelatedrole_member_id_role_id",
+				Unique:  true,
+				Columns: []*schema.Column{MemberRelatedRolesColumns[3], MemberRelatedRolesColumns[4]},
+			},
+		},
+	}
+	// MemberRolesColumns holds the columns for the "member_roles" table.
+	MemberRolesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "role_name", Type: field.TypeString, Size: 64},
+		{Name: "state", Type: field.TypeString, Size: 32, Default: "on"},
+	}
+	// MemberRolesTable holds the schema information for the "member_roles" table.
+	MemberRolesTable = &schema.Table{
+		Name:       "member_roles",
+		Columns:    MemberRolesColumns,
+		PrimaryKey: []*schema.Column{MemberRolesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "memberrole_state_role_name",
+				Unique:  true,
+				Columns: []*schema.Column{MemberRolesColumns[4], MemberRolesColumns[3]},
+			},
+		},
+	}
+	// MemberRoleRelatedPermissionsColumns holds the columns for the "member_role_related_permissions" table.
+	MemberRoleRelatedPermissionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "role_id", Type: field.TypeUUID},
+		{Name: "permission_group_id", Type: field.TypeUUID},
+	}
+	// MemberRoleRelatedPermissionsTable holds the schema information for the "member_role_related_permissions" table.
+	MemberRoleRelatedPermissionsTable = &schema.Table{
+		Name:       "member_role_related_permissions",
+		Columns:    MemberRoleRelatedPermissionsColumns,
+		PrimaryKey: []*schema.Column{MemberRoleRelatedPermissionsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "memberrolerelatedpermission_role_id_permission_group_id",
+				Unique:  true,
+				Columns: []*schema.Column{MemberRoleRelatedPermissionsColumns[3], MemberRoleRelatedPermissionsColumns[4]},
+			},
+		},
+	}
+	// PermissionGroupsColumns holds the columns for the "permission_groups" table.
+	PermissionGroupsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "permission_name", Type: field.TypeString, Size: 32, Default: ""},
+		{Name: "icon", Type: field.TypeString, Size: 254, Default: ""},
+		{Name: "sort", Type: field.TypeInt32, Default: 0},
+		{Name: "left", Type: field.TypeInt32, Default: 0},
+		{Name: "right", Type: field.TypeInt32, Default: 0},
+		{Name: "state", Type: field.TypeString, Default: "on"},
+	}
+	// PermissionGroupsTable holds the schema information for the "permission_groups" table.
+	PermissionGroupsTable = &schema.Table{
+		Name:       "permission_groups",
+		Columns:    PermissionGroupsColumns,
+		PrimaryKey: []*schema.Column{PermissionGroupsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "permissiongroup_left_right",
+				Unique:  false,
+				Columns: []*schema.Column{PermissionGroupsColumns[6], PermissionGroupsColumns[7]},
+			},
+			{
+				Name:    "permissiongroup_state_sort_permission_name",
+				Unique:  false,
+				Columns: []*schema.Column{PermissionGroupsColumns[8], PermissionGroupsColumns[5], PermissionGroupsColumns[3]},
+			},
+		},
+	}
+	// PermissionRelatedRoutersColumns holds the columns for the "permission_related_routers" table.
+	PermissionRelatedRoutersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "router_id", Type: field.TypeUUID},
+		{Name: "permission_group_id", Type: field.TypeUUID},
+	}
+	// PermissionRelatedRoutersTable holds the schema information for the "permission_related_routers" table.
+	PermissionRelatedRoutersTable = &schema.Table{
+		Name:       "permission_related_routers",
+		Columns:    PermissionRelatedRoutersColumns,
+		PrimaryKey: []*schema.Column{PermissionRelatedRoutersColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "permissionrelatedrouter_permission_group_id_router_id",
+				Unique:  false,
+				Columns: []*schema.Column{PermissionRelatedRoutersColumns[4], PermissionRelatedRoutersColumns[3]},
+			},
+		},
+	}
+	// RoutersColumns holds the columns for the "routers" table.
+	RoutersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "route_name", Type: field.TypeString, Size: 32, Default: ""},
+		{Name: "route", Type: field.TypeString, Size: 254, Default: ""},
+		{Name: "description", Type: field.TypeString, Size: 254, Default: ""},
+		{Name: "state", Type: field.TypeString, Size: 32, Default: "on"},
+	}
+	// RoutersTable holds the schema information for the "routers" table.
+	RoutersTable = &schema.Table{
+		Name:       "routers",
+		Columns:    RoutersColumns,
+		PrimaryKey: []*schema.Column{RoutersColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "router_state_route_name",
+				Unique:  false,
+				Columns: []*schema.Column{RoutersColumns[6], RoutersColumns[3]},
+			},
+			{
+				Name:    "router_state_route",
+				Unique:  false,
+				Columns: []*schema.Column{RoutersColumns[6], RoutersColumns[4]},
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		MembersTable,
+		MemberAuthorizeLogsTable,
+		MemberRelatedRolesTable,
+		MemberRolesTable,
+		MemberRoleRelatedPermissionsTable,
+		PermissionGroupsTable,
+		PermissionRelatedRoutersTable,
+		RoutersTable,
 	}
 )
 

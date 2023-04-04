@@ -8,3 +8,24 @@ import (
 
 // Member is the predicate function for member builders.
 type Member func(*sql.Selector)
+
+// MemberAuthorizeLog is the predicate function for memberauthorizelog builders.
+type MemberAuthorizeLog func(*sql.Selector)
+
+// MemberRelatedRole is the predicate function for memberrelatedrole builders.
+type MemberRelatedRole func(*sql.Selector)
+
+// MemberRole is the predicate function for memberrole builders.
+type MemberRole func(*sql.Selector)
+
+// MemberRoleRelatedPermission is the predicate function for memberrolerelatedpermission builders.
+type MemberRoleRelatedPermission func(*sql.Selector)
+
+// PermissionGroup is the predicate function for permissiongroup builders.
+type PermissionGroup func(*sql.Selector)
+
+// PermissionRelatedRouter is the predicate function for permissionrelatedrouter builders.
+type PermissionRelatedRouter func(*sql.Selector)
+
+// Router is the predicate function for router builders.
+type Router func(*sql.Selector)

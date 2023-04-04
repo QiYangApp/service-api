@@ -20,6 +20,90 @@ func (f MemberFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, erro
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MemberMutation", m)
 }
 
+// The MemberAuthorizeLogFunc type is an adapter to allow the use of ordinary
+// function as MemberAuthorizeLog mutator.
+type MemberAuthorizeLogFunc func(context.Context, *ent.MemberAuthorizeLogMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f MemberAuthorizeLogFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.MemberAuthorizeLogMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MemberAuthorizeLogMutation", m)
+}
+
+// The MemberRelatedRoleFunc type is an adapter to allow the use of ordinary
+// function as MemberRelatedRole mutator.
+type MemberRelatedRoleFunc func(context.Context, *ent.MemberRelatedRoleMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f MemberRelatedRoleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.MemberRelatedRoleMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MemberRelatedRoleMutation", m)
+}
+
+// The MemberRoleFunc type is an adapter to allow the use of ordinary
+// function as MemberRole mutator.
+type MemberRoleFunc func(context.Context, *ent.MemberRoleMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f MemberRoleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.MemberRoleMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MemberRoleMutation", m)
+}
+
+// The MemberRoleRelatedPermissionFunc type is an adapter to allow the use of ordinary
+// function as MemberRoleRelatedPermission mutator.
+type MemberRoleRelatedPermissionFunc func(context.Context, *ent.MemberRoleRelatedPermissionMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f MemberRoleRelatedPermissionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.MemberRoleRelatedPermissionMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MemberRoleRelatedPermissionMutation", m)
+}
+
+// The PermissionGroupFunc type is an adapter to allow the use of ordinary
+// function as PermissionGroup mutator.
+type PermissionGroupFunc func(context.Context, *ent.PermissionGroupMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PermissionGroupFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.PermissionGroupMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PermissionGroupMutation", m)
+}
+
+// The PermissionRelatedRouterFunc type is an adapter to allow the use of ordinary
+// function as PermissionRelatedRouter mutator.
+type PermissionRelatedRouterFunc func(context.Context, *ent.PermissionRelatedRouterMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PermissionRelatedRouterFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.PermissionRelatedRouterMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PermissionRelatedRouterMutation", m)
+}
+
+// The RouterFunc type is an adapter to allow the use of ordinary
+// function as Router mutator.
+type RouterFunc func(context.Context, *ent.RouterMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f RouterFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.RouterMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RouterMutation", m)
+}
+
 // Condition is a hook condition function.
 type Condition func(context.Context, ent.Mutation) bool
 

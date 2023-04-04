@@ -8,6 +8,13 @@ import (
 	"fmt"
 	"reflect"
 	"service-api/src/ent/member"
+	"service-api/src/ent/memberauthorizelog"
+	"service-api/src/ent/memberrelatedrole"
+	"service-api/src/ent/memberrole"
+	"service-api/src/ent/memberrolerelatedpermission"
+	"service-api/src/ent/permissiongroup"
+	"service-api/src/ent/permissionrelatedrouter"
+	"service-api/src/ent/router"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -65,7 +72,14 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		member.Table: member.ValidColumn,
+		member.Table:                      member.ValidColumn,
+		memberauthorizelog.Table:          memberauthorizelog.ValidColumn,
+		memberrelatedrole.Table:           memberrelatedrole.ValidColumn,
+		memberrole.Table:                  memberrole.ValidColumn,
+		memberrolerelatedpermission.Table: memberrolerelatedpermission.ValidColumn,
+		permissiongroup.Table:             permissiongroup.ValidColumn,
+		permissionrelatedrouter.Table:     permissionrelatedrouter.ValidColumn,
+		router.Table:                      router.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

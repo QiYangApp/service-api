@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// 会员
+// member
 type Member struct {
 	config `json:"-"`
 	// ID of the ent.

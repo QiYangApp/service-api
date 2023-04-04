@@ -4,6 +4,13 @@ package ent
 
 import (
 	"service-api/src/ent/member"
+	"service-api/src/ent/memberauthorizelog"
+	"service-api/src/ent/memberrelatedrole"
+	"service-api/src/ent/memberrole"
+	"service-api/src/ent/memberrolerelatedpermission"
+	"service-api/src/ent/permissiongroup"
+	"service-api/src/ent/permissionrelatedrouter"
+	"service-api/src/ent/router"
 	"service-api/src/ent/schema"
 	"time"
 
@@ -105,4 +112,407 @@ func init() {
 	memberDescID := memberFields[0].Descriptor()
 	// member.DefaultID holds the default value on creation for the id field.
 	member.DefaultID = memberDescID.Default.(func() uuid.UUID)
+	memberauthorizelogMixin := schema.MemberAuthorizeLog{}.Mixin()
+	memberauthorizelogMixinFields0 := memberauthorizelogMixin[0].Fields()
+	_ = memberauthorizelogMixinFields0
+	memberauthorizelogFields := schema.MemberAuthorizeLog{}.Fields()
+	_ = memberauthorizelogFields
+	// memberauthorizelogDescCreateTime is the schema descriptor for create_time field.
+	memberauthorizelogDescCreateTime := memberauthorizelogMixinFields0[0].Descriptor()
+	// memberauthorizelog.DefaultCreateTime holds the default value on creation for the create_time field.
+	memberauthorizelog.DefaultCreateTime = memberauthorizelogDescCreateTime.Default.(func() time.Time)
+	// memberauthorizelogDescUpdateTime is the schema descriptor for update_time field.
+	memberauthorizelogDescUpdateTime := memberauthorizelogMixinFields0[1].Descriptor()
+	// memberauthorizelog.DefaultUpdateTime holds the default value on creation for the update_time field.
+	memberauthorizelog.DefaultUpdateTime = memberauthorizelogDescUpdateTime.Default.(func() time.Time)
+	// memberauthorizelog.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	memberauthorizelog.UpdateDefaultUpdateTime = memberauthorizelogDescUpdateTime.UpdateDefault.(func() time.Time)
+	// memberauthorizelogDescMemberID is the schema descriptor for member_id field.
+	memberauthorizelogDescMemberID := memberauthorizelogFields[1].Descriptor()
+	// memberauthorizelog.DefaultMemberID holds the default value on creation for the member_id field.
+	memberauthorizelog.DefaultMemberID = memberauthorizelogDescMemberID.Default.(func() uuid.UUID)
+	// memberauthorizelogDescDevice is the schema descriptor for device field.
+	memberauthorizelogDescDevice := memberauthorizelogFields[3].Descriptor()
+	// memberauthorizelog.DeviceValidator is a validator for the "device" field. It is called by the builders before save.
+	memberauthorizelog.DeviceValidator = func() func(string) error {
+		validators := memberauthorizelogDescDevice.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(device string) error {
+			for _, fn := range fns {
+				if err := fn(device); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// memberauthorizelogDescDeviceDetail is the schema descriptor for device_detail field.
+	memberauthorizelogDescDeviceDetail := memberauthorizelogFields[4].Descriptor()
+	// memberauthorizelog.DeviceDetailValidator is a validator for the "device_detail" field. It is called by the builders before save.
+	memberauthorizelog.DeviceDetailValidator = func() func(string) error {
+		validators := memberauthorizelogDescDeviceDetail.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(device_detail string) error {
+			for _, fn := range fns {
+				if err := fn(device_detail); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// memberauthorizelogDescIpv4 is the schema descriptor for ipv4 field.
+	memberauthorizelogDescIpv4 := memberauthorizelogFields[5].Descriptor()
+	// memberauthorizelog.Ipv4Validator is a validator for the "ipv4" field. It is called by the builders before save.
+	memberauthorizelog.Ipv4Validator = func() func(string) error {
+		validators := memberauthorizelogDescIpv4.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(ipv4 string) error {
+			for _, fn := range fns {
+				if err := fn(ipv4); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// memberauthorizelogDescIpv6 is the schema descriptor for ipv6 field.
+	memberauthorizelogDescIpv6 := memberauthorizelogFields[6].Descriptor()
+	// memberauthorizelog.Ipv6Validator is a validator for the "ipv6" field. It is called by the builders before save.
+	memberauthorizelog.Ipv6Validator = func() func(string) error {
+		validators := memberauthorizelogDescIpv6.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(ipv6 string) error {
+			for _, fn := range fns {
+				if err := fn(ipv6); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// memberauthorizelogDescSnapshot is the schema descriptor for snapshot field.
+	memberauthorizelogDescSnapshot := memberauthorizelogFields[7].Descriptor()
+	// memberauthorizelog.SnapshotValidator is a validator for the "snapshot" field. It is called by the builders before save.
+	memberauthorizelog.SnapshotValidator = func() func(string) error {
+		validators := memberauthorizelogDescSnapshot.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(snapshot string) error {
+			for _, fn := range fns {
+				if err := fn(snapshot); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// memberauthorizelogDescID is the schema descriptor for id field.
+	memberauthorizelogDescID := memberauthorizelogFields[0].Descriptor()
+	// memberauthorizelog.DefaultID holds the default value on creation for the id field.
+	memberauthorizelog.DefaultID = memberauthorizelogDescID.Default.(func() uuid.UUID)
+	memberrelatedroleMixin := schema.MemberRelatedRole{}.Mixin()
+	memberrelatedroleMixinFields0 := memberrelatedroleMixin[0].Fields()
+	_ = memberrelatedroleMixinFields0
+	memberrelatedroleFields := schema.MemberRelatedRole{}.Fields()
+	_ = memberrelatedroleFields
+	// memberrelatedroleDescCreateTime is the schema descriptor for create_time field.
+	memberrelatedroleDescCreateTime := memberrelatedroleMixinFields0[0].Descriptor()
+	// memberrelatedrole.DefaultCreateTime holds the default value on creation for the create_time field.
+	memberrelatedrole.DefaultCreateTime = memberrelatedroleDescCreateTime.Default.(func() time.Time)
+	// memberrelatedroleDescUpdateTime is the schema descriptor for update_time field.
+	memberrelatedroleDescUpdateTime := memberrelatedroleMixinFields0[1].Descriptor()
+	// memberrelatedrole.DefaultUpdateTime holds the default value on creation for the update_time field.
+	memberrelatedrole.DefaultUpdateTime = memberrelatedroleDescUpdateTime.Default.(func() time.Time)
+	// memberrelatedrole.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	memberrelatedrole.UpdateDefaultUpdateTime = memberrelatedroleDescUpdateTime.UpdateDefault.(func() time.Time)
+	// memberrelatedroleDescID is the schema descriptor for id field.
+	memberrelatedroleDescID := memberrelatedroleFields[0].Descriptor()
+	// memberrelatedrole.DefaultID holds the default value on creation for the id field.
+	memberrelatedrole.DefaultID = memberrelatedroleDescID.Default.(func() uuid.UUID)
+	memberroleMixin := schema.MemberRole{}.Mixin()
+	memberroleMixinFields0 := memberroleMixin[0].Fields()
+	_ = memberroleMixinFields0
+	memberroleFields := schema.MemberRole{}.Fields()
+	_ = memberroleFields
+	// memberroleDescCreateTime is the schema descriptor for create_time field.
+	memberroleDescCreateTime := memberroleMixinFields0[0].Descriptor()
+	// memberrole.DefaultCreateTime holds the default value on creation for the create_time field.
+	memberrole.DefaultCreateTime = memberroleDescCreateTime.Default.(func() time.Time)
+	// memberroleDescUpdateTime is the schema descriptor for update_time field.
+	memberroleDescUpdateTime := memberroleMixinFields0[1].Descriptor()
+	// memberrole.DefaultUpdateTime holds the default value on creation for the update_time field.
+	memberrole.DefaultUpdateTime = memberroleDescUpdateTime.Default.(func() time.Time)
+	// memberrole.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	memberrole.UpdateDefaultUpdateTime = memberroleDescUpdateTime.UpdateDefault.(func() time.Time)
+	// memberroleDescRoleName is the schema descriptor for role_name field.
+	memberroleDescRoleName := memberroleFields[1].Descriptor()
+	// memberrole.RoleNameValidator is a validator for the "role_name" field. It is called by the builders before save.
+	memberrole.RoleNameValidator = func() func(string) error {
+		validators := memberroleDescRoleName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(role_name string) error {
+			for _, fn := range fns {
+				if err := fn(role_name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// memberroleDescState is the schema descriptor for state field.
+	memberroleDescState := memberroleFields[2].Descriptor()
+	// memberrole.DefaultState holds the default value on creation for the state field.
+	memberrole.DefaultState = memberroleDescState.Default.(string)
+	// memberrole.StateValidator is a validator for the "state" field. It is called by the builders before save.
+	memberrole.StateValidator = func() func(string) error {
+		validators := memberroleDescState.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(state string) error {
+			for _, fn := range fns {
+				if err := fn(state); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// memberroleDescID is the schema descriptor for id field.
+	memberroleDescID := memberroleFields[0].Descriptor()
+	// memberrole.DefaultID holds the default value on creation for the id field.
+	memberrole.DefaultID = memberroleDescID.Default.(func() uuid.UUID)
+	memberrolerelatedpermissionMixin := schema.MemberRoleRelatedPermission{}.Mixin()
+	memberrolerelatedpermissionMixinFields0 := memberrolerelatedpermissionMixin[0].Fields()
+	_ = memberrolerelatedpermissionMixinFields0
+	memberrolerelatedpermissionFields := schema.MemberRoleRelatedPermission{}.Fields()
+	_ = memberrolerelatedpermissionFields
+	// memberrolerelatedpermissionDescCreateTime is the schema descriptor for create_time field.
+	memberrolerelatedpermissionDescCreateTime := memberrolerelatedpermissionMixinFields0[0].Descriptor()
+	// memberrolerelatedpermission.DefaultCreateTime holds the default value on creation for the create_time field.
+	memberrolerelatedpermission.DefaultCreateTime = memberrolerelatedpermissionDescCreateTime.Default.(func() time.Time)
+	// memberrolerelatedpermissionDescUpdateTime is the schema descriptor for update_time field.
+	memberrolerelatedpermissionDescUpdateTime := memberrolerelatedpermissionMixinFields0[1].Descriptor()
+	// memberrolerelatedpermission.DefaultUpdateTime holds the default value on creation for the update_time field.
+	memberrolerelatedpermission.DefaultUpdateTime = memberrolerelatedpermissionDescUpdateTime.Default.(func() time.Time)
+	// memberrolerelatedpermission.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	memberrolerelatedpermission.UpdateDefaultUpdateTime = memberrolerelatedpermissionDescUpdateTime.UpdateDefault.(func() time.Time)
+	// memberrolerelatedpermissionDescID is the schema descriptor for id field.
+	memberrolerelatedpermissionDescID := memberrolerelatedpermissionFields[0].Descriptor()
+	// memberrolerelatedpermission.DefaultID holds the default value on creation for the id field.
+	memberrolerelatedpermission.DefaultID = memberrolerelatedpermissionDescID.Default.(func() uuid.UUID)
+	permissiongroupMixin := schema.PermissionGroup{}.Mixin()
+	permissiongroupMixinFields0 := permissiongroupMixin[0].Fields()
+	_ = permissiongroupMixinFields0
+	permissiongroupFields := schema.PermissionGroup{}.Fields()
+	_ = permissiongroupFields
+	// permissiongroupDescCreateTime is the schema descriptor for create_time field.
+	permissiongroupDescCreateTime := permissiongroupMixinFields0[0].Descriptor()
+	// permissiongroup.DefaultCreateTime holds the default value on creation for the create_time field.
+	permissiongroup.DefaultCreateTime = permissiongroupDescCreateTime.Default.(func() time.Time)
+	// permissiongroupDescUpdateTime is the schema descriptor for update_time field.
+	permissiongroupDescUpdateTime := permissiongroupMixinFields0[1].Descriptor()
+	// permissiongroup.DefaultUpdateTime holds the default value on creation for the update_time field.
+	permissiongroup.DefaultUpdateTime = permissiongroupDescUpdateTime.Default.(func() time.Time)
+	// permissiongroup.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	permissiongroup.UpdateDefaultUpdateTime = permissiongroupDescUpdateTime.UpdateDefault.(func() time.Time)
+	// permissiongroupDescPermissionName is the schema descriptor for permission_name field.
+	permissiongroupDescPermissionName := permissiongroupFields[1].Descriptor()
+	// permissiongroup.DefaultPermissionName holds the default value on creation for the permission_name field.
+	permissiongroup.DefaultPermissionName = permissiongroupDescPermissionName.Default.(string)
+	// permissiongroup.PermissionNameValidator is a validator for the "permission_name" field. It is called by the builders before save.
+	permissiongroup.PermissionNameValidator = func() func(string) error {
+		validators := permissiongroupDescPermissionName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(permission_name string) error {
+			for _, fn := range fns {
+				if err := fn(permission_name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// permissiongroupDescIcon is the schema descriptor for icon field.
+	permissiongroupDescIcon := permissiongroupFields[2].Descriptor()
+	// permissiongroup.DefaultIcon holds the default value on creation for the icon field.
+	permissiongroup.DefaultIcon = permissiongroupDescIcon.Default.(string)
+	// permissiongroup.IconValidator is a validator for the "icon" field. It is called by the builders before save.
+	permissiongroup.IconValidator = func() func(string) error {
+		validators := permissiongroupDescIcon.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(icon string) error {
+			for _, fn := range fns {
+				if err := fn(icon); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// permissiongroupDescSort is the schema descriptor for sort field.
+	permissiongroupDescSort := permissiongroupFields[3].Descriptor()
+	// permissiongroup.DefaultSort holds the default value on creation for the sort field.
+	permissiongroup.DefaultSort = permissiongroupDescSort.Default.(int32)
+	// permissiongroupDescLeft is the schema descriptor for left field.
+	permissiongroupDescLeft := permissiongroupFields[4].Descriptor()
+	// permissiongroup.DefaultLeft holds the default value on creation for the left field.
+	permissiongroup.DefaultLeft = permissiongroupDescLeft.Default.(int32)
+	// permissiongroupDescRight is the schema descriptor for right field.
+	permissiongroupDescRight := permissiongroupFields[5].Descriptor()
+	// permissiongroup.DefaultRight holds the default value on creation for the right field.
+	permissiongroup.DefaultRight = permissiongroupDescRight.Default.(int32)
+	// permissiongroupDescState is the schema descriptor for state field.
+	permissiongroupDescState := permissiongroupFields[6].Descriptor()
+	// permissiongroup.DefaultState holds the default value on creation for the state field.
+	permissiongroup.DefaultState = permissiongroupDescState.Default.(string)
+	// permissiongroup.StateValidator is a validator for the "state" field. It is called by the builders before save.
+	permissiongroup.StateValidator = permissiongroupDescState.Validators[0].(func(string) error)
+	// permissiongroupDescID is the schema descriptor for id field.
+	permissiongroupDescID := permissiongroupFields[0].Descriptor()
+	// permissiongroup.DefaultID holds the default value on creation for the id field.
+	permissiongroup.DefaultID = permissiongroupDescID.Default.(func() uuid.UUID)
+	permissionrelatedrouterMixin := schema.PermissionRelatedRouter{}.Mixin()
+	permissionrelatedrouterMixinFields0 := permissionrelatedrouterMixin[0].Fields()
+	_ = permissionrelatedrouterMixinFields0
+	permissionrelatedrouterFields := schema.PermissionRelatedRouter{}.Fields()
+	_ = permissionrelatedrouterFields
+	// permissionrelatedrouterDescCreateTime is the schema descriptor for create_time field.
+	permissionrelatedrouterDescCreateTime := permissionrelatedrouterMixinFields0[0].Descriptor()
+	// permissionrelatedrouter.DefaultCreateTime holds the default value on creation for the create_time field.
+	permissionrelatedrouter.DefaultCreateTime = permissionrelatedrouterDescCreateTime.Default.(func() time.Time)
+	// permissionrelatedrouterDescUpdateTime is the schema descriptor for update_time field.
+	permissionrelatedrouterDescUpdateTime := permissionrelatedrouterMixinFields0[1].Descriptor()
+	// permissionrelatedrouter.DefaultUpdateTime holds the default value on creation for the update_time field.
+	permissionrelatedrouter.DefaultUpdateTime = permissionrelatedrouterDescUpdateTime.Default.(func() time.Time)
+	// permissionrelatedrouter.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	permissionrelatedrouter.UpdateDefaultUpdateTime = permissionrelatedrouterDescUpdateTime.UpdateDefault.(func() time.Time)
+	// permissionrelatedrouterDescID is the schema descriptor for id field.
+	permissionrelatedrouterDescID := permissionrelatedrouterFields[0].Descriptor()
+	// permissionrelatedrouter.DefaultID holds the default value on creation for the id field.
+	permissionrelatedrouter.DefaultID = permissionrelatedrouterDescID.Default.(func() uuid.UUID)
+	routerMixin := schema.Router{}.Mixin()
+	routerMixinFields0 := routerMixin[0].Fields()
+	_ = routerMixinFields0
+	routerFields := schema.Router{}.Fields()
+	_ = routerFields
+	// routerDescCreateTime is the schema descriptor for create_time field.
+	routerDescCreateTime := routerMixinFields0[0].Descriptor()
+	// router.DefaultCreateTime holds the default value on creation for the create_time field.
+	router.DefaultCreateTime = routerDescCreateTime.Default.(func() time.Time)
+	// routerDescUpdateTime is the schema descriptor for update_time field.
+	routerDescUpdateTime := routerMixinFields0[1].Descriptor()
+	// router.DefaultUpdateTime holds the default value on creation for the update_time field.
+	router.DefaultUpdateTime = routerDescUpdateTime.Default.(func() time.Time)
+	// router.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	router.UpdateDefaultUpdateTime = routerDescUpdateTime.UpdateDefault.(func() time.Time)
+	// routerDescRouteName is the schema descriptor for route_name field.
+	routerDescRouteName := routerFields[1].Descriptor()
+	// router.DefaultRouteName holds the default value on creation for the route_name field.
+	router.DefaultRouteName = routerDescRouteName.Default.(string)
+	// router.RouteNameValidator is a validator for the "route_name" field. It is called by the builders before save.
+	router.RouteNameValidator = func() func(string) error {
+		validators := routerDescRouteName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(route_name string) error {
+			for _, fn := range fns {
+				if err := fn(route_name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// routerDescRoute is the schema descriptor for route field.
+	routerDescRoute := routerFields[2].Descriptor()
+	// router.DefaultRoute holds the default value on creation for the route field.
+	router.DefaultRoute = routerDescRoute.Default.(string)
+	// router.RouteValidator is a validator for the "route" field. It is called by the builders before save.
+	router.RouteValidator = func() func(string) error {
+		validators := routerDescRoute.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(route string) error {
+			for _, fn := range fns {
+				if err := fn(route); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// routerDescDescription is the schema descriptor for description field.
+	routerDescDescription := routerFields[3].Descriptor()
+	// router.DefaultDescription holds the default value on creation for the description field.
+	router.DefaultDescription = routerDescDescription.Default.(string)
+	// router.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	router.DescriptionValidator = func() func(string) error {
+		validators := routerDescDescription.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(description string) error {
+			for _, fn := range fns {
+				if err := fn(description); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// routerDescState is the schema descriptor for state field.
+	routerDescState := routerFields[4].Descriptor()
+	// router.DefaultState holds the default value on creation for the state field.
+	router.DefaultState = routerDescState.Default.(string)
+	// router.StateValidator is a validator for the "state" field. It is called by the builders before save.
+	router.StateValidator = func() func(string) error {
+		validators := routerDescState.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(state string) error {
+			for _, fn := range fns {
+				if err := fn(state); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// routerDescID is the schema descriptor for id field.
+	routerDescID := routerFields[0].Descriptor()
+	// router.DefaultID holds the default value on creation for the id field.
+	router.DefaultID = routerDescID.Default.(func() uuid.UUID)
 }

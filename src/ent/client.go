@@ -11,6 +11,13 @@ import (
 	"service-api/src/ent/migrate"
 
 	"service-api/src/ent/member"
+	"service-api/src/ent/memberauthorizelog"
+	"service-api/src/ent/memberrelatedrole"
+	"service-api/src/ent/memberrole"
+	"service-api/src/ent/memberrolerelatedpermission"
+	"service-api/src/ent/permissiongroup"
+	"service-api/src/ent/permissionrelatedrouter"
+	"service-api/src/ent/router"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -25,6 +32,20 @@ type Client struct {
 	Schema *migrate.Schema
 	// Member is the client for interacting with the Member builders.
 	Member *MemberClient
+	// MemberAuthorizeLog is the client for interacting with the MemberAuthorizeLog builders.
+	MemberAuthorizeLog *MemberAuthorizeLogClient
+	// MemberRelatedRole is the client for interacting with the MemberRelatedRole builders.
+	MemberRelatedRole *MemberRelatedRoleClient
+	// MemberRole is the client for interacting with the MemberRole builders.
+	MemberRole *MemberRoleClient
+	// MemberRoleRelatedPermission is the client for interacting with the MemberRoleRelatedPermission builders.
+	MemberRoleRelatedPermission *MemberRoleRelatedPermissionClient
+	// PermissionGroup is the client for interacting with the PermissionGroup builders.
+	PermissionGroup *PermissionGroupClient
+	// PermissionRelatedRouter is the client for interacting with the PermissionRelatedRouter builders.
+	PermissionRelatedRouter *PermissionRelatedRouterClient
+	// Router is the client for interacting with the Router builders.
+	Router *RouterClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -39,6 +60,13 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Member = NewMemberClient(c.config)
+	c.MemberAuthorizeLog = NewMemberAuthorizeLogClient(c.config)
+	c.MemberRelatedRole = NewMemberRelatedRoleClient(c.config)
+	c.MemberRole = NewMemberRoleClient(c.config)
+	c.MemberRoleRelatedPermission = NewMemberRoleRelatedPermissionClient(c.config)
+	c.PermissionGroup = NewPermissionGroupClient(c.config)
+	c.PermissionRelatedRouter = NewPermissionRelatedRouterClient(c.config)
+	c.Router = NewRouterClient(c.config)
 }
 
 type (
@@ -119,9 +147,16 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Member: NewMemberClient(cfg),
+		ctx:                         ctx,
+		config:                      cfg,
+		Member:                      NewMemberClient(cfg),
+		MemberAuthorizeLog:          NewMemberAuthorizeLogClient(cfg),
+		MemberRelatedRole:           NewMemberRelatedRoleClient(cfg),
+		MemberRole:                  NewMemberRoleClient(cfg),
+		MemberRoleRelatedPermission: NewMemberRoleRelatedPermissionClient(cfg),
+		PermissionGroup:             NewPermissionGroupClient(cfg),
+		PermissionRelatedRouter:     NewPermissionRelatedRouterClient(cfg),
+		Router:                      NewRouterClient(cfg),
 	}, nil
 }
 
@@ -139,9 +174,16 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Member: NewMemberClient(cfg),
+		ctx:                         ctx,
+		config:                      cfg,
+		Member:                      NewMemberClient(cfg),
+		MemberAuthorizeLog:          NewMemberAuthorizeLogClient(cfg),
+		MemberRelatedRole:           NewMemberRelatedRoleClient(cfg),
+		MemberRole:                  NewMemberRoleClient(cfg),
+		MemberRoleRelatedPermission: NewMemberRoleRelatedPermissionClient(cfg),
+		PermissionGroup:             NewPermissionGroupClient(cfg),
+		PermissionRelatedRouter:     NewPermissionRelatedRouterClient(cfg),
+		Router:                      NewRouterClient(cfg),
 	}, nil
 }
 
@@ -170,13 +212,25 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.Member.Use(hooks...)
+	for _, n := range []interface{ Use(...Hook) }{
+		c.Member, c.MemberAuthorizeLog, c.MemberRelatedRole, c.MemberRole,
+		c.MemberRoleRelatedPermission, c.PermissionGroup, c.PermissionRelatedRouter,
+		c.Router,
+	} {
+		n.Use(hooks...)
+	}
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	c.Member.Intercept(interceptors...)
+	for _, n := range []interface{ Intercept(...Interceptor) }{
+		c.Member, c.MemberAuthorizeLog, c.MemberRelatedRole, c.MemberRole,
+		c.MemberRoleRelatedPermission, c.PermissionGroup, c.PermissionRelatedRouter,
+		c.Router,
+	} {
+		n.Intercept(interceptors...)
+	}
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -184,6 +238,20 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *MemberMutation:
 		return c.Member.mutate(ctx, m)
+	case *MemberAuthorizeLogMutation:
+		return c.MemberAuthorizeLog.mutate(ctx, m)
+	case *MemberRelatedRoleMutation:
+		return c.MemberRelatedRole.mutate(ctx, m)
+	case *MemberRoleMutation:
+		return c.MemberRole.mutate(ctx, m)
+	case *MemberRoleRelatedPermissionMutation:
+		return c.MemberRoleRelatedPermission.mutate(ctx, m)
+	case *PermissionGroupMutation:
+		return c.PermissionGroup.mutate(ctx, m)
+	case *PermissionRelatedRouterMutation:
+		return c.PermissionRelatedRouter.mutate(ctx, m)
+	case *RouterMutation:
+		return c.Router.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
@@ -307,12 +375,842 @@ func (c *MemberClient) mutate(ctx context.Context, m *MemberMutation) (Value, er
 	}
 }
 
+// MemberAuthorizeLogClient is a client for the MemberAuthorizeLog schema.
+type MemberAuthorizeLogClient struct {
+	config
+}
+
+// NewMemberAuthorizeLogClient returns a client for the MemberAuthorizeLog from the given config.
+func NewMemberAuthorizeLogClient(c config) *MemberAuthorizeLogClient {
+	return &MemberAuthorizeLogClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `memberauthorizelog.Hooks(f(g(h())))`.
+func (c *MemberAuthorizeLogClient) Use(hooks ...Hook) {
+	c.hooks.MemberAuthorizeLog = append(c.hooks.MemberAuthorizeLog, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `memberauthorizelog.Intercept(f(g(h())))`.
+func (c *MemberAuthorizeLogClient) Intercept(interceptors ...Interceptor) {
+	c.inters.MemberAuthorizeLog = append(c.inters.MemberAuthorizeLog, interceptors...)
+}
+
+// Create returns a builder for creating a MemberAuthorizeLog entity.
+func (c *MemberAuthorizeLogClient) Create() *MemberAuthorizeLogCreate {
+	mutation := newMemberAuthorizeLogMutation(c.config, OpCreate)
+	return &MemberAuthorizeLogCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of MemberAuthorizeLog entities.
+func (c *MemberAuthorizeLogClient) CreateBulk(builders ...*MemberAuthorizeLogCreate) *MemberAuthorizeLogCreateBulk {
+	return &MemberAuthorizeLogCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for MemberAuthorizeLog.
+func (c *MemberAuthorizeLogClient) Update() *MemberAuthorizeLogUpdate {
+	mutation := newMemberAuthorizeLogMutation(c.config, OpUpdate)
+	return &MemberAuthorizeLogUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *MemberAuthorizeLogClient) UpdateOne(mal *MemberAuthorizeLog) *MemberAuthorizeLogUpdateOne {
+	mutation := newMemberAuthorizeLogMutation(c.config, OpUpdateOne, withMemberAuthorizeLog(mal))
+	return &MemberAuthorizeLogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *MemberAuthorizeLogClient) UpdateOneID(id uuid.UUID) *MemberAuthorizeLogUpdateOne {
+	mutation := newMemberAuthorizeLogMutation(c.config, OpUpdateOne, withMemberAuthorizeLogID(id))
+	return &MemberAuthorizeLogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for MemberAuthorizeLog.
+func (c *MemberAuthorizeLogClient) Delete() *MemberAuthorizeLogDelete {
+	mutation := newMemberAuthorizeLogMutation(c.config, OpDelete)
+	return &MemberAuthorizeLogDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *MemberAuthorizeLogClient) DeleteOne(mal *MemberAuthorizeLog) *MemberAuthorizeLogDeleteOne {
+	return c.DeleteOneID(mal.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *MemberAuthorizeLogClient) DeleteOneID(id uuid.UUID) *MemberAuthorizeLogDeleteOne {
+	builder := c.Delete().Where(memberauthorizelog.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &MemberAuthorizeLogDeleteOne{builder}
+}
+
+// Query returns a query builder for MemberAuthorizeLog.
+func (c *MemberAuthorizeLogClient) Query() *MemberAuthorizeLogQuery {
+	return &MemberAuthorizeLogQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeMemberAuthorizeLog},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a MemberAuthorizeLog entity by its id.
+func (c *MemberAuthorizeLogClient) Get(ctx context.Context, id uuid.UUID) (*MemberAuthorizeLog, error) {
+	return c.Query().Where(memberauthorizelog.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *MemberAuthorizeLogClient) GetX(ctx context.Context, id uuid.UUID) *MemberAuthorizeLog {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *MemberAuthorizeLogClient) Hooks() []Hook {
+	return c.hooks.MemberAuthorizeLog
+}
+
+// Interceptors returns the client interceptors.
+func (c *MemberAuthorizeLogClient) Interceptors() []Interceptor {
+	return c.inters.MemberAuthorizeLog
+}
+
+func (c *MemberAuthorizeLogClient) mutate(ctx context.Context, m *MemberAuthorizeLogMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&MemberAuthorizeLogCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&MemberAuthorizeLogUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&MemberAuthorizeLogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&MemberAuthorizeLogDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown MemberAuthorizeLog mutation op: %q", m.Op())
+	}
+}
+
+// MemberRelatedRoleClient is a client for the MemberRelatedRole schema.
+type MemberRelatedRoleClient struct {
+	config
+}
+
+// NewMemberRelatedRoleClient returns a client for the MemberRelatedRole from the given config.
+func NewMemberRelatedRoleClient(c config) *MemberRelatedRoleClient {
+	return &MemberRelatedRoleClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `memberrelatedrole.Hooks(f(g(h())))`.
+func (c *MemberRelatedRoleClient) Use(hooks ...Hook) {
+	c.hooks.MemberRelatedRole = append(c.hooks.MemberRelatedRole, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `memberrelatedrole.Intercept(f(g(h())))`.
+func (c *MemberRelatedRoleClient) Intercept(interceptors ...Interceptor) {
+	c.inters.MemberRelatedRole = append(c.inters.MemberRelatedRole, interceptors...)
+}
+
+// Create returns a builder for creating a MemberRelatedRole entity.
+func (c *MemberRelatedRoleClient) Create() *MemberRelatedRoleCreate {
+	mutation := newMemberRelatedRoleMutation(c.config, OpCreate)
+	return &MemberRelatedRoleCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of MemberRelatedRole entities.
+func (c *MemberRelatedRoleClient) CreateBulk(builders ...*MemberRelatedRoleCreate) *MemberRelatedRoleCreateBulk {
+	return &MemberRelatedRoleCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for MemberRelatedRole.
+func (c *MemberRelatedRoleClient) Update() *MemberRelatedRoleUpdate {
+	mutation := newMemberRelatedRoleMutation(c.config, OpUpdate)
+	return &MemberRelatedRoleUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *MemberRelatedRoleClient) UpdateOne(mrr *MemberRelatedRole) *MemberRelatedRoleUpdateOne {
+	mutation := newMemberRelatedRoleMutation(c.config, OpUpdateOne, withMemberRelatedRole(mrr))
+	return &MemberRelatedRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *MemberRelatedRoleClient) UpdateOneID(id uuid.UUID) *MemberRelatedRoleUpdateOne {
+	mutation := newMemberRelatedRoleMutation(c.config, OpUpdateOne, withMemberRelatedRoleID(id))
+	return &MemberRelatedRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for MemberRelatedRole.
+func (c *MemberRelatedRoleClient) Delete() *MemberRelatedRoleDelete {
+	mutation := newMemberRelatedRoleMutation(c.config, OpDelete)
+	return &MemberRelatedRoleDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *MemberRelatedRoleClient) DeleteOne(mrr *MemberRelatedRole) *MemberRelatedRoleDeleteOne {
+	return c.DeleteOneID(mrr.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *MemberRelatedRoleClient) DeleteOneID(id uuid.UUID) *MemberRelatedRoleDeleteOne {
+	builder := c.Delete().Where(memberrelatedrole.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &MemberRelatedRoleDeleteOne{builder}
+}
+
+// Query returns a query builder for MemberRelatedRole.
+func (c *MemberRelatedRoleClient) Query() *MemberRelatedRoleQuery {
+	return &MemberRelatedRoleQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeMemberRelatedRole},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a MemberRelatedRole entity by its id.
+func (c *MemberRelatedRoleClient) Get(ctx context.Context, id uuid.UUID) (*MemberRelatedRole, error) {
+	return c.Query().Where(memberrelatedrole.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *MemberRelatedRoleClient) GetX(ctx context.Context, id uuid.UUID) *MemberRelatedRole {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *MemberRelatedRoleClient) Hooks() []Hook {
+	return c.hooks.MemberRelatedRole
+}
+
+// Interceptors returns the client interceptors.
+func (c *MemberRelatedRoleClient) Interceptors() []Interceptor {
+	return c.inters.MemberRelatedRole
+}
+
+func (c *MemberRelatedRoleClient) mutate(ctx context.Context, m *MemberRelatedRoleMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&MemberRelatedRoleCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&MemberRelatedRoleUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&MemberRelatedRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&MemberRelatedRoleDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown MemberRelatedRole mutation op: %q", m.Op())
+	}
+}
+
+// MemberRoleClient is a client for the MemberRole schema.
+type MemberRoleClient struct {
+	config
+}
+
+// NewMemberRoleClient returns a client for the MemberRole from the given config.
+func NewMemberRoleClient(c config) *MemberRoleClient {
+	return &MemberRoleClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `memberrole.Hooks(f(g(h())))`.
+func (c *MemberRoleClient) Use(hooks ...Hook) {
+	c.hooks.MemberRole = append(c.hooks.MemberRole, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `memberrole.Intercept(f(g(h())))`.
+func (c *MemberRoleClient) Intercept(interceptors ...Interceptor) {
+	c.inters.MemberRole = append(c.inters.MemberRole, interceptors...)
+}
+
+// Create returns a builder for creating a MemberRole entity.
+func (c *MemberRoleClient) Create() *MemberRoleCreate {
+	mutation := newMemberRoleMutation(c.config, OpCreate)
+	return &MemberRoleCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of MemberRole entities.
+func (c *MemberRoleClient) CreateBulk(builders ...*MemberRoleCreate) *MemberRoleCreateBulk {
+	return &MemberRoleCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for MemberRole.
+func (c *MemberRoleClient) Update() *MemberRoleUpdate {
+	mutation := newMemberRoleMutation(c.config, OpUpdate)
+	return &MemberRoleUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *MemberRoleClient) UpdateOne(mr *MemberRole) *MemberRoleUpdateOne {
+	mutation := newMemberRoleMutation(c.config, OpUpdateOne, withMemberRole(mr))
+	return &MemberRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *MemberRoleClient) UpdateOneID(id uuid.UUID) *MemberRoleUpdateOne {
+	mutation := newMemberRoleMutation(c.config, OpUpdateOne, withMemberRoleID(id))
+	return &MemberRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for MemberRole.
+func (c *MemberRoleClient) Delete() *MemberRoleDelete {
+	mutation := newMemberRoleMutation(c.config, OpDelete)
+	return &MemberRoleDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *MemberRoleClient) DeleteOne(mr *MemberRole) *MemberRoleDeleteOne {
+	return c.DeleteOneID(mr.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *MemberRoleClient) DeleteOneID(id uuid.UUID) *MemberRoleDeleteOne {
+	builder := c.Delete().Where(memberrole.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &MemberRoleDeleteOne{builder}
+}
+
+// Query returns a query builder for MemberRole.
+func (c *MemberRoleClient) Query() *MemberRoleQuery {
+	return &MemberRoleQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeMemberRole},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a MemberRole entity by its id.
+func (c *MemberRoleClient) Get(ctx context.Context, id uuid.UUID) (*MemberRole, error) {
+	return c.Query().Where(memberrole.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *MemberRoleClient) GetX(ctx context.Context, id uuid.UUID) *MemberRole {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *MemberRoleClient) Hooks() []Hook {
+	return c.hooks.MemberRole
+}
+
+// Interceptors returns the client interceptors.
+func (c *MemberRoleClient) Interceptors() []Interceptor {
+	return c.inters.MemberRole
+}
+
+func (c *MemberRoleClient) mutate(ctx context.Context, m *MemberRoleMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&MemberRoleCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&MemberRoleUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&MemberRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&MemberRoleDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown MemberRole mutation op: %q", m.Op())
+	}
+}
+
+// MemberRoleRelatedPermissionClient is a client for the MemberRoleRelatedPermission schema.
+type MemberRoleRelatedPermissionClient struct {
+	config
+}
+
+// NewMemberRoleRelatedPermissionClient returns a client for the MemberRoleRelatedPermission from the given config.
+func NewMemberRoleRelatedPermissionClient(c config) *MemberRoleRelatedPermissionClient {
+	return &MemberRoleRelatedPermissionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `memberrolerelatedpermission.Hooks(f(g(h())))`.
+func (c *MemberRoleRelatedPermissionClient) Use(hooks ...Hook) {
+	c.hooks.MemberRoleRelatedPermission = append(c.hooks.MemberRoleRelatedPermission, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `memberrolerelatedpermission.Intercept(f(g(h())))`.
+func (c *MemberRoleRelatedPermissionClient) Intercept(interceptors ...Interceptor) {
+	c.inters.MemberRoleRelatedPermission = append(c.inters.MemberRoleRelatedPermission, interceptors...)
+}
+
+// Create returns a builder for creating a MemberRoleRelatedPermission entity.
+func (c *MemberRoleRelatedPermissionClient) Create() *MemberRoleRelatedPermissionCreate {
+	mutation := newMemberRoleRelatedPermissionMutation(c.config, OpCreate)
+	return &MemberRoleRelatedPermissionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of MemberRoleRelatedPermission entities.
+func (c *MemberRoleRelatedPermissionClient) CreateBulk(builders ...*MemberRoleRelatedPermissionCreate) *MemberRoleRelatedPermissionCreateBulk {
+	return &MemberRoleRelatedPermissionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for MemberRoleRelatedPermission.
+func (c *MemberRoleRelatedPermissionClient) Update() *MemberRoleRelatedPermissionUpdate {
+	mutation := newMemberRoleRelatedPermissionMutation(c.config, OpUpdate)
+	return &MemberRoleRelatedPermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *MemberRoleRelatedPermissionClient) UpdateOne(mrrp *MemberRoleRelatedPermission) *MemberRoleRelatedPermissionUpdateOne {
+	mutation := newMemberRoleRelatedPermissionMutation(c.config, OpUpdateOne, withMemberRoleRelatedPermission(mrrp))
+	return &MemberRoleRelatedPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *MemberRoleRelatedPermissionClient) UpdateOneID(id uuid.UUID) *MemberRoleRelatedPermissionUpdateOne {
+	mutation := newMemberRoleRelatedPermissionMutation(c.config, OpUpdateOne, withMemberRoleRelatedPermissionID(id))
+	return &MemberRoleRelatedPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for MemberRoleRelatedPermission.
+func (c *MemberRoleRelatedPermissionClient) Delete() *MemberRoleRelatedPermissionDelete {
+	mutation := newMemberRoleRelatedPermissionMutation(c.config, OpDelete)
+	return &MemberRoleRelatedPermissionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *MemberRoleRelatedPermissionClient) DeleteOne(mrrp *MemberRoleRelatedPermission) *MemberRoleRelatedPermissionDeleteOne {
+	return c.DeleteOneID(mrrp.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *MemberRoleRelatedPermissionClient) DeleteOneID(id uuid.UUID) *MemberRoleRelatedPermissionDeleteOne {
+	builder := c.Delete().Where(memberrolerelatedpermission.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &MemberRoleRelatedPermissionDeleteOne{builder}
+}
+
+// Query returns a query builder for MemberRoleRelatedPermission.
+func (c *MemberRoleRelatedPermissionClient) Query() *MemberRoleRelatedPermissionQuery {
+	return &MemberRoleRelatedPermissionQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeMemberRoleRelatedPermission},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a MemberRoleRelatedPermission entity by its id.
+func (c *MemberRoleRelatedPermissionClient) Get(ctx context.Context, id uuid.UUID) (*MemberRoleRelatedPermission, error) {
+	return c.Query().Where(memberrolerelatedpermission.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *MemberRoleRelatedPermissionClient) GetX(ctx context.Context, id uuid.UUID) *MemberRoleRelatedPermission {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *MemberRoleRelatedPermissionClient) Hooks() []Hook {
+	return c.hooks.MemberRoleRelatedPermission
+}
+
+// Interceptors returns the client interceptors.
+func (c *MemberRoleRelatedPermissionClient) Interceptors() []Interceptor {
+	return c.inters.MemberRoleRelatedPermission
+}
+
+func (c *MemberRoleRelatedPermissionClient) mutate(ctx context.Context, m *MemberRoleRelatedPermissionMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&MemberRoleRelatedPermissionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&MemberRoleRelatedPermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&MemberRoleRelatedPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&MemberRoleRelatedPermissionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown MemberRoleRelatedPermission mutation op: %q", m.Op())
+	}
+}
+
+// PermissionGroupClient is a client for the PermissionGroup schema.
+type PermissionGroupClient struct {
+	config
+}
+
+// NewPermissionGroupClient returns a client for the PermissionGroup from the given config.
+func NewPermissionGroupClient(c config) *PermissionGroupClient {
+	return &PermissionGroupClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `permissiongroup.Hooks(f(g(h())))`.
+func (c *PermissionGroupClient) Use(hooks ...Hook) {
+	c.hooks.PermissionGroup = append(c.hooks.PermissionGroup, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `permissiongroup.Intercept(f(g(h())))`.
+func (c *PermissionGroupClient) Intercept(interceptors ...Interceptor) {
+	c.inters.PermissionGroup = append(c.inters.PermissionGroup, interceptors...)
+}
+
+// Create returns a builder for creating a PermissionGroup entity.
+func (c *PermissionGroupClient) Create() *PermissionGroupCreate {
+	mutation := newPermissionGroupMutation(c.config, OpCreate)
+	return &PermissionGroupCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PermissionGroup entities.
+func (c *PermissionGroupClient) CreateBulk(builders ...*PermissionGroupCreate) *PermissionGroupCreateBulk {
+	return &PermissionGroupCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PermissionGroup.
+func (c *PermissionGroupClient) Update() *PermissionGroupUpdate {
+	mutation := newPermissionGroupMutation(c.config, OpUpdate)
+	return &PermissionGroupUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PermissionGroupClient) UpdateOne(pg *PermissionGroup) *PermissionGroupUpdateOne {
+	mutation := newPermissionGroupMutation(c.config, OpUpdateOne, withPermissionGroup(pg))
+	return &PermissionGroupUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PermissionGroupClient) UpdateOneID(id uuid.UUID) *PermissionGroupUpdateOne {
+	mutation := newPermissionGroupMutation(c.config, OpUpdateOne, withPermissionGroupID(id))
+	return &PermissionGroupUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PermissionGroup.
+func (c *PermissionGroupClient) Delete() *PermissionGroupDelete {
+	mutation := newPermissionGroupMutation(c.config, OpDelete)
+	return &PermissionGroupDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PermissionGroupClient) DeleteOne(pg *PermissionGroup) *PermissionGroupDeleteOne {
+	return c.DeleteOneID(pg.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *PermissionGroupClient) DeleteOneID(id uuid.UUID) *PermissionGroupDeleteOne {
+	builder := c.Delete().Where(permissiongroup.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PermissionGroupDeleteOne{builder}
+}
+
+// Query returns a query builder for PermissionGroup.
+func (c *PermissionGroupClient) Query() *PermissionGroupQuery {
+	return &PermissionGroupQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypePermissionGroup},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a PermissionGroup entity by its id.
+func (c *PermissionGroupClient) Get(ctx context.Context, id uuid.UUID) (*PermissionGroup, error) {
+	return c.Query().Where(permissiongroup.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PermissionGroupClient) GetX(ctx context.Context, id uuid.UUID) *PermissionGroup {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PermissionGroupClient) Hooks() []Hook {
+	return c.hooks.PermissionGroup
+}
+
+// Interceptors returns the client interceptors.
+func (c *PermissionGroupClient) Interceptors() []Interceptor {
+	return c.inters.PermissionGroup
+}
+
+func (c *PermissionGroupClient) mutate(ctx context.Context, m *PermissionGroupMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&PermissionGroupCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&PermissionGroupUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&PermissionGroupUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&PermissionGroupDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown PermissionGroup mutation op: %q", m.Op())
+	}
+}
+
+// PermissionRelatedRouterClient is a client for the PermissionRelatedRouter schema.
+type PermissionRelatedRouterClient struct {
+	config
+}
+
+// NewPermissionRelatedRouterClient returns a client for the PermissionRelatedRouter from the given config.
+func NewPermissionRelatedRouterClient(c config) *PermissionRelatedRouterClient {
+	return &PermissionRelatedRouterClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `permissionrelatedrouter.Hooks(f(g(h())))`.
+func (c *PermissionRelatedRouterClient) Use(hooks ...Hook) {
+	c.hooks.PermissionRelatedRouter = append(c.hooks.PermissionRelatedRouter, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `permissionrelatedrouter.Intercept(f(g(h())))`.
+func (c *PermissionRelatedRouterClient) Intercept(interceptors ...Interceptor) {
+	c.inters.PermissionRelatedRouter = append(c.inters.PermissionRelatedRouter, interceptors...)
+}
+
+// Create returns a builder for creating a PermissionRelatedRouter entity.
+func (c *PermissionRelatedRouterClient) Create() *PermissionRelatedRouterCreate {
+	mutation := newPermissionRelatedRouterMutation(c.config, OpCreate)
+	return &PermissionRelatedRouterCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PermissionRelatedRouter entities.
+func (c *PermissionRelatedRouterClient) CreateBulk(builders ...*PermissionRelatedRouterCreate) *PermissionRelatedRouterCreateBulk {
+	return &PermissionRelatedRouterCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PermissionRelatedRouter.
+func (c *PermissionRelatedRouterClient) Update() *PermissionRelatedRouterUpdate {
+	mutation := newPermissionRelatedRouterMutation(c.config, OpUpdate)
+	return &PermissionRelatedRouterUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PermissionRelatedRouterClient) UpdateOne(prr *PermissionRelatedRouter) *PermissionRelatedRouterUpdateOne {
+	mutation := newPermissionRelatedRouterMutation(c.config, OpUpdateOne, withPermissionRelatedRouter(prr))
+	return &PermissionRelatedRouterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PermissionRelatedRouterClient) UpdateOneID(id uuid.UUID) *PermissionRelatedRouterUpdateOne {
+	mutation := newPermissionRelatedRouterMutation(c.config, OpUpdateOne, withPermissionRelatedRouterID(id))
+	return &PermissionRelatedRouterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PermissionRelatedRouter.
+func (c *PermissionRelatedRouterClient) Delete() *PermissionRelatedRouterDelete {
+	mutation := newPermissionRelatedRouterMutation(c.config, OpDelete)
+	return &PermissionRelatedRouterDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PermissionRelatedRouterClient) DeleteOne(prr *PermissionRelatedRouter) *PermissionRelatedRouterDeleteOne {
+	return c.DeleteOneID(prr.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *PermissionRelatedRouterClient) DeleteOneID(id uuid.UUID) *PermissionRelatedRouterDeleteOne {
+	builder := c.Delete().Where(permissionrelatedrouter.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PermissionRelatedRouterDeleteOne{builder}
+}
+
+// Query returns a query builder for PermissionRelatedRouter.
+func (c *PermissionRelatedRouterClient) Query() *PermissionRelatedRouterQuery {
+	return &PermissionRelatedRouterQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypePermissionRelatedRouter},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a PermissionRelatedRouter entity by its id.
+func (c *PermissionRelatedRouterClient) Get(ctx context.Context, id uuid.UUID) (*PermissionRelatedRouter, error) {
+	return c.Query().Where(permissionrelatedrouter.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PermissionRelatedRouterClient) GetX(ctx context.Context, id uuid.UUID) *PermissionRelatedRouter {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PermissionRelatedRouterClient) Hooks() []Hook {
+	return c.hooks.PermissionRelatedRouter
+}
+
+// Interceptors returns the client interceptors.
+func (c *PermissionRelatedRouterClient) Interceptors() []Interceptor {
+	return c.inters.PermissionRelatedRouter
+}
+
+func (c *PermissionRelatedRouterClient) mutate(ctx context.Context, m *PermissionRelatedRouterMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&PermissionRelatedRouterCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&PermissionRelatedRouterUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&PermissionRelatedRouterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&PermissionRelatedRouterDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown PermissionRelatedRouter mutation op: %q", m.Op())
+	}
+}
+
+// RouterClient is a client for the Router schema.
+type RouterClient struct {
+	config
+}
+
+// NewRouterClient returns a client for the Router from the given config.
+func NewRouterClient(c config) *RouterClient {
+	return &RouterClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `router.Hooks(f(g(h())))`.
+func (c *RouterClient) Use(hooks ...Hook) {
+	c.hooks.Router = append(c.hooks.Router, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `router.Intercept(f(g(h())))`.
+func (c *RouterClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Router = append(c.inters.Router, interceptors...)
+}
+
+// Create returns a builder for creating a Router entity.
+func (c *RouterClient) Create() *RouterCreate {
+	mutation := newRouterMutation(c.config, OpCreate)
+	return &RouterCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Router entities.
+func (c *RouterClient) CreateBulk(builders ...*RouterCreate) *RouterCreateBulk {
+	return &RouterCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Router.
+func (c *RouterClient) Update() *RouterUpdate {
+	mutation := newRouterMutation(c.config, OpUpdate)
+	return &RouterUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *RouterClient) UpdateOne(r *Router) *RouterUpdateOne {
+	mutation := newRouterMutation(c.config, OpUpdateOne, withRouter(r))
+	return &RouterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *RouterClient) UpdateOneID(id uuid.UUID) *RouterUpdateOne {
+	mutation := newRouterMutation(c.config, OpUpdateOne, withRouterID(id))
+	return &RouterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Router.
+func (c *RouterClient) Delete() *RouterDelete {
+	mutation := newRouterMutation(c.config, OpDelete)
+	return &RouterDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *RouterClient) DeleteOne(r *Router) *RouterDeleteOne {
+	return c.DeleteOneID(r.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *RouterClient) DeleteOneID(id uuid.UUID) *RouterDeleteOne {
+	builder := c.Delete().Where(router.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &RouterDeleteOne{builder}
+}
+
+// Query returns a query builder for Router.
+func (c *RouterClient) Query() *RouterQuery {
+	return &RouterQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeRouter},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Router entity by its id.
+func (c *RouterClient) Get(ctx context.Context, id uuid.UUID) (*Router, error) {
+	return c.Query().Where(router.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *RouterClient) GetX(ctx context.Context, id uuid.UUID) *Router {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *RouterClient) Hooks() []Hook {
+	return c.hooks.Router
+}
+
+// Interceptors returns the client interceptors.
+func (c *RouterClient) Interceptors() []Interceptor {
+	return c.inters.Router
+}
+
+func (c *RouterClient) mutate(ctx context.Context, m *RouterMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&RouterCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&RouterUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&RouterUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&RouterDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Router mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Member []ent.Hook
+		Member, MemberAuthorizeLog, MemberRelatedRole, MemberRole,
+		MemberRoleRelatedPermission, PermissionGroup, PermissionRelatedRouter,
+		Router []ent.Hook
 	}
 	inters struct {
-		Member []ent.Interceptor
+		Member, MemberAuthorizeLog, MemberRelatedRole, MemberRole,
+		MemberRoleRelatedPermission, PermissionGroup, PermissionRelatedRouter,
+		Router []ent.Interceptor
 	}
 )

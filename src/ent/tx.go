@@ -14,6 +14,20 @@ type Tx struct {
 	config
 	// Member is the client for interacting with the Member builders.
 	Member *MemberClient
+	// MemberAuthorizeLog is the client for interacting with the MemberAuthorizeLog builders.
+	MemberAuthorizeLog *MemberAuthorizeLogClient
+	// MemberRelatedRole is the client for interacting with the MemberRelatedRole builders.
+	MemberRelatedRole *MemberRelatedRoleClient
+	// MemberRole is the client for interacting with the MemberRole builders.
+	MemberRole *MemberRoleClient
+	// MemberRoleRelatedPermission is the client for interacting with the MemberRoleRelatedPermission builders.
+	MemberRoleRelatedPermission *MemberRoleRelatedPermissionClient
+	// PermissionGroup is the client for interacting with the PermissionGroup builders.
+	PermissionGroup *PermissionGroupClient
+	// PermissionRelatedRouter is the client for interacting with the PermissionRelatedRouter builders.
+	PermissionRelatedRouter *PermissionRelatedRouterClient
+	// Router is the client for interacting with the Router builders.
+	Router *RouterClient
 
 	// lazily loaded.
 	client     *Client
@@ -146,6 +160,13 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Member = NewMemberClient(tx.config)
+	tx.MemberAuthorizeLog = NewMemberAuthorizeLogClient(tx.config)
+	tx.MemberRelatedRole = NewMemberRelatedRoleClient(tx.config)
+	tx.MemberRole = NewMemberRoleClient(tx.config)
+	tx.MemberRoleRelatedPermission = NewMemberRoleRelatedPermissionClient(tx.config)
+	tx.PermissionGroup = NewPermissionGroupClient(tx.config)
+	tx.PermissionRelatedRouter = NewPermissionRelatedRouterClient(tx.config)
+	tx.Router = NewRouterClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.
