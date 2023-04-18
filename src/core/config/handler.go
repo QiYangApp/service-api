@@ -15,7 +15,7 @@ type ConfigService struct {
 
 func (c *ConfigService) initConfig() *ConfigService {
 	viper.SetConfigName("config")
-	viper.AddConfigPath(helpers.NewPathMange().JoinCurrentRunPath("config"))
+	viper.AddConfigPath(helpers.newpathmange().JoinCurrentRunPath("config"))
 	viper.SetConfigType("toml")
 
 	// 读取配置文件

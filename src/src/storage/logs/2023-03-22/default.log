@@ -1,5 +1,0 @@
-{"level":"info","time":"2023-03-22 16:16:38","file":"system/logger.go:71","msg":"log 初始化成功","appName":"default"}
-{"level":"fatal","time":"2023-03-22 16:16:38","file":"system/database.go:54","msg":"failed creating schema resources: querying server version failed to connect to `host=postgres user=qi_yang database=`: failed SASL auth (FATAL: password authentication failed for user \"qi_yang\" (SQLSTATE 28P01))","appName":"default"}
-{"level":"info","time":"2023-03-22 16:17:24","file":"system/logger.go:71","msg":"log 初始化成功","appName":"default"}
-{"level":"info","time":"2023-03-22 16:19:17","file":"system/logger.go:71","msg":"log 初始化成功","appName":"default"}
-{"level":"fatal","time":"2023-03-22 16:19:22","file":"system/database.go:63","msg":"create migrate file: open ./src/database/migrate.sql: no such file or directory","appName":"default"}

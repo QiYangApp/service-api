@@ -10,7 +10,7 @@ import (
 )
 
 var once sync.Once
-var pathInstance *Path
+var PathInstance *Path
 
 type Path struct {
 	rootPath string
@@ -54,12 +54,4 @@ func (p Path) getCurrentRunPath() string {
 
 func (p Path) JoinCurrentRunPath(path string) string {
 	return fmt.Sprintf("%s/%s", p.getCurrentRunPath(), path)
-}
-
-func NewPathMange() Path {
-	once.Do(func() {
-		pathInstance = new(Path).init()
-	})
-
-	return *pathInstance
 }

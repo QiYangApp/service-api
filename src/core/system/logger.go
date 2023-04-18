@@ -19,11 +19,11 @@ type LoggerService struct {
 func (l *LoggerService) Handle(r *gin.Engine, cfg *config.ConfigService) {
 
 	hook := lumberjack.Logger{
-		Filename:   fmt.Sprintf("./src/storage/logs/%s/%s.log", time.Now().Format("2006-01-02"), "default"), // 日志文件路径
-		MaxSize:    128,                                                                                     // 每个日志文件保存的大小 单位:M
-		MaxAge:     7,                                                                                       // 文件最多保存多少天
-		MaxBackups: 30,                                                                                      // 日志文件最多保存多少个备份
-		Compress:   true,                                                                                    // 是否压缩
+		Filename:   fmt.Sprintf("./storage/logs/%s/%s.log", time.Now().Format("2006-01-02"), "system"), // 日志文件路径
+		MaxSize:    128,                                                                                // 每个日志文件保存的大小 单位:M
+		MaxAge:     7,                                                                                  // 文件最多保存多少天
+		MaxBackups: 30,                                                                                 // 日志文件最多保存多少个备份
+		Compress:   true,                                                                               // 是否压缩
 	}
 
 	encoderConfig := zapcore.EncoderConfig{
@@ -71,6 +71,5 @@ func (l *LoggerService) Handle(r *gin.Engine, cfg *config.ConfigService) {
 	ZapLogger := zap.New(core, caller, development, field)
 	ZapLogger.Info("log 初始化成功")
 
-	// logger, _ := zapConfig.Build()
 	zap.ReplaceGlobals(ZapLogger)
 }
