@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"net/http"
+	"service-api/src/core/helpers/response"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"golang.org/x/time/rate"
-	"net/http"
-	"service-api/src/app/helpers/response"
-	"time"
 )
 
 func Limiter(maxRequests int64, duration time.Duration) gin.HandlerFunc {

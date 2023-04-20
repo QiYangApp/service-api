@@ -2,8 +2,8 @@ package cache
 
 import (
 	"errors"
-	"go.uber.org/zap"
 	"service-api/src/core/config"
+	"service-api/src/core/logger"
 )
 
 const (
@@ -37,7 +37,7 @@ func (c *CacheManage) init() *CacheManage {
 
 	_, err := c.setDefaultDrive(c.drive)
 	if err != nil {
-		zap.S().Fatalf("register default cache drive fail: %v", err)
+		logger.S().Fatalf("register default cache drive fail: %v", err)
 	}
 
 	return c
@@ -57,7 +57,7 @@ func (c *CacheManage) setDefaultDrive(key string) (CacheDrive, error) {
 func (c *CacheManage) GetDefaultCacheDrive() CacheDrive {
 	var err error
 	if c.drive == "" {
-		zap.S().Fatalf("drive not found")
+		logger.S().Fatalf("drive not found")
 	}
 
 	if c.drives[c.drive] == nil {
@@ -66,7 +66,7 @@ func (c *CacheManage) GetDefaultCacheDrive() CacheDrive {
 
 	c.drives[c.drive], err = c.Register(c.drive)
 	if err != nil {
-		zap.S().Fatalf("register cache drive fail: %v", err)
+		logger.S().Fatalf("register cache drive fail: %v", err)
 	}
 
 	return c.drives[c.drive]

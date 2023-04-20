@@ -15,7 +15,7 @@ func logger() gin.HandlerFunc {
 		c.Next()
 
 		// 在请求处理之后记录响应信息
-		loggerInstance.NewSingletonLogger(loggerInstance.LoggerCoreParam{}).Info(
+		loggerInstance.C(loggerInstance.RequestMode).Info(
 			"request",
 			zap.String("url", c.Request.URL.String()),
 			zap.Any("headers", c.Request.Header),

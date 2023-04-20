@@ -20,12 +20,17 @@ func (l *LoggerService) Handle(r *gin.Engine, cfg *config.ConfigService) {
 	}
 
 	instance := logger.NewSingletonLogger(logger.LoggerCoreParam{
-		OutputLevel: &level,
+		OutputLevel: level,
 		Mode:        logger.SystemMode,
 	})
 
 	logger.NewSingletonLogger(logger.LoggerCoreParam{
-		OutputLevel: &level,
+		OutputLevel: level,
+		Mode:        logger.DefaultMode,
+	})
+
+	logger.NewSingletonLogger(logger.LoggerCoreParam{
+		OutputLevel: level,
 		Mode:        logger.RequestMode,
 	})
 

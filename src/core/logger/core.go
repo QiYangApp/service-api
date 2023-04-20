@@ -13,7 +13,7 @@ import (
 
 type LoggerCoreParam struct {
 	Mode        LoggerMode
-	OutputLevel *zapcore.Level
+	OutputLevel zapcore.Level
 }
 
 type LoggerCoreBuilder struct {
@@ -26,7 +26,7 @@ func (b *LoggerCoreBuilder) Logger() *zap.Logger {
 }
 
 func (b *LoggerCoreBuilder) setOutPutLevel(level zapcore.Level) *LoggerCoreBuilder {
-	b.OutputLevel = &level
+	b.OutputLevel = level
 
 	return b
 }
@@ -37,7 +37,7 @@ func (b *LoggerCoreBuilder) Builder() *LoggerCoreBuilder {
 	field := zap.Fields(zap.String("name", string(b.Mode)), zap.Any("level", b.OutputLevel))
 
 	// 开启开发模式，堆栈跟踪, 文件和行号
-	if *b.OutputLevel == zap.DebugLevel {
+	if b.OutputLevel == zap.DebugLevel {
 		b.logger = zap.New(b.core(), zap.AddCaller(), zap.Development(), field)
 	} else {
 		b.logger = zap.New(b.core(), field)
@@ -68,7 +68,7 @@ func (b *LoggerCoreBuilder) core() zapcore.Core {
 
 	// 设置日志级别
 	atomicLevel := zap.NewAtomicLevel()
-	atomicLevel.SetLevel(*b.OutputLevel)
+	atomicLevel.SetLevel(b.OutputLevel)
 
 	core := zapcore.NewCore(
 		zapcore.NewJSONEncoder(encoderConfig),
@@ -93,7 +93,7 @@ func (b *LoggerCoreBuilder) hook() []zapcore.WriteSyncer {
 	}
 
 	// 如果是开发环境，同时在控制台上也输出
-	if *b.OutputLevel == zap.DebugLevel {
+	if b.OutputLevel == zap.DebugLevel {
 		hooks = append(hooks, zapcore.AddSync(os.Stdout))
 	}
 

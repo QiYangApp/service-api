@@ -1,7 +1,7 @@
 package token
 
 import (
-	"go.uber.org/zap"
+	"service-api/src/core/logger"
 )
 
 type Token[G GeneratorMethodInterface, C CacheMethodInterface] struct {
@@ -68,12 +68,12 @@ func (t *Token[G, C]) Refresh(token string) bool {
 
 	newTokenString, err := t.generator.refresh(token)
 	if err != nil {
-		zap.S().Warnf("token refresh store failed key %s", token)
+		logger.S().Warnf("token refresh store failed key %s", token)
 		return false
 	}
 
 	if t.cacheStorage.refresh(token, newTokenString) == false {
-		zap.S().Warnf("token refresh cache store failed key %s", token)
+		logger.S().Warnf("token refresh cache store failed key %s", token)
 		return false
 	}
 

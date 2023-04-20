@@ -2,11 +2,13 @@ package config
 
 import (
 	"fmt"
+	"service-api/src/core/helpers"
+	"service-api/src/core/logger"
+
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"service-api/src/core/helpers"
 )
 
 type ConfigService struct {
@@ -15,7 +17,7 @@ type ConfigService struct {
 
 func (c *ConfigService) initConfig() *ConfigService {
 	viper.SetConfigName("config")
-	viper.AddConfigPath(helpers.newpathmange().JoinCurrentRunPath("config"))
+	viper.AddConfigPath(helpers.PathInstance.JoinCurrentRunPath("config"))
 	viper.SetConfigType("toml")
 
 	// 读取配置文件
@@ -31,7 +33,7 @@ func (c *ConfigService) initConfig() *ConfigService {
 	// 监听配置文件
 	viper.WatchConfig()
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		zap.S().Info("config file changed: ", in.Name)
+		logger.S().Info("config file changed: ", zap.String("name", in.Name))
 		// 重载配置
 		if err := viper.Unmarshal(&c.config); err != nil {
 			fmt.Println(err)

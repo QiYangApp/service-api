@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"go.uber.org/zap"
 )
 
 var PathInstance *Path = new(Path).init()
@@ -20,8 +18,6 @@ func (p *Path) init() *Path {
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	zap.S().Info("project root path ", path)
 
 	p.rootPath = path
 

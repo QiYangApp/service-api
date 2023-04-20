@@ -1,10 +1,12 @@
 package admin
 
 import (
+	"service-api/src/app/services/token"
+	"service-api/src/core/helpers/response"
+	"service-api/src/core/logger"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"service-api/src/app/helpers/response"
-	"service-api/src/app/services/token"
 )
 
 type testRouteHandle struct{}
@@ -22,7 +24,7 @@ func (s testRouteHandle) Handle(r *gin.RouterGroup) {
 		})
 
 		if e != nil {
-			zap.S().Info(e)
+			logger.S().Info("amidn", zap.Error(e))
 		}
 
 		r.JSON(200, response.SingleSuccess[string](t))
@@ -32,7 +34,7 @@ func (s testRouteHandle) Handle(r *gin.RouterGroup) {
 		t, e := token.NewTokenService().Parser(r.Query("token"))
 
 		if e != nil {
-			zap.S().Info(e)
+			logger.S().Info("fail", zap.Error(e))
 		}
 
 		r.JSON(200, response.SingleSuccess[*token.Claims](t))

@@ -8,6 +8,7 @@ import (
 	"os"
 	"service-api/src/core/config"
 	"service-api/src/core/helpers"
+	"service-api/src/core/logger"
 	"service-api/src/ent"
 	"service-api/src/ent/migrate"
 	"time"
@@ -17,8 +18,6 @@ import (
 
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
-
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
@@ -50,7 +49,7 @@ func (d DatabaseService) connect() {
 	)
 
 	if err != nil {
-		zap.S().Fatalf("failed creating schema resources: %v", err)
+		logger.S().Fatalf("failed creating schema resources: %v", err)
 	}
 
 	d.write(client)
@@ -59,7 +58,7 @@ func (d DatabaseService) connect() {
 func (d DatabaseService) write(client *ent.Client) {
 	f, err := os.Create(helpers.PathInstance.JoinCurrentRunPath("ent/migrate/migrate.sql"))
 	if err != nil {
-		zap.S().Fatalf("create migrate file: %v", err)
+		logger.S().Fatalf("create migrate file: %v", err)
 	}
 
 	defer f.Close()
@@ -72,7 +71,7 @@ func (d DatabaseService) write(client *ent.Client) {
 func (d DatabaseService) pool() *sql.DB {
 	db, err := sql.Open(d.cfg.Type, d.parseConfig())
 	if err != nil {
-		zap.S().Fatalf("failed connecting to the database: %v", err)
+		logger.S().Fatalf("failed connecting to the database: %v", err)
 	}
 
 	// 设置数据库连接池相关配置

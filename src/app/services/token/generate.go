@@ -6,10 +6,10 @@ import (
 	"github.com/imdario/mergo"
 	"os"
 	"service-api/src/core/helpers"
+	"service-api/src/core/logger"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"go.uber.org/zap"
 )
 
 type GeneratorMethodInterface interface {
@@ -49,28 +49,28 @@ func (t *TokenGenerator) formantKey() {
 	var err error
 
 	// Load RSA private key
-	privKey, err := os.ReadFile(helpers.NewPathMange().JoinCurrentRunPath(t.PrivateKey))
+	privKey, err := os.ReadFile(helpers.PathInstance.JoinCurrentRunPath(t.PrivateKey))
 	if err != nil {
-		zap.S().Fatalf("Failed to load RSA private key: %v", err)
+		logger.S().Fatalf("Failed to load RSA private key: %v", err)
 		return
 	}
 
 	// Load RSA private key
-	pubKey, err := os.ReadFile(helpers.NewPathMange().JoinCurrentRunPath(t.PublicKey))
+	pubKey, err := os.ReadFile(helpers.PathInstance.JoinCurrentRunPath(t.PublicKey))
 	if err != nil {
-		zap.S().Fatalf("Failed to load RSA private key: %v", err)
+		logger.S().Fatalf("Failed to load RSA private key: %v", err)
 		return
 	}
 
 	t.PrivateKeyRsa, err = jwt.ParseRSAPrivateKeyFromPEM(privKey)
 	if err != nil {
-		zap.S().Fatalf("parse rsa private key failed: %v", err)
+		logger.S().Fatalf("parse rsa private key failed: %v", err)
 		return
 	}
 
 	t.PublicKeyRsa, err = jwt.ParseRSAPublicKeyFromPEM(pubKey)
 	if err != nil {
-		zap.S().Fatalf("parse rsa public key failed: %v", err)
+		logger.S().Fatalf("parse rsa public key failed: %v", err)
 		return
 	}
 }

@@ -5,21 +5,39 @@ import "go.uber.org/zap/zapcore"
 type LoggerMode string
 
 var singleton = make(map[LoggerMode]*Instance, 0)
+var defaultOutputLevel = zapcore.WarnLevel
 
 const (
-	RequestMode LoggerMode = "request"
+	DefaultMode LoggerMode = "default"
+	RequestMode            = "request"
 	SystemMode             = "system"
 )
 
-func S(mode *string) Instance {
-	if mode == nil {
-		m := SystemMode
-		mode = &mode
-	}
-
+func R() Instance {
 	return NewSingletonLogger(LoggerCoreParam{
-		Mode:        *mode,
-		OutputLevel: zapcore.WarnLevel,
+		Mode:        RequestMode,
+		OutputLevel: defaultOutputLevel,
+	})
+}
+
+func D() Instance {
+	return NewSingletonLogger(LoggerCoreParam{
+		Mode:        DefaultMode,
+		OutputLevel: defaultOutputLevel,
+	})
+}
+
+func S() Instance {
+	return NewSingletonLogger(LoggerCoreParam{
+		Mode:        SystemMode,
+		OutputLevel: defaultOutputLevel,
+	})
+}
+
+func C(mode LoggerMode) Instance {
+	return NewSingletonLogger(LoggerCoreParam{
+		Mode:        mode,
+		OutputLevel: defaultOutputLevel,
 	})
 }
 

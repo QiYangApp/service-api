@@ -2,10 +2,11 @@ package cache
 
 import (
 	"fmt"
-	"github.com/redis/go-redis/v9"
-	"go.uber.org/zap"
 	"service-api/src/core/config"
+	"service-api/src/core/logger"
 	"time"
+
+	"github.com/redis/go-redis/v9"
 )
 
 type CacheRedisMethod interface {
@@ -57,13 +58,13 @@ func (c *CacheRedisDrive) Refresh(key string, exp int) bool {
 
 	valState, err := c.Get(key)
 	if err != nil {
-		zap.S().Warnf("cache drive refresh fail, get origin data fail, key, %s", err)
+		logger.S().Warnf("cache drive refresh fail, get origin data fail, key, %s", err)
 		return false
 	}
 
 	state, err := c.SetNx(key, valState, exp)
 	if err != nil {
-		zap.S().Warnf("cache drive refresh fail, set new data fail, key, %s", err)
+		logger.S().Warnf("cache drive refresh fail, set new data fail, key, %s", err)
 		return false
 	}
 

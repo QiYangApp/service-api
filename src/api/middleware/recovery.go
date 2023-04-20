@@ -2,9 +2,10 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
-	"service-api/src/app/helpers/response"
+	"service-api/src/core/helpers/response"
+
+	"github.com/gin-gonic/gin"
 )
 
 func recovery() gin.HandlerFunc {

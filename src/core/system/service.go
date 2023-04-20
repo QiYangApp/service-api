@@ -1,18 +1,11 @@
 package system
 
 import (
-	"context"
-	"net/http"
-	"os"
-	"os/signal"
+	"github.com/gin-gonic/gin"
 	"service-api/src/api/middleware"
 	"service-api/src/core/config"
 	"service-api/src/core/helpers"
 	"service-api/src/routes"
-	"time"
-
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 type service interface {
@@ -57,31 +50,26 @@ func afterStart(r *gin.Engine, cfg *config.ConfigService) {
 }
 
 func run(r *gin.Engine, cfg *config.ConfigService) {
+	r.Static("/resources/assets", helpers.PathInstance.JoinCurrentRunPath("resources/assets"))
 
-	r.Static("/resources/assets", helpers.NewPathMange().JoinCurrentRunPath("resources/assets"))
-
-	srv := &http.Server{
-		Addr:    cfg.StartServiceAddress(),
-		Handler: r,
-	}
-
-	go func() {
-		// 服务连接
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			zap.S().Fatalf("listen: %s\n", err)
+	if cfg.RunMode() == gin.DebugMode {
+		s := DevelopmentStartMode{
+			startMode{
+				Gin:  r,
+				Path: cfg.StartServiceAddress(),
+			},
 		}
-	}()
 
-	// 等待中断信号以优雅地关闭服务器（设置 5 秒的超时时间）
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	zap.S().Info("Shutdown Server ...")
+		s.Start()
+	} else {
+		s := ProductionStartMode{
+			startMode{
+				Gin:  r,
+				Path: cfg.StartServiceAddress(),
+			},
+		}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := srv.Shutdown(ctx); err != nil {
-		zap.S().Fatal("Server Shutdown:", err)
+		s.Start()
 	}
-	zap.S().Info("Server exiting")
+
 }

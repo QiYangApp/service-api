@@ -2,8 +2,8 @@ package cache
 
 import (
 	"context"
-	"go.uber.org/zap"
 	"service-api/src/core/config"
+	"service-api/src/core/logger"
 	"sync"
 )
 
@@ -14,7 +14,7 @@ var once = sync.Once{}
 func SetEx(key string, val interface{}, exp int) bool {
 	state, err := Instance.GetDefaultCacheDrive().SetEx(key, val, exp)
 	if err != nil {
-		zap.S().Infof("cache drive set key error, key: %s, val: %v", key, val)
+		logger.S().Infof("cache drive set key error, key: %s, val: %v", key, val)
 		return false
 	}
 
@@ -24,7 +24,7 @@ func SetEx(key string, val interface{}, exp int) bool {
 func SetNx(key string, val interface{}, exp int) bool {
 	state, err := Instance.GetDefaultCacheDrive().SetNx(key, val, exp)
 	if err != nil {
-		zap.S().Infof("cache drive set key error, key: %s, val: %v", key, val)
+		logger.S().Infof("cache drive set key error, key: %s, val: %v", key, val)
 		return false
 	}
 
