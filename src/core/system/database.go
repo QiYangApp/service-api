@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"service-api/src/app/helpers"
 	"service-api/src/core/config"
+	"service-api/src/core/helpers"
 	"service-api/src/ent"
 	"service-api/src/ent/migrate"
 	"time"
@@ -57,7 +57,7 @@ func (d DatabaseService) connect() {
 }
 
 func (d DatabaseService) write(client *ent.Client) {
-	f, err := os.Create(helpers.NewPathMange().JoinCurrentRunPath("/ent/migrate/migrate.sql"))
+	f, err := os.Create(helpers.PathInstance.JoinCurrentRunPath("ent/migrate/migrate.sql"))
 	if err != nil {
 		zap.S().Fatalf("create migrate file: %v", err)
 	}

@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"sync"
 
 	"go.uber.org/zap"
 )
 
-var once sync.Once
-var PathInstance *Path
+var PathInstance *Path = new(Path).init()
 
 type Path struct {
 	rootPath string

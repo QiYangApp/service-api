@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"service-api/src/app/helpers"
+	"service-api/src/core/helpers"
 )
 
 type ConfigService struct {

@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/signal"
 	"service-api/src/api/middleware"
-	"service-api/src/app/helpers"
 	"service-api/src/core/config"
+	"service-api/src/core/helpers"
 	"service-api/src/routes"
 	"time"
 

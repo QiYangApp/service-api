@@ -10,5 +10,5 @@ type MemberRepository struct {
 }
 
 func (a *MemberRepository) findSingleById(id int64) *ent.Member {
-	return new(ent.MemberClient).Query().FirstX(context.Background())
+	return a.Query().Query().FirstX(context.Background())
 }

@@ -3,6 +3,7 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	loggerInstance "service-api/src/core/logger"
 	"time"
 )
 
@@ -14,7 +15,7 @@ func logger() gin.HandlerFunc {
 		c.Next()
 
 		// 在请求处理之后记录响应信息
-		zap.L().Info(
+		loggerInstance.NewSingletonLogger(loggerInstance.LoggerCoreParam{}).Info(
 			"request",
 			zap.String("url", c.Request.URL.String()),
 			zap.Any("headers", c.Request.Header),

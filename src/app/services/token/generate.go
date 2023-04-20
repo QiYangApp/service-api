@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/imdario/mergo"
 	"os"
-	"service-api/src/app/helpers"
+	"service-api/src/core/helpers"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
