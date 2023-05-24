@@ -2,7 +2,7 @@ package login
 
 import (
 	"service-api/src/api/controller"
-	"service-api/src/app/http/authorize/request"
+	"service-api/src/app/entity/http/authorize/request"
 	"service-api/src/core/helpers/response"
 )
 
