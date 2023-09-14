@@ -3,13 +3,15 @@ package middleware
 import (
 	"bytes"
 	"crypto/sha1"
+	"encoding/hex"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"io"
 	"net/http"
 	"net/url"
 	"service-api/src/core/cache"
 	loggerInstance "service-api/src/core/logger"
+	"sort"
+	"strings"
 	"time"
 )
 
@@ -39,7 +41,6 @@ func Cache(duration time.Duration, handle func(*gin.Context) string) gin.Handler
 				zap.Any("body", c.Request.Body),
 				zap.Int("status", c.Writer.Status()),
 				zap.String("cache key", key),
-				zap.Any("cache data", resp),
 			)
 
 			c.Writer = &cacheWriter{
@@ -48,7 +49,6 @@ func Cache(duration time.Duration, handle func(*gin.Context) string) gin.Handler
 				duration,
 				key,
 				c.Writer.Status(),
-				false,
 			}
 
 			handle(c)
@@ -77,11 +77,6 @@ type cacheWriter struct {
 	duration time.Duration
 	key      string
 	status   int
-	written  bool
-}
-
-func (c *cacheWriter) Written() bool {
-	return c.ResponseWriter.Written()
 }
 
 func (c *cacheWriter) Write(data []byte) (int, error) {
@@ -125,7 +120,6 @@ func (c *cacheWriter) WriteString(s string) (int, error) {
 
 func (c *cacheWriter) WriteHeader(code int) {
 	c.status = code
-	c.written = true
 	c.ResponseWriter.WriteHeader(code)
 }
 
@@ -134,16 +128,56 @@ func CreateKey(u string) string {
 	return urlEscape(PageCachePrefix, u)
 }
 
-func urlEscape(prefix string, u string) string {
-	key := url.QueryEscape(u)
-	if len(key) > 200 {
-		h := sha1.New()
-		_, _ = io.WriteString(h, u)
-		key = string(h.Sum(nil))
+func urlEscape(prefix, u string) string {
+	//key := url.QueryEscape(u)
+	//if len(key) > 200 {
+	//	h := sha1.New()
+	//	_, _ = io.WriteString(h, u)
+	//	key = string(h.Sum(nil))
+	//}
+
+	path, err := getRequestUriIgnoreQueryOrder(u)
+	if err != nil {
+		return ""
 	}
+
+	h := sha1.New()
+	h.Write([]byte(path))
+	key := hex.EncodeToString(h.Sum(nil))
+
 	var buffer bytes.Buffer
 	buffer.WriteString(prefix)
 	buffer.WriteString(":")
 	buffer.WriteString(key)
+
 	return buffer.String()
+}
+
+func getRequestUriIgnoreQueryOrder(requestURI string) (string, error) {
+	parsedUrl, err := url.ParseRequestURI(requestURI)
+	if err != nil {
+		return "", err
+	}
+
+	values := parsedUrl.Query()
+
+	if len(values) == 0 {
+		return requestURI, nil
+	}
+
+	queryKeys := make([]string, 0, len(values))
+	for queryKey := range values {
+		queryKeys = append(queryKeys, queryKey)
+	}
+	sort.Strings(queryKeys)
+
+	queryVals := make([]string, 0, len(values))
+	for _, queryKey := range queryKeys {
+		sort.Strings(values[queryKey])
+		for _, val := range values[queryKey] {
+			queryVals = append(queryVals, queryKey+"="+val)
+		}
+	}
+
+	return parsedUrl.Path + "?" + strings.Join(queryVals, "&"), nil
 }

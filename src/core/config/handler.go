@@ -44,6 +44,10 @@ func (c *ConfigService) initConfig() *ConfigService {
 	return c
 }
 
+func (c *ConfigService) GetDomain() string {
+	return c.config.Domain
+}
+
 func (c ConfigService) GetAllConfig() *Config {
 	return c.config
 }
@@ -66,6 +70,10 @@ func (c ConfigService) StartServiceAddress() string {
 
 func (c ConfigService) GetCache() Cache {
 	return c.config.Cache
+}
+
+func (c ConfigService) IsDebug() bool {
+	return c.RunMode() == gin.DebugMode
 }
 
 func (c ConfigService) RunMode() string {

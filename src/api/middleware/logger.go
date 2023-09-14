@@ -10,7 +10,7 @@ import (
 
 func Logger() gin.HandlerFunc {
 
-	if config.Instance.RunMode() != gin.ReleaseMode {
+	if !config.Instance.IsDebug() {
 		return gin.Logger()
 	}
 

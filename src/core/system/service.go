@@ -21,7 +21,7 @@ func Start(r *gin.Engine) {
 func beforeStart(r *gin.Engine, cfg *config.ConfigService) {
 
 	// 日志颜色
-	if cfg.RunMode() == gin.DebugMode {
+	if cfg.IsDebug() {
 		gin.ForceConsoleColor()
 	} else {
 		gin.DisableConsoleColor()
@@ -55,7 +55,7 @@ func run(r *gin.Engine, cfg *config.ConfigService) {
 	r.SetTrustedProxies(nil)
 	r.Static("/resources/assets", helpers.PathInstance.JoinCurrentRunPath("resources/assets"))
 
-	if cfg.RunMode() == gin.DebugMode {
+	if cfg.IsDebug() {
 		s := DevelopmentStartMode{
 			startMode{
 				Gin:  r,

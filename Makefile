@@ -27,7 +27,7 @@ build-windows: setup
 dev: generate
 	go run ./src/main.go
 air: generate
-	air
+	air build -buildvcs=false
 generate:
 	go run -mod=mod entgo.io/ent/cmd/ent generate .\src\models\ent\schema
 

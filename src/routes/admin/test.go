@@ -43,7 +43,7 @@ func (s testRouteHandle) Handle(r *gin.RouterGroup) {
 	})
 
 	cacheGroup := group.Group("cache")
-	cacheGroup.GET("/token/generate", middleware.Cache(time.Duration(10), func(r *gin.Context) string {
+	cacheGroup.GET("/token/generate", middleware.Cache(time.Duration(10)*time.Minute, func(r *gin.Context) string {
 		t, e := token.NewTokenService().Generate(&token.Claims{
 			Context: "test",
 		})

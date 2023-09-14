@@ -1,5 +1,13 @@
 package middleware
 
+import (
+	"crypto/rand"
+	"encoding/base64"
+	"errors"
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
 /**
 // 单路由使用
 router.POST("/", middleware.CSRFMiddleware(), func(c *gin.Context) {
@@ -14,15 +22,6 @@ protected.POST("/", func(c *gin.Context) {
 	// Handle POST request
 })
 */
-
-import (
-	"crypto/rand"
-	"encoding/base64"
-	"errors"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
-)
 
 const (
 	csrfCookieName = "csrf_token"
@@ -49,7 +48,7 @@ func CSRF() gin.HandlerFunc {
 		if c.Request.Method == "POST" || c.Request.Method == "PUT" || c.Request.Method == "DELETE" {
 			referer := c.Request.Header.Get(csrfHeaderName)
 			if referer == "" {
-				c.AbortWithError(http.StatusBadRequest, errors.New("missing referer header"))
+				_ = c.AbortWithError(http.StatusBadRequest, errors.New("missing referer header"))
 				return
 			}
 

@@ -7,12 +7,14 @@ import (
 )
 
 func SetupMiddleware(r *gin.Engine) {
-	r.Use(Limiter(20, time.Minute))
-	r.Use(Logger())
 	r.Use(Recovery())
-	r.Use(Cors())
+
 	r.Use(Resposne())
+	r.Use(Limiter(20, time.Minute))
+	r.Use(Secure())
+	r.Use(Cors())
 	r.Use(CSRF())
+	r.Use(Logger())
 
 	//使用 Gzip
 	r.Use(gzip.Gzip(gzip.DefaultCompression))

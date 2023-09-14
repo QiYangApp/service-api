@@ -8,9 +8,10 @@ type Config struct {
 }
 
 type Server struct {
-	Host string `mapstructure:"host"`
-	Port int    `mapstructure:"port"`
-	Env  string `mapstructure:"env"`
+	Domain string `mapstructure:"domain"`
+	Host   string `mapstructure:"host"`
+	Port   int    `mapstructure:"port"`
+	Env    string `mapstructure:"env"`
 }
 
 type DatabaseOperation struct {

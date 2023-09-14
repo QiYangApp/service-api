@@ -58,7 +58,7 @@ func SetNx(key string, val interface{}, exp time.Duration) bool {
 }
 
 func Get(key string, ptrValue interface{}) error {
-	payload, err := Instance.GetDefaultCacheDrive().Get(context.TODO(), key)
+	payload, err := Instance.GetDefaultCacheDrive().Get(context.Background(), key)
 	if errors.Is(err, redis.Nil) {
 		return errors.New("data is empty")
 	}

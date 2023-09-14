@@ -15,7 +15,7 @@ type LoggerService struct {
 func (l *LoggerService) Handle(r *gin.Engine, cfg *config.ConfigService) {
 
 	level := zap.WarnLevel
-	if cfg.RunMode() == gin.DebugMode {
+	if cfg.IsDebug() {
 		level = zap.DebugLevel
 	}
 

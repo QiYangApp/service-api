@@ -4,6 +4,7 @@
 
 .idea
 tmp
+build
 
 # Binaries for programs and plugins
 *.exe

@@ -1,0 +1,23 @@
+{"level":"warn","time":"2023-09-14 21:35:56","msg":"check config.toml is exists!","name":"system","level":"warn"}
+{"level":"panic","time":"2023-09-14 21:35:56","msg":"config read fail {error 26 0  Config File \"config\" Not Found in \"[E:\\\\work\\\\myCode\\\\project\\\\QiYangXy\\\\code\\\\service-api\\\\src]\"}","name":"system","level":"warn"}
+{"level":"fatal","time":"2023-09-14 21:37:05","file":"db/connect.go:27","msg":"ping to the database failed failed to connect to `host=localhost user=qi_yang database=qi_yang`: dial error (dial tcp 127.0.0.1:5432: connectex: No connection could be made because the target machine actively refused it.)","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 21:37:46","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 21:39:18","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 21:41:41","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 21:43:45","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 21:45:27","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 21:46:22","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 21:48:26","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 21:59:50","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 22:00:35","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 22:03:40","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 22:07:23","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 22:19:14","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 22:21:06","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 22:22:29","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 22:25:42","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"info","time":"2023-09-14 22:25:42","file":"config/handler.go:37","msg":"config file changed: {name 15 0 E:\\work\\myCode\\project\\QiYangXy\\code\\service-api\\src\\config.toml <nil>}","name":"system","level":"debug"}
+{"level":"info","time":"2023-09-14 22:25:42","file":"config/handler.go:37","msg":"config file changed: {name 15 0 E:\\work\\myCode\\project\\QiYangXy\\code\\service-api\\src\\config.toml <nil>}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 22:25:53","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 22:29:50","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-09-14 22:32:15","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
