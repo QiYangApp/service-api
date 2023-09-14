@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	system.Start(gin.Default())
+	system.Start(gin.New())
 }

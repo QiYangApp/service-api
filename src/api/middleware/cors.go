@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func cors() gin.HandlerFunc {
+func Cors() gin.HandlerFunc {
 	return corsService.New(corsService.Config{
 		AllowOrigins:     []string{"http://localhost"},                        // 允许跨域请求的源地址
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}, // 允许跨域请求的 HTTP 方法

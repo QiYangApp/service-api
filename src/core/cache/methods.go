@@ -2,49 +2,84 @@ package cache
 
 import (
 	"context"
+	"errors"
+	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 	"service-api/src/core/config"
+	"service-api/src/core/helpers"
 	"service-api/src/core/logger"
 	"sync"
+	"time"
 )
 
-var ctx = context.Background()
 var Instance *CacheManage
 var once = sync.Once{}
 
-func SetEx(key string, val interface{}, exp int) bool {
-	state, err := Instance.GetDefaultCacheDrive().SetEx(key, val, exp)
+func SetEx(key string, val interface{}, exp time.Duration) bool {
+	payload, SerializeErr := helpers.Serialize(val)
+	if SerializeErr != nil {
+		logger.S().Warnw(
+			"cache",
+			zap.String("mes", "cache drive SerializeErr key error"),
+			zap.String("key", key),
+			zap.Any("val", val),
+		)
+		return false
+	}
+
+	state, err := Instance.GetDefaultCacheDrive().SetEx(context.TODO(), key, payload, exp)
 	if err != nil {
-		logger.S().Infof("cache drive set key error, key: %s, val: %v", key, val)
+		logger.S().Infof("cache drive set key error, key: %s, val: %v", key, payload)
 		return false
 	}
 
 	return state != ""
 }
 
-func SetNx(key string, val interface{}, exp int) bool {
-	state, err := Instance.GetDefaultCacheDrive().SetNx(key, val, exp)
+func SetNx(key string, val interface{}, exp time.Duration) bool {
+	payload, SerializeErr := helpers.Serialize(val)
+	if SerializeErr != nil {
+		logger.S().Warnw(
+			"cache",
+			zap.String("mes", "cache drive SerializeErr key error"),
+			zap.String("key", key),
+			zap.Any("val", val),
+		)
+		return false
+	}
+
+	state, err := Instance.GetDefaultCacheDrive().SetNx(context.TODO(), key, payload, exp)
 	if err != nil {
-		logger.S().Infof("cache drive set key error, key: %s, val: %v", key, val)
+		logger.S().Infof("cache drive set key error, key: %s, val: %v", key, payload)
 		return false
 	}
 
 	return state
 }
 
-func Get(key string) (string, error) {
-	return Instance.GetDefaultCacheDrive().Get(key)
+func Get(key string, ptrValue interface{}) error {
+	payload, err := Instance.GetDefaultCacheDrive().Get(context.TODO(), key)
+	if errors.Is(err, redis.Nil) {
+		return errors.New("data is empty")
+	}
+
+	if err != nil {
+		return err
+	}
+
+	return helpers.Deserialize([]byte(payload), ptrValue)
 }
 
 func Exists(key string) bool {
-	return Instance.GetDefaultCacheDrive().Exists(key)
+	return Instance.GetDefaultCacheDrive().Exists(context.TODO(), key)
 }
 
-func Refresh(key string, exp int) bool {
-	return Instance.GetDefaultCacheDrive().Refresh(key, exp)
+func Refresh(key string, exp time.Duration) bool {
+	return Instance.GetDefaultCacheDrive().Refresh(context.TODO(), key, exp)
 }
 
 func Del(key string) bool {
-	return Instance.GetDefaultCacheDrive().Del(key)
+	return Instance.GetDefaultCacheDrive().Del(context.TODO(), key)
 }
 
 func NewInstance(drive string) CacheManage {

@@ -3,8 +3,6 @@ package models
 import (
 	"context"
 	"entgo.io/ent/dialect/sql/schema"
-	"entgo.io/ent/entc"
-	"entgo.io/ent/entc/gen"
 	"errors"
 	"fmt"
 	"os"
@@ -28,15 +26,15 @@ func NewClient(path string, opts ...ent.Option) (*ent.Client, error) {
 		return nil, errors.New(fmt.Sprintf("failed creating schema resources: %v", err))
 	}
 
-	schemaDir, _ := filepath.Abs(path + "/models/ent/schema")
-	if err := entc.Generate(schemaDir, &gen.Config{}); err != nil {
-		return nil, errors.New(fmt.Sprintf("running ent code generate: %v", err))
-	}
-
-	err = write(path, client)
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("write sql file fail: %v", err))
-	}
+	//schemaDir, _ := filepath.Abs(path + "/models/ent/schema")
+	//if err := entc.Generate(schemaDir, &gen.Config{}); err != nil {
+	//	return nil, errors.New(fmt.Sprintf("running ent code generate: %v", err))
+	//}
+	//
+	//err = write(path, client)
+	//if err != nil {
+	//	return nil, errors.New(fmt.Sprintf("write sql file fail: %v", err))
+	//}
 
 	return client, nil
 }

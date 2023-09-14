@@ -1,18 +1,19 @@
 package middleware
 
 import (
-	"time"
-
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func SetupMiddleware(r *gin.Engine) {
 	r.Use(Limiter(20, time.Minute))
-	r.Use(logger())
-	r.Use(recovery())
-	r.Use(cors())
-	r.Use(resposne())
-	// 使用 Gzip 中间件
+	r.Use(Logger())
+	r.Use(Recovery())
+	r.Use(Cors())
+	r.Use(Resposne())
+	r.Use(CSRF())
+
+	//使用 Gzip
 	r.Use(gzip.Gzip(gzip.DefaultCompression))
 }

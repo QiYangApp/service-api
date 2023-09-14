@@ -29,8 +29,7 @@ const (
 	csrfHeaderName = "X-CSRF-Token"
 )
 
-// CSRFMiddleware returns a middleware to protect against CSRF attacks.
-func CSRFMiddleware() gin.HandlerFunc {
+func CSRF() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Get CSRF token from cookie or generate a new one
 		csrfToken, err := c.Cookie(csrfCookieName)

@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func resposne() gin.HandlerFunc {
+func Resposne() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.Method == http.MethodOptions {
 			c.AbortWithStatus(http.StatusNoContent)

@@ -1,9 +1,11 @@
 package cache
 
 import (
+	"context"
 	"errors"
 	"service-api/src/core/config"
 	"service-api/src/core/logger"
+	"time"
 )
 
 const (
@@ -13,13 +15,13 @@ const (
 )
 
 type CacheDrive interface {
-	Connect(cfg interface{}, cCfg interface{}) error
-	SetNx(key string, val interface{}, exp int) (bool, error)
-	SetEx(key string, val interface{}, exp int) (string, error)
-	Get(key string) (string, error)
-	Exists(key string) bool
-	Refresh(key string, exp int) bool
-	Del(key string) bool
+	Connect(ctx context.Context, cfg interface{}, cCfg interface{}) error
+	SetNx(ctx context.Context, key string, val interface{}, exp time.Duration) (bool, error)
+	SetEx(ctx context.Context, key string, val interface{}, exp time.Duration) (string, error)
+	Get(ctx context.Context, key string) (string, error)
+	Exists(ctx context.Context, key string) bool
+	Refresh(ctx context.Context, key string, exp time.Duration) bool
+	Del(ctx context.Context, key string) bool
 }
 
 type CacheManage struct {
@@ -101,7 +103,7 @@ func (c *CacheManage) Connect(key string, cfg interface{}, cCfg interface{}) (Ca
 	switch key {
 	case REDIS:
 		storage = &CacheRedisDrive{}
-		err = storage.Connect(cfg, cCfg)
+		err = storage.Connect(context.TODO(), cfg, cCfg)
 		break
 	default:
 		storage = nil

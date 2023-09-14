@@ -6,6 +6,7 @@ import (
 	"errors"
 	"service-api/src/core/cache"
 	"service-api/src/core/logger"
+	"time"
 )
 
 type CacheMethodInterface interface {
@@ -33,7 +34,7 @@ func (c *CacheRedis) init() CacheMethodInterface {
 
 func (c *CacheRedis) store(token string) (string, error) {
 	key := c.generate(token)
-	if cache.SetNx(key, token, c.ExpiresTime) == false {
+	if cache.SetNx(key, token, time.Duration(c.ExpiresTime)) == false {
 		logger.D().Errorf("token cache failed, token: %s", token)
 		return "", errors.New("token cache failed")
 	}
@@ -42,14 +43,20 @@ func (c *CacheRedis) store(token string) (string, error) {
 }
 
 func (c *CacheRedis) get(token string) (string, error) {
-	return cache.Get(token)
+	var data string
+
+	if err := cache.Get(token, &data); err != nil {
+		return "", err
+	}
+
+	return data, nil
 }
 
 func (c *CacheRedis) exists(token string) bool {
 	return cache.Exists(token)
 }
 func (c *CacheRedis) refresh(token, newToken string) bool {
-	if cache.SetEx(token, newToken, c.ExpiresTime) == false {
+	if cache.SetEx(token, newToken, time.Duration(c.ExpiresTime)) == false {
 		logger.D().Errorf("token cache refresh failed, token: %s", token)
 		return false
 	}
