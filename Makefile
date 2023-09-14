@@ -5,7 +5,7 @@ LDFLAGS=-ldflags "-w -s -X main.Version=${VERSION} -X main.Build=${BUILD}"
 TARGET_EXEC := clone
 GOFILES=`find . -name "*.go" -type f -not -path "./vendor/*"`
 
-.PHONY: all clean setup build-linux build-osx build-windows lib air dev
+.PHONY: all clean setup build-linux build-osx build-windows lib air dev generate
 
 all: clean setup build-linux build-osx build-windows lib air
 clean:
@@ -21,13 +21,13 @@ build-osx: setup
 	${BUILD_ENV} GOARCH=amd64 GOOS=darwin go build ${LDFLAGS} -o build/osx/${TARGET_EXEC} -buildvcs=false
 build-windows: setup
 	${BUILD_ENV} GOARCH=amd64 GOOS=windows go build ${LDFLAGS} -o build/windows/${TARGET_EXEC}.exe -buildvcs=false
-lib:
-	GOARCH=amd64 go build ${LDFLAGS} -buildmode=c-shared -buildvcs=false -o build/windows/${TARGET_EXEC}.so main.go
+#lib:
+#	GOARCH=amd64 go build ${LDFLAGS} -buildmode=c-shared -buildvcs=false -o build/windows/${TARGET_EXEC}.so main.go
 
-dev:
+dev: generate
 	go run ./src/main.go
-air:
-	ari
+air: generate
+	air
 generate:
 	go run -mod=mod entgo.io/ent/cmd/ent generate .\src\models\ent\schema
 

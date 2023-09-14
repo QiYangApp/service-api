@@ -52,6 +52,7 @@ func afterStart(r *gin.Engine, cfg *config.ConfigService) {
 }
 
 func run(r *gin.Engine, cfg *config.ConfigService) {
+	r.SetTrustedProxies(nil)
 	r.Static("/resources/assets", helpers.PathInstance.JoinCurrentRunPath("resources/assets"))
 
 	if cfg.RunMode() == gin.DebugMode {

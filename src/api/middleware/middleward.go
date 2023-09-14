@@ -15,5 +15,4 @@ func SetupMiddleware(r *gin.Engine) {
 	r.Use(resposne())
 	// 使用 Gzip 中间件
 	r.Use(gzip.Gzip(gzip.DefaultCompression))
-
 }
