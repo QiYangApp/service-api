@@ -1,0 +1,2 @@
+*.sh
+!init_qiyang_db.sh

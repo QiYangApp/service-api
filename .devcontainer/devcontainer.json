@@ -1,0 +1,32 @@
+{
+  "name": "qiyang",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/work/api",
+  "forwardPorts": [
+    3000
+  ],
+  "postAttachCommand": "gin -a 3001 -p 3000 -b gin-bin -t /work/api/src",
+  "runArgs": [
+    "--env-file",
+    ".env"
+  ],
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "extensions": [
+    "tamasfe.even-better-toml",
+    "golang.go",
+    "msyrus.go-doc",
+    "golang.go-nightly",
+    "766b.go-outliner",
+    "premparihar.gotestexplorer",
+    "neonxp.gotools",
+    "haozibi.goplay",
+    "kisstkondoros.vscode-gutter-preview",
+    "christian-kohler.path-intellisense",
+    "pnp.polacode",
+    "esbenp.prettier-vscode",
+    "bungcip.better-toml"
+  ]
+}

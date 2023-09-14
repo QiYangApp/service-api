@@ -1,0 +1,47 @@
+[server]
+host = '0.0.0.0'
+port = 3000
+env = "debug"
+
+[database]
+type = "pgx"
+
+[database.read]
+host = "localhost"
+port = 5432
+username = "qi_yang"
+password = "qi_yang"
+database = "qi_yang"
+
+[database.write]
+host = "localhost"
+port = 5432
+username = "qi_yang"
+password = "qi_yang"
+database = "qi_yang"
+
+[database.config]
+maxOpenConns = 100
+maxIdleConns = 50
+
+[database.cache]
+host = "localhost"
+port = 6379
+type = "redis"
+password = "secret_redis"
+maxIdleConns = 50
+maxActive = 30
+idleTimeout = 200
+
+[cache]
+driver = "redis"
+expires = 60
+
+[cache.redis]
+database = 0
+
+[token]
+privateKey = "/resources/certificate/token/RSAPrivate.key"
+publicKey = "/resources/certificate/token/RSAPublic.key"
+signing = "signing"
+expiresTime = 60

@@ -1,0 +1,7 @@
+[REQUESTS]
+TOO_MANY_REQUESTS = "请求太频繁~~"
+
+[STATE]
+SUCCESS = "成功"
+ERROR = "错误"
+FAIL = "系统异常"
