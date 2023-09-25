@@ -1,12 +1,26 @@
 package response
 
 type ResponseStateEnum string
+type ResponseTypeEnum string
 
 const (
 	Success ResponseStateEnum = "success"
 	Error   ResponseStateEnum = "error"
 	Warn    ResponseStateEnum = "warn"
 	Fail    ResponseStateEnum = "fail"
+)
+
+const (
+	IMAGE     ResponseTypeEnum = "IMAGE"
+	FILE      ResponseTypeEnum = "FILE"
+	JSON      ResponseTypeEnum = "JSON"
+	String    ResponseTypeEnum = "String"
+	AsciiJson ResponseTypeEnum = "AsciiJSON"
+	ProtoBuf  ResponseTypeEnum = "ProtoBuf"
+	PureJson  ResponseTypeEnum = "PureJson"
+	XML       ResponseTypeEnum = "XML"
+	YAML      ResponseTypeEnum = "YAML"
+	DATA      ResponseTypeEnum = "DATA"
 )
 
 type ResponseMethods[T interface{}] interface {

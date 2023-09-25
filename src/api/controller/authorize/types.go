@@ -1,7 +1,13 @@
 package authorize
 
-type AuthorizedType[T interface{}, R *interface{}] interface {
-	Authorizing(params T) R
+import (
+	"github.com/gin-gonic/gin"
+	"service-api/src/app/entity/http"
+	"service-api/src/core/helpers/response"
+)
 
-	Authorized(params)
+type AuthorizedType[T http.VerifyType] interface {
+	Authorizing(p T, c *gin.Context) *response.Response[interface{}]
+
+	Authorized(p T, c *gin.Context) *response.Response[interface{}]
 }

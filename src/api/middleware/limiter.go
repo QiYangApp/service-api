@@ -28,12 +28,15 @@ func Limiter(maxRequests int64, duration time.Duration) gin.HandlerFunc {
 
 		// 限流逻辑
 		if limiter.Allow() == false {
-			c.AbortWithStatusJSON(http.StatusTooManyRequests, response.SingleCustom(
-				c,
-				"TOO MANY REQUESTS",
+			c.AbortWithStatusJSON(
 				http.StatusTooManyRequests,
-				"REQUESTS.TOO_MANY_REQUESTS",
-			),
+				response.RError(
+					c,
+					"TOO MANY REQUESTS",
+					http.StatusTooManyRequests,
+					"REQUESTS.TOO_MANY_REQUESTS",
+					response.Fail,
+				),
 			)
 			return
 		}

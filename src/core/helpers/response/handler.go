@@ -10,16 +10,22 @@ import (
 
 type Response[T interface{}] struct {
 	Context   *gin.Context      `json:"-"`
+	Type      ResponseTypeEnum  `json:"-"`
 	Code      int               `json:"code"`
 	State     ResponseStateEnum `json:"state"`
 	Message   string            `json:"message"`
 	Timestamp time.Time         `json:"timestamp"`
 	Data      T                 `json:"data,omitempty"`
-	List      []T               `json:"list,omitempty"`
-	Page      int32             `json:"page,omitempty"`
-	PageSize  int32             `json:"page_size,omitempty"`
-	Total     int32             `json:"total,omitempty"`
-	LastPage  int32             `json:"last_page,omitempty"`
+}
+
+func (r *Response[T]) SetType(t ResponseTypeEnum) *Response[T] {
+	r.Type = t
+
+	return r
+}
+
+func (r *Response[T]) GetType() ResponseTypeEnum {
+	return r.Type
 }
 
 func (r *Response[T]) SetCode(code int) *Response[T] {
@@ -70,20 +76,8 @@ func (r *Response[T]) GetState() ResponseStateEnum {
 	return Success
 }
 
-func (r *Response[T]) Single(data T) *Response[T] {
+func (r *Response[T]) Resp(data T) *Response[T] {
 	r.Data = data
-
-	return r.toStruct()
-}
-
-func (r *Response[T]) Pagination(list []T) *Response[T] {
-	r.List = list
-
-	return r.toStruct()
-}
-
-func (r *Response[T]) Multiple(list []T) *Response[T] {
-	r.List = list
 
 	return r.toStruct()
 }

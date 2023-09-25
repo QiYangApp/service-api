@@ -17,7 +17,16 @@ func Recovery() gin.HandlerFunc {
 
 		logger.S().Errorln("url: %s, err: %v", c.Request.URL, zap.Error(err.(error)))
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, response.SingleCustom(c, errMsg, http.StatusInternalServerError, "STATE.FAIL"))
+		c.AbortWithStatusJSON(
+			http.StatusInternalServerError,
+			response.RError(
+				c,
+				errMsg,
+				http.StatusInternalServerError,
+				"STATE.FAIL",
+				response.Fail,
+			),
+		)
 	}
 
 	return gin.CustomRecovery(custom)

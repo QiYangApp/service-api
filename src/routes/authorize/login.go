@@ -2,7 +2,9 @@ package authorize
 
 import (
 	"github.com/gin-gonic/gin"
-	"service-api/src/api/controller/authorize/login"
+	"service-api/src/api/controller/authorize"
+	"service-api/src/app/entity/http/authorize/request"
+
 	"service-api/src/core/helpers/routes"
 )
 
@@ -16,7 +18,7 @@ func (a loginRouteHandle) Handle(r *gin.RouterGroup) {
 
 func (a loginRouteHandle) password(r *gin.RouterGroup) {
 	route := r.Group("/password")
-	controller := login.PasswordController{}
+	controller := authorize.PasswordController[request.PasswordLoginVerify]{}
 
-	route.GET("/mobile", routes.Bind(controller.Edit))
+	route.GET("/mobile", routes.Bind(controller.Authorized))
 }

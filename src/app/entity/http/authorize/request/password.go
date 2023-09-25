@@ -1,5 +1,8 @@
 package request
 
+import "service-api/src/app/entity/http"
+
 type PasswordLoginVerify struct {
-	mobile string `form:"mobile"`
+	http.VerifyType
+	account string `form:"account"`
 }
