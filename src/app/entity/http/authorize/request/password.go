@@ -4,5 +4,5 @@ import "service-api/src/app/entity/http"
 
 type PasswordLoginVerify struct {
 	http.VerifyType
-	account string `form:"account"`
+	Account string `form:"account"`
 }

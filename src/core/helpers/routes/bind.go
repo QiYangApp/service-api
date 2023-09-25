@@ -3,44 +3,41 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"service-api/src/core/helpers/response"
+	verifyType "service-api/src/app/entity/http"
 )
 
-type HandlerFunc[T interface{}, R interface{}] func(T, *gin.Context) *response.Response[R]
+type HandlerFunc[P verifyType.VerifyType, R *gin.Context] func(*gin.Context, P) R
 
-func Bind[T interface{}, R interface{}](handlerFunc HandlerFunc[T, R]) gin.HandlerFunc {
+func Bind[P verifyType.VerifyType, R *gin.Context](handlerFunc HandlerFunc[P, R]) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var p T
+		var p P
+		var err error
 		var pt string
 
 		pt = c.GetHeader("Content-Type")
 
 		switch pt {
 		case "application/json":
-			if err := c.ShouldBindJSON(&p); err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			}
+			err = c.ShouldBindJSON(&p)
 			break
 		case "application/xml":
-			if err := c.ShouldBindXML(&p); err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			}
+			err = c.ShouldBindXML(&p)
 			break
 		case "application/form":
-			if err := c.ShouldBindXML(&p); err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			}
+			err = c.ShouldBindXML(&p)
 			break
 		default:
-			if err := c.ShouldBind(&p); err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			}
+			err = c.ShouldBind(&p)
 			break
 		}
 
-		resp := handlerFunc(p, c)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.Abort()
+		}
 
-		c.JSON(resp.Code, resp)
+		handlerFunc(c, p)
+
 		c.Abort()
 	}
 }

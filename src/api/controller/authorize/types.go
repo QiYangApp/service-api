@@ -7,7 +7,7 @@ import (
 )
 
 type AuthorizedType[T http.VerifyType] interface {
-	Authorizing(p T, c *gin.Context) *response.Response[interface{}]
+	Authorizing(p T, c *gin.Context) *response.Response[any]
 
-	Authorized(p T, c *gin.Context) *response.Response[interface{}]
+	Authorized(p T, c *gin.Context) *response.Response[any]
 }
