@@ -6,8 +6,8 @@ import (
 	"service-api/src/core/helpers/response"
 )
 
-type AuthorizedType[T http.VerifyType] interface {
-	Authorizing(p T, c *gin.Context) *response.Response[any]
+type AuthorizedType[P http.VerifyType] interface {
+	Authorizing(p P, c *gin.Context) *response.Response[any]
 
-	Authorized(p T, c *gin.Context) *response.Response[any]
+	Authorized(p P, c *gin.Context) *response.Response[any]
 }

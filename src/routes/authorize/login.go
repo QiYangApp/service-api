@@ -18,7 +18,7 @@ func (a loginRouteHandle) Handle(r *gin.RouterGroup) {
 
 func (a loginRouteHandle) password(r *gin.RouterGroup) {
 	route := r.Group("/password")
-	controller := authorize.PasswordController[request.PasswordLoginVerify]{}
+	controller := authorize.PasswordLoginController[request.PasswordLoginVerify]{}
 
 	route.GET("/mobile", routes.Bind(controller.Authorized))
 }

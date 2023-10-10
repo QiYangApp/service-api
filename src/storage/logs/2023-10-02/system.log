@@ -1,0 +1,11 @@
+{"level":"debug","time":"2023-10-02 00:21:12","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-02 00:21:52","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-02 00:59:28","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-02 00:59:28","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-10-02 00:59:28","file":"system/start.go:31","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-02 00:59:28","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-02 00:59:28","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-10-02 00:59:28","file":"system/start.go:31","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-10-02 00:59:28","file":"system/start.go:31","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-02 00:59:39","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-02 01:00:19","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}

@@ -8,11 +8,12 @@ import (
 	"service-api/src/core/logger"
 )
 
-type PasswordController[P http.VerifyType] struct {
+type PasswordLoginController[P http.VerifyType] struct {
+	AuthorizedType[P]
 	controller.AbstractController
 }
 
-func (PasswordController[P]) Authorizing(c *gin.Context, p P) *gin.Context {
+func (PasswordLoginController[P]) Authorizing(c *gin.Context, p P) *gin.Context {
 	logger.S().Info(p)
 
 	data := response.RSuccess[bool](c, true)
@@ -22,7 +23,7 @@ func (PasswordController[P]) Authorizing(c *gin.Context, p P) *gin.Context {
 	return c
 }
 
-func (PasswordController[P]) Authorized(c *gin.Context, p P) *gin.Context {
+func (PasswordLoginController[P]) Authorized(c *gin.Context, p P) *gin.Context {
 	logger.S().Info(p)
 
 	data := response.RSuccess[P](c, p)

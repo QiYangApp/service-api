@@ -33,6 +33,8 @@ func (Member) Fields() []ent.Field {
 		field.String("account").Comment("login account"),
 		field.String("email").NotEmpty().MaxLen(128),
 		field.String("avatar"),
+		field.String("password_sing").NotEmpty().MaxLen(64),
+		field.String("password").NotEmpty().MaxLen(32),
 		field.String("mobile").NotEmpty().MaxLen(32),
 		field.String("nickname").NotEmpty().MaxLen(32),
 		field.String("state").NotEmpty().MaxLen(32),

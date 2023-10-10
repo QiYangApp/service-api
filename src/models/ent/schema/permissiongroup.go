@@ -19,7 +19,7 @@ func (PermissionGroup) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).Comment(""),
 		field.String("permission_name").MaxLen(32).Default("").NotEmpty().Comment("权限名称"),
-		field.String("icon").Default("").MaxLen(254).NotEmpty().Comment(""),
+		field.String("ioc").Default("").MaxLen(254).NotEmpty().Comment(""),
 		field.Int32("sort").Default(0).Comment("排序"),
 		field.Int32("left").Default(0).Comment(""),
 		field.Int32("right").Default(0).Comment(""),
