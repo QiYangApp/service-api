@@ -5,7 +5,6 @@ import (
 	"service-api/src/api/middleware"
 	"service-api/src/core/config"
 	"service-api/src/core/helpers"
-	"service-api/src/routes"
 )
 
 type service interface {
@@ -39,11 +38,13 @@ func beforeStart(r *gin.Engine, cfg *config.ConfigService) {
 
 	(new(CronService)).Handle(r, cfg)
 
+	(new(InjectService)).Handle(r, cfg)
+
 	// 注册路由
 	middleware.SetupMiddleware(r)
 
 	// 注册路由
-	routes.SetupRoutes(r)
+	//routes.SetupRoutes(r)
 
 }
 

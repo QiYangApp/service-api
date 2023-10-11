@@ -2,8 +2,6 @@ package exception
 
 import (
 	"errors"
-
-	"github.com/gin-contrib/i18n"
 )
 
 type BusinessError struct {
@@ -14,21 +12,7 @@ type BusinessError struct {
 }
 
 func (e BusinessError) Error() string {
-	content := ""
-	if e.Detail != nil {
-		content = i18n.MustGetMessage(e.Msg)
-	} else if e.Map != nil {
-		content = i18n.MustGetMessage(e.Msg)
-	} else {
-		content = i18n.MustGetMessage(e.Msg)
-	}
-	if content == "" {
-		if e.Err != nil {
-			return e.Err.Error()
-		}
-		return errors.New(e.Msg).Error()
-	}
-	return content
+	return errors.New(e.Msg).Error()
 }
 
 func New(Key string) BusinessError {

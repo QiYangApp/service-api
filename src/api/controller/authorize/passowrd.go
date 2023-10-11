@@ -2,30 +2,34 @@ package authorize
 
 import (
 	"github.com/gin-gonic/gin"
-	"service-api/src/api/controller"
 	"service-api/src/app/entity/http"
 	"service-api/src/app/services/authorize"
 	"service-api/src/core/helpers/response"
+	"service-api/src/core/inject"
 )
 
 type PasswordLoginController[P http.VerifyType] struct {
 	AuthorizedType[P]
-	controller.AbstractController
+	inject.Controller
+	PasswordLoginService authorize.PasswordLoginService
 }
 
-func (PasswordLoginController[P]) CheckAccountExists(c *gin.Context, p P) *gin.Context {
+// Check
+// @GET(path="check")
+func (PasswordLoginController[P]) Check(c *gin.Context, p P) *gin.Context {
 	return c
 }
 
-func (PasswordLoginController[P]) Authorizing(c *gin.Context, p P) *gin.Context {
+func (t PasswordLoginController[P]) Authorizing(c *gin.Context, p P) *gin.Context {
 
 	// todo 待处理账号校验
-	var a = authorize.PasswordLoginService{}
-	d := a.Authorizing(true)
+	d := t.PasswordLoginService.Authorizing(true)
 
 	return response.RSuccess[any](c, d).ToJson()
 }
 
-func (PasswordLoginController[P]) Authorized(c *gin.Context, p P) *gin.Context {
-	return response.RSuccess[bool](c, true).ToJson()
+func (t PasswordLoginController[P]) Authorized(c *gin.Context, p P) *gin.Context {
+	d := t.PasswordLoginService.Authorizing("ssss")
+
+	return response.RSuccess(c, d).ToJson()
 }
