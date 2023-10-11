@@ -8,6 +8,7 @@ require (
 	dario.cat/mergo v1.0.0
 	entgo.io/ent v0.12.3
 	github.com/BurntSushi/toml v1.3.2
+	github.com/archine/ioc v1.0.1
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/gzip v0.0.6
@@ -30,7 +31,6 @@ require (
 	ariga.io/atlas v0.10.2-0.20230427182402-87a07dfb83bf // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
-	github.com/archine/ioc v1.0.1 // indirect
 	github.com/bytedance/sonic v1.10.0-rc3 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
