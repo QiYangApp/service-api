@@ -17,7 +17,7 @@ func (s testRouteHandle) Handle(r *gin.RouterGroup) {
 	group := r.Group("/test")
 
 	group.GET("/welcome", func(r *gin.Context) {
-		r.JSON(200, response.RSuccess[string](r, "welcome"))
+		r.JSON(200, response.RSuccess[string](r, "welcome").ToStruct())
 	})
 
 	group.GET("/token/generate", func(r *gin.Context) {
@@ -29,7 +29,7 @@ func (s testRouteHandle) Handle(r *gin.RouterGroup) {
 			logger.R().Info("admin", zap.Error(e))
 		}
 
-		r.JSON(200, response.RSuccess[string](r, t))
+		r.JSON(200, response.RSuccess[string](r, t).ToStruct())
 	})
 
 	group.GET("/token/parser", func(r *gin.Context) {
@@ -39,7 +39,7 @@ func (s testRouteHandle) Handle(r *gin.RouterGroup) {
 			logger.R().Info("fail", zap.Error(e))
 		}
 
-		r.JSON(200, response.RSuccess[*token.Claims](r, t))
+		r.JSON(200, response.RSuccess[*token.Claims](r, t).ToStruct())
 	})
 
 	cacheGroup := group.Group("cache")
@@ -52,7 +52,7 @@ func (s testRouteHandle) Handle(r *gin.RouterGroup) {
 			logger.R().Info("admin", zap.Error(e))
 		}
 
-		r.JSON(200, response.RSuccess[string](r, t))
+		r.JSON(200, response.RSuccess[string](r, t).ToStruct())
 
 		return "test"
 	}))

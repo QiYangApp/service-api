@@ -21,11 +21,11 @@ func R[T interface{}](
 	m string,
 	s ResponseStateEnum,
 ) *Response[T] {
-	return NewResponse[T](c).SetType(t).SetState(s).SetMessage(m).SetCode(code).Resp(data)
+	return NewResponse[T](c).SetType(t).SetState(s).SetMessage(m).SetCode(code).SetData(data)
 }
 
 func RSuccess[T interface{}](c *gin.Context, data T) *Response[T] {
-	return NewResponse[T](c).SetState(Success).SetCode(http.StatusOK).SetType(JSON).SetMessage("success").Resp(data)
+	return NewResponse[T](c).SetState(Success).SetCode(http.StatusOK).SetType(JSON).SetMessage("success").SetData(data)
 }
 
 func RError[T interface{}](
@@ -35,13 +35,13 @@ func RError[T interface{}](
 	m string,
 	s ResponseStateEnum,
 ) *Response[T] {
-	return NewResponse[T](c).SetType(JSON).SetState(s).SetMessage(m).SetCode(code).Resp(data)
+	return NewResponse[T](c).SetType(JSON).SetState(s).SetMessage(m).SetCode(code).SetData(data)
 }
 
-func RImage[T interface{}](c *gin.Context, data T) *Response[T] {
-	return NewResponse[T](c).SetType(IMAGE).Resp(data)
+func RImage[T interface{}](c *gin.Context, data []byte) *gin.Context {
+	return NewResponse[T](c).SetType(IMAGE).ToStream(data)
 }
 
 func RFail[T interface{}](c *gin.Context, data T, t ResponseTypeEnum, code int) *Response[T] {
-	return NewResponse[T](c).SetType(IMAGE).SetCode(code).SetMessage("success").Resp(data)
+	return NewResponse[T](c).SetType(IMAGE).SetCode(code).SetMessage("success").SetData(data)
 }

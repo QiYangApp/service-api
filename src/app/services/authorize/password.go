@@ -1,16 +1,23 @@
 package authorize
 
-import "service-api/src/app/entity/http"
+import "github.com/archine/ioc"
 
-type PasswordLoginService[P http.VerifyType] struct {
-	AuthorizedService[P]
+type PasswordLoginService struct {
+	//AuthorizedService[P]
 }
 
-func (s *PasswordLoginService[P]) Authorizing(p P) any {
-	return nil
+func (s *PasswordLoginService) Check(p any) any {
+	return p
 }
 
-func (s *PasswordLoginService[P]) Authorized(p P) any {
+func (s *PasswordLoginService) Authorizing(p any) any {
+	return p
+}
 
-	return nil
+func (s *PasswordLoginService) Authorized(p any) any {
+	return p
+}
+
+func (s *PasswordLoginService) CreateBean() ioc.Bean {
+	return &PasswordLoginService{}
 }

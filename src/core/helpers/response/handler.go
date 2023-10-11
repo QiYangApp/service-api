@@ -18,6 +18,12 @@ type Response[T interface{}] struct {
 	Data      T                 `json:"data,omitempty"`
 }
 
+func (r *Response[T]) SetData(data T) *Response[T] {
+	r.Data = data
+
+	return r
+}
+
 func (r *Response[T]) SetType(t ResponseTypeEnum) *Response[T] {
 	r.Type = t
 
@@ -76,16 +82,26 @@ func (r *Response[T]) GetState() ResponseStateEnum {
 	return Success
 }
 
-func (r *Response[T]) Resp(data T) *Response[T] {
-	r.Data = data
-
-	return r.toStruct()
+func (r *Response[T]) RContext() *gin.Context {
+	return r.Context
 }
 
-func (r *Response[T]) toStruct() *Response[T] {
+func (r *Response[T]) ToStruct() *Response[T] {
 	r.Message = r.GetMessage()
 	r.Code = r.GetCode()
 	r.State = r.GetState()
 
 	return r
+}
+
+func (r *Response[T]) ToJson() *gin.Context {
+	r.Context.SecureJSON(r.GetCode(), r.ToStruct())
+
+	return r.Context
+}
+
+func (r *Response[T]) ToStream(data []byte) *gin.Context {
+	r.Context.File(string(data))
+
+	return r.Context
 }

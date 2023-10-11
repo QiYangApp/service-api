@@ -25,7 +25,7 @@ func Recovery() gin.HandlerFunc {
 				http.StatusInternalServerError,
 				"STATE.FAIL",
 				response.Fail,
-			),
+			).ToStruct(),
 		)
 	}
 

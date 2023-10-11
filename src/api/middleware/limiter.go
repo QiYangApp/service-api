@@ -35,7 +35,7 @@ func Limiter(maxRequests int64, duration time.Duration) gin.HandlerFunc {
 					http.StatusTooManyRequests,
 					"REQUESTS.TOO_MANY_REQUESTS",
 					response.Fail,
-				),
+				).ToStruct(),
 			)
 			return
 		}
