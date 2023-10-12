@@ -19,10 +19,26 @@ import (
 	"unicode"
 )
 
+type Scan struct {
+	Path string
+	Pkg string
+	BasePaths map[string]string
+	Names []string
+	Apis map[string]*inject.MethodInfo
+}
+
+type Scan struct {
+	Path string
+	Pkg string
+	BasePaths map[string]string
+	Names []string
+	Apis map[string]*inject.MethodInfo
+}
+
 // Parse project controllers and API methods
 // Run with go generate
 func main() {
-	controllerDir := "controller"
+	controllerDir := "./src/api/controller"
 	if len(os.Args) > 1 {
 		controllerDir = os.Args[1]
 	}
@@ -30,96 +46,127 @@ func main() {
 	if err != nil {
 		log.Fatalf("[%s] get controller directory abstract path error, %s", controllerDir, err.Error())
 	}
-	pkgs, err := decorator.ParseDir(token.NewFileSet(), controllerAbs, nil, parser.ParseComments)
-	if err != nil {
-		log.Fatalf("[%s] parse controller directory error, %s", controllerDir, err.Error())
-	}
-	var controllerNames []string                      // controller struct name
-	apiCache := make(map[string]*inject.MethodInfo)   // api cache, key is controller name + method name, such as: UserController/AddUser
-	basePathEachController := make(map[string]string) // base path for each controller, key indicates the owning controller
-	bracketRegex := regexp.MustCompile("[(](.*?)[)]")
-	var pkg string // package name
-	var p *dst.Package
-	for pkg, p = range pkgs {
-		for filePath, file := range p.Files {
-			dst.Inspect(file, func(node dst.Node) bool {
-				switch t := node.(type) {
-				case *dst.GenDecl:
-					var match bool
-					var structType *dst.StructType
-					var spec *dst.TypeSpec
-					if spec, match = t.Specs[0].(*dst.TypeSpec); !match {
-						return false
-					}
-					if structType, match = spec.Type.(*dst.StructType); !match {
-						return false
-					}
-					if isController(structType.Fields.List) {
-						controllerNames = append(controllerNames, spec.Name.Name)
-						var prefix string
-						for _, comment := range t.Decs.Start {
-							comment = removePrefix(comment)
-							if strings.HasPrefix(comment, "@BasePath") {
-								basePathSub := bracketRegex.FindStringSubmatch(comment)
-								if len(basePathSub) == 0 {
-									prefix = "/"
-									break
-								}
-								prefix = strings.ReplaceAll(basePathSub[1], "\"", "")
-								break
-							}
-						}
-						basePathEachController[spec.Name.Name] = prefix
-					}
-				case *dst.FuncDecl:
-					if t.Decs.Start == nil || t.Recv == nil || t.Name.Name == "PostConstruct" {
-						return false
-					}
-					onwer := searchFather(t.Recv.List) // Which controller does it belong to
-					method := inject.MethodInfo{
-						Annotations: make(map[string]string),
-					}
-					for _, comment := range t.Decs.Start {
-						comment = removePrefix(comment)
-						if strings.HasPrefix(comment, "@POST") || strings.HasPrefix(comment, "@GET") ||
-							strings.HasPrefix(comment, "@DELETE") || strings.HasPrefix(comment, "@PUT") ||
-							strings.HasPrefix(comment, "@PATCH") || strings.HasPrefix(comment, "@OPTIONS") ||
-							strings.HasPrefix(comment, "@HEAD") {
 
-							if unicode.IsLower(rune(t.Name.Name[0])) {
-								log.Fatalf("[%s] %s: invalid method name, name first word must be uppercase", filePath, t.Name.Name)
-							}
-							submatch := bracketRegex.FindStringSubmatch(comment)
-							if len(submatch) == 0 {
-								log.Fatalf("[%s] %s: invalid api definition, example: @GET(path=\"/test\")", filePath, t.Name.Name)
-							}
-							method.Method = comment[1:strings.Index(comment, "(")]
-							apiDefine := strings.Split(submatch[1], ",")
-							if strings.HasPrefix(apiDefine[0], "path=") {
-								method.ApiPath = path.Join(basePathEachController[onwer], strings.ReplaceAll(apiDefine[0][5:], "\"", ""))
-							} else {
-								log.Fatalf("[%s] %s invalid path parameter, Must start with path=", filePath, t.Name.Name)
-							}
-							continue
+var	scans set*Scan
+
+	scan := &Scan{
+		Apis: make(map[string]*inject.MethodInfo),
+		Pkg: "",
+		Path: controllerAbs,
+		BasePaths: make(map[string]string),
+		Names: make([]string, 0),
+	}
+
+	recursionPkgDir(controllerNames, controllerAbs, apiCache, basePathEach)
+
+	//recordProjectControllerAndApi(controllerNames, controllerAbs, pkg, apiCache)
+}
+
+func recursionPkgDir(controllerNames []string, currentDir string, apiCache map[string]*inject.MethodInfo, basePathEach ) {
+
+	dirs, err := os.ReadDir(currentDir)
+	if err != nil {
+		log.Fatalf("[%s] read path error, %s", currentDir, err.Error())
+	}
+
+	for _, dir := range dirs {
+		if dir.IsDir() {
+			nextPathDir, err := filepath.Abs(path.Join(currentDir, dir.Name()))
+			if err != nil {
+				log.Fatalf("[%s] red controller directory error, %s", nextPathDir, err.Error())
+			}
+
+			recursionPkgDir(controllerNames, nextPathDir, apiCache, basePathEach)
+			continue
+		}
+
+		pkg, err := decorator.ParseFile(token.NewFileSet(), path.Join(currentDir, dir.Name()), nil, parser.ParseComments)
+		if err != nil {
+			log.Fatalf("[%s] parse controller directory error, %s", currentDir, err.Error())
+		}
+
+		recursionPkgFile(pkg, controllerNames, currentDir, apiCache, basePathEach)
+	}
+}
+
+func recursionPkgFile(pkg *dst.File, controllerNames []string, pkgName string, apiCache map[string]*inject.MethodInfo, basePathEach map[string]string) {
+	bracketRegex := regexp.MustCompile("[(](.*?)[)]")
+	dst.Inspect(pkg, func(node dst.Node) bool {
+		switch t := node.(type) {
+		case *dst.GenDecl:
+			var match bool
+			var structType *dst.StructType
+			var spec *dst.TypeSpec
+			if spec, match = t.Specs[0].(*dst.TypeSpec); !match {
+				return false
+			}
+			if structType, match = spec.Type.(*dst.StructType); !match {
+				return false
+			}
+			if isController(structType.Fields.List) {
+				controllerNames = append(controllerNames, spec.Name.Name)
+				var prefix string
+				for _, comment := range t.Decs.Start {
+					comment = removePrefix(comment)
+					if strings.HasPrefix(comment, "@BasePath") {
+						basePathSub := bracketRegex.FindStringSubmatch(comment)
+						if len(basePathSub) == 0 {
+							prefix = "/"
+							break
 						}
-						if strings.HasPrefix(comment, "@") {
-							annotationArr := strings.Split(comment, "->")
-							var annotationVal string
-							if len(annotationArr) == 2 {
-								annotationVal = annotationArr[1]
-							}
-							method.Annotations[annotationArr[0]] = annotationVal
-						}
-					}
-					if method.ApiPath != "" {
-						apiCache[onwer+"/"+t.Name.Name] = &method
+						prefix = strings.ReplaceAll(basePathSub[1], "\"", "")
+						break
 					}
 				}
-				return true
-			})
+				basePathEach[spec.Name.Name] = prefix
+			}
+		case *dst.FuncDecl:
+			if t.Decs.Start == nil || t.Recv == nil || t.Name.Name == "PostConstruct" {
+				return false
+			}
+			onwer := searchFather(t.Recv.List) // Which controller does it belong to
+			method := inject.MethodInfo{
+				Annotations: make(map[string]string),
+			}
+			for _, comment := range t.Decs.Start {
+				comment = removePrefix(comment)
+				if strings.HasPrefix(comment, "@POST") || strings.HasPrefix(comment, "@GET") ||
+					strings.HasPrefix(comment, "@DELETE") || strings.HasPrefix(comment, "@PUT") ||
+					strings.HasPrefix(comment, "@PATCH") || strings.HasPrefix(comment, "@OPTIONS") ||
+					strings.HasPrefix(comment, "@HEAD") {
+
+					if unicode.IsLower(rune(t.Name.Name[0])) {
+						log.Fatalf("[%s] %s: invalid method name, name first word must be uppercase", pkgName, t.Name.Name)
+					}
+					submatch := bracketRegex.FindStringSubmatch(comment)
+					if len(submatch) == 0 {
+						log.Fatalf("[%s] %s: invalid api definition, example: @GET(path=\"/test\")", pkgName, t.Name.Name)
+					}
+					method.Method = comment[1:strings.Index(comment, "(")]
+					apiDefine := strings.Split(submatch[1], ",")
+					if strings.HasPrefix(apiDefine[0], "path=") {
+						method.ApiPath = path.Join(basePathEach[onwer], strings.ReplaceAll(apiDefine[0][5:], "\"", ""))
+					} else {
+						log.Fatalf("[%s] %s invalid path parameter, Must start with path=", pkgName, t.Name.Name)
+					}
+					continue
+				}
+				if strings.HasPrefix(comment, "@") {
+					annotationArr := strings.Split(comment, "->")
+					var annotationVal string
+					if len(annotationArr) == 2 {
+						annotationVal = annotationArr[1]
+					}
+					method.Annotations[annotationArr[0]] = annotationVal
+				}
+			}
+			if method.ApiPath != "" {
+				apiCache[onwer+"/"+t.Name.Name] = &method
+			}
 		}
-	}
-	recordProjectControllerAndApi(controllerNames, controllerAbs, pkg, apiCache)
+		return true
+	})
+
 }
 
 // Determines whether the current structure is a controller

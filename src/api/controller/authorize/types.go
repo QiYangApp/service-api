@@ -5,13 +5,13 @@ import (
 	"service-api/src/app/entity/http"
 )
 
-type AuthorizedType[P http.VerifyType] interface {
+type AuthorizedType interface {
 	// Check 检测
-	Check(p P, c *gin.Context) *gin.Context
+	Check(c *gin.Context, p http.VerifyType) *gin.Context
 
 	// Authorizing 授权前置
-	Authorizing(p P, c *gin.Context) *gin.Context
+	Authorizing(c *gin.Context, p http.VerifyType) *gin.Context
 
 	// Authorized 授权完成
-	Authorized(p P, c *gin.Context) *gin.Context
+	Authorized(c *gin.Context, p http.VerifyType) *gin.Context
 }

@@ -7,5 +7,6 @@ var Apis map[string]*MethodInfo
 type MethodInfo struct {
 	Method      string            // API method。such as: POST、GET、DELETE、PUT、OPTIONS、PATCH、HEAD
 	ApiPath     string            // API path
+	PackPath    string            // API path
 	Annotations map[string]string // Annotations of the method
 }

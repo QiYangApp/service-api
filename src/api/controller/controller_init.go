@@ -3,10 +3,12 @@
 
 package controller
 
-import "service-api/src/core/inject"
+import (
+	"service-api/src/core/inject"
+)
 
 func init() {
-	inject.Register(&AbstractController{}, &TestController{})
+	inject.Register(&AbstractController{})
 	inject.Apis = map[string]*inject.MethodInfo{"TestController/Test": {
 
 		Annotations: map[string]string{},

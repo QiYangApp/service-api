@@ -1,9 +1,9 @@
 package main
 
 import (
-	"service-api/src/core/system"
-
 	"github.com/gin-gonic/gin"
+	_ "service-api/src/api/controller"
+	"service-api/src/core/system"
 )
 
 //go:generate ioc "./src/api/controller"

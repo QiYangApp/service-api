@@ -8,19 +8,18 @@ import (
 	"service-api/src/core/inject"
 )
 
-type PasswordLoginController[P http.VerifyType] struct {
-	AuthorizedType[P]
+type PasswordLoginController struct {
 	inject.Controller
 	PasswordLoginService authorize.PasswordLoginService
 }
 
 // Check
 // @GET(path="check")
-func (PasswordLoginController[P]) Check(c *gin.Context, p P) *gin.Context {
+func (PasswordLoginController) Check(c *gin.Context, p http.VerifyType) *gin.Context {
 	return c
 }
 
-func (t PasswordLoginController[P]) Authorizing(c *gin.Context, p P) *gin.Context {
+func (t PasswordLoginController) Authorizing(c *gin.Context, p http.VerifyType) *gin.Context {
 
 	// todo 待处理账号校验
 	d := t.PasswordLoginService.Authorizing(true)
@@ -28,7 +27,7 @@ func (t PasswordLoginController[P]) Authorizing(c *gin.Context, p P) *gin.Contex
 	return response.RSuccess[any](c, d).ToJson()
 }
 
-func (t PasswordLoginController[P]) Authorized(c *gin.Context, p P) *gin.Context {
+func (t PasswordLoginController) Authorized(c *gin.Context, p http.VerifyType) *gin.Context {
 	d := t.PasswordLoginService.Authorizing("ssss")
 
 	return response.RSuccess(c, d).ToJson()
