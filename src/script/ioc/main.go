@@ -19,20 +19,11 @@ import (
 	"unicode"
 )
 
-type Scan struct {
-	Path string
-	Pkg string
+type Container struct {
+	Apis      map[string]*inject.MethodInfo
 	BasePaths map[string]string
-	Names []string
-	Apis map[string]*inject.MethodInfo
-}
-
-type Scan struct {
-	Path string
-	Pkg string
-	BasePaths map[string]string
-	Names []string
-	Apis map[string]*inject.MethodInfo
+	Names     []string
+	Pkg       string
 }
 
 // Parse project controllers and API methods
@@ -47,22 +38,18 @@ func main() {
 		log.Fatalf("[%s] get controller directory abstract path error, %s", controllerDir, err.Error())
 	}
 
-var	scans set*Scan
-
-	scan := &Scan{
-		Apis: make(map[string]*inject.MethodInfo),
-		Pkg: "",
-		Path: controllerAbs,
+	container := Container{
 		BasePaths: make(map[string]string),
-		Names: make([]string, 0),
+		Names:     make([]string, 0),
+		Apis:      make(map[string]*inject.MethodInfo),
 	}
 
-	recursionPkgDir(controllerNames, controllerAbs, apiCache, basePathEach)
+	recursionPkgDir(container, controllerAbs)
 
 	//recordProjectControllerAndApi(controllerNames, controllerAbs, pkg, apiCache)
 }
 
-func recursionPkgDir(controllerNames []string, currentDir string, apiCache map[string]*inject.MethodInfo, basePathEach ) {
+func recursionPkgDir(container Container, currentDir string) {
 
 	dirs, err := os.ReadDir(currentDir)
 	if err != nil {
@@ -71,12 +58,12 @@ func recursionPkgDir(controllerNames []string, currentDir string, apiCache map[s
 
 	for _, dir := range dirs {
 		if dir.IsDir() {
-			nextPathDir, err := filepath.Abs(path.Join(currentDir, dir.Name()))
+			nextDir, err := filepath.Abs(path.Join(currentDir, dir.Name()))
 			if err != nil {
-				log.Fatalf("[%s] red controller directory error, %s", nextPathDir, err.Error())
+				log.Fatalf("[%s] red controller directory error, %s", nextDir, err.Error())
 			}
 
-			recursionPkgDir(controllerNames, nextPathDir, apiCache, basePathEach)
+			recursionPkgDir(container, nextDir)
 			continue
 		}
 
@@ -85,11 +72,11 @@ func recursionPkgDir(controllerNames []string, currentDir string, apiCache map[s
 			log.Fatalf("[%s] parse controller directory error, %s", currentDir, err.Error())
 		}
 
-		recursionPkgFile(pkg, controllerNames, currentDir, apiCache, basePathEach)
+		recursionPkgFile(pkg, container, currentDir)
 	}
 }
 
-func recursionPkgFile(pkg *dst.File, controllerNames []string, pkgName string, apiCache map[string]*inject.MethodInfo, basePathEach map[string]string) {
+func recursionPkgFile(pkg *dst.File, container Container, currentDir string) {
 	bracketRegex := regexp.MustCompile("[(](.*?)[)]")
 	dst.Inspect(pkg, func(node dst.Node) bool {
 		switch t := node.(type) {
@@ -104,7 +91,7 @@ func recursionPkgFile(pkg *dst.File, controllerNames []string, pkgName string, a
 				return false
 			}
 			if isController(structType.Fields.List) {
-				controllerNames = append(controllerNames, spec.Name.Name)
+				container.Names = append(container.Names, spec.Name.Name)
 				var prefix string
 				for _, comment := range t.Decs.Start {
 					comment = removePrefix(comment)
@@ -118,7 +105,7 @@ func recursionPkgFile(pkg *dst.File, controllerNames []string, pkgName string, a
 						break
 					}
 				}
-				basePathEach[spec.Name.Name] = prefix
+				container.BasePaths[spec.Name.Name] = prefix
 			}
 		case *dst.FuncDecl:
 			if t.Decs.Start == nil || t.Recv == nil || t.Name.Name == "PostConstruct" {
@@ -136,18 +123,18 @@ func recursionPkgFile(pkg *dst.File, controllerNames []string, pkgName string, a
 					strings.HasPrefix(comment, "@HEAD") {
 
 					if unicode.IsLower(rune(t.Name.Name[0])) {
-						log.Fatalf("[%s] %s: invalid method name, name first word must be uppercase", pkgName, t.Name.Name)
+						log.Fatalf("[%s] %s: invalid method name, name first word must be uppercase", currentDir, t.Name.Name)
 					}
 					submatch := bracketRegex.FindStringSubmatch(comment)
 					if len(submatch) == 0 {
-						log.Fatalf("[%s] %s: invalid api definition, example: @GET(path=\"/test\")", pkgName, t.Name.Name)
+						log.Fatalf("[%s] %s: invalid api definition, example: @GET(path=\"/test\")", currentDir, t.Name.Name)
 					}
 					method.Method = comment[1:strings.Index(comment, "(")]
 					apiDefine := strings.Split(submatch[1], ",")
 					if strings.HasPrefix(apiDefine[0], "path=") {
-						method.ApiPath = path.Join(basePathEach[onwer], strings.ReplaceAll(apiDefine[0][5:], "\"", ""))
+						method.ApiPath = path.Join(container.BasePaths[onwer], strings.ReplaceAll(apiDefine[0][5:], "\"", ""))
 					} else {
-						log.Fatalf("[%s] %s invalid path parameter, Must start with path=", pkgName, t.Name.Name)
+						log.Fatalf("[%s] %s invalid path parameter, Must start with path=", currentDir, t.Name.Name)
 					}
 					continue
 				}
@@ -161,7 +148,7 @@ func recursionPkgFile(pkg *dst.File, controllerNames []string, pkgName string, a
 				}
 			}
 			if method.ApiPath != "" {
-				apiCache[onwer+"/"+t.Name.Name] = &method
+				container.Apis[onwer+"/"+t.Name.Name] = &method
 			}
 		}
 		return true
