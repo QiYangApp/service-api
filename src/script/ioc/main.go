@@ -3,6 +3,8 @@ package main
 //https://github.com/archine/gin-plus/blob/v2/ast/mvc2/main.go
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"github.com/dave/dst"
 	"github.com/dave/dst/decorator"
@@ -30,6 +32,7 @@ type Container struct {
 // Run with go generate
 func main() {
 	controllerDir := "./src/api/controller"
+	packName := "service-api/src/api/controller"
 	if len(os.Args) > 1 {
 		controllerDir = os.Args[1]
 	}
@@ -44,12 +47,12 @@ func main() {
 		Apis:      make(map[string]*inject.MethodInfo),
 	}
 
-	recursionPkgDir(container, controllerAbs)
+	recursionPkgDir(container, controllerAbs, packName)
 
-	//recordProjectControllerAndApi(controllerNames, controllerAbs, pkg, apiCache)
+	recordProjectControllerAndApi(container, controllerAbs, packName)
 }
 
-func recursionPkgDir(container Container, currentDir string) {
+func recursionPkgDir(container Container, currentDir, packName string) {
 
 	dirs, err := os.ReadDir(currentDir)
 	if err != nil {
@@ -63,7 +66,7 @@ func recursionPkgDir(container Container, currentDir string) {
 				log.Fatalf("[%s] red controller directory error, %s", nextDir, err.Error())
 			}
 
-			recursionPkgDir(container, nextDir)
+			recursionPkgDir(container, nextDir, packName)
 			continue
 		}
 
@@ -72,12 +75,14 @@ func recursionPkgDir(container Container, currentDir string) {
 			log.Fatalf("[%s] parse controller directory error, %s", currentDir, err.Error())
 		}
 
-		recursionPkgFile(pkg, container, currentDir)
+		recursionPkgFile(pkg, container, currentDir, packName)
 	}
 }
 
-func recursionPkgFile(pkg *dst.File, container Container, currentDir string) {
+func recursionPkgFile(pkg *dst.File, container Container, currentDir, packName string) {
 	bracketRegex := regexp.MustCompile("[(](.*?)[)]")
+	haser := md5.New()
+
 	dst.Inspect(pkg, func(node dst.Node) bool {
 		switch t := node.(type) {
 		case *dst.GenDecl:
@@ -114,6 +119,8 @@ func recursionPkgFile(pkg *dst.File, container Container, currentDir string) {
 			onwer := searchFather(t.Recv.List) // Which controller does it belong to
 			method := inject.MethodInfo{
 				Annotations: make(map[string]string),
+				PackPath:    currentDir,
+				PackName:    packName,
 			}
 			for _, comment := range t.Decs.Start {
 				comment = removePrefix(comment)
@@ -148,7 +155,9 @@ func recursionPkgFile(pkg *dst.File, container Container, currentDir string) {
 				}
 			}
 			if method.ApiPath != "" {
-				container.Apis[onwer+"/"+t.Name.Name] = &method
+				haser.Write([]byte(onwer + "/" + t.Name.Name))
+				key := hex.EncodeToString(haser.Sum(nil))
+				container.Apis[key] = &method
 			}
 		}
 		return true
@@ -195,16 +204,16 @@ func removePrefix(text string) string {
 }
 
 // All controller information and Api information for the current project is recorded here
-func recordProjectControllerAndApi(controllerNames []string, controllerAbs, pkg string, apiCache map[string]*inject.MethodInfo) {
-	if len(controllerNames) == 0 {
+func recordProjectControllerAndApi(container Container, dir, controllerPackName string) {
+	if len(container.Names) == 0 {
 		return
 	}
-	newFile := jen.NewFile(pkg)
+	newFile := jen.NewFile("controller")
 	newFile.HeaderComment("// ⚠️⛔ Auto generate code by gin-plus framework, Do not edit!!!")
 	newFile.HeaderComment("// All controller information and Api information for the current project is recorded here\n")
 	newFile.ImportName("service-api/src/core/inject", "inject")
 	var registerCode []jen.Code
-	for _, controllerName := range controllerNames {
+	for _, controllerName := range container.Names {
 		registerCode = append(registerCode, jen.Id(fmt.Sprintf("&%s{}", controllerName)))
 	}
 	newFile.Func().Id("init").Params().Block(
@@ -212,7 +221,7 @@ func recordProjectControllerAndApi(controllerNames []string, controllerAbs, pkg 
 		jen.Qual("service-api/src/core/inject", "Apis").Op("=").Map(jen.String()).Op("*").
 			Qual("service-api/src/core/inject", "MethodInfo").
 			Values(jen.DictFunc(func(dict jen.Dict) {
-				for k, methodInfo := range apiCache {
+				for k, methodInfo := range container.Apis {
 					dict[jen.Lit(k)] = jen.Block(jen.Dict{
 						jen.Id("Method"):  jen.Lit(methodInfo.Method),
 						jen.Id("ApiPath"): jen.Lit(methodInfo.ApiPath),
@@ -225,7 +234,7 @@ func recordProjectControllerAndApi(controllerNames []string, controllerAbs, pkg 
 				}
 			})),
 	)
-	err := newFile.Save(filepath.Join(controllerAbs, "controller_init.go"))
+	err := newFile.Save(filepath.Join(dir, "controller_init.go"))
 	if err != nil {
 		panic(err)
 	}
