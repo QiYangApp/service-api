@@ -8,6 +8,8 @@ import (
 	"service-api/src/core/inject"
 )
 
+// PasswordLoginController
+// @BasePath(path="/api/authorize/password")
 type PasswordLoginController struct {
 	inject.Controller
 	PasswordLoginService authorize.PasswordLoginService
