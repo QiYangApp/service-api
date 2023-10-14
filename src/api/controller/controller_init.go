@@ -11,18 +11,20 @@ func init() {
 		"2bf6b51395f94da1c7905daf27970cbc": {
 
 			Annotations: map[string]string{},
-			ApiPath:     "path=/api/authorize/password/check",
-			Method:      "GET",
+			ApiPath:     "/api/authorize/password/check",
+			MethodName:  "GET",
 			PackName:    "authorize",
 			PackPath:    "service-api/src/api/controller/authorize",
+			ServiceName: "PasswordLoginController",
 		},
 		"a56c6e931fca8b4154cf7169d79c0c15": {
 
 			Annotations: map[string]string{},
-			ApiPath:     "test",
-			Method:      "GET",
+			ApiPath:     "/api/test",
+			MethodName:  "GET",
 			PackName:    "controller",
 			PackPath:    "service-api/src/api/controller",
+			ServiceName: "TestController",
 		},
 	}
 }

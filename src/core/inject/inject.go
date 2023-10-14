@@ -84,7 +84,7 @@ func Apply(e *gin.Engine, autowired bool) {
 			methodProxy := controllerTypeOf.Method(i)
 			methodFullName := controllerTypeOf.Elem().Name() + "/" + methodProxy.Name
 			if info, ok := Apis[methodFullName]; ok {
-				ginMethod := ginProxy.MethodByName(info.Method)
+				ginMethod := ginProxy.MethodByName(info.MethodName)
 				args := []reflect.Value{reflect.ValueOf(info.ApiPath)}
 				args = append(args, controllerProxy.MethodByName(methodProxy.Name))
 				ginMethod.Call(args)

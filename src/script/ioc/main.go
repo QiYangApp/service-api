@@ -22,10 +22,11 @@ import (
 )
 
 type Container struct {
-	Apis      map[string]*inject.MethodInfo
-	BasePaths map[string]string
-	Names     []string
-	Pkg       string
+	ApiRootPath string
+	Apis        map[string]*inject.MethodInfo
+	BasePaths   map[string]string
+	Names       []string
+	Pkg         string
 }
 
 // Parse project controllers and API methods
@@ -81,7 +82,8 @@ func recursionPkgDir(container Container, currentDir, fullPackName, shortPckName
 }
 
 func recursionPkgFile(pkgs map[string]*dst.Package, container Container, currentDir, fullPackName, shortPackName string) {
-	bracketRegex := regexp.MustCompile("[(](.*?)[)]")
+	commonMethodRegex := regexp.MustCompile("//.*@(BasePath|RootPath|GET|POST|DELETE|PATCH|HEAD|PUT|OPTIONS).*")
+	commonAttrRegex := regexp.MustCompile("[(|,]([^=]+)=\"([^\"]+)[)|\"]")
 	haser := md5.New()
 
 	for _, p := range pkgs {
@@ -102,15 +104,24 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container Container, current
 						container.Names = append(container.Names, spec.Name.Name)
 						var prefix string
 						for _, comment := range t.Decs.Start {
-							comment = removePrefix(comment)
-							if strings.HasPrefix(comment, "@BasePath") {
-								basePathSub := bracketRegex.FindStringSubmatch(comment)
-								if len(basePathSub) == 0 {
-									prefix = "/"
-									break
+							commentsMethod := commonMethodRegex.FindStringSubmatch(comment)
+							if len(commentsMethod) == 0 {
+								prefix = "/"
+							} else {
+								commentsAttr := commonAttrRegex.FindStringSubmatch(commentsMethod[0])
+								if len(commentsAttr) == 0 {
+									log.Fatalf("[%s]: invalid api definition, example: @GET(path=\"/test\")", currentDir)
 								}
-								prefix = strings.ReplaceAll(basePathSub[1], "\"", "")
-								break
+
+								if commentsMethod[1] == "RootPath" && container.ApiRootPath != "" {
+									log.Fatalf("api root path repat set, [%s] %s:", container.ApiRootPath, commentsMethod[1])
+								}
+
+								if commentsMethod[1] == "BasePath" {
+									prefix = commentsAttr[2]
+								} else if commentsMethod[1] == "RootPath" {
+									container.ApiRootPath = commentsAttr[2]
+								}
 							}
 						}
 						container.BasePaths[spec.Name.Name] = prefix
@@ -124,30 +135,36 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container Container, current
 						Annotations: make(map[string]string),
 						PackPath:    fullPackName,
 						PackName:    shortPackName,
+						ServiceName: onwer,
 					}
 					for _, comment := range t.Decs.Start {
-						comment = removePrefix(comment)
-						if strings.HasPrefix(comment, "@POST") || strings.HasPrefix(comment, "@GET") ||
-							strings.HasPrefix(comment, "@DELETE") || strings.HasPrefix(comment, "@PUT") ||
-							strings.HasPrefix(comment, "@PATCH") || strings.HasPrefix(comment, "@OPTIONS") ||
-							strings.HasPrefix(comment, "@HEAD") {
-
+						commentsMethod := commonMethodRegex.FindStringSubmatch(comment)
+						if len(commentsMethod) != 0 {
 							if unicode.IsLower(rune(t.Name.Name[0])) {
 								log.Fatalf("[%s] %s: invalid method name, name first word must be uppercase", filePath, t.Name.Name)
 							}
-							submatch := bracketRegex.FindStringSubmatch(comment)
-							if len(submatch) == 0 {
-								log.Fatalf("[%s] %s: invalid api definition, example: @GET(path=\"/test\")", currentDir, t.Name.Name)
-							}
-							method.Method = comment[1:strings.Index(comment, "(")]
-							apiDefine := strings.Split(submatch[1], ",")
-							if strings.HasPrefix(apiDefine[0], "path=") {
-								method.ApiPath = path.Join(container.BasePaths[onwer], strings.ReplaceAll(apiDefine[0][5:], "\"", ""))
-							} else {
+
+							method.MethodName = commentsMethod[1]
+							commentsAttr := commonAttrRegex.FindAllStringSubmatch(commentsMethod[0], 1)
+							if len(commentsAttr) == 0 {
 								log.Fatalf("[%s] %s invalid path parameter, Must start with path=", filePath, t.Name.Name)
 							}
+
+							for _, attr := range commentsAttr {
+								switch attr[1] {
+								case "path":
+									method.ApiPath = path.Join(container.ApiRootPath, container.BasePaths[onwer], attr[2])
+									break
+								}
+							}
+
+							if method.ApiPath == "" {
+								log.Fatalf("[%s] %s: invalid api definition, example: @GET(path=\"/test\")", currentDir, t.Name.Name)
+							}
+
 							continue
 						}
+
 						if strings.HasPrefix(comment, "@") {
 							annotationArr := strings.Split(comment, "->")
 							var annotationVal string
@@ -229,10 +246,11 @@ func recordProjectControllerAndApi(container Container, dir, controllerPackName 
 			Values(jen.DictFunc(func(dict jen.Dict) {
 				for k, methodInfo := range container.Apis {
 					dict[jen.Lit(k)] = jen.Block(jen.Dict{
-						jen.Id("Method"):   jen.Lit(methodInfo.Method),
-						jen.Id("ApiPath"):  jen.Lit(methodInfo.ApiPath),
-						jen.Id("PackName"): jen.Lit(methodInfo.PackName),
-						jen.Id("PackPath"): jen.Lit(methodInfo.PackPath),
+						jen.Id("PackName"):    jen.Lit(methodInfo.PackName),
+						jen.Id("PackPath"):    jen.Lit(methodInfo.PackPath),
+						jen.Id("ServiceName"): jen.Lit(methodInfo.ServiceName),
+						jen.Id("MethodName"):  jen.Lit(methodInfo.MethodName),
+						jen.Id("ApiPath"):     jen.Lit(methodInfo.ApiPath),
 						jen.Id("Annotations"): jen.Map(jen.String()).String().Values(jen.DictFunc(func(dict jen.Dict) {
 							for k, v := range methodInfo.Annotations {
 								dict[jen.Lit(k)] = jen.Lit(v)

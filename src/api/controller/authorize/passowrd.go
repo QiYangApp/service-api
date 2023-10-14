@@ -2,21 +2,21 @@ package authorize
 
 import (
 	"github.com/gin-gonic/gin"
+	"service-api/src/api/controller"
 	"service-api/src/app/entity/http"
 	"service-api/src/app/services/authorize"
 	"service-api/src/core/helpers/response"
-	"service-api/src/core/inject"
 )
 
 // PasswordLoginController
 // @BasePath(path="/api/authorize/password")
 type PasswordLoginController struct {
-	inject.Controller
+	controller.AbstractController
 	PasswordLoginService authorize.PasswordLoginService
 }
 
 // Check
-// @GET(path="check")
+// @GET(path="check", alias="alias")
 func (*PasswordLoginController) Check(c *gin.Context, p http.VerifyType) *gin.Context {
 	return c
 }
