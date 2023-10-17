@@ -1,14 +1,21 @@
 package controller
 
-import (
-	"service-api/src/core/inject"
-)
+import "service-api/src/core/inject"
 
-type AbstractMethod struct{}
+type AbstractControllerMethod interface {
+}
 
 // AbstractController
-// @RootPath(path="/api)
+// @RootPath(path="/api")
 type AbstractController struct {
-	AbstractMethod
+	AbstractControllerMethod
+}
+
+type InjectController struct {
+	AbstractController
 	inject.Controller
+}
+
+func (*InjectController) PostConstruct() {
+
 }

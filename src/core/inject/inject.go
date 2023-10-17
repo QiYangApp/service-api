@@ -1,9 +1,12 @@
 package inject
 
 import (
+	"crypto/md5"
 	"github.com/archine/ioc"
 	"github.com/gin-gonic/gin"
 	"reflect"
+	"service-api/src/app/entity/http"
+	"service-api/src/core/helpers/routes"
 )
 
 // controller Top-level interface used to declare a structure as a controller.
@@ -71,6 +74,8 @@ func Apply(e *gin.Engine, autowired bool) {
 		}
 		return
 	}
+
+	haser := md5.New()
 	ginProxy := reflect.ValueOf(e)
 	annotationCache = make(map[string]Annotations)
 	for _, controller := range controllerCache {
@@ -82,13 +87,22 @@ func Apply(e *gin.Engine, autowired bool) {
 		controllerProxy := reflect.ValueOf(controller)
 		for i := 0; i < controllerTypeOf.NumMethod(); i++ {
 			methodProxy := controllerTypeOf.Method(i)
-			methodFullName := controllerTypeOf.Elem().Name() + "/" + methodProxy.Name
-			if info, ok := Apis[methodFullName]; ok {
+
+			key := controllerTypeOf.Elem().PkgPath() + "-" + controllerTypeOf.Elem().Name() + "-" + methodProxy.Name
+			haser.Write([]byte(key))
+			//key = hex.EncodeToString(haser.Sum(nil))
+
+			if info, ok := Apis[key]; ok {
 				ginMethod := ginProxy.MethodByName(info.MethodName)
 				args := []reflect.Value{reflect.ValueOf(info.ApiPath)}
 				args = append(args, controllerProxy.MethodByName(methodProxy.Name))
 				ginMethod.Call(args)
 				annotationCache[info.ApiPath] = info.Annotations
+
+				e.Match([]string{info.MethodName}, info.ApiPath, routes.Bind(func(route *gin.Context, param http.VerifyType) {
+					controllerProxy.MethodByName(methodProxy.Name)
+				}))
+
 			}
 		}
 		if len(controllerCache) == 1 {

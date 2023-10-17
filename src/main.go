@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	_ "service-api/src/api/controller"
 	"service-api/src/core/system"
 )
 

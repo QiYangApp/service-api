@@ -25,8 +25,14 @@ type Container struct {
 	ApiRootPath string
 	Apis        map[string]*inject.MethodInfo
 	BasePaths   map[string]string
-	Names       []string
+	Names       map[string]Names
 	Pkg         string
+}
+
+type Names struct {
+	Name          string
+	FullPackName  string
+	ShortPackName string
 }
 
 // Parse project controllers and API methods
@@ -43,23 +49,30 @@ func main() {
 		log.Fatalf("[%s] get controller directory abstract path error, %s", controllerDir, err.Error())
 	}
 
-	container := Container{
+	container := &Container{
 		BasePaths: make(map[string]string),
-		Names:     make([]string, 0),
+		Names:     make(map[string]Names),
 		Apis:      make(map[string]*inject.MethodInfo),
 	}
 
 	recursionPkgDir(container, controllerAbs, fullPackName, shortPckName)
 
-	recordProjectControllerAndApi(container, controllerAbs, fullPackName)
+	recordProjectControllerAndApi(container, controllerAbs, shortPckName, fullPackName)
 }
 
-func recursionPkgDir(container Container, currentDir, fullPackName, shortPckName string) {
+func recursionPkgDir(container *Container, currentDir, fullPackName, shortPckName string) {
 
 	dirs, err := os.ReadDir(currentDir)
 	if err != nil {
 		log.Fatalf("[%s] read path error, %s", currentDir, err.Error())
 	}
+
+	pkgs, err := decorator.ParseDir(token.NewFileSet(), currentDir, nil, parser.ParseComments)
+	if err != nil {
+		log.Fatalf("[%s] parse controller directory error, %s", currentDir, err.Error())
+	}
+
+	recursionPkgFile(pkgs, container, currentDir, fullPackName, shortPckName)
 
 	for _, dir := range dirs {
 		if dir.IsDir() {
@@ -72,16 +85,9 @@ func recursionPkgDir(container Container, currentDir, fullPackName, shortPckName
 			recursionPkgDir(container, nextDir, nextFullPackName, dir.Name())
 		}
 	}
-
-	pkgs, err := decorator.ParseDir(token.NewFileSet(), currentDir, nil, parser.ParseComments)
-	if err != nil {
-		log.Fatalf("[%s] parse controller directory error, %s", currentDir, err.Error())
-	}
-
-	recursionPkgFile(pkgs, container, currentDir, fullPackName, shortPckName)
 }
 
-func recursionPkgFile(pkgs map[string]*dst.Package, container Container, currentDir, fullPackName, shortPackName string) {
+func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, currentDir, fullPackName, shortPackName string) {
 	commonMethodRegex := regexp.MustCompile("//.*@(BasePath|RootPath|GET|POST|DELETE|PATCH|HEAD|PUT|OPTIONS).*")
 	commonAttrRegex := regexp.MustCompile("[(|,]([^=]+)=\"([^\"]+)[)|\"]")
 	haser := md5.New()
@@ -101,7 +107,10 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container Container, current
 						return false
 					}
 					if isController(structType.Fields.List) {
-						container.Names = append(container.Names, spec.Name.Name)
+						haser.Write([]byte(fmt.Sprintf("%s%s", fullPackName, spec.Name.Name)))
+						key := hex.EncodeToString(haser.Sum(nil))
+						container.Names[key] = Names{Name: spec.Name.Name, ShortPackName: shortPackName, FullPackName: fullPackName}
+
 						var prefix string
 						for _, comment := range t.Decs.Start {
 							commentsMethod := commonMethodRegex.FindStringSubmatch(comment)
@@ -153,7 +162,7 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container Container, current
 							for _, attr := range commentsAttr {
 								switch attr[1] {
 								case "path":
-									method.ApiPath = path.Join(container.ApiRootPath, container.BasePaths[onwer], attr[2])
+									method.ApiPath = path.Join(container.BasePaths[onwer], attr[2])
 									break
 								}
 							}
@@ -175,8 +184,9 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container Container, current
 						}
 					}
 					if method.ApiPath != "" {
-						haser.Write([]byte(fullPackName + "/" + onwer + "/" + t.Name.Name))
-						key := hex.EncodeToString(haser.Sum(nil))
+						key := fullPackName + "-" + onwer + "-" + t.Name.Name
+						haser.Write([]byte(key))
+						//key = hex.EncodeToString(haser.Sum(nil))
 						container.Apis[key] = &method
 					}
 				}
@@ -198,7 +208,7 @@ func isController(fields []*dst.Field) bool {
 		}
 		x := selectorExpr.X.(*dst.Ident)
 		sel := selectorExpr.Sel
-		if x.Name == "mvc" && sel.Name == "Controller" {
+		if x.Name == "inject" && sel.Name == "Controller" {
 			ok = true
 			break
 		}
@@ -213,31 +223,27 @@ func searchFather(fields []*dst.Field) string {
 			return f.X.(*dst.Ident).Name
 		}
 	}
+
 	return ""
 }
 
-// Remove comment prefixes such as // @BasePath("/") -> @BasePath("/")
-func removePrefix(text string) string {
-	text = strings.ReplaceAll(text, " ", "")
-	if strings.HasPrefix(text, "//") {
-		return text[2:]
-	}
-	return text
-}
-
 // All controller information and Api information for the current project is recorded here
-func recordProjectControllerAndApi(container Container, dir, controllerPackName string) {
+func recordProjectControllerAndApi(container *Container, dir, shortPckName, controllerPackName string) {
 	if len(container.Apis) == 0 {
 		return
 	}
-	newFile := jen.NewFile("controller")
+	newFile := jen.NewFile("main")
 	newFile.HeaderComment("// ⚠️⛔ Auto generate code by gin-plus framework, Do not edit!!!")
 	newFile.HeaderComment("// All controller information and Api information for the current project is recorded here\n")
 	newFile.ImportName("service-api/src/core/inject", "inject")
 
+	//for key, pkg := range container.Names {
+	//	newFile.ImportAlias(pkg.FullPackName, key)
+	//}
+
 	var registerCode []jen.Code
-	for _, controllerName := range container.Names {
-		registerCode = append(registerCode, jen.Id(fmt.Sprintf("&%s{}", controllerName)))
+	for _, pkg := range container.Names {
+		registerCode = append(registerCode, jen.Op("&").Qual(pkg.FullPackName, pkg.Name).Values())
 	}
 	newFile.Func().Id("init").Params().Block(
 		jen.Qual("service-api/src/core/inject", "Register").Call(registerCode...),
@@ -250,7 +256,7 @@ func recordProjectControllerAndApi(container Container, dir, controllerPackName 
 						jen.Id("PackPath"):    jen.Lit(methodInfo.PackPath),
 						jen.Id("ServiceName"): jen.Lit(methodInfo.ServiceName),
 						jen.Id("MethodName"):  jen.Lit(methodInfo.MethodName),
-						jen.Id("ApiPath"):     jen.Lit(methodInfo.ApiPath),
+						jen.Id("ApiPath"):     jen.Lit(path.Join(container.ApiRootPath, methodInfo.ApiPath)),
 						jen.Id("Annotations"): jen.Map(jen.String()).String().Values(jen.DictFunc(func(dict jen.Dict) {
 							for k, v := range methodInfo.Annotations {
 								dict[jen.Lit(k)] = jen.Lit(v)
@@ -260,7 +266,8 @@ func recordProjectControllerAndApi(container Container, dir, controllerPackName 
 				}
 			})),
 	)
-	err := newFile.Save(filepath.Join(dir, "controller_init.go"))
+
+	err := newFile.Save(filepath.Join("./src", "controller_init.go"))
 	if err != nil {
 		panic(err)
 	}

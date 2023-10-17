@@ -2,10 +2,12 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"service-api/src/app/services/authorize"
 )
 
 type TestController struct {
-	AbstractController
+	*InjectController
+	PasswordLoginService authorize.PasswordLoginService
 }
 
 // Test
