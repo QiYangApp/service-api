@@ -4,10 +4,10 @@ import (
 	"service-api/src/app/entity/http"
 )
 
-type AuthorizedService[P http.VerifyType] interface {
-	Check(p P) interface{}
+type AuthorizedService interface {
+	Check(p http.ReqType) http.RespType
 
-	Authorizing(p P) interface{}
+	Authorizing(p http.ReqType) http.RespType
 
-	Authorized(p P) interface{}
+	Authorized(p http.ReqType) http.RespType
 }

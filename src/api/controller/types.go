@@ -5,17 +5,12 @@ import "service-api/src/core/inject"
 type AbstractControllerMethod interface {
 }
 
-// AbstractController
-// @RootPath(path="/api")
 type AbstractController struct {
-	AbstractControllerMethod
 }
 
+// InjectController
+// @RootPath(path="/api")
 type InjectController struct {
 	AbstractController
-	inject.Controller
-}
-
-func (*InjectController) PostConstruct() {
-
+	inject.Inject
 }

@@ -7,11 +7,11 @@ import (
 
 type AuthorizedType interface {
 	// Check 检测
-	Check(c *gin.Context, p http.VerifyType) *gin.Context
+	Check(c *gin.Context, p http.ReqType) *gin.Context
 
 	// Authorizing 授权前置
-	Authorizing(c *gin.Context, p http.VerifyType) *gin.Context
+	Authorizing(c *gin.Context, p http.ReqType) *gin.Context
 
 	// Authorized 授权完成
-	Authorized(c *gin.Context, p http.VerifyType) *gin.Context
+	Authorized(c *gin.Context, p http.ReqType) *gin.Context
 }

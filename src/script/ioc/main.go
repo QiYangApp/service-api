@@ -4,7 +4,6 @@ package main
 
 import (
 	"crypto/md5"
-	"encoding/hex"
 	"fmt"
 	"github.com/dave/dst"
 	"github.com/dave/dst/decorator"
@@ -38,6 +37,7 @@ type Names struct {
 // Parse project controllers and API methods
 // Run with go generate
 func main() {
+	storageDir := "./src"
 	controllerDir := "./src/api/controller"
 	fullPackName := "service-api/src/api/controller"
 	shortPckName := "controller"
@@ -48,6 +48,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("[%s] get controller directory abstract path error, %s", controllerDir, err.Error())
 	}
+	storageDir, err = filepath.Abs(storageDir)
+	if err != nil {
+		log.Fatalf("[%s] get controller directory abstract path error, %s", storageDir, err.Error())
+	}
 
 	container := &Container{
 		BasePaths: make(map[string]string),
@@ -57,7 +61,7 @@ func main() {
 
 	recursionPkgDir(container, controllerAbs, fullPackName, shortPckName)
 
-	recordProjectControllerAndApi(container, controllerAbs, shortPckName, fullPackName)
+	recordProjectControllerAndApi(container, storageDir, shortPckName, fullPackName)
 }
 
 func recursionPkgDir(container *Container, currentDir, fullPackName, shortPckName string) {
@@ -88,9 +92,8 @@ func recursionPkgDir(container *Container, currentDir, fullPackName, shortPckNam
 }
 
 func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, currentDir, fullPackName, shortPackName string) {
-	commonMethodRegex := regexp.MustCompile("//.*@(BasePath|RootPath|GET|POST|DELETE|PATCH|HEAD|PUT|OPTIONS).*")
+	commonMethodRegex := regexp.MustCompile("//.*@(BasePath|RootPath|GET|POST|DELETE|PATCH|HEAD|PUT|OPTIONS|ANY).*")
 	commonAttrRegex := regexp.MustCompile("[(|,]([^=]+)=\"([^\"]+)[)|\"]")
-	haser := md5.New()
 
 	for _, p := range pkgs {
 		for filePath, file := range p.Files {
@@ -107,8 +110,7 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, curren
 						return false
 					}
 					if isController(structType.Fields.List) {
-						haser.Write([]byte(fmt.Sprintf("%s%s", fullPackName, spec.Name.Name)))
-						key := hex.EncodeToString(haser.Sum(nil))
+						key := fmt.Sprintf("pack_%x", md5.Sum([]byte(fmt.Sprintf("%s%s%s", fullPackName, shortPackName, spec.Name.Name))))
 						container.Names[key] = Names{Name: spec.Name.Name, ShortPackName: shortPackName, FullPackName: fullPackName}
 
 						var prefix string
@@ -141,10 +143,10 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, curren
 					}
 					onwer := searchFather(t.Recv.List) // Which controller does it belong to
 					method := inject.MethodInfo{
-						Annotations: make(map[string]string),
-						PackPath:    fullPackName,
-						PackName:    shortPackName,
-						ServiceName: onwer,
+						Annotations:    make(map[string]string),
+						PackPath:       fullPackName,
+						PackName:       shortPackName,
+						PackMethodName: onwer,
 					}
 					for _, comment := range t.Decs.Start {
 						commentsMethod := commonMethodRegex.FindStringSubmatch(comment)
@@ -153,7 +155,7 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, curren
 								log.Fatalf("[%s] %s: invalid method name, name first word must be uppercase", filePath, t.Name.Name)
 							}
 
-							method.MethodName = commentsMethod[1]
+							method.ApiMethodName = commentsMethod[1]
 							commentsAttr := commonAttrRegex.FindAllStringSubmatch(commentsMethod[0], 1)
 							if len(commentsAttr) == 0 {
 								log.Fatalf("[%s] %s invalid path parameter, Must start with path=", filePath, t.Name.Name)
@@ -184,9 +186,7 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, curren
 						}
 					}
 					if method.ApiPath != "" {
-						key := fullPackName + "-" + onwer + "-" + t.Name.Name
-						haser.Write([]byte(key))
-						//key = hex.EncodeToString(haser.Sum(nil))
+						key := fmt.Sprintf("%x", md5.Sum([]byte(fullPackName+"-"+onwer+"-"+t.Name.Name)))
 						container.Apis[key] = &method
 					}
 				}
@@ -228,18 +228,18 @@ func searchFather(fields []*dst.Field) string {
 }
 
 // All controller information and Api information for the current project is recorded here
-func recordProjectControllerAndApi(container *Container, dir, shortPckName, controllerPackName string) {
+func recordProjectControllerAndApi(container *Container, storageDir, shortPckName, controllerPackName string) {
 	if len(container.Apis) == 0 {
 		return
 	}
 	newFile := jen.NewFile("main")
-	newFile.HeaderComment("// ⚠️⛔ Auto generate code by gin-plus framework, Do not edit!!!")
+	newFile.HeaderComment("// ⚠️⛔ Auto generate code by gin framework, Do not edit!!!")
 	newFile.HeaderComment("// All controller information and Api information for the current project is recorded here\n")
 	newFile.ImportName("service-api/src/core/inject", "inject")
 
-	//for key, pkg := range container.Names {
-	//	newFile.ImportAlias(pkg.FullPackName, key)
-	//}
+	for key, pkg := range container.Names {
+		newFile.ImportAlias(pkg.FullPackName, key)
+	}
 
 	var registerCode []jen.Code
 	for _, pkg := range container.Names {
@@ -247,16 +247,16 @@ func recordProjectControllerAndApi(container *Container, dir, shortPckName, cont
 	}
 	newFile.Func().Id("init").Params().Block(
 		jen.Qual("service-api/src/core/inject", "Register").Call(registerCode...),
-		jen.Qual("service-api/src/core/inject", "Apis").Op("=").Map(jen.String()).Op("*").
+		jen.Qual("service-api/src/core/inject", "DI").Op("=").Map(jen.String()).Op("*").
 			Qual("service-api/src/core/inject", "MethodInfo").
 			Values(jen.DictFunc(func(dict jen.Dict) {
 				for k, methodInfo := range container.Apis {
 					dict[jen.Lit(k)] = jen.Block(jen.Dict{
-						jen.Id("PackName"):    jen.Lit(methodInfo.PackName),
-						jen.Id("PackPath"):    jen.Lit(methodInfo.PackPath),
-						jen.Id("ServiceName"): jen.Lit(methodInfo.ServiceName),
-						jen.Id("MethodName"):  jen.Lit(methodInfo.MethodName),
-						jen.Id("ApiPath"):     jen.Lit(path.Join(container.ApiRootPath, methodInfo.ApiPath)),
+						jen.Id("PackName"):       jen.Lit(methodInfo.PackName),
+						jen.Id("PackPath"):       jen.Lit(methodInfo.PackPath),
+						jen.Id("PackMethodName"): jen.Lit(methodInfo.PackMethodName),
+						jen.Id("ApiMethodName"):  jen.Lit(methodInfo.ApiMethodName),
+						jen.Id("ApiPath"):        jen.Lit(path.Join(container.ApiRootPath, methodInfo.ApiPath)),
 						jen.Id("Annotations"): jen.Map(jen.String()).String().Values(jen.DictFunc(func(dict jen.Dict) {
 							for k, v := range methodInfo.Annotations {
 								dict[jen.Lit(k)] = jen.Lit(v)
@@ -267,7 +267,7 @@ func recordProjectControllerAndApi(container *Container, dir, shortPckName, cont
 			})),
 	)
 
-	err := newFile.Save(filepath.Join("./src", "controller_init.go"))
+	err := newFile.Save(filepath.Join(storageDir, "controller_init.go"))
 	if err != nil {
 		panic(err)
 	}

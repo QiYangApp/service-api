@@ -5,71 +5,22 @@ package inject
 
 import (
 	"crypto/md5"
+	"fmt"
 	"github.com/archine/ioc"
 	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
 	"reflect"
+	"service-api/src/core/helpers/response"
+	"strings"
 )
-
-// controller Top-level interface used to declare a structure as a controller.
-type abstractController interface {
-	// PostConstruct Triggered after dependency injection is completed. You can continue to decorate the controller here.
-	PostConstruct()
-}
-
-/*
-Controller Default abstract controller implementation.
-
-	Simply integrate the default controller into your structure.
-
-Example:
-
-	type YourController struct {
-	   mvc.Controller
-	}
-
-	// Hello
-	// @GET(path="/hello") this is api method
-	func (y *YourController) Hello(ctx *gin.Context) {
-	   resp.Json(ctx, "Hello World")
-	}
-
-	// Access the API
-	curl http://localhost:4006/hello
-*/
-type Controller struct{}
-
-func (c *Controller) PostConstruct() {}
-
-// Annotations the annotation of Api method
-type Annotations map[string]string
-
-// Global controller cache
-var controllerCache []abstractController
-
-// Annotations of each API
-var annotationCache map[string]Annotations
-
-// Register controllers
-func Register(controller ...abstractController) {
-	controllerCache = append(controllerCache, controller...)
-}
-
-// IsController Determine whether it is controller
-func IsController(v interface{}) bool {
-	ct := reflect.TypeOf(v)
-	if ct.Kind() != reflect.Ptr {
-		return false
-	}
-	return ct.Implements(reflect.TypeOf((*abstractController)(nil)).Elem())
-}
 
 // Apply all apis to the gin engine
 // @param e: gin.Engine
 // @param autowired: whether enable autowired properties
 func Apply(e *gin.Engine, autowired bool) {
-	if Apis == nil {
-		for _, controller := range controllerCache {
+	if DI == nil {
+		for _, controller := range diCache {
 			if autowired {
 				ioc.Inject(controller)
 			}
@@ -77,72 +28,105 @@ func Apply(e *gin.Engine, autowired bool) {
 		return
 	}
 
-	haser := md5.New()
-	ginProxy := reflect.ValueOf(e)
 	annotationCache = make(map[string]Annotations)
-	for _, controller := range controllerCache {
+	for _, di := range diCache {
 		if autowired {
-			ioc.Inject(controller)
+			ioc.Inject(di)
 		}
-		controller.PostConstruct()
-		controllerTypeOf := reflect.TypeOf(controller)
-		controllerProxy := reflect.ValueOf(controller)
-		for i := 0; i < controllerTypeOf.NumMethod(); i++ {
-			methodProxy := controllerTypeOf.Method(i)
+		di.PostConstruct()
+		diTypeOf := reflect.TypeOf(di)
+		diProxy := reflect.ValueOf(di)
+		for i := 0; i < diTypeOf.NumMethod(); i++ {
+			methodProxy := diTypeOf.Method(i)
 
-			key := controllerTypeOf.Elem().PkgPath() + "-" + controllerTypeOf.Elem().Name() + "-" + methodProxy.Name
-			haser.Write([]byte(key))
-			//key = hex.EncodeToString(haser.Sum(nil))
+			key := diTypeOf.Elem().PkgPath() + "-" + diTypeOf.Elem().Name() + "-" + methodProxy.Name
+			key = fmt.Sprintf("%x", md5.Sum([]byte(key)))
 
-			if info, ok := Apis[key]; ok {
-				//ginMethod := ginProxy.MethodByName(info.MethodName)
-				//args := []reflect.Value{reflect.ValueOf(info.ApiPath)}
-				//args = append(args, controllerProxy.MethodByName(methodProxy.Name))
-				//ginMethod.Call(args)
-				//annotationCache[info.ApiPath] = info.Annotations
-				//
-				//fn, ok := controllerTypeOf.MethodByName(methodProxy.Name)
-				//if !ok {
-				//	continue
-				//}
-				//
-				//e.Match([]string{info.MethodName}, info.ApiPath, fn)
-
-				if method, ok := controllerTypeOf.MethodByName(methodProxy.Name); ok {
-					RegisterRoute(e, info.MethodName, info.ApiPath, method, controllerTypeOf, controllerProxy)
+			if info, ok := DI[key]; ok {
+				if method, ok := diTypeOf.MethodByName(methodProxy.Name); ok {
+					RegisterRoute(e, info.ApiMethodName, info.ApiPath, method, diTypeOf, diProxy)
 				}
 
 			}
 		}
-		if len(controllerCache) == 1 {
-			controllerCache = nil
+
+		if len(diCache) == 1 {
+			diCache = nil
 			return
 		}
-		controllerCache = controllerCache[1:]
+
+		diCache = diCache[1:]
 	}
 
-	Apis = nil
+	DI = nil
 }
 
-func RegisterRoute(e *gin.Engine, method string, path string, fn reflect.Method, TypeOf reflect.Type, ValueOf reflect.Value) {
-
+func RegisterRoute(e *gin.Engine, method string, path string, fn reflect.Method, typeOf reflect.Type, valueOf reflect.Value) {
+	RouteBind(e, method, path, fn, typeOf, valueOf)
 }
 
-func RouteBind(e *gin.Engine, method string, path string, fn reflect.Value, TypeOf reflect.Type, ValueOf reflect.Value) {
+func RouteBind(e *gin.Engine, method string, path string, fn reflect.Method, typeOf reflect.Type, valueOf reflect.Value) {
+	callFn := RouteHandle(fn, valueOf, typeOf)
 
+	switch strings.ToUpper(method) {
+	case "ANY":
+		e.Any(path, callFn)
+	default:
+		e.Handle(method, path, callFn)
+	}
 }
 
 func RouteHandle(fn reflect.Method, valueOf reflect.Value, typeOf reflect.Type) gin.HandlerFunc {
-	if valueOf.Type().NumIn() <= 1 {
+	if fn.Func.Type().NumIn() <= 1 {
 		log.Fatalf("route handle fun error, method name: %v", fn.Name)
 	}
 
-	t := valueOf.Type().In(1)
-
-	defFun := func(c *gin.Context) interface{} { return c }
-	if t == defFun {
-
+	reqType := fn.Func.Type().In(1)
+	if reqType != reflect.TypeOf(&gin.Context{}) {
+		log.Fatalf("route handle fun error, method first params require *gin.Context{},  error method: %v", fn.Name)
 	}
+
+	var reqLen = fn.Func.Type().NumIn()
+	return func(c *gin.Context) {
+		var tmp reflect.Value
+		var reqs []reflect.Value
+
+		for i := 2; i < reqLen; i++ {
+			reqType := fn.Func.Type().In(i)
+
+			if reqType.Kind() != reflect.Ptr {
+				tmp = reflect.New(reqType)
+			} else {
+				tmp = reflect.New(reqType.Elem())
+			}
+
+			if err := unmarshal(c, tmp.Interface()); err != nil { // Return error message.返回错误信息
+				response.RFail(c, fmt.Sprintf("route handle fun error, error method: %v, error: %v", fn.Name, err), http.StatusBadRequest)
+				c.Abort()
+				return
+			}
+
+			if reqType.Kind() == reflect.Ptr {
+				reqs = append(reqs, tmp)
+			} else {
+				reqs = append(reqs, tmp.Elem())
+			}
+		}
+
+		fn.Func.Call(append([]reflect.Value{valueOf, reflect.ValueOf(c)}, reqs...))
+		if !c.IsAborted() {
+			c.Abort()
+		}
+	}
+
+}
+
+func unmarshal(c *gin.Context, v interface{}) error {
+	err := c.ShouldBind(v)
+	if err != nil {
+		log.Fatalf("route handle fun error, method params bind, error method: %v", v)
+	}
+	return err
 }
 
 // GetAnnotation Gets the specified annotation

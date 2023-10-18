@@ -42,6 +42,6 @@ func RImage[T interface{}](c *gin.Context, data []byte) *gin.Context {
 	return NewResponse[T](c).SetType(IMAGE).ToStream(data)
 }
 
-func RFail[T interface{}](c *gin.Context, data T, t ResponseTypeEnum, code int) *Response[T] {
+func RFail[T interface{}](c *gin.Context, data T, code int) *Response[T] {
 	return NewResponse[T](c).SetType(IMAGE).SetCode(code).SetMessage("success").SetData(data)
 }

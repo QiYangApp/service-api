@@ -38,10 +38,10 @@ func beforeStart(r *gin.Engine, cfg *config.ConfigService) {
 
 	(new(CronService)).Handle(r, cfg)
 
-	(new(InjectService)).Handle(r, cfg)
-
 	// 注册路由
 	middleware.SetupMiddleware(r)
+
+	(new(InjectService)).Handle(r, cfg)
 }
 
 func afterStart(r *gin.Engine, cfg *config.ConfigService) {

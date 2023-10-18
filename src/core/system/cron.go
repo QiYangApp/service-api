@@ -2,7 +2,7 @@ package system
 
 import (
 	"github.com/gin-gonic/gin"
-	"service-api/src/app/jobs"
+	"service-api/src/api/jobs"
 	"service-api/src/core/config"
 	"service-api/src/core/cron"
 )
