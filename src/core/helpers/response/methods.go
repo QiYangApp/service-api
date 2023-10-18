@@ -28,20 +28,19 @@ func RSuccess[T interface{}](c *gin.Context, data T) *Response[T] {
 	return NewResponse[T](c).SetState(Success).SetCode(http.StatusOK).SetType(JSON).SetMessage("success").SetData(data)
 }
 
-func RError[T interface{}](
+func RError(
 	c *gin.Context,
-	data T,
+	data error,
 	code int,
-	m string,
-	s ResponseStateEnum,
-) *Response[T] {
-	return NewResponse[T](c).SetType(JSON).SetState(s).SetMessage(m).SetCode(code).SetData(data)
+	mes string,
+) *Response[error] {
+	return NewResponse[error](c).SetType(JSON).SetState(Error).SetMessage(mes).SetCode(code).SetData(data)
 }
 
 func RImage[T interface{}](c *gin.Context, data []byte) *gin.Context {
 	return NewResponse[T](c).SetType(IMAGE).ToStream(data)
 }
 
-func RFail[T interface{}](c *gin.Context, data T, code int) *Response[T] {
-	return NewResponse[T](c).SetType(IMAGE).SetCode(code).SetMessage("success").SetData(data)
+func RFail[T interface{}](c *gin.Context, data T, code int, mes string) *Response[T] {
+	return NewResponse[T](c).SetType(IMAGE).SetState(Fail).SetCode(code).SetMessage(mes).SetData(data)
 }

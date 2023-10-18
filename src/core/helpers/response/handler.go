@@ -69,17 +69,11 @@ func (r *Response[T]) SetState(state ResponseStateEnum) *Response[T] {
 }
 
 func (r *Response[T]) GetState() ResponseStateEnum {
-	switch r.State {
-	case Success:
-	case Fail:
-	case Warn:
-	case Error:
-		return r.State
-	default:
+	if r.State == "" {
 		return Success
 	}
 
-	return Success
+	return r.State
 }
 
 func (r *Response[T]) RContext() *gin.Context {

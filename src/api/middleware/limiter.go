@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"service-api/src/core/helpers/response"
 	loggerInstance "service-api/src/core/logger"
+	"service-api/src/enums/i18n"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -29,12 +30,11 @@ func Limiter(maxRequests int64, duration time.Duration) gin.HandlerFunc {
 
 			c.AbortWithStatusJSON(
 				http.StatusTooManyRequests,
-				response.RError(
+				response.RFail(
 					c,
-					"TOO MANY REQUESTS",
+					i18n.TooManyRequests,
 					http.StatusTooManyRequests,
-					"REQUESTS.TOO_MANY_REQUESTS",
-					response.Fail,
+					i18n.TooManyRequests,
 				).ToStruct(),
 			)
 			return

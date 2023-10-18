@@ -17,11 +17,11 @@ func AccountExists(account string) bool {
 }
 
 // FirstMemberByAccount 获取一个账号
-func FirstMemberByAccount(account string) *ent.Member {
+func FirstMemberByAccount(account string) (*ent.Member, error) {
 	return repo.Query().Member.Query().Where(
 		member.Or(
 			member.Account(account),
 			member.Email(account),
 		),
-	).FirstX(repo.Ctx())
+	).First(repo.Ctx())
 }

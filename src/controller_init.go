@@ -34,7 +34,7 @@ func init() {
 
 			Annotations:    map[string]string{},
 			ApiMethodName:  "GET",
-			ApiPath:        "/api/authorize/password/Authorized",
+			ApiPath:        "/api/authorize/password/authorized",
 			PackMethodName: "PasswordLoginController",
 			PackName:       "authorize",
 			PackPath:       "service-api/src/api/controller/authorize",

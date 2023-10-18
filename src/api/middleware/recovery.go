@@ -19,12 +19,11 @@ func Recovery() gin.HandlerFunc {
 
 		c.AbortWithStatusJSON(
 			http.StatusInternalServerError,
-			response.RError(
+			response.RFail(
 				c,
-				errMsg,
+				err,
 				http.StatusInternalServerError,
-				"STATE.FAIL",
-				response.Fail,
+				errMsg,
 			).ToStruct(),
 		)
 	}

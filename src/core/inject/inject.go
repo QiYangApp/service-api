@@ -12,6 +12,8 @@ import (
 	"net/http"
 	"reflect"
 	"service-api/src/core/helpers/response"
+	"service-api/src/enums/i18n"
+	"service-api/src/errors"
 	"strings"
 )
 
@@ -101,7 +103,12 @@ func RouteHandle(fn reflect.Method, valueOf reflect.Value, typeOf reflect.Type) 
 			}
 
 			if err := unmarshal(c, tmp.Interface()); err != nil { // Return error message.返回错误信息
-				response.RFail(c, fmt.Sprintf("route handle fun error, error method: %v, error: %v", fn.Name, err), http.StatusBadRequest)
+				response.RFail(
+					c,
+					errors.WithErr(i18n.StateFail, err),
+					http.StatusBadRequest,
+					fmt.Sprintf("route handle fun error, error method: %v, error: %v", fn.Name, err),
+				)
 				c.Abort()
 				return
 			}

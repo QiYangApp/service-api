@@ -1,0 +1,11 @@
+{"level":"fatal","time":"2023-10-18 20:01:21","file":"db/connect.go:27","msg":"ping to the database failed failed to connect to `host=localhost user=qi_yang database=qi_yang`: dial error (dial tcp 127.0.0.1:5430: connectex: No connection could be made because the target machine actively refused it.)","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-10-18 20:01:55","file":"db/connect.go:27","msg":"ping to the database failed failed to connect to `host=localhost user=qi_yang database=qi_yang`: dial error (dial tcp 127.0.0.1:5430: connectex: No connection could be made because the target machine actively refused it.)","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-18 20:15:07","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-18 20:19:04","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-18 23:54:31","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-18 23:55:52","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-18 23:56:27","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-18 23:56:30","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-18 23:56:45","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-18 23:56:55","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-10-18 23:57:13","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
