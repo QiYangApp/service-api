@@ -42,10 +42,6 @@ func beforeStart(r *gin.Engine, cfg *config.ConfigService) {
 
 	// 注册路由
 	middleware.SetupMiddleware(r)
-
-	// 注册路由
-	//routes.SetupRoutes(r)
-
 }
 
 func afterStart(r *gin.Engine, cfg *config.ConfigService) {

@@ -1,12 +1,14 @@
 package inject
 
+// https://github.com/xxjwxc/ginrpc/blob/master/common.go#L57
+// https://github.com/archine/gin-plus/blob/v2/ast/mvc2/main.go
+
 import (
 	"crypto/md5"
 	"github.com/archine/ioc"
 	"github.com/gin-gonic/gin"
+	"log"
 	"reflect"
-	"service-api/src/app/entity/http"
-	"service-api/src/core/helpers/routes"
 )
 
 // controller Top-level interface used to declare a structure as a controller.
@@ -93,15 +95,22 @@ func Apply(e *gin.Engine, autowired bool) {
 			//key = hex.EncodeToString(haser.Sum(nil))
 
 			if info, ok := Apis[key]; ok {
-				ginMethod := ginProxy.MethodByName(info.MethodName)
-				args := []reflect.Value{reflect.ValueOf(info.ApiPath)}
-				args = append(args, controllerProxy.MethodByName(methodProxy.Name))
-				ginMethod.Call(args)
-				annotationCache[info.ApiPath] = info.Annotations
+				//ginMethod := ginProxy.MethodByName(info.MethodName)
+				//args := []reflect.Value{reflect.ValueOf(info.ApiPath)}
+				//args = append(args, controllerProxy.MethodByName(methodProxy.Name))
+				//ginMethod.Call(args)
+				//annotationCache[info.ApiPath] = info.Annotations
+				//
+				//fn, ok := controllerTypeOf.MethodByName(methodProxy.Name)
+				//if !ok {
+				//	continue
+				//}
+				//
+				//e.Match([]string{info.MethodName}, info.ApiPath, fn)
 
-				e.Match([]string{info.MethodName}, info.ApiPath, routes.Bind(func(route *gin.Context, param http.VerifyType) {
-					controllerProxy.MethodByName(methodProxy.Name)
-				}))
+				if method, ok := controllerTypeOf.MethodByName(methodProxy.Name); ok {
+					RegisterRoute(e, info.MethodName, info.ApiPath, method, controllerTypeOf, controllerProxy)
+				}
 
 			}
 		}
@@ -113,6 +122,27 @@ func Apply(e *gin.Engine, autowired bool) {
 	}
 
 	Apis = nil
+}
+
+func RegisterRoute(e *gin.Engine, method string, path string, fn reflect.Method, TypeOf reflect.Type, ValueOf reflect.Value) {
+
+}
+
+func RouteBind(e *gin.Engine, method string, path string, fn reflect.Value, TypeOf reflect.Type, ValueOf reflect.Value) {
+
+}
+
+func RouteHandle(fn reflect.Method, valueOf reflect.Value, typeOf reflect.Type) gin.HandlerFunc {
+	if valueOf.Type().NumIn() <= 1 {
+		log.Fatalf("route handle fun error, method name: %v", fn.Name)
+	}
+
+	t := valueOf.Type().In(1)
+
+	defFun := func(c *gin.Context) interface{} { return c }
+	if t == defFun {
+
+	}
 }
 
 // GetAnnotation Gets the specified annotation

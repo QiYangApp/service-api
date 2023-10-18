@@ -6,11 +6,15 @@ import (
 	verifyType "service-api/src/app/entity/http"
 )
 
-type HandlerFunc[P verifyType.VerifyType, R *gin.Context] func(*gin.Context, P) R
+type HandlerFuncParams func(*gin.Context, verifyType.VerifyType) *gin.Context
+type HandlerFuncDefault func(*gin.Context) *gin.Context
 
-func Bind[P verifyType.VerifyType, R *gin.Context](handlerFunc HandlerFunc[P, R]) gin.HandlerFunc {
+func Exce(fn gin.HandlerFunc) {
+
+}
+
+func Bind(handlerFunc HandlerFuncParams, p any) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var p P
 		var err error
 		var pt string
 
