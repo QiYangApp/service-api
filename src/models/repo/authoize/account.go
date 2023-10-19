@@ -6,12 +6,20 @@ import (
 	"service-api/src/models/repo"
 )
 
-// AccountExists 判断账号是否存在
-func AccountExists(account string) bool {
+// AccountAndEmailExists 判断账号是否存在
+func AccountAndEmailExists(account, email string) bool {
+	return repo.Query().Member.Query().Where(
+		member.Account(account),
+		member.Email(email),
+	).ExistX(repo.Ctx())
+}
+
+// AccountOrEmailExists 判断账号是否存在
+func AccountOrEmailExists(account, email string) bool {
 	return repo.Query().Member.Query().Where(
 		member.Or(
 			member.Account(account),
-			member.Email(account),
+			member.Email(email),
 		),
 	).ExistX(repo.Ctx())
 }
