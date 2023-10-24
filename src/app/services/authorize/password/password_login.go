@@ -1,4 +1,4 @@
-package authorize
+package password
 
 import (
 	"crypto/md5"
@@ -44,8 +44,8 @@ func (s *PasswordLoginService) Check(req request.PasswordLoginCheckReq) (*reques
 		return nil, errors.WithMes(i18n.EmptyAccount)
 	}
 
-	if !authoize.AccountExists(req.Account) {
-		return nil, errors.WithMes(i18n.NotExistsAccount)
+	if state, err := authoize.AccountExists(req.Account); err != nil || !state {
+		return nil, errors.WithErr(i18n.NotExistsAccount, err)
 	}
 
 	return &request.PasswordLoginCheckRsp{
@@ -117,8 +117,8 @@ func (s *PasswordRegisterService) Check(req request.PasswordLoginCheckReq) (*req
 		return nil, errors.WithMes(i18n.EmptyAccount)
 	}
 
-	if !authoize.AccountExists(req.Account) {
-		return nil, errors.WithMes(i18n.NotExistsAccount)
+	if state, err := authoize.AccountExists(req.Account); err != nil || !state {
+		return nil, errors.WithErr(i18n.NotExistsAccount, err)
 	}
 
 	return &request.PasswordLoginCheckRsp{
