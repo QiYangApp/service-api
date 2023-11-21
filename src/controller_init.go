@@ -5,12 +5,12 @@ package main
 
 import (
 	pack_71fc781208c148cecd8c184360762152 "service-api/src/api/controller"
-	pack_44baa70fb0a0c7a5b3e85c805406f0bf "service-api/src/api/controller/authorize"
+	pack_850f5fd4b0bda50703b2d689c801ef40 "service-api/src/api/controller/authorize"
 	"service-api/src/core/inject"
 )
 
 func init() {
-	inject.Register(&pack_71fc781208c148cecd8c184360762152.InjectController{}, &pack_44baa70fb0a0c7a5b3e85c805406f0bf.PasswordLoginController{})
+	inject.Register(&pack_71fc781208c148cecd8c184360762152.InjectController{}, &pack_850f5fd4b0bda50703b2d689c801ef40.PasswordLoginController{}, &pack_850f5fd4b0bda50703b2d689c801ef40.PasswordRegisterController{})
 	inject.DI = map[string]*inject.MethodInfo{
 		"5a95ba9c494eba401182399acc6c4d95": {
 
