@@ -42,5 +42,5 @@ func RImage[T interface{}](c *gin.Context, data []byte) *gin.Context {
 }
 
 func RFail[T interface{}](c *gin.Context, data T, code int, mes string) *Response[T] {
-	return NewResponse[T](c).SetType(IMAGE).SetState(Fail).SetCode(code).SetMessage(mes).SetData(data)
+	return NewResponse[T](c).SetState(Fail).SetType(JSON).SetCode(code).SetMessage(mes).SetData(data)
 }

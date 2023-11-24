@@ -20,7 +20,7 @@ func (d *LanguageService) Handle(r *gin.Engine, cfg *config.ConfigService) {
 		i18n.WithBundle(&i18n.BundleCfg{
 			RootPath:         helpers.PathInstance.JoinCurrentRunPath("resources/lang"),
 			AcceptLanguage:   []language.Tag{language.Chinese, language.SimplifiedChinese, language.English},
-			DefaultLanguage:  language.Chinese,
+			DefaultLanguage:  language.SimplifiedChinese,
 			UnmarshalFunc:    toml.Unmarshal,
 			FormatBundleFile: "toml",
 		}),

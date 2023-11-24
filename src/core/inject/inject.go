@@ -8,12 +8,11 @@ import (
 	"fmt"
 	"github.com/archine/ioc"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"reflect"
+	http2 "service-api/src/app/entity/http"
 	"service-api/src/core/helpers/response"
-	"service-api/src/enums/i18n"
-	"service-api/src/errors"
+	"service-api/src/core/logger"
 	"strings"
 )
 
@@ -80,12 +79,12 @@ func RouteBind(e *gin.Engine, method string, path string, fn reflect.Method, typ
 
 func RouteHandle(fn reflect.Method, valueOf reflect.Value, typeOf reflect.Type) gin.HandlerFunc {
 	if fn.Func.Type().NumIn() <= 1 {
-		log.Fatalf("route handle fun error, method name: %v", fn.Name)
+		logger.S().Fatal("route handle fun error, method name: %v", fn.Name)
 	}
 
 	reqType := fn.Func.Type().In(1)
 	if reqType != reflect.TypeOf(&gin.Context{}) {
-		log.Fatalf("route handle fun error, method first params require *gin.Context{},  error method: %v", fn.Name)
+		logger.S().Fatal("route handle fun error, method first params require *gin.Context{},  error method: %v", fn.Name)
 	}
 
 	var reqLen = fn.Func.Type().NumIn()
@@ -105,11 +104,10 @@ func RouteHandle(fn reflect.Method, valueOf reflect.Value, typeOf reflect.Type) 
 			if err := unmarshal(c, tmp.Interface()); err != nil { // Return error message.返回错误信息
 				response.RFail(
 					c,
-					errors.WithErr(i18n.StateFail, err),
+					http2.GetErrorMsg(c, tmp.Interface().(http2.Validator), err),
 					http.StatusBadRequest,
-					fmt.Sprintf("route handle fun error, error method: %v, error: %v", fn.Name, err),
-				)
-				c.Abort()
+					fmt.Sprintf("params error"),
+				).ToJson().Abort()
 				return
 			}
 
@@ -131,7 +129,7 @@ func RouteHandle(fn reflect.Method, valueOf reflect.Value, typeOf reflect.Type) 
 func unmarshal(c *gin.Context, v interface{}) error {
 	err := c.ShouldBind(v)
 	if err != nil {
-		log.Fatalf("route handle fun error, method params bind, error method: %v", v)
+		logger.S().Errorln("route handle fun error, method params bind, error method: %v", v)
 	}
 	return err
 }

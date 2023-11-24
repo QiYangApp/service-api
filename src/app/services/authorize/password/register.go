@@ -24,7 +24,7 @@ func (s *RegisterService) Check(req request.PasswordRegisterCheckReq) (*request.
 		return nil, errors.WithMes(i18n.EmptyEmail)
 	}
 
-	if authoize.AccountOrEmailExists(req.Account, req.Email) {
+	if authoize.AccountAndEmailExists(req.Account, req.Email) {
 		return nil, errors.WithMes(i18n.ExistsAccount)
 	}
 

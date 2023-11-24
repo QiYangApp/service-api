@@ -56,10 +56,15 @@ func (r *Response[T]) SetMessage(message string) *Response[T] {
 
 func (r *Response[T]) GetMessage() string {
 	if r.Message == "" {
-		return "--"
+		return ""
 	}
 
-	return i18n.MustGetMessage(r.Context, r.Message)
+	msg := i18n.MustGetMessage(r.Context, r.Message)
+	if msg == "" {
+		return r.Message
+	}
+
+	return msg
 }
 
 func (r *Response[T]) SetState(state ResponseStateEnum) *Response[T] {

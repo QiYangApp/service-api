@@ -5,7 +5,7 @@ const AuthorizePrefix = "AUTHORIZE."
 // EmptyAccount AuthorizeEmptyAccount 空账号
 const EmptyAccount = AuthorizePrefix + "EMPTY_ACCOUNT"
 
-const EmptyEmail = AuthorizePrefix + "EmptyEmail"
+const EmptyEmail = AuthorizePrefix + "EMPTY_EMAIL"
 const ErrorPassword = AuthorizePrefix + "ERROR_PASSWORD"
 const ErrorSingPassword = AuthorizePrefix + "ERROR_Sing_PASSWORD"
 

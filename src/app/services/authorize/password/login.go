@@ -20,7 +20,7 @@ func (s *LoginService) Check(req request.PasswordLoginCheckReq) (*request.Passwo
 		return nil, errors.WithMes(i18n.EmptyAccount)
 	}
 
-	if !authoize.AccountOrEmailExists(req.Account, req.Account) {
+	if !authoize.AccountAndEmailExists(req.Account, req.Account) {
 		return nil, errors.WithMes(i18n.NotExistsAccount)
 	}
 

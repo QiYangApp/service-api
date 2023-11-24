@@ -11,7 +11,7 @@ func AccountExists(account string) (bool, error) {
 	return repo.Query().Member.Query().Where(
 		member.Or(
 			member.Account(account),
-			member.Email(email),
+			member.Email(account),
 		),
 	).Exist(repo.Ctx())
 }
@@ -20,7 +20,7 @@ func AccountExists(account string) (bool, error) {
 func AccountAndEmailExists(account string, email string) bool {
 	return repo.Query().Member.Query().Where(
 		member.Account(account),
-		member.Email(account),
+		member.Email(email),
 	).ExistX(repo.Ctx())
 }
 

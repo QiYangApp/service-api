@@ -1,13 +1,27 @@
 package request
 
 import (
+	"github.com/gin-contrib/i18n"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"service-api/src/app/entity/http"
+	msg "service-api/src/enums/i18n"
 )
 
+type PasswordReqErrMsg struct {
+}
+
+func (PasswordReqErrMsg) GetMessage(c *gin.Context) http.ValidatorMessages {
+	return http.ValidatorMessages{
+		"Account.required": i18n.MustGetMessage(c, msg.EmptyAccount),
+		"Email.required":   i18n.MustGetMessage(c, msg.EmptyEmail),
+	}
+}
+
 type PasswordLoginCheckReq struct {
-	http.ReqType `json:"_"`
-	Account      string `form:"account" json:"account" binding:"required" `
+	http.ReqType      `json:"_"`
+	PasswordReqErrMsg `json:"-"`
+	Account           string `form:"account" json:"account" binding:"required" `
 }
 
 type PasswordLoginCheckRsp struct {
@@ -17,7 +31,8 @@ type PasswordLoginCheckRsp struct {
 
 type PasswordLoggingReq struct {
 	http.ReqType
-	Account string `form:"account" json:"account" binding:"required" `
+	PasswordReqErrMsg `json:"-"`
+	Account           string `form:"account" json:"account" binding:"required" `
 }
 
 type PasswordLoggingRsp struct {
@@ -28,10 +43,11 @@ type PasswordLoggingRsp struct {
 
 type PasswordLoggedReq struct {
 	http.ReqType
-	CaptchaId string `form:"captchaId" json:"captcha_id" binding:"required" `
-	Captcha   string `form:"captcha" json:"captcha" binding:"required" `
-	Account   string `form:"account" json:"account" binding:"required" `
-	Password  string `form:"password" json:"password" binding:"required" `
+	PasswordReqErrMsg `json:"-"`
+	CaptchaId         string `form:"captchaId" json:"captcha_id" binding:"required" `
+	Captcha           string `form:"captcha" json:"captcha" binding:"required" `
+	Account           string `form:"account" json:"account" binding:"required" `
+	Password          string `form:"password" json:"password" binding:"required" `
 }
 
 type PasswordLoggedRsp struct {
