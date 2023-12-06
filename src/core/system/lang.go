@@ -24,16 +24,16 @@ func (d *LanguageService) Handle(r *gin.Engine, cfg *config.ConfigService) {
 			UnmarshalFunc:    toml.Unmarshal,
 			FormatBundleFile: "toml",
 		}),
-		i18n.WithGetLngHandle(
-			func(r *gin.Context, defaultLng string) string {
-				/**
-				**/
-				lang := r.GetHeader("Accept-Language")
-				if lang == "" {
-					return defaultLng
-				}
-				return lang
-			},
-		),
+		//i18n.WithGetLngHandle(
+		//	func(r *gin.Context, defaultLng string) string {
+		//		/**
+		//		**/
+		//		lang := r.GetHeader("Accept-Language")
+		//		if lang == "" {
+		//			return defaultLng
+		//		}
+		//		return lang
+		//	},
+		//),
 	))
 }

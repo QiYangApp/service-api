@@ -5,39 +5,66 @@ package main
 
 import (
 	pack_71fc781208c148cecd8c184360762152 "service-api/src/api/controller"
-	pack_850f5fd4b0bda50703b2d689c801ef40 "service-api/src/api/controller/authorize"
+	pack_f9cd26517a85a763fe7acac8691e4de8 "service-api/src/api/controller/authorize/password"
 	"service-api/src/core/inject"
 )
 
 func init() {
-	inject.Register(&pack_71fc781208c148cecd8c184360762152.InjectController{}, &pack_850f5fd4b0bda50703b2d689c801ef40.PasswordLoginController{}, &pack_850f5fd4b0bda50703b2d689c801ef40.PasswordRegisterController{})
+	inject.Register(&pack_71fc781208c148cecd8c184360762152.InjectController{}, &pack_f9cd26517a85a763fe7acac8691e4de8.LoginController{}, &pack_f9cd26517a85a763fe7acac8691e4de8.RegisterController{})
 	inject.DI = map[string]*inject.MethodInfo{
-		"5a95ba9c494eba401182399acc6c4d95": {
+		"3f855e20f2fea9e7cd8932bee26b60a6": {
 
 			Annotations:    map[string]string{},
 			ApiMethodName:  "GET",
-			ApiPath:        "/api/authorize/password/authorizing",
-			PackMethodName: "PasswordLoginController",
-			PackName:       "authorize",
-			PackPath:       "service-api/src/api/controller/authorize",
+			ApiPath:        "/api/authorize/password/register/authorizing",
+			PackMethodName: "RegisterController",
+			PackName:       "password",
+			PackPath:       "service-api/src/api/controller/authorize/password",
 		},
-		"8da03d27bb2baa2ecbde4bff293d7668": {
+		"556902bab00c142a01230816f883559a": {
 
 			Annotations:    map[string]string{},
 			ApiMethodName:  "GET",
-			ApiPath:        "/api/authorize/password/check",
-			PackMethodName: "PasswordLoginController",
-			PackName:       "authorize",
-			PackPath:       "service-api/src/api/controller/authorize",
+			ApiPath:        "/api/authorize/password/login/authorizing",
+			PackMethodName: "LoginController",
+			PackName:       "password",
+			PackPath:       "service-api/src/api/controller/authorize/password",
 		},
-		"994daa151fc09281b473959f28371e38": {
+		"7ff40593b4b22ed5dba9052c470c53af": {
 
 			Annotations:    map[string]string{},
 			ApiMethodName:  "GET",
-			ApiPath:        "/api/authorize/password/authorized",
-			PackMethodName: "PasswordLoginController",
-			PackName:       "authorize",
-			PackPath:       "service-api/src/api/controller/authorize",
+			ApiPath:        "/api/authorize/password/login/authorized",
+			PackMethodName: "LoginController",
+			PackName:       "password",
+			PackPath:       "service-api/src/api/controller/authorize/password",
+		},
+		"d5fa1995f02dd382744519e85df30b62": {
+
+			Annotations:    map[string]string{},
+			ApiMethodName:  "GET",
+			ApiPath:        "/api/authorize/password/register/authorized",
+			PackMethodName: "RegisterController",
+			PackName:       "password",
+			PackPath:       "service-api/src/api/controller/authorize/password",
+		},
+		"e5c48c31f71c60ebe119cafdb0a627db": {
+
+			Annotations:    map[string]string{},
+			ApiMethodName:  "GET",
+			ApiPath:        "/api/authorize/password/register/check",
+			PackMethodName: "RegisterController",
+			PackName:       "password",
+			PackPath:       "service-api/src/api/controller/authorize/password",
+		},
+		"ff1bd80654ed43f7fcc68f1ae721283d": {
+
+			Annotations:    map[string]string{},
+			ApiMethodName:  "GET",
+			ApiPath:        "/api/authorize/password/login/check",
+			PackMethodName: "LoginController",
+			PackName:       "password",
+			PackPath:       "service-api/src/api/controller/authorize/password",
 		},
 	}
 }

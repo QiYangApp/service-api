@@ -1,20 +1,20 @@
 package response
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"time"
-
 	"github.com/gin-contrib/i18n"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"net/http"
 )
 
 type Response[T interface{}] struct {
 	Context   *gin.Context      `json:"-"`
 	Type      ResponseTypeEnum  `json:"-"`
+	RequestId uuid.UUID         `json:"request_id"`
 	Code      int               `json:"code"`
 	State     ResponseStateEnum `json:"state"`
 	Message   string            `json:"message"`
-	Timestamp time.Time         `json:"timestamp"`
+	Timestamp string            `json:"timestamp"`
 	Data      T                 `json:"data,omitempty"`
 }
 
@@ -86,11 +86,14 @@ func (r *Response[T]) RContext() *gin.Context {
 }
 
 func (r *Response[T]) ToStruct() *Response[T] {
-	r.Message = r.GetMessage()
-	r.Code = r.GetCode()
-	r.State = r.GetState()
-
-	return r
+	return &Response[T]{
+		Code:      r.GetCode(),
+		State:     r.GetState(),
+		Message:   r.GetMessage(),
+		Data:      r.Data,
+		Timestamp: r.Timestamp,
+		RequestId: r.RequestId,
+	}
 }
 
 func (r *Response[T]) ToJson() *gin.Context {

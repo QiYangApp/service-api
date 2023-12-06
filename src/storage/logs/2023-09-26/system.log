@@ -1,2 +1,0 @@
-{"level":"fatal","time":"2023-09-26 01:30:54","file":"db/connect.go:27","msg":"ping to the database failed failed to connect to `host=localhost user=qi_yang database=qi_yang`: dial error (dial tcp 127.0.0.1:5430: connectex: No connection could be made because the target machine actively refused it.)","name":"system","level":"debug"}
-{"level":"debug","time":"2023-09-26 01:33:43","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}

@@ -19,7 +19,7 @@ func Limiter(maxRequests int64, duration time.Duration) gin.HandlerFunc {
 		// 限流逻辑
 		if limiter.Allow() == false {
 			// 在请求处理之后记录响应信息
-			loggerInstance.R().Debugw(
+			loggerInstance.R().Info(
 				"limiter",
 				zap.String("url", c.Request.URL.String()),
 				zap.Any("headers", c.Request.Header),
@@ -32,7 +32,7 @@ func Limiter(maxRequests int64, duration time.Duration) gin.HandlerFunc {
 				http.StatusTooManyRequests,
 				response.RFail(
 					c,
-					i18n.TooManyRequests,
+					"",
 					http.StatusTooManyRequests,
 					i18n.TooManyRequests,
 				).ToStruct(),

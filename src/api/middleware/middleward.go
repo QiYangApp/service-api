@@ -14,6 +14,7 @@ func SetupMiddleware(r *gin.Engine) {
 	r.Use(Secure())
 	r.Use(Cors())
 	r.Use(CSRF())
+	r.Use(Lang())
 	r.Use(Logger())
 
 	//使用 Gzip

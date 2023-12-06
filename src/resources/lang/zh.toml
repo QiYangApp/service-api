@@ -1,3 +1,4 @@
+welcome = "welcome1"
 [REQUESTS]
 TOO_MANY_REQUESTS = "请求太频繁~~"
 
@@ -6,7 +7,7 @@ SUCCESS = "成功"
 ERROR = "错误"
 FAIL = "系统异常"
 
-[AUTHOIRZE]
+[AUTHORIZE]
 EMPTY_ACCOUNT="账号为空"
 EMPTY_EMAIL="邮箱为空"
 EMPTY_PASSWORD="空密码"

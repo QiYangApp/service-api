@@ -3,6 +3,7 @@ package helpers
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -47,7 +48,9 @@ func (p Path) GetCurrentRunPath() string {
 }
 
 func (p Path) JoinCurrentRunPath(path string) string {
-	return fmt.Sprintf("%s/%s", p.GetCurrentRunPath(), path)
+	path, _ = filepath.Abs(fmt.Sprintf("%s/%s", p.GetCurrentRunPath(), path))
+
+	return path
 }
 
 func (p Path) JoinCurrentRunRootPath(path string) string {

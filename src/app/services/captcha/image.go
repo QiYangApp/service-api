@@ -1,6 +1,7 @@
 package captcha
 
 import (
+	"fmt"
 	"github.com/mojocn/base64Captcha"
 	"service-api/src/core/cache"
 	"service-api/src/enums/i18n"
@@ -61,7 +62,7 @@ type Image struct {
 	store *ImageStore
 }
 
-func (i *Image) Generate(p *ImageParam) (*ImageResp, error) {
+func (i *Image) Generate(scenes string, p *ImageParam) (*ImageResp, error) {
 
 	if p == nil {
 		p = &ImageParam{
@@ -87,10 +88,19 @@ func (i *Image) Generate(p *ImageParam) (*ImageResp, error) {
 		return nil, errors.WithMes(i18n.CaptchaErrorGenerateCode)
 	}
 
+	// 生成场景存储类型错误
+	if cache.SetEx(fmt.Sprintf("captcha-%s-%s", scenes, id), id, 2*time.Minute) == false {
+		return nil, errors.WithMes(i18n.CaptchaErrorGenerateCode)
+	}
+
 	return &ImageResp{Captcha: body, Id: id}, nil
 }
 
-func (i *Image) Check(id, value string) bool {
+func (i *Image) Check(scenes, id, value string) bool {
+	if cache.Exists(fmt.Sprintf("captcha-%s-%s", scenes, id)) {
+		return false
+	}
+
 	return i.store.Verify(id, value, true)
 }
 

@@ -2,7 +2,7 @@ package password
 
 import (
 	"github.com/archine/ioc"
-	"service-api/src/app/entity/authorize/request"
+	"service-api/src/app/entity/authorize/password"
 	"service-api/src/app/services/authorize"
 	"service-api/src/app/services/captcha"
 	"service-api/src/app/services/token"
@@ -15,7 +15,7 @@ type RegisterService struct {
 }
 
 // Check 判断账号是否存在
-func (s *RegisterService) Check(req request.PasswordRegisterCheckReq) (*request.PasswordRegisterCheckRsp, error) {
+func (s *RegisterService) Check(req password.RegisterCheckReq) (*password.RegisterCheckRsp, error) {
 	if req.Account == "" {
 		return nil, errors.WithMes(i18n.EmptyAccount)
 	}
@@ -28,27 +28,27 @@ func (s *RegisterService) Check(req request.PasswordRegisterCheckReq) (*request.
 		return nil, errors.WithMes(i18n.ExistsAccount)
 	}
 
-	return &request.PasswordRegisterCheckRsp{
+	return &password.RegisterCheckRsp{
 		State: true,
 	}, nil
 }
 
-func (s *RegisterService) Authorizing(p request.PasswordLoggingReq) (*request.PasswordLoggingRsp, error) {
+func (s *RegisterService) Authorizing(p password.RegisteringReq) (*password.RegisteringRsp, error) {
 	client := captcha.NewImage()
-	body, err := client.Generate(nil)
+	body, err := client.Generate("register", nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return &request.PasswordLoggingRsp{
+	return &password.RegisteringRsp{
 		Id:      body.Id,
 		Captcha: body.Captcha,
 	}, nil
 }
 
-func (s *RegisterService) Authorized(req request.PasswordLoggedReq) (*request.PasswordLoggedRsp, error) {
+func (s *RegisterService) Authorized(req password.RegisteredReq) (*password.RegisteredRsp, error) {
 	client := captcha.NewImage()
-	if client.Check(req.CaptchaId, req.Captcha) {
+	if client.Check("register", req.CaptchaId, req.Captcha) {
 		return nil, errors.WithMes(i18n.CaptchaErrorCheck)
 	}
 
@@ -57,13 +57,13 @@ func (s *RegisterService) Authorized(req request.PasswordLoggedReq) (*request.Pa
 		return nil, errors.WithErr(i18n.NotExistsAccount, err)
 	}
 
-	var password string
-	password, err = authorize.Encrypt(req.Password, member.PasswordSing)
+	var pwd string
+	pwd, err = authorize.Encrypt(req.Password, member.PasswordSing)
 	if err != nil {
 		return nil, errors.WithErr(i18n.ErrorSingPassword, err)
 	}
 
-	if !authoize.ExistsBYPassword(req.Account, password) {
+	if !authoize.ExistsBYPassword(req.Account, pwd) {
 		return nil, errors.WithMes(i18n.ErrorPassword)
 	}
 
@@ -75,7 +75,7 @@ func (s *RegisterService) Authorized(req request.PasswordLoggedReq) (*request.Pa
 		return nil, err
 	}
 
-	return &request.PasswordLoggedRsp{
+	return &password.RegisteredRsp{
 		MemberId: member.ID,
 		Nickname: member.Nickname,
 		Avatar:   member.Avatar,

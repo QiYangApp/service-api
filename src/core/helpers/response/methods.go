@@ -2,6 +2,7 @@ package response
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"net/http"
 	"time"
 )
@@ -9,7 +10,8 @@ import (
 func NewResponse[T interface{}](c *gin.Context) *Response[T] {
 	return &Response[T]{
 		Context:   c,
-		Timestamp: time.Now(),
+		Timestamp: time.Now().Format("20060102150405.0000"),
+		RequestId: uuid.New(),
 	}
 }
 
@@ -30,11 +32,11 @@ func RSuccess[T interface{}](c *gin.Context, data T) *Response[T] {
 
 func RError(
 	c *gin.Context,
-	data error,
+	err error,
 	code int,
-	mes string,
-) *Response[error] {
-	return NewResponse[error](c).SetType(JSON).SetState(Error).SetMessage(mes).SetCode(code).SetData(data)
+	data any,
+) *Response[any] {
+	return NewResponse[any](c).SetType(JSON).SetState(Error).SetMessage(err.Error()).SetCode(code).SetData(data)
 }
 
 func RImage[T interface{}](c *gin.Context, data []byte) *gin.Context {
