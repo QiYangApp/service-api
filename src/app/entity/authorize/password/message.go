@@ -12,7 +12,7 @@ type ErrMsg struct {
 
 func (ErrMsg) GetMessage(c *gin.Context) http.ValidatorMessages {
 	return http.ValidatorMessages{
-		"Account.required": i18n.MustGetMessage(c, msg.EmptyAccount),
-		"Email.required":   i18n.MustGetMessage(c, msg.EmptyEmail),
+		"Email.required": i18n.MustGetMessage(c, msg.EmptyEmail),
+		"Email.email":    i18n.MustGetMessage(c, msg.ErrorFormatEmail),
 	}
 }

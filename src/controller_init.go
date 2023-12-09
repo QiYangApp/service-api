@@ -15,7 +15,7 @@ func init() {
 		"3f855e20f2fea9e7cd8932bee26b60a6": {
 
 			Annotations:    map[string]string{},
-			ApiMethodName:  "GET",
+			ApiMethodName:  "POST",
 			ApiPath:        "/api/authorize/password/register/authorizing",
 			PackMethodName: "RegisterController",
 			PackName:       "password",
@@ -42,17 +42,8 @@ func init() {
 		"d5fa1995f02dd382744519e85df30b62": {
 
 			Annotations:    map[string]string{},
-			ApiMethodName:  "GET",
+			ApiMethodName:  "POST",
 			ApiPath:        "/api/authorize/password/register/authorized",
-			PackMethodName: "RegisterController",
-			PackName:       "password",
-			PackPath:       "service-api/src/api/controller/authorize/password",
-		},
-		"e5c48c31f71c60ebe119cafdb0a627db": {
-
-			Annotations:    map[string]string{},
-			ApiMethodName:  "GET",
-			ApiPath:        "/api/authorize/password/register/check",
 			PackMethodName: "RegisterController",
 			PackName:       "password",
 			PackPath:       "service-api/src/api/controller/authorize/password",

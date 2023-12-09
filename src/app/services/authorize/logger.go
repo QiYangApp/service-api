@@ -5,11 +5,11 @@ import (
 	"github.com/google/uuid"
 	"regexp"
 	"service-api/src/models/ent"
-	"service-api/src/models/repo/authoize"
+	"service-api/src/models/repo/member"
 )
 
 type LoggerService struct {
-	repo authoize.LoggerRepo
+	repo member.LoggerRepo
 }
 
 func (a *LoggerService) Write(c *gin.Context, memberId uuid.UUID) (uuid.UUID, error) {

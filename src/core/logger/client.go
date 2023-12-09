@@ -11,10 +11,20 @@ var singleton = make(map[LoggerMode]*Instance, 0)
 var defaultOutputLevel = zapcore.WarnLevel
 
 const (
-	DefaultMode LoggerMode = "default"
-	RequestMode            = "request"
-	SystemMode             = "system"
+	DefaultMode  LoggerMode = "default"
+	RequestMode             = "request"
+	SystemMode              = "system"
+	RecoveryMode            = "recovery"
 )
+
+func Recovery() *zap.SugaredLogger {
+	log := NewSingletonLogger(LoggerCoreParam{
+		Mode:        RequestMode,
+		OutputLevel: defaultOutputLevel,
+	})
+
+	return log.Logger().Sugar()
+}
 
 func R() *zap.SugaredLogger {
 	log := NewSingletonLogger(LoggerCoreParam{

@@ -8,7 +8,7 @@ import (
 type LoginCheckReq struct {
 	http.ReqType `json:"_"`
 	ErrMsg       `json:"-"`
-	Account      string `form:"account" json:"account" binding:"required" `
+	Email        string `form:"email" json:"email" binding:"required,email" `
 }
 
 type LoginCheckRsp struct {
@@ -18,8 +18,8 @@ type LoginCheckRsp struct {
 
 type LoggingReq struct {
 	http.ReqType
-	ErrMsg  `json:"-"`
-	Account string `form:"account" json:"account" binding:"required" `
+	ErrMsg `json:"-"`
+	Email  string `form:"email" json:"email" binding:"required,email" `
 }
 
 type LoggingRsp struct {
@@ -39,7 +39,7 @@ type LoggedReq struct {
 
 type LoggedRsp struct {
 	http.RespType `json:"-"`
-	Account       string    `json:"account"`
+	Email         string    `json:"Email"`
 	Avatar        string    `json:"avatar"`
 	Nickname      string    `json:"nickname"`
 	MemberId      uuid.UUID `json:"member_id"`

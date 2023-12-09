@@ -24,8 +24,8 @@ type LoginController struct {
 // @GET(path="check")
 func (p *LoginController) Check(c *gin.Context, req password2.LoginCheckReq) *gin.Context {
 
-	if req.Account == "" {
-		return response.RError(c, errors.WithMes(i18n.EmptyAccount), http.StatusBadRequest, nil).ToJson()
+	if req.Email == "" {
+		return response.RError(c, errors.WithMes(i18n.EmptyEmail), http.StatusBadRequest, nil).ToJson()
 	}
 
 	body, err := p.Service.Check(req)
@@ -40,8 +40,8 @@ func (p *LoginController) Check(c *gin.Context, req password2.LoginCheckReq) *gi
 // @GET(path="authorizing")
 func (p *LoginController) Authorizing(c *gin.Context, req password2.LoggingReq) *gin.Context {
 
-	if req.Account == "" {
-		return response.RError(c, errors.WithMes(i18n.EmptyAccount), http.StatusBadRequest, nil).ToJson()
+	if req.Email == "" {
+		return response.RError(c, errors.WithMes(i18n.EmptyEmail), http.StatusBadRequest, nil).ToJson()
 	}
 
 	body, err := p.Service.Authorizing(req)

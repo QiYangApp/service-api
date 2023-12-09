@@ -13,3 +13,13 @@ func Query() *ent.Client {
 func Ctx() context.Context {
 	return context.TODO()
 }
+
+type BaseModel struct {
+}
+
+func (*BaseModel) NewQuery() *ent.Client {
+	return Query()
+}
+func (*BaseModel) Ctx() context.Context {
+	return Ctx()
+}

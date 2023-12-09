@@ -30,12 +30,11 @@ func (Member) Annotations() []schema.Annotation {
 func (Member) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).Comment("UUID of the"),
-		field.String("account").Comment("login account"),
 		field.String("email").NotEmpty().MaxLen(128),
 		field.String("avatar"),
-		field.String("password_sing").NotEmpty().MaxLen(64),
+		field.String("password_sing").NotEmpty().MaxLen(120),
 		field.String("password").NotEmpty().MaxLen(32),
-		field.String("mobile").NotEmpty().MaxLen(32),
+		field.String("mobile").MaxLen(32),
 		field.String("nickname").NotEmpty().MaxLen(32),
 		field.String("state").NotEmpty().MaxLen(32),
 	}
@@ -48,7 +47,9 @@ func (Member) Edges() []ent.Edge {
 
 func (Member) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("mobile", "mobile").
+		index.Fields("mobile").
+			Unique(),
+		index.Fields("email").
 			Unique(),
 	}
 }

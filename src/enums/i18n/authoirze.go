@@ -2,15 +2,16 @@ package i18n
 
 const AuthorizePrefix = "AUTHORIZE."
 
-// EmptyAccount AuthorizeEmptyAccount 空账号
-const EmptyAccount = AuthorizePrefix + "EMPTY_ACCOUNT"
-
+// EmptyEmail   空账号
 const EmptyEmail = AuthorizePrefix + "EMPTY_EMAIL"
 const ErrorPassword = AuthorizePrefix + "ERROR_PASSWORD"
 const ErrorSingPassword = AuthorizePrefix + "ERROR_Sing_PASSWORD"
 
-// NotExistsAccount 账号不存在
-const NotExistsAccount = AuthorizePrefix + "NOT_EXISTS_ACCOUNT"
+// NotExistsEmail 账号不存在
+const NotExistsEmail = AuthorizePrefix + "NOT_EXISTS_EMAIL"
 
-// ExistsAccount AuthorizeExistsAccount 账号不存在
-const ExistsAccount = AuthorizePrefix + "EXISTS_ACCOUNT"
+// ExistsEmail  账号不存在
+const ExistsEmail = AuthorizePrefix + "EXISTS_EMAIL"
+
+// ErrorFormatEmail 格式错误
+const ErrorFormatEmail = AuthorizePrefix + "ERROR_FORMAT_EMAIL"

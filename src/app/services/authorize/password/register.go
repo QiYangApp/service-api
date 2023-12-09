@@ -3,39 +3,25 @@ package password
 import (
 	"github.com/archine/ioc"
 	"service-api/src/app/entity/authorize/password"
+	member2 "service-api/src/app/entity/member"
 	"service-api/src/app/services/authorize"
+	"service-api/src/app/services/avatar"
 	"service-api/src/app/services/captcha"
 	"service-api/src/app/services/token"
 	"service-api/src/enums/i18n"
 	"service-api/src/errors"
-	"service-api/src/models/repo/authoize"
+	"service-api/src/models/ent"
+	"service-api/src/models/repo/member"
+	"time"
 )
 
 type RegisterService struct {
+	memberModel member.Model
 }
 
-// Check 判断账号是否存在
-func (s *RegisterService) Check(req password.RegisterCheckReq) (*password.RegisterCheckRsp, error) {
-	if req.Account == "" {
-		return nil, errors.WithMes(i18n.EmptyAccount)
-	}
-
-	if req.Email == "" {
-		return nil, errors.WithMes(i18n.EmptyEmail)
-	}
-
-	if authoize.AccountAndEmailExists(req.Account, req.Email) {
-		return nil, errors.WithMes(i18n.ExistsAccount)
-	}
-
-	return &password.RegisterCheckRsp{
-		State: true,
-	}, nil
-}
-
-func (s *RegisterService) Authorizing(p password.RegisteringReq) (*password.RegisteringRsp, error) {
+func (s *RegisterService) Authorizing(req password.RegisteringReq) (*password.RegisteringRsp, error) {
 	client := captcha.NewImage()
-	body, err := client.Generate("register", nil)
+	body, err := client.Generate("register"+req.Email, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -48,27 +34,40 @@ func (s *RegisterService) Authorizing(p password.RegisteringReq) (*password.Regi
 
 func (s *RegisterService) Authorized(req password.RegisteredReq) (*password.RegisteredRsp, error) {
 	client := captcha.NewImage()
-	if client.Check("register", req.CaptchaId, req.Captcha) {
+	if client.Check("register"+req.Email, req.CaptchaId, req.Captcha) {
 		return nil, errors.WithMes(i18n.CaptchaErrorCheck)
 	}
 
-	member, err := authoize.FirstMemberByAccount(req.Account)
-	if err != nil {
-		return nil, errors.WithErr(i18n.NotExistsAccount, err)
+	_, err := member.FindByEmail(req.Email)
+	if err == nil {
+		return nil, errors.WithErr(i18n.ExistsEmail, err)
 	}
 
-	var pwd string
-	pwd, err = authorize.Encrypt(req.Password, member.PasswordSing)
+	sing, err := authorize.GenPasswordSing(req.Password, time.Now().String())
 	if err != nil {
 		return nil, errors.WithErr(i18n.ErrorSingPassword, err)
 	}
 
-	if !authoize.ExistsBYPassword(req.Account, pwd) {
-		return nil, errors.WithMes(i18n.ErrorPassword)
+	req.Password, err = authorize.Encrypt(req.Password, sing)
+	if err != nil {
+		return nil, errors.WithErr(i18n.ErrorSingPassword, err)
 	}
 
-	sing, err := token.Instance.Generate(&token.Claims{
-		Context: member,
+	entity := &ent.Member{
+		Email:        req.Email,
+		Mobile:       "",
+		Nickname:     req.Nickname,
+		Avatar:       avatar.GenMemberAvatar(req.Email),
+		PasswordSing: sing,
+		Password:     req.Password,
+		State:        member2.MemberStateUnActive,
+		CreateTime:   time.Now(),
+	}
+
+	entity = s.memberModel.Create(entity)
+
+	sing, err = token.Instance.Generate(&token.Claims{
+		Context: entity,
 	})
 
 	if err != nil {
@@ -76,14 +75,16 @@ func (s *RegisterService) Authorized(req password.RegisteredReq) (*password.Regi
 	}
 
 	return &password.RegisteredRsp{
-		MemberId: member.ID,
-		Nickname: member.Nickname,
-		Avatar:   member.Avatar,
-		Account:  member.Account,
+		MemberId: entity.ID,
+		Nickname: entity.Nickname,
+		Avatar:   entity.Avatar,
+		Email:    entity.Email,
 		Token:    sing,
 	}, nil
 }
 
 func (s *RegisterService) CreateBean() ioc.Bean {
-	return &RegisterService{}
+	return &RegisterService{
+		memberModel: member.Model{},
+	}
 }

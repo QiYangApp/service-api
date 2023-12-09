@@ -27,7 +27,17 @@ func (c *CacheRedisDrive) Connect(ctx context.Context, cfg interface{}, cCfg int
 		DB:       nCCfg.Database, // use default DB
 	})
 
-	return c.storage.Ping(ctx).Err()
+	_, err := c.storage.Conn().Ping(ctx).Result()
+	if err != nil {
+		return err
+	}
+
+	_, err = c.storage.Conn().Auth(ctx, nCfg.Password).Result()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *CacheRedisDrive) Get(ctx context.Context, key string) (string, error) {

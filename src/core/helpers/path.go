@@ -56,3 +56,9 @@ func (p Path) JoinCurrentRunPath(path string) string {
 func (p Path) JoinCurrentRunRootPath(path string) string {
 	return fmt.Sprintf("%s/%s", p.GetCurrentRunRootPath(), path)
 }
+
+func (p Path) Resource(path string) string {
+	path, _ = filepath.Abs(fmt.Sprintf("%s/resources/%s", p.GetCurrentRunPath(), path))
+
+	return path
+}

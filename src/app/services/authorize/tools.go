@@ -6,10 +6,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-const bcryptDefaultCost = 31
-
 func Encrypt(password, sing string) (string, error) {
-	p, err := bcrypt.GenerateFromPassword([]byte(password), bcryptDefaultCost)
+	p, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
 	}
@@ -19,8 +17,10 @@ func Encrypt(password, sing string) (string, error) {
 	return fmt.Sprintf("%x", md5.Sum([]byte(password))), nil
 }
 
-func GenPasswordSing(password, sing string) (string, error) {
-	p, err := bcrypt.GenerateFromPassword([]byte(password), bcryptDefaultCost)
+func GenPasswordSing(ps, sing string) (string, error) {
+	password := fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%x-%s", ps, sing))))
+
+	p, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
 	}

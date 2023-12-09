@@ -72,6 +72,25 @@ func RouteBind(e *gin.Engine, method string, path string, fn reflect.Method, typ
 	switch strings.ToUpper(method) {
 	case "ANY":
 		e.Any(path, callFn)
+		break
+	case "POST":
+		e.POST(path, callFn)
+		break
+	case "GET":
+		e.GET(path, callFn)
+		break
+	case "PATCH":
+		e.PATCH(path, callFn)
+		break
+	case "PUT":
+		e.PUT(path, callFn)
+		break
+	case "DELETE":
+		e.DELETE(path, callFn)
+		break
+	case "OPTIONS":
+		e.OPTIONS(path, callFn)
+		break
 	default:
 		e.Handle(method, path, callFn)
 	}

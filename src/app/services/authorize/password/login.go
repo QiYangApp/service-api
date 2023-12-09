@@ -8,7 +8,7 @@ import (
 	"service-api/src/app/services/token"
 	"service-api/src/enums/i18n"
 	"service-api/src/errors"
-	"service-api/src/models/repo/authoize"
+	"service-api/src/models/repo/member"
 )
 
 type LoginService struct {
@@ -16,12 +16,12 @@ type LoginService struct {
 
 // Check 判断账号是否存在
 func (s *LoginService) Check(req password.LoginCheckReq) (*password.LoginCheckRsp, error) {
-	if req.Account == "" {
-		return nil, errors.WithMes(i18n.EmptyAccount)
+	if req.Email == "" {
+		return nil, errors.WithMes(i18n.EmptyEmail)
 	}
 
-	if !authoize.AccountAndEmailExists(req.Account, req.Account) {
-		return nil, errors.WithMes(i18n.NotExistsAccount)
+	if !member.EmailByExists(req.Email) {
+		return nil, errors.WithMes(i18n.NotExistsEmail)
 	}
 
 	return &password.LoginCheckRsp{
@@ -31,7 +31,7 @@ func (s *LoginService) Check(req password.LoginCheckReq) (*password.LoginCheckRs
 
 func (s *LoginService) Authorizing(req password.LoggingReq) (*password.LoggingRsp, error) {
 	client := captcha.NewImage()
-	body, err := client.Generate("login"+req.Account, nil)
+	body, err := client.Generate("login"+req.Email, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -48,23 +48,23 @@ func (s *LoginService) Authorized(req password.LoggedReq) (*password.LoggedRsp, 
 		return nil, errors.WithMes(i18n.CaptchaErrorCheck)
 	}
 
-	member, err := authoize.FirstMemberByAccount(req.Account)
+	mb, err := member.FindByEmail(req.Account)
 	if err != nil {
-		return nil, errors.WithErr(i18n.NotExistsAccount, err)
+		return nil, errors.WithErr(i18n.NotExistsEmail, err)
 	}
 
 	var pwd string
-	pwd, err = authorize.Encrypt(req.Password, member.PasswordSing)
+	pwd, err = authorize.Encrypt(req.Password, mb.PasswordSing)
 	if err != nil {
 		return nil, errors.WithErr(i18n.ErrorSingPassword, err)
 	}
 
-	if !authoize.ExistsBYPassword(req.Account, pwd) {
+	if !member.ExistsBYPassword(req.Account, pwd) {
 		return nil, errors.WithMes(i18n.ErrorPassword)
 	}
 
 	sing, err := token.Instance.Generate(&token.Claims{
-		Context: member,
+		Context: mb,
 	})
 
 	if err != nil {
@@ -72,10 +72,10 @@ func (s *LoginService) Authorized(req password.LoggedReq) (*password.LoggedRsp, 
 	}
 
 	return &password.LoggedRsp{
-		MemberId: member.ID,
-		Nickname: member.Nickname,
-		Avatar:   member.Avatar,
-		Account:  member.Account,
+		MemberId: mb.ID,
+		Nickname: mb.Nickname,
+		Avatar:   mb.Avatar,
+		Email:    mb.Email,
 		Token:    sing,
 	}, nil
 }

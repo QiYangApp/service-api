@@ -1,4 +1,4 @@
-package authoize
+package member
 
 import (
 	"service-api/src/models/ent"
