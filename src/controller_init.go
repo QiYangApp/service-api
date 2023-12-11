@@ -10,12 +10,12 @@ import (
 )
 
 func init() {
-	inject.Register(&pack_71fc781208c148cecd8c184360762152.InjectController{}, &pack_f9cd26517a85a763fe7acac8691e4de8.LoginController{}, &pack_f9cd26517a85a763fe7acac8691e4de8.RegisterController{})
+	inject.Register(&pack_f9cd26517a85a763fe7acac8691e4de8.LoginController{}, &pack_f9cd26517a85a763fe7acac8691e4de8.RegisterController{}, &pack_71fc781208c148cecd8c184360762152.InjectController{})
 	inject.DI = map[string]*inject.MethodInfo{
 		"3f855e20f2fea9e7cd8932bee26b60a6": {
 
 			Annotations:    map[string]string{},
-			ApiMethodName:  "POST",
+			ApiMethodName:  "GET",
 			ApiPath:        "/api/authorize/password/register/authorizing",
 			PackMethodName: "RegisterController",
 			PackName:       "password",

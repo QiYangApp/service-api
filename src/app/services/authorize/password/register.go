@@ -66,7 +66,7 @@ func (s *RegisterService) Authorized(req password.RegisteredReq) (*password.Regi
 
 	entity = s.memberModel.Create(entity)
 
-	sing, err = token.Instance.Generate(&token.Claims{
+	sing, err = token.Instance().Generate(&token.Claims{
 		Context: entity,
 	})
 

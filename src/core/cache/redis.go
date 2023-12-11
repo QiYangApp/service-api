@@ -32,9 +32,11 @@ func (c *CacheRedisDrive) Connect(ctx context.Context, cfg interface{}, cCfg int
 		return err
 	}
 
-	_, err = c.storage.Conn().Auth(ctx, nCfg.Password).Result()
-	if err != nil {
-		return err
+	if nCfg.Password != "" {
+		_, err = c.storage.Conn().Auth(ctx, nCfg.Password).Result()
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

@@ -3,9 +3,11 @@ package middleware
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"errors"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
+	"service-api/src/core/helpers/response"
+	"service-api/src/core/logger"
 )
 
 /**
@@ -33,9 +35,19 @@ func CSRF() gin.HandlerFunc {
 		// Get CSRF token from cookie or generate a new one
 		csrfToken, err := c.Cookie(csrfCookieName)
 		if err != nil || csrfToken == "" {
+			logger.S().Errorln("url: %s, err: %v", c.Request.URL, zap.Error(err.(error)))
+
 			csrfToken, err = GetCSRFToken()
 			if err != nil {
-				c.AbortWithStatus(http.StatusInternalServerError)
+				c.AbortWithStatusJSON(
+					http.StatusInternalServerError,
+					response.RFail(
+						c,
+						err,
+						http.StatusInternalServerError,
+						"",
+					).ToStruct(),
+				)
 				return
 			}
 			c.SetCookie(csrfCookieName, csrfToken, 0, "", "", false, true)
@@ -48,13 +60,31 @@ func CSRF() gin.HandlerFunc {
 		if c.Request.Method == "POST" || c.Request.Method == "PUT" || c.Request.Method == "DELETE" {
 			referer := c.Request.Header.Get(csrfHeaderName)
 			if referer == "" {
-				_ = c.AbortWithError(http.StatusBadRequest, errors.New("missing referer header"))
+				logger.S().Errorln("url: %s, referer is empty", c.Request.URL)
+
+				c.AbortWithStatusJSON(
+					http.StatusBadRequest,
+					response.RFail(
+						c,
+						err,
+						http.StatusInternalServerError,
+						"missing referer header",
+					).ToStruct(),
+				)
 				return
 			}
 
 			err := CheckCSRF(csrfToken, c.Request)
 			if err != nil {
-				c.AbortWithStatus(http.StatusForbidden)
+				c.AbortWithStatusJSON(
+					http.StatusForbidden,
+					response.RFail(
+						c,
+						err,
+						http.StatusForbidden,
+						"",
+					).ToStruct(),
+				)
 				return
 			}
 		}

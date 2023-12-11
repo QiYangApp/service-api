@@ -17,5 +17,7 @@ func (LoggerRepo) Write(log ent.MemberAuthorizeLog) (*ent.MemberAuthorizeLog, er
 		SetDeviceDetail(log.DeviceDetail).
 		SetRemoteIP(log.RemoteIP).
 		SetClientIP(log.ClientIP).
+		SetToken(log.Token).
+		SetSnapshot(log.Snapshot).
 		Save(repo.Ctx())
 }

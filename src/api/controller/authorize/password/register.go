@@ -21,7 +21,7 @@ type RegisterController struct {
 }
 
 // Authorizing
-// @POST(path="authorizing")
+// @GET(path="authorizing")
 func (p *RegisterController) Authorizing(c *gin.Context, req entity.RegisteringReq) *gin.Context {
 
 	if req.Email == "" {
@@ -44,7 +44,7 @@ func (p *RegisterController) Authorized(c *gin.Context, req entity.RegisteredReq
 		return response.RError(c, err, http.StatusBadRequest, nil).ToJson()
 	}
 
-	_, err = p.LoggerService.Write(c, member.MemberId)
+	_, err = p.LoggerService.Write(c, member.MemberId, member.Token)
 	if err != nil {
 		return response.RError(c, err, http.StatusBadRequest, nil).ToJson()
 	}

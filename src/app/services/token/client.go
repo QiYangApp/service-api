@@ -6,15 +6,14 @@ import (
 	"sync"
 )
 
-var Instance *Token[GeneratorMethodInterface, CacheMethodInterface]
+var instance *Token[GeneratorMethodInterface, CacheMethodInterface]
 var once = sync.Once{}
 
-func NewTokenService() *Token[GeneratorMethodInterface, CacheMethodInterface] {
-
+func Instance() *Token[GeneratorMethodInterface, CacheMethodInterface] {
 	once.Do(func() {
 		tokenConfig := config.Instance.GetToken()
 
-		Instance = &Token[GeneratorMethodInterface, CacheMethodInterface]{
+		instance = &Token[GeneratorMethodInterface, CacheMethodInterface]{
 			generator: &TokenGenerator{
 				Generator: &Generator{
 					ExpiresTime: tokenConfig.ExpiresTime,
@@ -31,9 +30,9 @@ func NewTokenService() *Token[GeneratorMethodInterface, CacheMethodInterface] {
 			},
 		}
 
-		Instance.generator.init()
-		Instance.cacheStorage.init()
+		instance.generator.init()
+		instance.cacheStorage.init()
 	})
 
-	return Instance
+	return instance
 }
