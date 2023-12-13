@@ -60,7 +60,7 @@ func (p *LoginController) Authorized(c *gin.Context, req password2.LoggedReq) *g
 		return response.RError(c, err, http.StatusBadRequest, nil).ToJson()
 	}
 
-	_, err = p.LoggerService.Write(c, member.MemberId)
+	_, err = p.LoggerService.Write(c, member.MemberId, member.Token)
 	if err != nil {
 		return response.RError(c, err, http.StatusBadRequest, nil).ToJson()
 	}

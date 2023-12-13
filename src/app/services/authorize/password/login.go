@@ -63,7 +63,7 @@ func (s *LoginService) Authorized(req password.LoggedReq) (*password.LoggedRsp, 
 		return nil, errors.WithMes(i18n.ErrorPassword)
 	}
 
-	sing, err := token.Instance.Generate(&token.Claims{
+	sing, err := token.Instance().Generate(&token.Claims{
 		Context: mb,
 	})
 
