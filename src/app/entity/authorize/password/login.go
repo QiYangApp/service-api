@@ -6,13 +6,13 @@ import (
 )
 
 type LoginCheckReq struct {
-	http.ReqType `json:"_"`
+	http.ReqType `json:"-"`
 	ErrMsg       `json:"-"`
 	Email        string `form:"email" json:"email" binding:"required,email" `
 }
 
 type LoginCheckRsp struct {
-	http.RespType `json:"_"`
+	http.RespType `json:"-"`
 	State         bool `json:"state"`
 }
 
@@ -31,10 +31,10 @@ type LoggingRsp struct {
 type LoggedReq struct {
 	http.ReqType
 	ErrMsg    `json:"-"`
-	CaptchaId string `form:"captchaId" json:"captcha_id" binding:"required" `
+	CaptchaId string `form:"captcha_id" json:"captcha_id" binding:"required,min=10" `
 	Captcha   string `form:"captcha" json:"captcha" binding:"required" `
-	Account   string `form:"account" json:"account" binding:"required" `
-	Password  string `form:"password" json:"password" binding:"required" `
+	Email     string `form:"email" json:"email" binding:"required,email" `
+	Password  string `form:"password" json:"password" binding:"required,min=8,max=16" `
 }
 
 type LoggedRsp struct {

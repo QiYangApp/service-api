@@ -21,7 +21,9 @@ func (s *LoginService) Check(req password.LoginCheckReq) (*password.LoginCheckRs
 	}
 
 	if !member.EmailByExists(req.Email) {
-		return nil, errors.WithMes(i18n.NotExistsEmail)
+		return &password.LoginCheckRsp{
+			State: false,
+		}, nil
 	}
 
 	return &password.LoginCheckRsp{
@@ -44,11 +46,11 @@ func (s *LoginService) Authorizing(req password.LoggingReq) (*password.LoggingRs
 
 func (s *LoginService) Authorized(req password.LoggedReq) (*password.LoggedRsp, error) {
 	client := captcha.NewImage()
-	if client.Check("login"+req.Account, req.CaptchaId, req.Captcha) {
+	if client.Verify("login"+req.Email, req.CaptchaId, req.Captcha) {
 		return nil, errors.WithMes(i18n.CaptchaErrorCheck)
 	}
 
-	mb, err := member.FindByEmail(req.Account)
+	mb, err := member.FindByEmail(req.Email)
 	if err != nil {
 		return nil, errors.WithErr(i18n.NotExistsEmail, err)
 	}
@@ -59,7 +61,7 @@ func (s *LoginService) Authorized(req password.LoggedReq) (*password.LoggedRsp, 
 		return nil, errors.WithErr(i18n.ErrorSingPassword, err)
 	}
 
-	if !member.ExistsBYPassword(req.Account, pwd) {
+	if !member.ExistsBYPassword(req.Email, pwd) {
 		return nil, errors.WithMes(i18n.ErrorPassword)
 	}
 

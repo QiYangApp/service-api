@@ -20,7 +20,7 @@ type RegisteringRsp struct {
 type RegisteredReq struct {
 	http.ReqType
 	ErrMsg         `json:"-"`
-	CaptchaId      string `form:"captchaId" json:"captcha_id" binding:"required" `
+	CaptchaId      string `form:"captcha_id" json:"captcha_id" binding:"required" `
 	Captcha        string `form:"captcha" json:"captcha" binding:"required" `
 	Email          string `form:"email" json:"email" binding:"required,email" `
 	Nickname       string `form:"nickname" json:"nickname" binding:"required,min=4,max=10" `

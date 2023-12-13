@@ -34,7 +34,7 @@ func (s *RegisterService) Authorizing(req password.RegisteringReq) (*password.Re
 
 func (s *RegisterService) Authorized(req password.RegisteredReq) (*password.RegisteredRsp, error) {
 	client := captcha.NewImage()
-	if client.Check("register"+req.Email, req.CaptchaId, req.Captcha) {
+	if client.Verify("register"+req.Email, req.CaptchaId, req.Captcha) {
 		return nil, errors.WithMes(i18n.CaptchaErrorCheck)
 	}
 

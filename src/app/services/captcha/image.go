@@ -96,12 +96,12 @@ func (i *Image) Generate(scenes string, p *ImageParam) (*ImageResp, error) {
 	return &ImageResp{Captcha: body, Id: id}, nil
 }
 
-func (i *Image) Check(scenes, id, value string) bool {
+func (i *Image) Verify(scenes, id, value string) bool {
 	if cache.Exists(fmt.Sprintf("captcha-%s-%s", scenes, id)) {
 		return false
 	}
 
-	return i.store.Verify(id, value, true)
+	return i.store.Verify(id, value, false) == false
 }
 
 func NewImage() *Image {

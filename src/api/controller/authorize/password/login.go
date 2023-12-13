@@ -53,7 +53,7 @@ func (p *LoginController) Authorizing(c *gin.Context, req password2.LoggingReq) 
 }
 
 // Authorized
-// @GET(path="authorized")
+// @POST(path="authorized")
 func (p *LoginController) Authorized(c *gin.Context, req password2.LoggedReq) *gin.Context {
 	member, err := p.Service.Authorized(req)
 	if err != nil {

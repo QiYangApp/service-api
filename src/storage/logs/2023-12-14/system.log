@@ -1,0 +1,83 @@
+{"level":"debug","time":"2023-12-14 00:27:54","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:28:20","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:28:20","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:28:20","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:28:39","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:28:39","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:28:39","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:28:58","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}    }","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:31:33","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:31:33","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:31:33","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:31:34","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}    }","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:32:18","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:32:18","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:32:18","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:32:18","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:32:18","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:32:18","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:32:18","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:32:47","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:32:47","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:32:47","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:32:53","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}    }","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:33:31","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}    }","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:34:02","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}    }","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:34:22","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:34:22","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:34:22","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:34:30","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:34:30","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:34:30","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:34:33","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}    }","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:34:34","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}    }","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:34:39","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:34:40","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}    }","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:35:00","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}  1 1@1.com 111}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:35:28","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:35:38","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} q2FeFyOdT19AqysvTxuu 1234 1@1.com 12345678}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:35:53","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:35:53","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:35:53","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:36:07","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} q2FeFyOdT19AqysvTxuu 1234 1@1.com 12345678}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:36:22","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:36:22","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:36:22","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:39:00","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}    }","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:39:29","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:39:29","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:39:29","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:39:37","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:39:37","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:39:37","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:43:29","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}  1234 1@1.com 123456}","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:43:46","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}  123w 1@1.com 123456}","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:43:59","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 123w 1@1.com 123456}","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:44:07","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 123w 1@1.com 123456789}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:44:19","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:44:19","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:44:19","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:44:38","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 123w 1@1.com 123456789}","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:44:39","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 123w 1@1.com 123456789}","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:44:40","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 123w 1@1.com 123456789}","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:44:52","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 1234 1@1.com 123456789}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:45:00","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:45:00","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:45:00","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:45:18","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {}  1234 1@1.com  123456789 }","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:45:28","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:45:28","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:45:28","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:45:38","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:45:38","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"fatal","time":"2023-12-14 00:45:38","file":"system/start.go:32","msg":"development service start failed: %v listen tcp 0.0.0.0:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:46:20","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 1234 1@1.com 名称 123456789 }","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:46:26","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 1234 1@1.com 名称22 123456789 }","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:46:32","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 1234 1@1.com 名称22 123456789 }","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:46:37","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 1234 1@1.com 名称22 123456789 }","name":"system","level":"debug"}
+{"level":"error","time":"2023-12-14 00:46:45","file":"inject/inject.go:151","msg":"route handle fun error, method params bind, error method: %v &{<nil> {} tjuFNBoZbDH1Qx41dQHt 1234 1@1.com 名称22 123456789 1234567892}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:47:47","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:52:25","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:52:41","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 00:55:28","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}
+{"level":"debug","time":"2023-12-14 01:01:00","file":"cron/log.go:16","msg":"{msg 15 0 start <nil>} {data 23 0  []}","name":"system","level":"debug"}

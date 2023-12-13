@@ -13,6 +13,7 @@ require (
 	github.com/dave/jennifer v1.7.0
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/gin-contrib/cors v1.5.0
+	github.com/gin-contrib/gzip v0.0.6
 	github.com/gin-contrib/i18n v1.1.0
 	github.com/gin-contrib/secure v0.0.1
 	github.com/gin-gonic/gin v1.9.1
