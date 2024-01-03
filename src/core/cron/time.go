@@ -13,6 +13,10 @@ type TimeInterface interface {
 	EverySecond(minute int) TimeInterface
 
 	EveryMinute(minute int) TimeInterface
+
+	EveryDay(day int) TimeInterface
+
+	AtDay(day int) TimeInterface
 }
 
 type Time struct {
@@ -41,6 +45,22 @@ func (t *Time) EverySecond(second int) TimeInterface {
 func (t *Time) EveryMinute(minute int) TimeInterface {
 	if minute != 0 {
 		t.minute = fmt.Sprintf("%s/%d", "*", minute)
+	}
+
+	return t
+}
+
+func (t *Time) EveryDay(day int) TimeInterface {
+	if day != 0 {
+		t.day = fmt.Sprintf("%s/%d", "*", day)
+	}
+
+	return t
+}
+
+func (t *Time) AtDay(day int) TimeInterface {
+	if day != 0 {
+		t.day = strconv.Itoa(day)
 	}
 
 	return t

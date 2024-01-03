@@ -12,7 +12,7 @@ func handlePathToken(path string, token string) string {
 	return path + "?api_key=" + token
 }
 
-func Get[R interface{}](path string, params map[string]interface{}, resp R) error {
+func Get[R interface{}](path string, params map[string]interface{}, resp *R) error {
 	path = handlePathToken(path, params["token"].(string))
 	delete(params, "token")
 
@@ -28,7 +28,7 @@ func Get[R interface{}](path string, params map[string]interface{}, resp R) erro
 	return client[R](req, resp)
 }
 
-func Post[R interface{}](path string, params map[string]interface{}, resp R) error {
+func Post[R interface{}](path string, params map[string]interface{}, resp *R) error {
 	path = handlePathToken(path, params["token"].(string))
 
 	var body, _ = json.Marshal(params)
@@ -41,7 +41,7 @@ func Post[R interface{}](path string, params map[string]interface{}, resp R) err
 	return client[R](req, resp)
 }
 
-func client[R interface{}](req *http.Request, body R) error {
+func client[R interface{}](req *http.Request, body *R) error {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 
@@ -60,7 +60,7 @@ func client[R interface{}](req *http.Request, body R) error {
 		return fmt.Errorf("Unauthorized")
 	}
 
-	if err := json.Unmarshal(respBody, &body); err != nil {
+	if err := json.Unmarshal(respBody, body); err != nil {
 		return err
 	}
 

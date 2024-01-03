@@ -16,7 +16,6 @@ import (
 )
 
 type RegisterService struct {
-	memberModel member.Model
 }
 
 func (s *RegisterService) Authorizing(req password.RegisteringReq) (*password.RegisteringRsp, error) {
@@ -64,7 +63,7 @@ func (s *RegisterService) Authorized(req password.RegisteredReq) (*password.Regi
 		CreateTime:   time.Now(),
 	}
 
-	entity = s.memberModel.Create(entity)
+	entity = member.AddSingleByRegister(entity)
 
 	sing, err = token.Instance().Generate(&token.Claims{
 		Context: entity,
@@ -84,7 +83,5 @@ func (s *RegisterService) Authorized(req password.RegisteredReq) (*password.Regi
 }
 
 func (s *RegisterService) CreateBean() ioc.Bean {
-	return &RegisterService{
-		memberModel: member.Model{},
-	}
+	return &RegisterService{}
 }

@@ -5,12 +5,9 @@ import (
 	"service-api/src/models/repo"
 )
 
-type Model struct {
-	repo.BaseModel
-}
-
-func (m *Model) Create(entity *ent.Member) *ent.Member {
-	return m.NewQuery().
+// AddSingleByRegister 注册时候添加会员
+func AddSingleByRegister(entity *ent.Member) *ent.Member {
+	return repo.Query().
 		Member.
 		Create().
 		SetEmail(entity.Email).
@@ -21,5 +18,5 @@ func (m *Model) Create(entity *ent.Member) *ent.Member {
 		SetState(entity.State).
 		SetPassword(entity.Password).
 		SetPasswordSing(entity.PasswordSing).
-		SaveX(m.Ctx())
+		SaveX(repo.Ctx())
 }

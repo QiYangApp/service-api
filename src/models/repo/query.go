@@ -17,7 +17,7 @@ func Ctx() context.Context {
 type BaseModel struct {
 }
 
-func (*BaseModel) NewQuery() *ent.Client {
+func (*BaseModel) Query() *ent.Client {
 	return Query()
 }
 func (*BaseModel) Ctx() context.Context {

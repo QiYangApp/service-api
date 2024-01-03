@@ -31,6 +31,7 @@ require (
 	golang.org/x/text v0.14.0
 	golang.org/x/time v0.5.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
+	wakatimeSync v0.0.1
 )
 
 require (
@@ -48,6 +49,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
+	github.com/golang-module/carbon/v2 v2.3.2 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
