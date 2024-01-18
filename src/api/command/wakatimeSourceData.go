@@ -3,9 +3,9 @@ package command
 import (
 	"encoding/json"
 	"github.com/golang-module/carbon/v2"
+	"service-api/src/app/enums"
 	"service-api/src/models/repo"
 
-	"service-api/src/enums"
 	"service-api/src/models/repo/wakatimeRepo"
 	"wakatimeSync"
 	syncEntity "wakatimeSync/entity"

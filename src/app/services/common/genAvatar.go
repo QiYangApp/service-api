@@ -1,4 +1,4 @@
-package avatar
+package common
 
 import (
 	"github.com/google/uuid"
@@ -6,7 +6,7 @@ import (
 	"service-api/src/core/helpers"
 )
 
-func GenMemberAvatar(key string) string {
+func GenAvatar(key string) string {
 	dir := helpers.PathInstance.Resource("avatar/member/" + uuid.NewString() + ".jpg")
 	err := govatar.GenerateFileForUsername(govatar.MALE, key, dir)
 	if err != nil {

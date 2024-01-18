@@ -11,6 +11,7 @@ import (
 )
 
 type App struct {
+	RunMode     string
 	Engine      *gin.Engine
 	middlewares []gin.HandlerFunc
 	providers   []Provider
@@ -48,7 +49,8 @@ func (t *App) Container(container *Container) *App {
 	return t
 }
 
-func (t *App) Run(mode string) {
+func (t *App) Run() {
+	gin.SetMode(t.RunMode)
 
 	_ = t.Engine.SetTrustedProxies(nil)
 

@@ -3,11 +3,11 @@ package password
 import (
 	"github.com/archine/ioc"
 	"service-api/src/app/entity/authorize/password"
+	i18n2 "service-api/src/app/enums/i18n"
+	"service-api/src/app/errors"
 	"service-api/src/app/services/authorize"
 	"service-api/src/app/services/captcha"
 	"service-api/src/app/services/token"
-	"service-api/src/enums/i18n"
-	"service-api/src/errors"
 	"service-api/src/models/repo/member"
 )
 
@@ -17,7 +17,7 @@ type LoginService struct {
 // Check 判断账号是否存在
 func (s *LoginService) Check(req password.LoginCheckReq) (*password.LoginCheckRsp, error) {
 	if req.Email == "" {
-		return nil, errors.WithMes(i18n.EmptyEmail)
+		return nil, errors.WithMes(i18n2.EmptyEmail)
 	}
 
 	if !member.EmailByExists(req.Email) {
@@ -47,22 +47,22 @@ func (s *LoginService) Authorizing(req password.LoggingReq) (*password.LoggingRs
 func (s *LoginService) Authorized(req password.LoggedReq) (*password.LoggedRsp, error) {
 	client := captcha.NewImage()
 	if client.Verify("login"+req.Email, req.CaptchaId, req.Captcha) {
-		return nil, errors.WithMes(i18n.CaptchaErrorCheck)
+		return nil, errors.WithMes(i18n2.CaptchaErrorCheck)
 	}
 
 	mb, err := member.FindByEmail(req.Email)
 	if err != nil {
-		return nil, errors.WithErr(i18n.NotExistsEmail, err)
+		return nil, errors.WithErr(i18n2.NotExistsEmail, err)
 	}
 
 	var pwd string
 	pwd, err = authorize.Encrypt(req.Password, mb.PasswordSing)
 	if err != nil {
-		return nil, errors.WithErr(i18n.ErrorSingPassword, err)
+		return nil, errors.WithErr(i18n2.ErrorSingPassword, err)
 	}
 
 	if !member.ExistsBYPassword(req.Email, pwd) {
-		return nil, errors.WithMes(i18n.ErrorPassword)
+		return nil, errors.WithMes(i18n2.ErrorPassword)
 	}
 
 	sing, err := token.Instance().Generate(&token.Claims{

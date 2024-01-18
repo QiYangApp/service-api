@@ -6,7 +6,7 @@ import (
 )
 
 //go:generate go run ./src/script/ioc/main.go
-//go:generate go run -mod=mod entgo.io/ent/cmd/ent generate "./src/models/ent/schema"
+//go:generate go run -mod=mod entgo.io/ent/cmd/ent generate "./src/app/models/ent/schema"
 func main() {
 	system.Start(gin.New())
 }

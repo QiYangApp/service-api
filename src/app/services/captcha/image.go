@@ -3,9 +3,9 @@ package captcha
 import (
 	"fmt"
 	"github.com/mojocn/base64Captcha"
+	"service-api/src/app/enums/i18n"
+	"service-api/src/app/errors"
 	"service-api/src/core/cache"
-	"service-api/src/enums/i18n"
-	"service-api/src/errors"
 	"sync"
 	"time"
 )

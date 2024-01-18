@@ -235,7 +235,7 @@ func recordProjectControllerAndApi(container *Container, storageDir, shortPckNam
 	newFile := jen.NewFile("main")
 	newFile.HeaderComment("// ⚠️⛔ Auto generate code by gin framework, Do not edit!!!")
 	newFile.HeaderComment("// All controller information and Api information for the current project is recorded here\n")
-	newFile.ImportName("service-api/src/core/inject", "inject")
+	newFile.ImportName("service-api/src/pkg/inject", "inject")
 
 	for key, pkg := range container.Names {
 		newFile.ImportAlias(pkg.FullPackName, key)
@@ -246,9 +246,9 @@ func recordProjectControllerAndApi(container *Container, storageDir, shortPckNam
 		registerCode = append(registerCode, jen.Op("&").Qual(pkg.FullPackName, pkg.Name).Values())
 	}
 	newFile.Func().Id("init").Params().Block(
-		jen.Qual("service-api/src/core/inject", "Register").Call(registerCode...),
-		jen.Qual("service-api/src/core/inject", "DI").Op("=").Map(jen.String()).Op("*").
-			Qual("service-api/src/core/inject", "MethodInfo").
+		jen.Qual("service-api/src/pkg/inject", "Register").Call(registerCode...),
+		jen.Qual("service-api/src/pkg/inject", "DI").Op("=").Map(jen.String()).Op("*").
+			Qual("service-api/src/pkg/inject", "MethodInfo").
 			Values(jen.DictFunc(func(dict jen.Dict) {
 				for k, methodInfo := range container.Apis {
 					dict[jen.Lit(k)] = jen.Block(jen.Dict{

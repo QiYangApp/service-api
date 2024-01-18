@@ -6,7 +6,7 @@
 tmp
 build
 
-# Binaries for programs and core
+# Binaries for programs and pkg
 *.exe
 *.exe~
 *.dll

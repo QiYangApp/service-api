@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"service-api/src/api/controller"
 	password2 "service-api/src/app/entity/authorize/password"
+	"service-api/src/app/enums/i18n"
+	"service-api/src/app/errors"
 	"service-api/src/app/services/authorize"
 	"service-api/src/app/services/authorize/password"
 	"service-api/src/core/helpers/response"
-	"service-api/src/enums/i18n"
-	"service-api/src/errors"
 )
 
 // LoginController

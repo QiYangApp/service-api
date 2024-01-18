@@ -3,9 +3,9 @@ package middleware
 import (
 	"go.uber.org/zap"
 	"net/http"
+	"service-api/src/app/enums/i18n"
 	"service-api/src/core/helpers/response"
 	loggerInstance "service-api/src/core/logger"
-	"service-api/src/enums/i18n"
 	"time"
 
 	"github.com/gin-gonic/gin"

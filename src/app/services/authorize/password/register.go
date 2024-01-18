@@ -4,12 +4,12 @@ import (
 	"github.com/archine/ioc"
 	"service-api/src/app/entity/authorize/password"
 	member2 "service-api/src/app/entity/member"
+	i18n2 "service-api/src/app/enums/i18n"
+	"service-api/src/app/errors"
 	"service-api/src/app/services/authorize"
-	"service-api/src/app/services/avatar"
 	"service-api/src/app/services/captcha"
+	"service-api/src/app/services/common"
 	"service-api/src/app/services/token"
-	"service-api/src/enums/i18n"
-	"service-api/src/errors"
 	"service-api/src/models/ent"
 	"service-api/src/models/repo/member"
 	"time"
@@ -34,29 +34,29 @@ func (s *RegisterService) Authorizing(req password.RegisteringReq) (*password.Re
 func (s *RegisterService) Authorized(req password.RegisteredReq) (*password.RegisteredRsp, error) {
 	client := captcha.NewImage()
 	if client.Verify("register"+req.Email, req.CaptchaId, req.Captcha) {
-		return nil, errors.WithMes(i18n.CaptchaErrorCheck)
+		return nil, errors.WithMes(i18n2.CaptchaErrorCheck)
 	}
 
 	_, err := member.FindByEmail(req.Email)
 	if err == nil {
-		return nil, errors.WithErr(i18n.ExistsEmail, err)
+		return nil, errors.WithErr(i18n2.ExistsEmail, err)
 	}
 
 	sing, err := authorize.GenPasswordSing(req.Password, time.Now().String())
 	if err != nil {
-		return nil, errors.WithErr(i18n.ErrorSingPassword, err)
+		return nil, errors.WithErr(i18n2.ErrorSingPassword, err)
 	}
 
 	req.Password, err = authorize.Encrypt(req.Password, sing)
 	if err != nil {
-		return nil, errors.WithErr(i18n.ErrorSingPassword, err)
+		return nil, errors.WithErr(i18n2.ErrorSingPassword, err)
 	}
 
 	entity := &ent.Member{
 		Email:        req.Email,
 		Mobile:       "",
 		Nickname:     req.Nickname,
-		Avatar:       avatar.GenMemberAvatar(req.Email),
+		Avatar:       common.GenMemberAvatar(req.Email),
 		PasswordSing: sing,
 		Password:     req.Password,
 		State:        member2.MemberStateUnActive,

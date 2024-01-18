@@ -2,7 +2,7 @@ module service-api
 
 go 1.21.0
 
-replace wakatimeSync => ./core/wakatimeSync
+replace wakatimeSync => ./pkg/wakatimeSync
 
 require (
 	dario.cat/mergo v1.0.0
@@ -19,6 +19,7 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/validator/v10 v10.16.0
 	github.com/golang-jwt/jwt/v5 v5.1.0
+	github.com/golang-module/carbon/v2 v2.3.2
 	github.com/google/uuid v1.4.0
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/mojocn/base64Captcha v1.3.5
@@ -49,7 +50,6 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
-	github.com/golang-module/carbon/v2 v2.3.2 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
