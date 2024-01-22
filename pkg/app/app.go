@@ -4,6 +4,7 @@ import (
 	"app/config"
 	"app/log"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
@@ -45,8 +46,10 @@ func (t *App) Run(cmd *Cmd) {
 		provider.Register(t)
 	}
 
-	t.Cmd.Debug = config.Client().GetBool("server.debug")
-	t.Cmd.RunMode = config.Client().GetString("server.runMode")
+	a := config.Client().Get(`server`)
+	fmt.Println(a)
+	t.Cmd.Debug = config.Client().GetBool(`server.debug`)
+	t.Cmd.RunMode = config.Client().GetString(`server.runMode`)
 
 	t.Engine.Use(t.middlewares...)
 

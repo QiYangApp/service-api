@@ -2,6 +2,7 @@ package app
 
 import (
 	"app/config"
+	"github.com/spf13/viper"
 )
 
 type Provider interface {
@@ -12,5 +13,9 @@ type ConfigProviders struct {
 }
 
 func (c *ConfigProviders) Register(r *App) {
-	config.Instance().ParseFile()
+	conf := &config.Manage{
+		Client: viper.New(),
+	}
+
+	config.Instance = conf.ParseFile()
 }

@@ -7,7 +7,7 @@ import (
 	"sync"
 )
 
-var instance *Manage
+var Instance *Manage
 var once = sync.Once{}
 
 type Methods func(config *viper.Viper) *Manage
@@ -34,12 +34,8 @@ func (c *Manage) ParserRemote(m Methods) *Manage {
 	return m(c.Client)
 }
 
-func Instance() *Manage {
-	once.Do(func() {
-		instance = &Manage{
-			Client: viper.New(),
-		}
-	})
+func () *Manage {
+
 
 	return instance
 }
