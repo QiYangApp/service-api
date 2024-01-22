@@ -1,12 +1,10 @@
 package main
 
-import (
-	"github.com/gin-gonic/gin"
-	"service-api/src/core/system"
-)
+import "app"
 
 //go:generate go run ./src/script/ioc/main.go
 //go:generate go run -mod=mod entgo.io/ent/cmd/ent generate "./src/app/models/ent/schema"
 func main() {
-	system.Start(gin.New())
+	//system.Start(gin.New())
+	app.New().Run(&app.Cmd{Debug: true})
 }
