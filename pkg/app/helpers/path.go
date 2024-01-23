@@ -13,6 +13,7 @@ type PathHelpers struct {
 	RootPath     string
 	StoragePath  string
 	LogPath      string
+	I18Path      string
 	ResourcePath string
 }
 
@@ -22,6 +23,7 @@ func (p *PathHelpers) init() *PathHelpers {
 	p.StoragePath = p.JoinCurrentRunRootPath("/storage")
 	p.LogPath = p.JoinCurrentRunRootPath("/storage/log")
 	p.ResourcePath = p.JoinCurrentRunRootPath("/resource")
+	p.I18Path = p.Join(p.ResourcePath, "/lang")
 
 	return p
 }

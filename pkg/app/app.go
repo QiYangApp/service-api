@@ -3,15 +3,17 @@ package app
 import (
 	"app/config"
 	"app/log"
+	"app/middlewares"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
-	"golang.org/x/net/context"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+	"golang.org/x/net/context"
 )
 
 type Cmd struct {
@@ -22,12 +24,12 @@ type Cmd struct {
 type App struct {
 	Cmd         *Cmd
 	Engine      *gin.Engine
-	middlewares []gin.HandlerFunc
+	middlewares []middlewares.Middleware
 	providers   []Provider
 	container   *Container
 }
 
-func (t *App) Middlewares(middlewares ...gin.HandlerFunc) *App {
+func (t *App) Middlewares(middlewares ...middlewares.Middleware) *App {
 	t.middlewares = append(t.middlewares, middlewares...)
 
 	return t
@@ -51,8 +53,10 @@ func (t *App) Run(cmd *Cmd) {
 	t.Cmd.Debug = config.Client().GetBool(`server.debug`)
 	t.Cmd.RunMode = config.Client().GetString(`server.runMode`)
 
-	t.Engine.Use(t.middlewares...)
+	for _, middleware := range t.middlewares {
+		t.Engine.Use(middleware())
 
+	}
 	gin.SetMode(t.Cmd.RunMode)
 
 	_ = t.Engine.SetTrustedProxies(nil)
@@ -92,6 +96,16 @@ func New() *App {
 		Engine: gin.New(),
 		providers: []Provider{
 			&ConfigProviders{},
+			&CronProviders{},
+		},
+		middlewares: []middlewares.Middleware{
+			middlewares.Recovery,
+			middlewares.Limiter,
+			middlewares.Option,
+			middlewares.I18nLocal,
+			middlewares.I18nUrl,
+			middlewares.Secure,
+			middlewares.Logger,
 		},
 	}
 }

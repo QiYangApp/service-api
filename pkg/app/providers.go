@@ -2,20 +2,23 @@ package app
 
 import (
 	"app/config"
-	"github.com/spf13/viper"
+	"app/cron"
 )
 
 type Provider interface {
-	Register(r *App)
+	Register(app *App)
 }
 
 type ConfigProviders struct {
 }
 
-func (c *ConfigProviders) Register(r *App) {
-	conf := &config.Manage{
-		Client: viper.New(),
-	}
+func (c *ConfigProviders) Register(app *App) {
+	config.Instance().ParseFile()
+}
 
-	config.Instance = conf.ParseFile()
+type CronProviders struct {
+}
+
+func (c *CronProviders) Register(app *App) {
+	cron.Instance().Init()
 }
