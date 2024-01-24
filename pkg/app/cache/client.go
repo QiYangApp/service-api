@@ -1,6 +1,8 @@
 package cache
 
 import (
+	"app/config"
+	"app/log"
 	"context"
 	"errors"
 	"time"
@@ -12,8 +14,8 @@ const (
 	FILE    = "file"
 )
 
-type CacheDrive interface {
-	Connect(ctx context.Context, cfg interface{}, cCfg interface{}) error
+type Drive interface {
+	Connect(ctx context.Context, cfg map[string]any) error
 	SetNx(ctx context.Context, key string, val interface{}, exp time.Duration) (bool, error)
 	SetEx(ctx context.Context, key string, val interface{}, exp time.Duration) (string, error)
 	Get(ctx context.Context, key string) (string, error)
@@ -22,28 +24,26 @@ type CacheDrive interface {
 	Del(ctx context.Context, key string) bool
 }
 
-type CacheManage struct {
-	drive          string
-	cacheConfig    config.Cache
-	databaseConfig config.Database
-	drives         map[string]CacheDrive
+type Manage struct {
+	drive  string
+	drives map[string]Drive
 }
 
-func (c *CacheManage) init() *CacheManage {
+func (c *Manage) init() *Manage {
 
 	if c.drives == nil {
-		c.drives = map[string]CacheDrive{}
+		c.drives = map[string]Drive{}
 	}
 
 	_, err := c.setDefaultDrive(c.drive)
 	if err != nil {
-		logger.S().Fatalf("register default cache drive fail: %v", err)
+		log.Client().Sugar().Fatalf("register default cache drive fail: %v", err)
 	}
 
 	return c
 }
 
-func (c *CacheManage) setDefaultDrive(key string) (CacheDrive, error) {
+func (c *Manage) setDefaultDrive(key string) (Drive, error) {
 	c.drive = key
 
 	cacheDrive, err := c.Register(key)
@@ -54,10 +54,10 @@ func (c *CacheManage) setDefaultDrive(key string) (CacheDrive, error) {
 	return cacheDrive, nil
 }
 
-func (c *CacheManage) GetDefaultCacheDrive() CacheDrive {
+func (c *Manage) GetDefaultCacheDrive() Drive {
 	var err error
 	if c.drive == "" {
-		logger.S().Fatalf("drive not found")
+		log.Client().Fatal("drive not found")
 	}
 
 	if c.drives[c.drive] == nil {
@@ -66,22 +66,25 @@ func (c *CacheManage) GetDefaultCacheDrive() CacheDrive {
 
 	c.drives[c.drive], err = c.Register(c.drive)
 	if err != nil {
-		logger.S().Fatalf("register cache drive fail: %v", err)
+		log.Client().Sugar().Fatalf("register cache drive fail: %v", err)
 	}
 
 	return c.drives[c.drive]
 }
 
-func (c *CacheManage) Register(key string) (CacheDrive, error) {
+func (c *Manage) Register(key string) (Drive, error) {
 	var err error
 	if c.drives[key] != nil {
 		return c.drives[key], nil
 	}
-	if key == REDIS {
-		c.drives[key], err = c.Connect(key, c.databaseConfig.Cache, c.cacheConfig.Redis)
-	} else {
-		err = errors.New("register cache drive not exist")
+
+	cfg := config.Client().GetStringMap("cache.conns." + key)
+
+	if _, ok := cfg["type"]; !ok {
+		log.Client().Fatal("register cache drive not exist")
 	}
+
+	c.drives[key], err = c.Connect(key, cfg["type"].(string), cfg)
 
 	if err != nil {
 		return nil, err
@@ -90,18 +93,18 @@ func (c *CacheManage) Register(key string) (CacheDrive, error) {
 	return c.drives[key], nil
 }
 
-func (c *CacheManage) Connect(key string, cfg interface{}, cCfg interface{}) (CacheDrive, error) {
-	var storage CacheDrive
+func (c *Manage) Connect(key, tp string, cfg map[string]any) (Drive, error) {
+	var storage Drive
 	var err error
 
 	if c.drives[key] != nil {
 		return c.drives[key], nil
 	}
 
-	switch key {
+	switch tp {
 	case REDIS:
-		storage = &CacheRedisDrive{}
-		err = storage.Connect(context.TODO(), cfg, cCfg)
+		storage = &RedisDrive{}
+		err = storage.Connect(context.TODO(), cfg)
 		break
 	default:
 		storage = nil
@@ -111,7 +114,7 @@ func (c *CacheManage) Connect(key string, cfg interface{}, cCfg interface{}) (Ca
 	return storage, err
 }
 
-func (c *CacheManage) GetCacheDriver(key string) (CacheDrive, error) {
+func (c *Manage) GetCacheDriver(key string) (Drive, error) {
 	if c.drives[key] != nil {
 		return c.drives[key], nil
 	}

@@ -1,28 +1,26 @@
 package cache
 
 import (
+	"app/log"
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/redis/go-redis/v9"
 )
 
-type CacheRedisMethod interface {
+type RedisMethod interface {
 }
 
-type CacheRedisDrive struct {
+type RedisDrive struct {
 	storage *redis.Client
-	CacheDrive
+	Drive
 }
 
-func (c *CacheRedisDrive) Connect(ctx context.Context, cfg interface{}, cCfg interface{}) error {
-	nCfg := cfg.(config.DatabaseRedis)
-	nCCfg := cCfg.(config.CacheRedis)
+func (c *RedisDrive) Connect(ctx context.Context, cfg map[string]any) error {
 	c.storage = redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%d", nCfg.Host, nCfg.Port),
-		Password: nCfg.Password,  // no password set
-		DB:       nCCfg.Database, // use default DB
+		Addr:     (cfg["addr"].(string)) + ":" + (cfg["addr"].(string)),
+		Password: cfg["password"].(string), // no password set
+		DB:       cfg["database"].(int),    // use default DB
 	})
 
 	_, err := c.storage.Conn().Ping(ctx).Result()
@@ -30,8 +28,8 @@ func (c *CacheRedisDrive) Connect(ctx context.Context, cfg interface{}, cCfg int
 		return err
 	}
 
-	if nCfg.Password != "" {
-		_, err = c.storage.Conn().Auth(ctx, nCfg.Password).Result()
+	if pwd, st := cfg["password"]; st && pwd != "" {
+		_, err = c.storage.Conn().Auth(ctx, pwd.(string)).Result()
 		if err != nil {
 			return err
 		}
@@ -40,19 +38,19 @@ func (c *CacheRedisDrive) Connect(ctx context.Context, cfg interface{}, cCfg int
 	return nil
 }
 
-func (c *CacheRedisDrive) Get(ctx context.Context, key string) (string, error) {
+func (c *RedisDrive) Get(ctx context.Context, key string) (string, error) {
 	return c.storage.Get(ctx, key).Result()
 }
 
-func (c *CacheRedisDrive) SetNx(ctx context.Context, key string, val interface{}, exp time.Duration) (bool, error) {
+func (c *RedisDrive) SetNx(ctx context.Context, key string, val interface{}, exp time.Duration) (bool, error) {
 	return c.storage.SetNX(ctx, key, val, exp).Result()
 }
 
-func (c *CacheRedisDrive) SetEx(ctx context.Context, key string, val interface{}, exp time.Duration) (string, error) {
+func (c *RedisDrive) SetEx(ctx context.Context, key string, val interface{}, exp time.Duration) (string, error) {
 	return c.storage.SetEx(ctx, key, val, exp).Result()
 }
 
-func (c *CacheRedisDrive) Exists(ctx context.Context, key string) bool {
+func (c *RedisDrive) Exists(ctx context.Context, key string) bool {
 	state := c.storage.Exists(ctx, key)
 	if state.Err() != nil {
 		return false
@@ -61,7 +59,7 @@ func (c *CacheRedisDrive) Exists(ctx context.Context, key string) bool {
 	return state.Val() == 1
 }
 
-func (c *CacheRedisDrive) Refresh(ctx context.Context, key string, exp time.Duration) bool {
+func (c *RedisDrive) Refresh(ctx context.Context, key string, exp time.Duration) bool {
 
 	if c.Exists(ctx, key) == false {
 		return false
@@ -69,19 +67,19 @@ func (c *CacheRedisDrive) Refresh(ctx context.Context, key string, exp time.Dura
 
 	valState, err := c.Get(ctx, key)
 	if err != nil {
-		logger.S().Warnf("cache drive refresh fail, get origin data fail, key, %s", err)
+		log.Client().Sugar().Warnf("cache drive refresh fail, get origin data fail, key, %s", err)
 		return false
 	}
 
 	state, err := c.SetNx(ctx, key, valState, exp)
 	if err != nil {
-		logger.S().Warnf("cache drive refresh fail, set new data fail, key, %s", err)
+		log.Client().Sugar().Warnf("cache drive refresh fail, set new data fail, key, %s", err)
 		return false
 	}
 
 	return state
 }
 
-func (c *CacheRedisDrive) Del(ctx context.Context, key string) bool {
+func (c *RedisDrive) Del(ctx context.Context, key string) bool {
 	return c.storage.Del(ctx, key).Val() == 1
 }

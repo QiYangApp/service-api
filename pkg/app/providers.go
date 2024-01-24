@@ -1,6 +1,7 @@
 package app
 
 import (
+	"app/cache"
 	"app/config"
 	"app/cron"
 )
@@ -21,4 +22,11 @@ type CronProviders struct {
 
 func (c *CronProviders) Register(app *App) {
 	cron.Instance().Init()
+}
+
+type CacheProviders struct {
+}
+
+func (c *CacheProviders) Register(app *App) {
+	cache.NewInstance(config.Client().GetString("cache.driver"))
 }

@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"app/config"
 	"app/helpers"
 	"app/log"
 	"context"
@@ -12,8 +11,28 @@ import (
 	"time"
 )
 
-var Instance *CacheManage
+var singleton *Manage
 var once = sync.Once{}
+
+func NewInstance(drive string) Manage {
+	once.Do(func() {
+		singleton = &Manage{
+			drive: drive,
+		}
+
+		singleton.init()
+	})
+
+	return *singleton
+}
+
+func Instance() *Manage {
+	return singleton
+}
+
+func Client() Drive {
+	return Instance().drives[singleton.drive]
+}
 
 func SetEx(key string, val interface{}, exp time.Duration) bool {
 	payload, SerializeErr := helpers.Serialize(val)
@@ -27,7 +46,7 @@ func SetEx(key string, val interface{}, exp time.Duration) bool {
 		return false
 	}
 
-	state, err := Instance.GetDefaultCacheDrive().SetEx(context.TODO(), key, payload, exp)
+	state, err := singleton.GetDefaultCacheDrive().SetEx(context.TODO(), key, payload, exp)
 	if err != nil {
 		log.Client().Sugar().Info("cache drive set key error, key: %s, val: %v", key, payload)
 		return false
@@ -48,7 +67,7 @@ func SetNx(key string, val interface{}, exp time.Duration) bool {
 		return false
 	}
 
-	state, err := Instance.GetDefaultCacheDrive().SetNx(context.TODO(), key, payload, exp)
+	state, err := singleton.GetDefaultCacheDrive().SetNx(context.TODO(), key, payload, exp)
 	if err != nil {
 		log.Client().Sugar().Infof("cache drive set key error, key: %s, val: %v", key, payload)
 		return false
@@ -58,7 +77,7 @@ func SetNx(key string, val interface{}, exp time.Duration) bool {
 }
 
 func Get(key string, ptrValue interface{}) error {
-	payload, err := Instance.GetDefaultCacheDrive().Get(context.Background(), key)
+	payload, err := singleton.GetDefaultCacheDrive().Get(context.Background(), key)
 	if errors.Is(err, redis.Nil) {
 		return errors.New("data is empty")
 	}
@@ -71,27 +90,13 @@ func Get(key string, ptrValue interface{}) error {
 }
 
 func Exists(key string) bool {
-	return Instance.GetDefaultCacheDrive().Exists(context.TODO(), key)
+	return singleton.GetDefaultCacheDrive().Exists(context.TODO(), key)
 }
 
 func Refresh(key string, exp time.Duration) bool {
-	return Instance.GetDefaultCacheDrive().Refresh(context.TODO(), key, exp)
+	return singleton.GetDefaultCacheDrive().Refresh(context.TODO(), key, exp)
 }
 
 func Del(key string) bool {
-	return Instance.GetDefaultCacheDrive().Del(context.TODO(), key)
-}
-
-func NewInstance(drive string) CacheManage {
-	once.Do(func() {
-		Instance = &CacheManage{
-			drive:          drive,
-			cacheConfig:    config.Instance.GetCache(),
-			databaseConfig: config.Instance.GetDatabase(),
-		}
-
-		Instance.init()
-	})
-
-	return *Instance
+	return singleton.GetDefaultCacheDrive().Del(context.TODO(), key)
 }

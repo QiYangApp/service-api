@@ -10,16 +10,18 @@ import (
 var Path = new(PathHelpers).init()
 
 type PathHelpers struct {
-	RootPath     string
-	StoragePath  string
-	LogPath      string
-	I18Path      string
-	ResourcePath string
+	RootPath       string
+	StoragePath    string
+	LogPath        string
+	I18Path        string
+	ControllerPath string
+	ResourcePath   string
 }
 
 // https://www.pudongping.com/posts/7c9ed3a3.html
 func (p *PathHelpers) init() *PathHelpers {
 	p.RootPath = p.GetCurrentRunPath()
+	p.ControllerPath = p.JoinCurrentRunRootPath("/api/controller")
 	p.StoragePath = p.JoinCurrentRunRootPath("/storage")
 	p.LogPath = p.JoinCurrentRunRootPath("/storage/log")
 	p.ResourcePath = p.JoinCurrentRunRootPath("/resource")
