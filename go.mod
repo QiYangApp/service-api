@@ -27,7 +27,7 @@ require (
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/o1egl/govatar v0.4.1
-	github.com/redis/go-redis/v9 v9.3.0
+	github.com/redis/go-redis/v9 v9.4.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/spf13/viper v1.18.2
 	go.uber.org/zap v1.26.0

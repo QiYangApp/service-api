@@ -3,6 +3,7 @@ module app
 go 1.21.0
 
 require (
+	entgo.io/ent v0.12.5
 	github.com/BurntSushi/toml v1.0.0
 	github.com/gin-contrib/i18n v1.1.0
 	github.com/gin-contrib/secure v0.0.1
