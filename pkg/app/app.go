@@ -26,7 +26,6 @@ type App struct {
 	Engine      *gin.Engine
 	middlewares []middlewares.Middleware
 	providers   []Provider
-	container   *Container
 }
 
 func (t *App) Middlewares(middlewares ...middlewares.Middleware) *App {

@@ -1,4 +1,4 @@
-package main
+package router
 
 //https://github.com/archine/gin-plus/blob/v2/ast/mvc2/main.go
 
@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/dave/dst"
 	"github.com/dave/dst/decorator"
-	"github.com/dave/jennifer/jen"
 	"go/parser"
 	"go/token"
 	"log"
@@ -15,56 +14,37 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
-	"service-api/src/core/inject"
 	"strings"
 	"unicode"
 )
 
-type Container struct {
-	ApiRootPath string
-	Apis        map[string]*inject.MethodInfo
-	BasePaths   map[string]string
-	Names       map[string]Names
-	Pkg         string
-}
-
+// Names controller Top-level interface used to declare a structure as a controller.
 type Names struct {
 	Name          string
 	FullPackName  string
 	ShortPackName string
 }
 
-// Parse project controllers and API methods
-// Run with go generate
-func main() {
-	storageDir := "./src"
-	controllerDir := "./src/api/controller"
-	fullPackName := "service-api/src/api/controller"
-	shortPckName := "controller"
-	if len(os.Args) > 1 {
-		controllerDir = os.Args[1]
-	}
-	controllerAbs, err := filepath.Abs(controllerDir)
-	if err != nil {
-		log.Fatalf("[%s] get controller directory abstract path error, %s", controllerDir, err.Error())
-	}
-	storageDir, err = filepath.Abs(storageDir)
-	if err != nil {
-		log.Fatalf("[%s] get controller directory abstract path error, %s", storageDir, err.Error())
-	}
-
-	container := &Container{
-		BasePaths: make(map[string]string),
-		Names:     make(map[string]Names),
-		Apis:      make(map[string]*MethodInfo),
-	}
-
-	recursionPkgDir(container, controllerAbs, fullPackName, shortPckName)
-
-	recordProjectControllerAndApi(container, storageDir, shortPckName, fullPackName)
+// MethodInfo Api method info
+type MethodInfo struct {
+	ApiMethodName  string // API method。such as: POST、GET、DELETE、PUT、OPTIONS、PATCH、HEAD
+	ApiPath        string // API path
+	PackPath       string // API pack
+	PackName       string
+	PackMethodName string            //
+	Annotations    map[string]string // Annotations of the method
 }
 
-func recursionPkgDir(container *Container, currentDir, fullPackName, shortPckName string) {
+type Scan struct {
+	Apis        map[string]*MethodInfo
+	Pkg         string
+	ApiRootPath string
+	BasePaths   map[string]string
+	Names       map[string]Names
+	Controller  []Inject
+}
+
+func (s *Scan) recursionPkgDir(currentDir, fullPackName, shortPckName string) {
 
 	dirs, err := os.ReadDir(currentDir)
 	if err != nil {
@@ -76,7 +56,7 @@ func recursionPkgDir(container *Container, currentDir, fullPackName, shortPckNam
 		log.Fatalf("[%s] parse controller directory error, %s", currentDir, err.Error())
 	}
 
-	recursionPkgFile(pkgs, container, currentDir, fullPackName, shortPckName)
+	s.recursionPkgFile(pkgs, currentDir, fullPackName, shortPckName)
 
 	for _, dir := range dirs {
 		if dir.IsDir() {
@@ -86,12 +66,12 @@ func recursionPkgDir(container *Container, currentDir, fullPackName, shortPckNam
 				log.Fatalf("[%s] red controller directory error, %s", nextDir, err.Error())
 			}
 
-			recursionPkgDir(container, nextDir, nextFullPackName, dir.Name())
+			s.recursionPkgDir(nextDir, nextFullPackName, dir.Name())
 		}
 	}
 }
 
-func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, currentDir, fullPackName, shortPackName string) {
+func (s *Scan) recursionPkgFile(pkgs map[string]*dst.Package, currentDir, fullPackName, shortPackName string) {
 	commonMethodRegex := regexp.MustCompile("//.*@(BasePath|RootPath|GET|POST|DELETE|PATCH|HEAD|PUT|OPTIONS|ANY).*")
 	commonAttrRegex := regexp.MustCompile("[(|,]([^=]+)=\"([^\"]+)[)|\"]")
 
@@ -109,9 +89,9 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, curren
 					if structType, match = spec.Type.(*dst.StructType); !match {
 						return false
 					}
-					if isController(structType.Fields.List) {
+					if s.isController(structType.Fields.List) {
 						key := fmt.Sprintf("pack_%x", md5.Sum([]byte(fmt.Sprintf("%s%s%s", fullPackName, shortPackName, spec.Name.Name))))
-						container.Names[key] = Names{Name: spec.Name.Name, ShortPackName: shortPackName, FullPackName: fullPackName}
+						s.Names[key] = Names{Name: spec.Name.Name, ShortPackName: shortPackName, FullPackName: fullPackName}
 
 						var prefix string
 						for _, comment := range t.Decs.Start {
@@ -124,25 +104,25 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, curren
 									log.Fatalf("[%s]: invalid api definition, example: @GET(path=\"/test\")", currentDir)
 								}
 
-								if commentsMethod[1] == "RootPath" && container.ApiRootPath != "" {
-									log.Fatalf("api root path repat set, [%s] %s:", container.ApiRootPath, commentsMethod[1])
+								if commentsMethod[1] == "RootPath" && s.ApiRootPath != "" {
+									log.Fatalf("api root path repat set, [%s] %s:", s.ApiRootPath, commentsMethod[1])
 								}
 
 								if commentsMethod[1] == "BasePath" {
 									prefix = commentsAttr[2]
 								} else if commentsMethod[1] == "RootPath" {
-									container.ApiRootPath = commentsAttr[2]
+									s.ApiRootPath = commentsAttr[2]
 								}
 							}
 						}
-						container.BasePaths[spec.Name.Name] = prefix
+						s.BasePaths[spec.Name.Name] = prefix
 					}
 				case *dst.FuncDecl:
 					if t.Decs.Start == nil || t.Recv == nil || t.Name.Name == "PostConstruct" {
 						return false
 					}
-					onwer := searchFather(t.Recv.List) // Which controller does it belong to
-					method := inject.MethodInfo{
+					onwer := s.searchFather(t.Recv.List) // Which controller does it belong to
+					method := MethodInfo{
 						Annotations:    make(map[string]string),
 						PackPath:       fullPackName,
 						PackName:       shortPackName,
@@ -164,7 +144,7 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, curren
 							for _, attr := range commentsAttr {
 								switch attr[1] {
 								case "path":
-									method.ApiPath = path.Join(container.BasePaths[onwer], attr[2])
+									method.ApiPath = path.Join(s.BasePaths[onwer], attr[2])
 									break
 								}
 							}
@@ -187,7 +167,7 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, curren
 					}
 					if method.ApiPath != "" {
 						key := fmt.Sprintf("%x", md5.Sum([]byte(fullPackName+"-"+onwer+"-"+t.Name.Name)))
-						container.Apis[key] = &method
+						s.Apis[key] = &method
 					}
 				}
 				return true
@@ -198,7 +178,7 @@ func recursionPkgFile(pkgs map[string]*dst.Package, container *Container, curren
 }
 
 // Determines whether the current structure is a controller
-func isController(fields []*dst.Field) bool {
+func (s *Scan) isController(fields []*dst.Field) bool {
 	var ok bool
 	var selectorExpr *dst.SelectorExpr
 	for _, field := range fields {
@@ -217,7 +197,7 @@ func isController(fields []*dst.Field) bool {
 }
 
 // Query the controller to which the method belongs
-func searchFather(fields []*dst.Field) string {
+func (s *Scan) searchFather(fields []*dst.Field) string {
 	for _, field := range fields {
 		if f, ok := field.Type.(*dst.StarExpr); ok {
 			return f.X.(*dst.Ident).Name
@@ -225,51 +205,4 @@ func searchFather(fields []*dst.Field) string {
 	}
 
 	return ""
-}
-
-// All controller information and Api information for the current project is recorded here
-func recordProjectControllerAndApi(container *Container, storageDir, shortPckName, controllerPackName string) {
-	if len(container.Apis) == 0 {
-		return
-	}
-	newFile := jen.NewFile("main")
-	newFile.HeaderComment("// ⚠️⛔ Auto generate code by gin framework, Do not edit!!!")
-	newFile.HeaderComment("// All controller information and Api information for the current project is recorded here\n")
-	newFile.ImportName("service-api/src/pkg/inject", "inject")
-
-	for key, pkg := range container.Names {
-		newFile.ImportAlias(pkg.FullPackName, key)
-	}
-
-	var registerCode []jen.Code
-	for _, pkg := range container.Names {
-		registerCode = append(registerCode, jen.Op("&").Qual(pkg.FullPackName, pkg.Name).Values())
-	}
-	newFile.Func().Id("init").Params().Block(
-		jen.Qual("service-api/src/pkg/inject", "Register").Call(registerCode...),
-		jen.Qual("service-api/src/pkg/inject", "DI").Op("=").Map(jen.String()).Op("*").
-			Qual("service-api/src/pkg/inject", "MethodInfo").
-			Values(jen.DictFunc(func(dict jen.Dict) {
-				for k, methodInfo := range container.Apis {
-					dict[jen.Lit(k)] = jen.Block(jen.Dict{
-						jen.Id("PackName"):       jen.Lit(methodInfo.PackName),
-						jen.Id("PackPath"):       jen.Lit(methodInfo.PackPath),
-						jen.Id("PackMethodName"): jen.Lit(methodInfo.PackMethodName),
-						jen.Id("ApiMethodName"):  jen.Lit(methodInfo.ApiMethodName),
-						jen.Id("ApiPath"):        jen.Lit(path.Join(container.ApiRootPath, methodInfo.ApiPath)),
-						jen.Id("Annotations"): jen.Map(jen.String()).String().Values(jen.DictFunc(func(dict jen.Dict) {
-							for k, v := range methodInfo.Annotations {
-								dict[jen.Lit(k)] = jen.Lit(v)
-							}
-						})),
-					})
-				}
-			})),
-	)
-
-	err := newFile.Save(filepath.Join(storageDir, "controller_init.go"))
-	if err != nil {
-		panic(err)
-	}
-
 }
