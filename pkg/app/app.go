@@ -5,7 +5,6 @@ import (
 	"app/log"
 	"app/middlewares"
 	"errors"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -40,6 +39,21 @@ func (t *App) Providers(providers ...Provider) *App {
 	return t
 }
 
+func (t *App) SetMode(mod string) {
+	ginMode := ""
+	switch mod {
+	case "debug":
+		ginMode = gin.DebugMode
+	case "release":
+		ginMode = gin.ReleaseMode
+	case "test":
+		ginMode = gin.TestMode
+	default:
+		panic("gin mode unknown: " + mod + " (available mode: debug release test)")
+	}
+	gin.SetMode(ginMode)
+}
+
 func (t *App) Run(cmd *Cmd) {
 	t.Cmd = cmd
 
@@ -47,21 +61,18 @@ func (t *App) Run(cmd *Cmd) {
 		provider.Register(t)
 	}
 
-	a := config.Client().Get(`server`)
-	fmt.Println(a)
 	t.Cmd.Debug = config.Client().GetBool(`server.debug`)
 	t.Cmd.RunMode = config.Client().GetString(`server.runMode`)
+	t.SetMode(t.Cmd.RunMode)
 
 	for _, middleware := range t.middlewares {
 		t.Engine.Use(middleware())
-
 	}
-	gin.SetMode(t.Cmd.RunMode)
 
 	_ = t.Engine.SetTrustedProxies(nil)
 
 	srv := &http.Server{
-		Addr:                         config.Client().GetString("server.addr") + ":" + config.Client().GetString("server.prot"),
+		Addr:                         config.Client().GetString("server.addr") + ":" + config.Client().GetString("server.port"),
 		Handler:                      t.Engine,
 		DisableGeneralOptionsHandler: true,
 		ReadTimeout:                  time.Duration(config.Client().GetInt("server.config.readTimeout")),
@@ -96,14 +107,16 @@ func New() *App {
 		providers: []Provider{
 			&ConfigProviders{},
 			&CronProviders{},
+			&RouterProviders{},
 		},
 		middlewares: []middlewares.Middleware{
+			middlewares.I18nLocal,
+			middlewares.I18nUrl,
 			middlewares.Recovery,
 			middlewares.Limiter,
 			middlewares.Option,
-			middlewares.I18nLocal,
-			middlewares.I18nUrl,
 			middlewares.Secure,
+			middlewares.DefaultLogger,
 			middlewares.Logger,
 		},
 	}

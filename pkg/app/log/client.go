@@ -11,7 +11,7 @@ import (
 )
 
 type Param struct {
-	Level       zapcore.Level
+	Level       string
 	MaxSize     int
 	MaxAge      int
 	MaxBackups  int
@@ -62,7 +62,7 @@ func (b *Manage) core() zapcore.Core {
 
 	// 设置日志级别
 	atomicLevel := zap.NewAtomicLevel()
-	atomicLevel.SetLevel(b.Level)
+	atomicLevel.SetLevel(b.GetLevel(b.Level))
 
 	core := zapcore.NewCore(
 		zapcore.NewJSONEncoder(encoderConfig),
@@ -71,6 +71,27 @@ func (b *Manage) core() zapcore.Core {
 	)
 
 	return core
+}
+func (b *Manage) GetLevel(level string) zapcore.Level {
+
+	switch level {
+	case "debug":
+		return zap.DebugLevel
+	case "info":
+		return zap.InfoLevel
+	case "warn":
+		return zap.WarnLevel
+	case "error":
+		return zap.ErrorLevel
+	case "DPanic":
+		return zap.DPanicLevel
+	case "panic":
+		return zap.PanicLevel
+	case "fatal":
+		return zap.FatalLevel
+	}
+
+	return zap.DebugLevel
 }
 
 func (b *Manage) hook() []zapcore.WriteSyncer {

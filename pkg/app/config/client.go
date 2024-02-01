@@ -19,11 +19,11 @@ type Manage struct {
 func (c *Manage) ParseFile() *Manage {
 
 	c.Client.SetConfigType("toml")
-	viper.AddConfigPath(helpers.Path.RootPath)
-	viper.AddConfigPath("config")
+	c.Client.AddConfigPath(helpers.Path.RootPath)
+	c.Client.AddConfigPath("config")
 
 	// 读取配置文件
-	if err := viper.ReadInConfig(); err != nil {
+	if err := c.Client.ReadInConfig(); err != nil {
 		zap.S().Error(err)
 	}
 

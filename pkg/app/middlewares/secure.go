@@ -7,7 +7,6 @@ import (
 )
 
 func Secure() gin.HandlerFunc {
-
 	return secure.New(secure.Config{
 		IsDevelopment:         config.Client().GetBool("server.debug"),
 		AllowedHosts:          []string{config.Client().GetString("server.domain")},

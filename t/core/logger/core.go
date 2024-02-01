@@ -11,30 +11,30 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-type LoggerCoreParam struct {
-	Mode        LoggerMode
+type CoreParam struct {
+	Mode        string
 	OutputLevel zapcore.Level
 }
 
-type LoggerCoreBuilder struct {
-	LoggerCoreParam
+type CoreBuilder struct {
+	CoreParam
 	logger *zap.Logger
 }
 
-func (b *LoggerCoreBuilder) Logger() *zap.Logger {
+func (b *CoreBuilder) Logger() *zap.Logger {
 	return b.logger
 }
 
-func (b *LoggerCoreBuilder) setOutPutLevel(level zapcore.Level) *LoggerCoreBuilder {
+func (b *CoreBuilder) setOutPutLevel(level zapcore.Level) *CoreBuilder {
 	b.OutputLevel = level
 
 	return b
 }
 
-func (b *LoggerCoreBuilder) Builder() *LoggerCoreBuilder {
+func (b *CoreBuilder) Builder() *CoreBuilder {
 
 	// 设置初始化字段
-	field := zap.Fields(zap.String("name", string(b.Mode)), zap.Any("level", b.OutputLevel))
+	field := zap.Fields(zap.String("name", b.Mode), zap.Any("level", b.OutputLevel))
 
 	// 开启开发模式，堆栈跟踪, 文件和行号
 	if b.OutputLevel == zap.DebugLevel {
@@ -46,7 +46,7 @@ func (b *LoggerCoreBuilder) Builder() *LoggerCoreBuilder {
 	return b
 }
 
-func (b *LoggerCoreBuilder) core() zapcore.Core {
+func (b *CoreBuilder) core() zapcore.Core {
 
 	encoderConfig := zapcore.EncoderConfig{
 		MessageKey:    "msg",
@@ -79,7 +79,7 @@ func (b *LoggerCoreBuilder) core() zapcore.Core {
 	return core
 }
 
-func (b *LoggerCoreBuilder) hook() []zapcore.WriteSyncer {
+func (b *CoreBuilder) hook() []zapcore.WriteSyncer {
 	hooks := []zapcore.WriteSyncer{
 		zapcore.AddSync(
 			&lumberjack.Logger{

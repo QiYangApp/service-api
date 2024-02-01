@@ -19,7 +19,7 @@ func Recovery() gin.HandlerFunc {
 		// 自定义输出内容
 		errMsg := fmt.Sprintf("error: %v", err)
 
-		log.Client().Sugar().Error("url: %s, err: %v", c.Request.URL, zap.Error(err.(error)))
+		log.Client().Sugar().Error("url: %s, exceptions: %v", c.Request.URL, zap.Error(err.(error)))
 
 		c.AbortWithStatusJSON(
 			http.StatusInternalServerError,

@@ -3,7 +3,7 @@ package logger
 import "go.uber.org/zap"
 
 type Instance struct {
-	logger *LoggerCoreBuilder
+	logger *CoreBuilder
 }
 
 func (i *Instance) Logger() *zap.Logger {

@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/dave/dst"
 	"github.com/dave/dst/decorator"
-	"github.com/dave/jennifer/jen"
 	"go/parser"
 	"go/token"
 	"log"
@@ -225,51 +224,4 @@ func searchFather(fields []*dst.Field) string {
 	}
 
 	return ""
-}
-
-// All controller information and Api information for the current project is recorded here
-func recordProjectControllerAndApi(container *Container, storageDir, shortPckName, controllerPackName string) {
-	if len(container.Apis) == 0 {
-		return
-	}
-	newFile := jen.NewFile("main")
-	newFile.HeaderComment("// ⚠️⛔ Auto generate code by gin framework, Do not edit!!!")
-	newFile.HeaderComment("// All controller information and Api information for the current project is recorded here\n")
-	newFile.ImportName("service-api/src/pkg/inject", "inject")
-
-	for key, pkg := range container.Names {
-		newFile.ImportAlias(pkg.FullPackName, key)
-	}
-
-	var registerCode []jen.Code
-	for _, pkg := range container.Names {
-		registerCode = append(registerCode, jen.Op("&").Qual(pkg.FullPackName, pkg.Name).Values())
-	}
-	newFile.Func().Id("init").Params().Block(
-		jen.Qual("service-api/src/pkg/inject", "Register").Call(registerCode...),
-		jen.Qual("service-api/src/pkg/inject", "DI").Op("=").Map(jen.String()).Op("*").
-			Qual("service-api/src/pkg/inject", "MethodInfo").
-			Values(jen.DictFunc(func(dict jen.Dict) {
-				for k, methodInfo := range container.Apis {
-					dict[jen.Lit(k)] = jen.Block(jen.Dict{
-						jen.Id("PackName"):       jen.Lit(methodInfo.PackName),
-						jen.Id("PackPath"):       jen.Lit(methodInfo.PackPath),
-						jen.Id("PackMethodName"): jen.Lit(methodInfo.PackMethodName),
-						jen.Id("ApiMethodName"):  jen.Lit(methodInfo.ApiMethodName),
-						jen.Id("ApiPath"):        jen.Lit(path.Join(container.ApiRootPath, methodInfo.ApiPath)),
-						jen.Id("Annotations"): jen.Map(jen.String()).String().Values(jen.DictFunc(func(dict jen.Dict) {
-							for k, v := range methodInfo.Annotations {
-								dict[jen.Lit(k)] = jen.Lit(v)
-							}
-						})),
-					})
-				}
-			})),
-	)
-
-	err := newFile.Save(filepath.Join(storageDir, "controller_init.go"))
-	if err != nil {
-		panic(err)
-	}
-
 }

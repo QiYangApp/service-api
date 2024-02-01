@@ -23,8 +23,8 @@ func (p *PathHelpers) init() *PathHelpers {
 	p.RootPath = p.GetCurrentRunPath()
 	p.ControllerPath = p.JoinCurrentRunRootPath("/api/controller")
 	p.StoragePath = p.JoinCurrentRunRootPath("/storage")
-	p.LogPath = p.JoinCurrentRunRootPath("/storage/log")
-	p.ResourcePath = p.JoinCurrentRunRootPath("/resource")
+	p.ResourcePath = p.JoinCurrentRunRootPath("/resources")
+	p.LogPath = p.Join(p.StoragePath, "/log")
 	p.I18Path = p.Join(p.ResourcePath, "/lang")
 
 	return p

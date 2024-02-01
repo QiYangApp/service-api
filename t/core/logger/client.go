@@ -5,20 +5,18 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-type LoggerMode string
-
-var singleton = make(map[LoggerMode]*Instance, 0)
+var singleton = make(map[string]*Instance, 0)
 var defaultOutputLevel = zapcore.WarnLevel
 
 const (
-	DefaultMode  LoggerMode = "default"
-	RequestMode             = "request"
-	SystemMode              = "system"
-	RecoveryMode            = "recovery"
+	DefaultMode  string = "default"
+	RequestMode         = "request"
+	SystemMode          = "system"
+	RecoveryMode        = "recovery"
 )
 
 func Recovery() *zap.SugaredLogger {
-	log := NewSingletonLogger(LoggerCoreParam{
+	log := NewSingletonLogger(CoreParam{
 		Mode:        RequestMode,
 		OutputLevel: defaultOutputLevel,
 	})
@@ -27,7 +25,7 @@ func Recovery() *zap.SugaredLogger {
 }
 
 func R() *zap.SugaredLogger {
-	log := NewSingletonLogger(LoggerCoreParam{
+	log := NewSingletonLogger(CoreParam{
 		Mode:        RequestMode,
 		OutputLevel: defaultOutputLevel,
 	})
@@ -36,7 +34,7 @@ func R() *zap.SugaredLogger {
 }
 
 func D() *zap.SugaredLogger {
-	log := NewSingletonLogger(LoggerCoreParam{
+	log := NewSingletonLogger(CoreParam{
 		Mode:        DefaultMode,
 		OutputLevel: defaultOutputLevel,
 	})
@@ -45,7 +43,7 @@ func D() *zap.SugaredLogger {
 }
 
 func S() *zap.SugaredLogger {
-	log := NewSingletonLogger(LoggerCoreParam{
+	log := NewSingletonLogger(CoreParam{
 		Mode:        SystemMode,
 		OutputLevel: defaultOutputLevel,
 	})
@@ -53,14 +51,14 @@ func S() *zap.SugaredLogger {
 	return log.Logger().Sugar()
 }
 
-func C(mode LoggerMode) Instance {
-	return NewSingletonLogger(LoggerCoreParam{
+func C(mode string) Instance {
+	return NewSingletonLogger(CoreParam{
 		Mode:        mode,
 		OutputLevel: defaultOutputLevel,
 	})
 }
 
-func NewSingletonLogger(param LoggerCoreParam) Instance {
+func NewSingletonLogger(param CoreParam) Instance {
 	if logger, ok := singleton[param.Mode]; ok {
 		return *logger
 	}
@@ -70,10 +68,10 @@ func NewSingletonLogger(param LoggerCoreParam) Instance {
 	return *singleton[param.Mode]
 }
 
-func NewLogger(param LoggerCoreParam) *Instance {
+func NewLogger(param CoreParam) *Instance {
 
-	logger := LoggerCoreBuilder{
-		LoggerCoreParam: param,
+	logger := CoreBuilder{
+		CoreParam: param,
 	}
 
 	return &Instance{

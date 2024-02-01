@@ -1,4 +1,4 @@
-package errors
+package exceptions
 
 import (
 	"encoding/json"
@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
-type errorString struct {
+type ErrorString struct {
 	s string
 }
 
-type errorInfo struct {
+type ErrorInfo struct {
 	Time     string `json:"time"`
 	Alarm    string `json:"alarm"`
 	Message  string `json:"message"`
@@ -22,31 +22,31 @@ type errorInfo struct {
 	FuncName string `json:"funcName"`
 }
 
-func (e *errorString) Error() string {
+func (e *ErrorString) Error() string {
 	return e.s
 }
 
 func New(text string) error {
 	alarm("INFO", text)
-	return &errorString{text}
+	return &ErrorString{text}
 }
 
 // Email 发邮件
 func Email(text string) error {
 	alarm("EMAIL", text)
-	return &errorString{text}
+	return &ErrorString{text}
 }
 
 // Sms 发短信
 func Sms(text string) error {
 	alarm("SMS", text)
-	return &errorString{text}
+	return &ErrorString{text}
 }
 
 // WeChat 发微信
 func WeChat(text string) error {
 	alarm("WX", text)
-	return &errorString{text}
+	return &ErrorString{text}
 }
 
 // 告警方法
@@ -64,7 +64,7 @@ func alarm(level string, str string) {
 		functionName = strings.TrimPrefix(functionName, ".")
 	}
 
-	var msg = errorInfo{
+	var msg = ErrorInfo{
 		Time:     currentTime,
 		Alarm:    level,
 		Message:  str,

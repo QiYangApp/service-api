@@ -3,7 +3,6 @@ package log
 import (
 	"app/config"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"sync"
 )
 
@@ -20,9 +19,10 @@ func Instance() *Manage {
 				MaxSize:     config.Client().GetInt("log.maxSize"),
 				Compress:    config.Client().GetBool("log.compress"),
 				LogFileName: config.Client().GetString("log.fileName") + ".log",
-				Level:       zapcore.Level(config.Client().GetInt("log.level")),
+				Level:       config.Client().GetString("log.level"),
 			},
 		}
+		instance.Builder()
 	})
 
 	return instance
