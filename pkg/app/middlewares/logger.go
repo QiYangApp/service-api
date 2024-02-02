@@ -8,18 +8,13 @@ import (
 	"time"
 )
 
-func DefaultLogger() gin.HandlerFunc {
+func Logger() gin.HandlerFunc {
 	if config.Client().GetBool("server.debug") {
 		return gin.Logger()
 	}
 
-	return func(c *gin.Context) {}
-}
-
-func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
-
 		// 中间件逻辑
 		c.Next()
 

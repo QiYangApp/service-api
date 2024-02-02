@@ -13,7 +13,10 @@ import (
 func Limiter() gin.HandlerFunc {
 
 	if config.Client().GetBool("server.debug") {
-		return func(context *gin.Context) {}
+		return func(c *gin.Context) {
+			// 中间件逻辑
+			c.Next()
+		}
 	}
 
 	duration := config.Client().GetDuration("server.request.maxRequestTime")

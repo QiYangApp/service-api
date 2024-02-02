@@ -116,7 +116,6 @@ func New() *App {
 			middlewares.Limiter,
 			middlewares.Option,
 			middlewares.Secure,
-			middlewares.DefaultLogger,
 			middlewares.Logger,
 		},
 	}
