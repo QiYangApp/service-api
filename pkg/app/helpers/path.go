@@ -15,13 +15,15 @@ type PathHelpers struct {
 	LogPath        string
 	I18Path        string
 	ControllerPath string
+	ApiPath        string
 	ResourcePath   string
 }
 
 // https://www.pudongping.com/posts/7c9ed3a3.html
 func (p *PathHelpers) init() *PathHelpers {
 	p.RootPath = p.GetCurrentRunPath()
-	p.ControllerPath = p.JoinCurrentRunRootPath("/api/controller")
+	p.ApiPath = p.JoinCurrentRunRootPath("/api")
+	p.ControllerPath = p.JoinCurrentRunRootPath("/controller")
 	p.StoragePath = p.JoinCurrentRunRootPath("/storage")
 	p.ResourcePath = p.JoinCurrentRunRootPath("/resources")
 	p.LogPath = p.Join(p.StoragePath, "/log")

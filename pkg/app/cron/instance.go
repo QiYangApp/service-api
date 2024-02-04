@@ -12,6 +12,8 @@ func (i *Manage) Init() *Manage {
 		cron.WithLogger(Logger{}),
 	)
 
+	i.cron.Start()
+
 	return i
 }
 

@@ -10,7 +10,7 @@ type TimeInterface interface {
 
 	AtMinute(minute int) TimeInterface
 
-	EverySecond(minute int) TimeInterface
+	EverySecond(second int) TimeInterface
 
 	EveryMinute(minute int) TimeInterface
 
