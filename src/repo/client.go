@@ -1,4 +1,4 @@
-package models
+package repo
 
 import (
 	"app/log"
@@ -17,10 +17,10 @@ var once = sync.Once{}
 
 func New(opts []models.Option) *models.Client {
 	once.Do(func() {
-		Instance = NewClient(opts)
+		Client = NewClient(opts)
 	})
 
-	return Instance
+	return Client
 }
 
 func NewClient(opts []models.Option) *models.Client {

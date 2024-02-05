@@ -4,16 +4,15 @@ import (
 	"app/config"
 	"app/log"
 	"encoding/json"
-	entsql "entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect"
 )
 
-type DB[C any] struct {
-	Client   C
+type DB struct {
 	Cfg      ConfigConnsMany
 	Classify string
 }
 
-func (i *DB[C]) Init() {
+func (i *DB) Init() {
 	var t = config.Client().GetString("database.driver")
 	if t == "" {
 		log.Client().Panic("database config type error")
@@ -40,10 +39,10 @@ func (i *DB[C]) Init() {
 	i.Cfg = cfg
 }
 
-func (i *DB[C]) Read() *entsql.Driver {
+func (i *DB) Read() dialect.Driver {
 	return new(Connect).Open(i.Classify, i.Cfg.Read)
 }
 
-func (i *DB[C]) Write() *entsql.Driver {
+func (i *DB) Write() dialect.Driver {
 	return new(Connect).Open(i.Classify, i.Cfg.Write)
 }

@@ -7,38 +7,38 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-type multiDriver struct {
-	r, w dialect.Driver
+type MultiDriver struct {
+	R, W dialect.Driver
 }
 
-var _ dialect.Driver = (*multiDriver)(nil)
+var _ dialect.Driver = (*MultiDriver)(nil)
 
-func (d *multiDriver) Query(ctx context.Context, query string, args, v any) error {
-	e := d.r
+func (d *MultiDriver) Query(ctx context.Context, query string, args, v any) error {
+	e := d.R
 	// Mutation statements that use the RETURNING clause.
 	if ent.QueryFromContext(ctx) == nil {
-		e = d.w
+		e = d.W
 	}
 	return e.Query(ctx, query, args, v)
 }
 
-func (d *multiDriver) Exec(ctx context.Context, query string, args, v any) error {
-	return d.w.Exec(ctx, query, args, v)
+func (d *MultiDriver) Exec(ctx context.Context, query string, args, v any) error {
+	return d.W.Exec(ctx, query, args, v)
 }
 
-func (d *multiDriver) Tx(ctx context.Context) (dialect.Tx, error) {
-	return d.w.Tx(ctx)
+func (d *MultiDriver) Tx(ctx context.Context) (dialect.Tx, error) {
+	return d.W.Tx(ctx)
 }
 
-func (d *multiDriver) BeginTx(ctx context.Context, opts *sql.TxOptions) (dialect.Tx, error) {
-	return d.w.(interface {
+func (d *MultiDriver) BeginTx(ctx context.Context, opts *sql.TxOptions) (dialect.Tx, error) {
+	return d.W.(interface {
 		BeginTx(context.Context, *sql.TxOptions) (dialect.Tx, error)
 	}).BeginTx(ctx, opts)
 }
 
-func (d *multiDriver) Close() error {
-	rerr := d.r.Close()
-	werr := d.w.Close()
+func (d *MultiDriver) Close() error {
+	rerr := d.R.Close()
+	werr := d.W.Close()
 	if rerr != nil {
 		return rerr
 	}
@@ -48,6 +48,6 @@ func (d *multiDriver) Close() error {
 	return nil
 }
 
-func (d *multiDriver) Dialect() string {
-	return d.r.Dialect()
+func (d *MultiDriver) Dialect() string {
+	return d.R.Dialect()
 }

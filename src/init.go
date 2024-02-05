@@ -5,9 +5,9 @@ package main
 
 import (
 	"app/router"
-	pack_3a9dfef63c6b1485efcc8a63a017d962 "service-api/src/api/controller"
+	pack_71fc781208c148cecd8c184360762152 "service-api/src/api/controller"
 )
 
 func init() {
-	router.Register(&pack_3a9dfef63c6b1485efcc8a63a017d962.LoginController{}, &pack_3a9dfef63c6b1485efcc8a63a017d962.InjectController{})
+	router.Register(&pack_71fc781208c148cecd8c184360762152.LoginController{}, &pack_71fc781208c148cecd8c184360762152.InjectController{})
 }
