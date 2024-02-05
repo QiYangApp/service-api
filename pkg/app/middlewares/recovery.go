@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"app/config"
 	"app/log"
 	"app/response"
 	"fmt"
@@ -11,9 +10,9 @@ import (
 )
 
 func Recovery() gin.HandlerFunc {
-	if config.Client().GetBool("server.debug") {
-		return gin.Recovery()
-	}
+	//if config.Client().GetBool("server.debug") {
+	//	return gin.Recovery()
+	//}
 
 	var custom = func(c *gin.Context, err any) {
 		// 自定义输出内容
@@ -28,7 +27,7 @@ func Recovery() gin.HandlerFunc {
 				err,
 				http.StatusInternalServerError,
 				errMsg,
-			).ToStruct(),
+			).ToSelf(),
 		)
 	}
 

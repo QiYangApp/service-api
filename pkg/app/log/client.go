@@ -102,7 +102,7 @@ func (b *Manage) hook() []zapcore.WriteSyncer {
 				MaxSize:    b.MaxSize,                                              // 每个日志文件保存的大小 单位:M
 				MaxAge:     b.MaxAge,                                               // 文件最多保存多少天
 				MaxBackups: b.MaxBackups,                                           // 日志文件最多保存多少个备份
-				Compress:   true,                                                   // 是否压缩
+				Compress:   b.Compress,                                             // 是否压缩
 			},
 		),
 	}

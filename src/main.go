@@ -2,7 +2,7 @@ package main
 
 import (
 	"app"
-	"service-api/src/api/providers"
+	"service-api/src/providers"
 )
 
 //go:generate go run ./src/script/ioc/main.go
@@ -10,6 +10,7 @@ import (
 func main() {
 	//system.Start(gin.New())
 	context := app.New()
+	context.PackageName = "service-api/src"
 	context.Providers(
 		&providers.Cron{},
 	)

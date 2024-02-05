@@ -44,7 +44,7 @@ type Scan struct {
 	Controller  []Inject
 }
 
-func (s *Scan) recursionPkgDir(currentDir, fullPackName, shortPckName string) {
+func (s *Scan) RecursionPkgDir(currentDir, fullPackName, shortPckName string) {
 
 	dirs, err := os.ReadDir(currentDir)
 	if err != nil {
@@ -66,7 +66,7 @@ func (s *Scan) recursionPkgDir(currentDir, fullPackName, shortPckName string) {
 				log.Fatalf("[%s] red controller directory error, %s", nextDir, err.Error())
 			}
 
-			s.recursionPkgDir(nextDir, nextFullPackName, dir.Name())
+			s.RecursionPkgDir(nextDir, nextFullPackName, dir.Name())
 		}
 	}
 }

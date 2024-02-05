@@ -2,12 +2,14 @@ package middlewares
 
 import (
 	"app/config"
+	"app/helpers"
 	"app/log"
 	"app/response"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"golang.org/x/time/rate"
 	"net/http"
+	"time"
 )
 
 func Limiter() gin.HandlerFunc {
@@ -20,8 +22,8 @@ func Limiter() gin.HandlerFunc {
 	}
 
 	duration := config.Client().GetDuration("server.request.maxRequestTime")
-	maxRequests := config.Client().GetInt64("server.request.maxRequests")
-	limiter := rate.NewLimiter(rate.Every(duration), int(maxRequests))
+	maxRequests := config.Client().GetInt("server.request.maxRequests")
+	limiter := helpers.NewLimiter(rate.Every(duration*time.Second), maxRequests, "request")
 
 	return func(c *gin.Context) {
 		// 限流逻辑

@@ -16,8 +16,10 @@ import (
 // https://github.com/xxjwxc/ginrpc/blob/master/common.go#L57
 // https://github.com/archine/gin-plus/blob/v2/ast/mvc2/main.go
 
-// DiService  Apis Project global API cache
-var Containers map[string]*Inject
+// Containers  Apis Project global API
+var Containers map[string]Inject
+
+var Cache []inject
 
 // Annotations the annotation of Api method
 type Annotations map[string]string
@@ -25,12 +27,17 @@ type Annotations map[string]string
 // Annotations of each API
 var annotationCache map[string]Annotations
 
+// Register controllers
+func Register(containers ...inject) {
+	Cache = append(Cache, containers...)
+}
+
 // Apply all apis to the gin engine
 // @param e: gin.Engine
 // @param autowired: whether enable autowired properties
-func Apply(e *gin.Engine, scan Scan, autowired bool) {
+func Apply(e *gin.Engine, scan *Scan, autowired bool) {
 	annotationCache = make(map[string]Annotations)
-	for _, di := range Containers {
+	for _, di := range Cache {
 		if autowired {
 			ioc.Inject(di)
 		}

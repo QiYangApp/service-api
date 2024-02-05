@@ -4,6 +4,7 @@ import (
 	"app/config"
 	"app/log"
 	"app/middlewares"
+	"app/router"
 	"errors"
 	"net/http"
 	"os"
@@ -21,10 +22,12 @@ type Cmd struct {
 }
 
 type App struct {
+	PackageName string
 	Cmd         *Cmd
 	Engine      *gin.Engine
 	middlewares []middlewares.Middleware
 	providers   []Provider
+	Scan        *router.Scan
 }
 
 func (t *App) Middlewares(middlewares ...middlewares.Middleware) *App {
@@ -65,11 +68,16 @@ func (t *App) Run(cmd *Cmd) {
 	t.Cmd.RunMode = config.Client().GetString(`server.runMode`)
 	t.SetMode(t.Cmd.RunMode)
 
+	funcs := []gin.HandlerFunc{}
 	for _, middleware := range t.middlewares {
-		t.Engine.Use(middleware())
+		funcs = append(funcs, middleware())
 	}
 
+	t.Engine.Use(funcs...)
+
 	_ = t.Engine.SetTrustedProxies(nil)
+
+	router.Apply(t.Engine, t.Scan, true)
 
 	srv := &http.Server{
 		Addr:                         config.Client().GetString("server.addr") + ":" + config.Client().GetString("server.port"),
@@ -110,9 +118,9 @@ func New() *App {
 			&RouterProviders{},
 		},
 		middlewares: []middlewares.Middleware{
+			middlewares.Recovery,
 			middlewares.I18nLocal,
 			middlewares.I18nUrl,
-			middlewares.Recovery,
 			middlewares.Limiter,
 			middlewares.Option,
 			middlewares.Secure,

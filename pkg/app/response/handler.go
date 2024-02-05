@@ -95,6 +95,10 @@ func (r *Response[T]) RContext() *gin.Context {
 	return r.Context
 }
 
+func (r *Response[T]) ToSelf() *Response[T] {
+	return r
+}
+
 func (r *Response[T]) ToStruct() *Response[T] {
 	return &Response[T]{
 		Code:      r.GetCode(),

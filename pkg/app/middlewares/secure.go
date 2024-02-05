@@ -8,7 +8,7 @@ import (
 
 func Secure() gin.HandlerFunc {
 	return secure.New(secure.Config{
-		IsDevelopment:         config.Client().GetBool("server.debug"),
+		IsDevelopment:         true,
 		AllowedHosts:          []string{config.Client().GetString("server.domain")},
 		SSLRedirect:           false,
 		SSLHost:               config.Client().GetString("server.domain"),
