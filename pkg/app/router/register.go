@@ -21,12 +21,6 @@ var Containers map[string]Inject
 
 var Cache []inject
 
-// Annotations the annotation of Api method
-type Annotations map[string]string
-
-// Annotations of each API
-var annotationCache map[string]Annotations
-
 // Register controllers
 func Register(containers ...inject) {
 	Cache = append(Cache, containers...)
@@ -36,7 +30,6 @@ func Register(containers ...inject) {
 // @param e: gin.Engine
 // @param autowired: whether enable autowired properties
 func Apply(e *gin.Engine, scan *Scan, autowired bool) {
-	annotationCache = make(map[string]Annotations)
 	for _, di := range Cache {
 		if autowired {
 			ioc.Inject(di)
@@ -151,17 +144,6 @@ func unmarshal(c *gin.Context, v interface{}) error {
 		log.Client().Sugar().Error("route handle fun error, method params bind, error method: %v", v)
 	}
 	return err
-}
-
-// GetAnnotation Gets the specified annotation
-// Returns the value of this annotation, when the has is false mine this val is empty
-func GetAnnotation(ctx *gin.Context, annotationName string) (val string, has bool) {
-	anno, has := annotationCache[ctx.FullPath()]
-	if !has || len(anno) == 0 {
-		return "", false
-	}
-	val, has = anno[annotationName]
-	return
 }
 
 // MethodInterceptor API method interceptor

@@ -8,6 +8,6 @@ import (
 type Cron struct {
 }
 
-func (*Cron) Register(appCaron *app.App) {
+func (*Cron) Register(app *app.App) {
 	jobs.Conf()
 }

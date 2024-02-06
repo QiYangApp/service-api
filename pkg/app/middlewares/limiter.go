@@ -14,15 +14,15 @@ import (
 
 func Limiter() gin.HandlerFunc {
 
-	if config.Client().GetBool("server.debug") {
+	if config.Client().GetBool("debug") {
 		return func(c *gin.Context) {
 			// 中间件逻辑
 			c.Next()
 		}
 	}
 
-	duration := config.Client().GetDuration("server.request.maxRequestTime")
-	maxRequests := config.Client().GetInt("server.request.maxRequests")
+	duration := config.Client().GetDuration("maxRequestTime")
+	maxRequests := config.Client().GetInt("maxRequests")
 	limiter := helpers.NewLimiter(rate.Every(duration*time.Second), maxRequests, "request")
 
 	return func(c *gin.Context) {

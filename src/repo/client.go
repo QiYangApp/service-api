@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"app/db"
 	"app/log"
 	"context"
 	"entgo.io/ent/dialect/sql/schema"
@@ -11,16 +12,26 @@ import (
 	"sync"
 )
 
-var Client *models.Client
+var client *models.Client
 
 var once = sync.Once{}
 
-func New(opts []models.Option) *models.Client {
+func New() *models.Client {
 	once.Do(func() {
-		Client = NewClient(opts)
+		conns := db.DB{}
+
+		conns.Init()
+
+		client = NewClient([]models.Option{
+			models.Driver(&db.MultiDriver{R: conns.Read(), W: conns.Write()}),
+		})
 	})
 
-	return Client
+	return client
+}
+
+func Client() *models.Client {
+	return New()
 }
 
 func NewClient(opts []models.Option) *models.Client {

@@ -9,7 +9,7 @@ import (
 )
 
 func Logger() gin.HandlerFunc {
-	if config.Client().GetBool("server.debug") {
+	if config.Client().GetBool("debug") {
 		return gin.Logger()
 	}
 

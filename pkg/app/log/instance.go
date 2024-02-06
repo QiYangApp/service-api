@@ -13,7 +13,7 @@ func Instance() *Manage {
 	once.Do(func() {
 		instance = &Manage{
 			Param: &Param{
-				Debug:       config.Client().GetBool("server.debug"),
+				Debug:       config.Client().GetBool("debug"),
 				MaxBackups:  config.Client().GetInt("log.maxBackups"),
 				MaxAge:      config.Client().GetInt("log.maxAge"),
 				MaxSize:     config.Client().GetInt("log.maxSize"),

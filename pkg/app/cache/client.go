@@ -78,13 +78,20 @@ func (c *Manage) Register(key string) (Drive, error) {
 		return c.drives[key], nil
 	}
 
-	cfg := config.Client().GetStringMap("cache.conns." + key)
-
-	if _, ok := cfg["type"]; !ok {
-		log.Client().Fatal("register cache drive not exist")
+	conns := config.Client().Get("conns").([]map[string]any)
+	var cfg map[string]any
+	for _, conn := range conns {
+		if name, ok := conn["driver"].(string); ok && name == key {
+			cfg = conn
+			break
+		}
 	}
 
-	c.drives[key], err = c.Connect(key, cfg["type"].(string), cfg)
+	if len(cfg) == 0 {
+		log.Client().Panic("cache database config conns empty")
+	}
+
+	c.drives[key], err = c.Connect(key, cfg["driver"].(string), cfg)
 
 	if err != nil {
 		return nil, err

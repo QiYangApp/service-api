@@ -64,8 +64,8 @@ func (t *App) Run(cmd *Cmd) {
 		provider.Register(t)
 	}
 
-	t.Cmd.Debug = config.Client().GetBool(`server.debug`)
-	t.Cmd.RunMode = config.Client().GetString(`server.runMode`)
+	t.Cmd.Debug = config.Client().GetBool(`debug`)
+	t.Cmd.RunMode = config.Client().GetString(`runMode`)
 	t.SetMode(t.Cmd.RunMode)
 
 	funcs := []gin.HandlerFunc{}
@@ -80,11 +80,11 @@ func (t *App) Run(cmd *Cmd) {
 	router.Apply(t.Engine, t.Scan, true)
 
 	srv := &http.Server{
-		Addr:                         config.Client().GetString("server.addr") + ":" + config.Client().GetString("server.port"),
+		Addr:                         config.Client().GetString("addr") + ":" + config.Client().GetString("port"),
 		Handler:                      t.Engine,
 		DisableGeneralOptionsHandler: true,
-		ReadTimeout:                  time.Duration(config.Client().GetInt("server.config.readTimeout")),
-		WriteTimeout:                 time.Duration(config.Client().GetInt("server.config.writeTimeout")),
+		ReadTimeout:                  time.Duration(config.Client().GetInt("readTimeout")),
+		WriteTimeout:                 time.Duration(config.Client().GetInt("writeTimeout")),
 	}
 
 	go func() {
@@ -115,7 +115,6 @@ func New() *App {
 		providers: []Provider{
 			&ConfigProviders{},
 			&CronProviders{},
-			&RouterProviders{},
 		},
 		middlewares: []middlewares.Middleware{
 			middlewares.Recovery,

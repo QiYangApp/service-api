@@ -17,11 +17,18 @@ type RedisDrive struct {
 }
 
 func (c *RedisDrive) Connect(ctx context.Context, cfg map[string]any) error {
-	c.storage = redis.NewClient(&redis.Options{
-		Addr:     (cfg["addr"].(string)) + ":" + (cfg["addr"].(string)),
-		Password: cfg["password"].(string), // no password set
-		DB:       cfg["database"].(int),    // use default DB
-	})
+	c.storage = redis.NewClient(
+		&redis.Options{
+			Addr:         cfg["addr"].(string),
+			Password:     cfg["password"].(string), // no password set
+			DB:           cfg["database"].(int),    // use default DB
+			PoolSize:     cfg["poolSize"].(int),
+			PoolTimeout:  time.Duration(cfg["poolTimeout"].(int)) * time.Second,
+			WriteTimeout: time.Duration(cfg["writeTimeout"].(int)) * time.Second,
+			ReadTimeout:  time.Duration(cfg["readTimeout"].(int)) * time.Second,
+			DialTimeout:  time.Duration(cfg["dialTimeout"].(int)) * time.Second,
+		},
+	)
 
 	_, err := c.storage.Conn().Ping(ctx).Result()
 	if err != nil {

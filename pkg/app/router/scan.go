@@ -188,7 +188,7 @@ func (s *Scan) isController(fields []*dst.Field) bool {
 		}
 		x := selectorExpr.X.(*dst.Ident)
 		sel := selectorExpr.Sel
-		if x.Name == "inject" && sel.Name == "Controller" {
+		if x.Name == "router" && sel.Name == "Inject" {
 			ok = true
 			break
 		}
