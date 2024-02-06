@@ -78,20 +78,20 @@ func (c *Manage) Register(key string) (Drive, error) {
 		return c.drives[key], nil
 	}
 
-	conns := config.Client().Get("conns").([]map[string]any)
-	var cfg map[string]any
-	for _, conn := range conns {
+	conns := config.Client().Get("conns").([]interface{})
+	var conn map[string]any
+	for _, t := range conns {
+		conn = t.(map[string]any)
 		if name, ok := conn["driver"].(string); ok && name == key {
-			cfg = conn
 			break
 		}
 	}
 
-	if len(cfg) == 0 {
+	if len(conn) == 0 {
 		log.Client().Panic("cache database config conns empty")
 	}
 
-	c.drives[key], err = c.Connect(key, cfg["driver"].(string), cfg)
+	c.drives[key], err = c.Connect(key, conn["driver"].(string), conn)
 
 	if err != nil {
 		return nil, err

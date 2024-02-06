@@ -1,0 +1,54 @@
+# release or debug or test
+runMode = "debug"
+debug = false
+domain = "127.0.0.1"
+addr = '127.0.0.1'
+port = 3000
+writeTimeout = 120
+readTimeout = 120
+maxRequests = 10
+maxRequestTime = 60
+
+[database]
+driver = "pgx"
+
+[cache]
+driver = "cache-redis"
+expires = 60
+
+[[conns]]
+name = "pgx"
+driver = "pgx"
+read = { host = "localhost", port = 5432, username = "qi_yang", password = "qi_yang", database = "qi_yang", maxOpenConns = 100, maxIdleConns = 50 }
+write = { host = "localhost", port = 5432, username = "qi_yang", password = "qi_yang", database = "qi_yang", maxOpenConns = 100, maxIdleConns = 50 }
+[[conns]]
+name = "cache-redis"
+driver = "redis"
+addr = "localhost:6379"
+password = "secret_redis"
+database = 0
+maxOpenConns = 100
+maxIdleConns = 50
+maxActive = 30
+readTimeout=10
+dialTimeout=10
+writeTimeout=10
+poolSize = 10
+poolTimeout = 30
+
+[log]
+#debug info warn error DPanic panic fatal
+level = "debug"
+fileName = "log"
+# default 120 M
+maxSize = 1
+# save days
+maxAge = 7
+maxBackups = 30
+Compress = true
+
+[token]
+privateKey = "/resources/certificate/token/RSAPrivate.key"
+publicKey = "/resources/certificate/token/RSAPublic.key"
+signing = "signing"
+expiresTime = 60

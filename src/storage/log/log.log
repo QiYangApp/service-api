@@ -1,0 +1,4 @@
+{"level":"panic","time":"2024-02-06 17:15:21","msg":"json: cannot unmarshal string into Go value of type db.ConfigConnsMany","time":"2024-02-06 17:15:21","level":"debug"}
+{"level":"panic","time":"2024-02-06 17:17:07","msg":"json: cannot unmarshal string into Go value of type db.ConfigConnsMany","time":"2024-02-06 17:17:07","level":"debug"}
+{"level":"fatal","time":"2024-02-06 18:01:32","msg":"connecting to the database failed sql: unknown driver \"pgx\" (forgotten import?)","time":"2024-02-06 18:01:32","level":"debug"}
+{"level":"fatal","time":"2024-02-06 18:01:46","msg":"connecting to the database failed sql: unknown driver \"pgx\" (forgotten import?)","time":"2024-02-06 18:01:46","level":"debug"}

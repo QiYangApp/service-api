@@ -33,9 +33,9 @@ func (i *DB) Init() {
 
 	var cfg ConfigConnsMany
 	var err error
-	if temp, ok := conn["driver"]; ok {
+	if _, ok := conn["driver"]; ok {
 		// 使用encoding/json包进行转换
-		jsonData, _ := json.Marshal(temp)
+		jsonData, _ := json.Marshal(conn)
 		err = json.Unmarshal(jsonData, &cfg)
 	}
 

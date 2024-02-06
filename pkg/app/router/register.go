@@ -16,8 +16,8 @@ import (
 // https://github.com/xxjwxc/ginrpc/blob/master/common.go#L57
 // https://github.com/archine/gin-plus/blob/v2/ast/mvc2/main.go
 
-// Containers  Apis Project global API
-var Containers map[string]Inject
+// Apis  Apis Project global API
+var Apis map[string]*MethodInfo
 
 var Cache []inject
 
@@ -52,7 +52,7 @@ func Apply(e *gin.Engine, scan *Scan, autowired bool) {
 		}
 	}
 
-	Containers = nil
+	Apis = nil
 }
 
 func RegisterRoute(e *gin.Engine, method string, path string, fn reflect.Method, typeOf reflect.Type, valueOf reflect.Value) {
