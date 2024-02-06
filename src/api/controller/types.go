@@ -2,9 +2,6 @@ package controller
 
 import "app/router"
 
-type AbstractControllerMethod interface {
-}
-
 type AbstractController struct {
 }
 

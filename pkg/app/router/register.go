@@ -43,7 +43,7 @@ func Apply(e *gin.Engine, scan *Scan, autowired bool) {
 			key := diTypeOf.Elem().PkgPath() + "-" + diTypeOf.Elem().Name() + "-" + methodProxy.Name
 			key = fmt.Sprintf("%x", md5.Sum([]byte(key)))
 
-			if info, ok := scan.Apis[key]; ok {
+			if info, ok := Apis[key]; ok {
 				if method, ok := diTypeOf.MethodByName(methodProxy.Name); ok {
 					RegisterRoute(e, info.ApiMethodName, info.ApiPath, method, diTypeOf, diProxy)
 				}

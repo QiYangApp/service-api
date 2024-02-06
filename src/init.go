@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	router.Register(&pack_71fc781208c148cecd8c184360762152.InjectController{}, &pack_71fc781208c148cecd8c184360762152.LoginController{})
+	router.Register(&pack_71fc781208c148cecd8c184360762152.LoginController{}, &pack_71fc781208c148cecd8c184360762152.InjectController{})
 	router.Apis = map[string]*router.MethodInfo{
 		"054850cbb8f2d5f96de13218da515d5c": {
 

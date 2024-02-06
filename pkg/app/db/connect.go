@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"fmt"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"time"
 )
 

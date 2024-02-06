@@ -2,3 +2,24 @@
 {"level":"panic","time":"2024-02-06 17:17:07","msg":"json: cannot unmarshal string into Go value of type db.ConfigConnsMany","time":"2024-02-06 17:17:07","level":"debug"}
 {"level":"fatal","time":"2024-02-06 18:01:32","msg":"connecting to the database failed sql: unknown driver \"pgx\" (forgotten import?)","time":"2024-02-06 18:01:32","level":"debug"}
 {"level":"fatal","time":"2024-02-06 18:01:46","msg":"connecting to the database failed sql: unknown driver \"pgx\" (forgotten import?)","time":"2024-02-06 18:01:46","level":"debug"}
+{"level":"fatal","time":"2024-02-06 21:49:43","msg":"connecting to the database failed sql: unknown driver \"pgx\" (forgotten import?)","time":"2024-02-06 21:49:43","level":"debug"}
+{"level":"info","time":"2024-02-06 21:51:40","msg":"Shutdown Server ...","time":"2024-02-06 21:51:40","level":"debug"}
+{"level":"info","time":"2024-02-06 21:51:40","msg":"Server exiting","time":"2024-02-06 21:51:40","level":"debug"}
+{"level":"info","time":"2024-02-06 22:43:41","msg":"Shutdown Server ...","time":"2024-02-06 22:43:41","level":"debug"}
+{"level":"info","time":"2024-02-06 22:43:41","msg":"Server exiting","time":"2024-02-06 22:43:41","level":"debug"}
+{"level":"fatal","time":"2024-02-06 22:43:53","msg":"connecting to the database failed sql: unknown driver \"pgx\" (forgotten import?)","time":"2024-02-06 22:43:53","level":"debug"}
+{"level":"fatal","time":"2024-02-06 22:59:17","msg":"connecting to the database failed sql: unknown driver \"pgx\" (forgotten import?)","time":"2024-02-06 22:59:17","level":"debug"}
+{"level":"fatal","time":"2024-02-06 23:00:21","msg":"connecting to the database failed sql: unknown driver \"pgx\" (forgotten import?)","time":"2024-02-06 23:00:21","level":"debug"}
+{"level":"fatal","time":"2024-02-06 23:18:52","msg":"ping to the database failed failed to connect to `host=localhost user=qi_yang database=qi_yang`: dial error (dial tcp 127.0.0.1:5432: connectex: No connection could be made because the target machine actively refused it.)","time":"2024-02-06 23:18:52","level":"debug"}
+{"level":"info","time":"2024-02-06 23:19:39","msg":"Shutdown Server ...","time":"2024-02-06 23:19:39","level":"debug"}
+{"level":"info","time":"2024-02-06 23:19:39","msg":"Server exiting","time":"2024-02-06 23:19:39","level":"debug"}
+{"level":"info","time":"2024-02-06 23:21:17","file":"app/app.go:102","msg":"Shutdown Server ...","time":"2024-02-06 23:21:17","level":"debug"}
+{"level":"info","time":"2024-02-06 23:21:17","file":"app/app.go:109","msg":"Server exiting","time":"2024-02-06 23:21:17","level":"debug"}
+{"level":"info","time":"2024-02-06 23:21:34","file":"app/app.go:102","msg":"Shutdown Server ...","time":"2024-02-06 23:21:34","level":"debug"}
+{"level":"info","time":"2024-02-06 23:21:34","file":"app/app.go:109","msg":"Server exiting","time":"2024-02-06 23:21:34","level":"debug"}
+{"level":"info","time":"2024-02-06 23:22:06","file":"app/app.go:102","msg":"Shutdown Server ...","time":"2024-02-06 23:22:06","level":"debug"}
+{"level":"info","time":"2024-02-06 23:22:06","file":"app/app.go:109","msg":"Server exiting","time":"2024-02-06 23:22:06","level":"debug"}
+{"level":"info","time":"2024-02-06 23:22:14","file":"app/app.go:102","msg":"Shutdown Server ...","time":"2024-02-06 23:22:14","level":"debug"}
+{"level":"info","time":"2024-02-06 23:22:14","file":"app/app.go:109","msg":"Server exiting","time":"2024-02-06 23:22:14","level":"debug"}
+{"level":"info","time":"2024-02-06 23:22:39","file":"app/app.go:102","msg":"Shutdown Server ...","time":"2024-02-06 23:22:39","level":"debug"}
+{"level":"info","time":"2024-02-06 23:22:39","file":"app/app.go:109","msg":"Server exiting","time":"2024-02-06 23:22:39","level":"debug"}

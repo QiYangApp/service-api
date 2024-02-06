@@ -83,8 +83,8 @@ func (t *App) Run(cmd *Cmd) {
 		Addr:                         config.Client().GetString("addr") + ":" + config.Client().GetString("port"),
 		Handler:                      t.Engine,
 		DisableGeneralOptionsHandler: true,
-		ReadTimeout:                  time.Duration(config.Client().GetInt("readTimeout")),
-		WriteTimeout:                 time.Duration(config.Client().GetInt("writeTimeout")),
+		ReadTimeout:                  time.Duration(config.Client().GetInt("readTimeout")) * time.Second,
+		WriteTimeout:                 time.Duration(config.Client().GetInt("writeTimeout")) * time.Second,
 	}
 
 	go func() {
