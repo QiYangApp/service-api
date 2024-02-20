@@ -23,3 +23,6 @@
 {"level":"info","time":"2024-02-06 23:22:14","file":"app/app.go:109","msg":"Server exiting","time":"2024-02-06 23:22:14","level":"debug"}
 {"level":"info","time":"2024-02-06 23:22:39","file":"app/app.go:102","msg":"Shutdown Server ...","time":"2024-02-06 23:22:39","level":"debug"}
 {"level":"info","time":"2024-02-06 23:22:39","file":"app/app.go:109","msg":"Server exiting","time":"2024-02-06 23:22:39","level":"debug"}
+{"level":"fatal","time":"2024-02-12 04:44:52","file":"db/connect.go:65","msg":"ping to the database failed failed to connect to `host=localhost user=qi_yang database=qi_yang`: dial error (dial tcp 127.0.0.1:5430: connectex: No connection could be made because the target machine actively refused it.)","time":"2024-02-12 04:44:52","level":"debug"}
+{"level":"info","time":"2024-02-12 05:01:16","file":"app/app.go:102","msg":"Shutdown Server ...","time":"2024-02-12 05:01:16","level":"debug"}
+{"level":"info","time":"2024-02-12 05:01:16","file":"app/app.go:109","msg":"Server exiting","time":"2024-02-12 05:01:16","level":"debug"}
