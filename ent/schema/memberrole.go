@@ -6,7 +6,7 @@ import (
 	"entgo.io/ent/schema/index"
 	"entgo.io/ent/schema/mixin"
 	"github.com/google/uuid"
-	"service-api/src/repo/enums"
+	"service-api/enums"
 )
 
 // MemberRole holds the schema definition for the MemberRole entity.

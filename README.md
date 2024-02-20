@@ -11,11 +11,11 @@ openssl rsa -pubout -in private_key.pem -out public_key.pem
 
 ## conf
 
-CP ./src/config.example.toml ./src/config.toml
+CP ./config.example.toml ./config.toml
 
 ### Using Default
 
-1. edit `./src/config/config.toml`
+1. edit `./config.toml`
 
 2. generate token ras
 
@@ -24,10 +24,18 @@ openssl genpkey -algorithm RSA -out private_key.pem -aes256
 openssl rsa -pubout -in private_key.pem -out public_key.pem
 ```
 
+3. generate api
+
+```bash
+go run ./pkg/framework/script/router/main.go
+go run -mod=mod entgo.io/ent/cmd/ent generate "./ent/schema"
+
+```
+
 3. start
 
 ```bash
-go run ./src/main.go
+go run ./main.go
 ```
 
 ### Useing VsCode Docker
