@@ -19,8 +19,8 @@ type Manage struct {
 func (c *Manage) ParseFile() *Manage {
 
 	c.Client.SetConfigType("toml")
+	c.Client.SetConfigName("config")
 	c.Client.AddConfigPath(helpers.Path.RootPath)
-	c.Client.AddConfigPath("config")
 
 	// 读取配置文件
 	if err := c.Client.ReadInConfig(); err != nil {

@@ -8,6 +8,11 @@ import (
 type CaptchaApi struct {
 }
 
-func (*CaptchaApi) Index(c *gin.Context, req *validator.CaptchaFrom) *gin.Context {
+func (*CaptchaApi) Index(c *gin.Context, req *validator.CaptchaForm) *gin.Context {
+
+	return c
+}
+
+func (*CaptchaApi) Check(c *gin.Context, req *validator.CaptchaForm) *gin.Context {
 	return c
 }

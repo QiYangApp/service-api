@@ -47,7 +47,6 @@ func Limiter() gin.HandlerFunc {
 					"TooManyRequests",
 				).ToStruct(),
 			)
-			return
 		}
 
 		// 继续处理请求

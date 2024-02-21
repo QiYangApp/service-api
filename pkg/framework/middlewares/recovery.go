@@ -6,30 +6,32 @@ import (
 	"framework/log"
 	"framework/response"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"net/http"
 )
 
 func Recovery() gin.HandlerFunc {
-	if config.Client().GetBool("server.debug") {
+	if config.Client().GetBool("debug") {
 		return gin.Recovery()
 	}
 
 	var custom = func(c *gin.Context, err any) {
-		// 自定义输出内容
-		errMsg := fmt.Sprintf("error: %v", err)
+		defer func() {
+			// 自定义输出内容
+			errMsg := fmt.Sprintf("%v", err)
 
-		log.Client().Sugar().Error("url: %s, exceptions: %v", c.Request.URL, zap.Error(err.(error)))
+			log.Client().Sugar().Errorf("url: %s, err: %s", c.Request.URL, errMsg)
 
-		c.AbortWithStatusJSON(
-			http.StatusInternalServerError,
-			response.RFail(
-				c,
-				err,
+			c.AbortWithStatusJSON(
 				http.StatusInternalServerError,
-				errMsg,
-			).ToSelf(),
-		)
+				response.RFail(
+					c,
+					err,
+					http.StatusInternalServerError,
+					errMsg,
+				).ToSelf(),
+			)
+		}()
+		c.Next()
 	}
 
 	return gin.CustomRecovery(custom)

@@ -143,6 +143,12 @@ func unmarshal(c *gin.Context, v interface{}) error {
 	if err != nil {
 		log.Client().Sugar().Error("route handle fun error, method params bind, error method: %v", v)
 	}
+
+	err = c.ShouldBindUri(v)
+	if err != nil {
+		log.Client().Sugar().Error("route handle fun error, uri method params bind, error method: %v", v)
+	}
+
 	return err
 }
 

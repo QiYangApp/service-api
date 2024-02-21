@@ -2,7 +2,6 @@ package router
 
 import (
 	"fmt"
-	"framework/exceptions"
 	"framework/response"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -14,13 +13,10 @@ type Router interface {
 	IsPrivate() bool
 }
 
-type BindFunc[T any] func(c *gin.Context, req T) *gin.Context
-
-func Bind[T any](fun BindFunc[T]) gin.HandlerFunc {
+func Bind(fun any) gin.HandlerFunc {
 
 	methodValueOf := reflect.ValueOf(fun)
 	methodType := methodValueOf.Type()
-	fmt.Println(methodValueOf.String(), methodType.String())
 
 	return func(c *gin.Context) {
 		var tmp reflect.Value
@@ -36,9 +32,9 @@ func Bind[T any](fun BindFunc[T]) gin.HandlerFunc {
 			}
 
 			if err := unmarshal(c, tmp.Interface()); err != nil { // Return error message.返回错误信息
-				response.RError(
+				response.RFail(
 					c,
-					exceptions.New(err.Error()),
+					GetErrorMsg(c, tmp.Interface().(Validator), err),
 					http.StatusBadRequest,
 					fmt.Sprintf("params error"),
 				).ToJson().Abort()
