@@ -14,11 +14,11 @@ func Instance() *Manage {
 		instance = &Manage{
 			Param: &Param{
 				Debug:       config.Client().GetBool("debug"),
-				MaxBackups:  config.Client().GetInt("log.maxBackups"),
-				MaxAge:      config.Client().GetInt("log.maxAge"),
-				MaxSize:     config.Client().GetInt("log.maxSize"),
+				MaxBackups:  config.Client().GetInt("log.max_backups"),
+				MaxAge:      config.Client().GetInt("log.max_age"),
+				MaxSize:     config.Client().GetInt("log.max_size"),
 				Compress:    config.Client().GetBool("log.compress"),
-				LogFileName: config.Client().GetString("log.fileName") + ".log",
+				LogFileName: config.Client().GetString("log.file_name") + ".log",
 				Level:       config.Client().GetString("log.level"),
 			},
 		}

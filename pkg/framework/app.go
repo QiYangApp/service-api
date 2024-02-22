@@ -111,6 +111,7 @@ func Client() *App {
 			Engine: gin.New(),
 			providers: []Provider{
 				&ConfigProviders{},
+				&CacheProviders{},
 				&CronProviders{},
 			},
 			Middlewares: []middlewares.Middleware{

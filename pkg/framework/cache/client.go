@@ -111,7 +111,7 @@ func (c *Manage) Connect(key, tp string, cfg map[string]any) (Drive, error) {
 	switch tp {
 	case REDIS:
 		storage = &RedisDrive{}
-		err = storage.Connect(context.TODO(), cfg)
+		err = storage.Connect(context.Background(), cfg)
 		break
 	default:
 		storage = nil

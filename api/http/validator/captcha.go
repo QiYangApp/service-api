@@ -4,27 +4,33 @@ import (
 	"framework/router"
 	"github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
+	"service-api/resources/lang"
 )
 
-type CaptchaForm struct {
-	Type  string `uri:"type" binding:"required" `
+type CaptchaRequest struct {
+	Msg
 	Token string `form:"token" binding:"required"`
-}
-
-type ErrMsg struct {
-}
-
-func (ErrMsg) GetMessage(c *gin.Context) router.ValidatorMessages {
-	return router.ValidatorMessages{
-		"Email.required":     i18n.MustGetMessage(c, i18n.EmptyEmail),
-		"Email.email":        i18n.MustGetMessage(c, i18n2.ErrorFormatEmail),
-		"Captcha.required":   i18n.MustGetMessage(c, i18n2.CaptchaEmptyId),
-		"CaptchaId.required": i18n.MustGetMessage(c, i18n2.CaptchaEmptyId),
-		"Password.required":  i18n.MustGetMessage(c, i18n2.ErrorPassword),
-	}
 }
 
 type CaptchaResponse struct {
 	Id      string `json:"id"`
 	Captcha string `json:"captcha"`
+}
+
+type CaptchaVerifyRequest struct {
+	Msg
+	Token  string `form:"token" binding:"required"`
+	Id     string `form:"id" binding:"required"`
+	Answer string `form:"answer" binding:"required"`
+}
+
+type Msg struct {
+}
+
+func (Msg) GetMessage(c *gin.Context) router.ValidatorMessages {
+	return router.ValidatorMessages{
+		"Token.required":  i18n.MustGetMessage(c, lang.CaptchaEmpty),
+		"Id.required":     i18n.MustGetMessage(c, lang.CaptchaEmptyId),
+		"Answer.required": i18n.MustGetMessage(c, lang.CaptchaEmptyId),
+	}
 }

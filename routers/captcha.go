@@ -15,7 +15,7 @@ func (c *CaptchaRouter) IsPrivate() bool {
 
 func (*CaptchaRouter) Handle(r *gin.RouterGroup) {
 	// 获取验证码
-	r.GET("/captcha/:type", router.Bind(controller.Client.CaptchaApi.Index))
+	r.GET("/captcha/", router.Bind(controller.Client.CaptchaApi.Index))
 	// 验证验证码
-	r.GET("/captcha/:type/:code", router.Bind(controller.Client.CaptchaApi.Check))
+	r.GET("/captcha/:code", router.Bind(controller.Client.CaptchaApi.Verify))
 }

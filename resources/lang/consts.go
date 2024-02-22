@@ -9,11 +9,26 @@ const StateError = "STATE.ERROR"
 // StateFail 失败状态
 const StateFail = "STATE.FAIL"
 
-// 重复请求问题
+// TooManyRequests 重复请求问题
 const TooManyRequests = "REQUESTS.TOO_MANY_REQUESTS"
 
-const CaptchaPrefix = "CAPTCHA."
-const CaptchaEmptyId = CaptchaPrefix + "EMPTY_ID"
-const CaptchaErrorGenerateCode = CaptchaPrefix + "ERROR_GENERATE_CODE"
-const CaptchaErrorStoreCode = CaptchaPrefix + "ERROR_STORE_CODE"
-const CaptchaErrorCheck = CaptchaPrefix + "ERROR_CHECK"
+const CaptchaEmpty = "CAPTCHA.EMPTY"
+const CaptchaGenerate = "CAPTCHA.GENERATE"
+const CaptchaEmptyId = "CAPTCHA.EMPTY_ID"
+const CaptchaErrorGenerateCode = "CAPTCHA.ERROR_GENERATE_CODE"
+const CaptchaErrorStoreCode = "CAPTCHA.ERROR_STORE_CODE"
+const CaptchaErrorCheck = "CAPTCHA.ERROR_CHECK"
+
+// EmptyEmail   空账号
+const EmptyEmail = "AUTHORIZE.EMPTY_EMAIL"
+const ErrorPassword = "AUTHORIZE.ERROR_PASSWORD"
+const ErrorSingPassword = "AUTHORIZE.ERROR_Sing_PASSWORD"
+
+// NotExistsEmail 账号不存在
+const NotExistsEmail = "AUTHORIZE.NOT_EXISTS_EMAIL"
+
+// ExistsEmail  账号不存在
+const ExistsEmail = "AUTHORIZE.EXISTS_EMAIL"
+
+// ErrorFormatEmail 格式错误
+const ErrorFormatEmail = "AUTHORIZE.ERROR_FORMAT_EMAIL"

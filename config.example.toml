@@ -1,6 +1,6 @@
 # release or debug or test
 runMode = "debug"
-debug = false
+debug = true
 domain = "127.0.0.1"
 addr = '127.0.0.1'
 port = 3000
@@ -19,33 +19,33 @@ expires = 60
 [[conns]]
 name = "pgx"
 driver = "pgx"
-read = { host = "localhost", port = 5432, username = "qi_yang", password = "qi_yang", database = "qi_yang", maxOpenConns = 100, maxIdleConns = 50 }
-write = { host = "localhost", port = 5432, username = "qi_yang", password = "qi_yang", database = "qi_yang", maxOpenConns = 100, maxIdleConns = 50 }
+read = { host = "localhost", port = 5432, username = "qiyang", password = "qiyang", database = "qiyang", max_open_conns = 100, max_idle_conns = 50 }
+write = { host = "localhost", port = 5432, username = "qiyang", password = "qiyang", database = "qiyang",max_open_conns = 100, max_idle_conns = 50 }
 [[conns]]
 name = "cache-redis"
 driver = "redis"
 addr = "localhost:6379"
 password = "secret_redis"
 database = 0
-maxOpenConns = 100
-maxIdleConns = 50
-maxActive = 30
-readTimeout=10
-dialTimeout=10
-writeTimeout=10
-poolSize = 10
-poolTimeout = 30
+max_open_conns = 100
+max_idle_conns = 50
+max_active = 30
+read_timeout=10
+dial_timeout=10
+write_timeout=10
+pool_size = 10
+pool_timeout = 30
 
 [log]
 #debug info warn error DPanic panic fatal
 level = "debug"
-fileName = "log"
+file_name = "log"
 # default 120 M
-maxSize = 1
+max_size = 1
 # save days
-maxAge = 7
-maxBackups = 30
-Compress = true
+max_age = 7
+max_backups = 30
+compress = true
 
 [token]
 privateKey = "/resources/certificate/token/RSAPrivate.key"

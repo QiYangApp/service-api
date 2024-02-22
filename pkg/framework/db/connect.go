@@ -1,11 +1,11 @@
 package db
 
 import (
-	"framework/log"
 	"database/sql"
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"fmt"
+	"framework/log"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"time"
 )
@@ -16,8 +16,8 @@ type Config struct {
 }
 
 type ConfigConnsSingle struct {
-	MaxOpenConns int    `json:"MaxOpenConns,omitempty"`
-	MaxIdleConns int    `json:"MaxIdleConns,omitempty"`
+	MaxOpenConns int    `json:"max_open_conns,omitempty"`
+	MaxIdleConns int    `json:"max_idle_conns,omitempty"`
 	Host         string `json:"host,omitempty"`
 	Port         int    `json:"port,omitempty"`
 	Username     string `json:"username,omitempty"`

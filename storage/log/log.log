@@ -138,3 +138,32 @@
 {"level":"info","time":"2024-02-21 16:28:20","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-21 16:22:03","level":"debug"}
 {"level":"info","time":"2024-02-21 16:28:20","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-21 16:22:03","level":"debug"}
 {"level":"info","time":"2024-02-21 16:28:32","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-21 16:28:32","level":"debug"}
+{"level":"error","time":"2024-02-22 15:08:30","file":"router/register.go:144","msg":"route handle fun error, method params bind, error method: %v&{ }","time":"2024-02-21 16:28:32","level":"debug"}
+{"level":"error","time":"2024-02-22 15:08:30","file":"router/register.go:149","msg":"route handle fun error, uri method params bind, error method: %v&{b }","time":"2024-02-21 16:28:32","level":"debug"}
+{"level":"info","time":"2024-02-22 16:42:27","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-21 16:28:32","level":"debug"}
+{"level":"info","time":"2024-02-22 16:42:27","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-21 16:28:32","level":"debug"}
+{"level":"info","time":"2024-02-22 16:42:49","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-22 16:42:49","level":"debug"}
+{"level":"error","time":"2024-02-22 16:43:01","file":"router/register.go:144","msg":"route handle fun error, method params bind, error method: %v&{{}   }","time":"2024-02-22 16:42:49","level":"debug"}
+{"level":"error","time":"2024-02-22 16:43:01","file":"router/register.go:149","msg":"route handle fun error, uri method params bind, error method: %v&{{}   }","time":"2024-02-22 16:42:49","level":"debug"}
+{"level":"info","time":"2024-02-22 16:45:36","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-22 16:42:49","level":"debug"}
+{"level":"info","time":"2024-02-22 16:45:36","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-22 16:42:49","level":"debug"}
+{"level":"info","time":"2024-02-22 16:45:45","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-22 16:45:45","level":"debug"}
+{"level":"info","time":"2024-02-22 16:48:00","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-22 16:45:45","level":"debug"}
+{"level":"info","time":"2024-02-22 16:48:00","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-22 16:45:45","level":"debug"}
+{"level":"info","time":"2024-02-22 16:48:11","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-22 16:48:11","level":"debug"}
+{"level":"info","time":"2024-02-22 16:48:38","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-22 16:48:11","level":"debug"}
+{"level":"info","time":"2024-02-22 16:48:38","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-22 16:48:11","level":"debug"}
+{"level":"fatal","time":"2024-02-22 17:03:51","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:03:51","level":"debug"}
+{"level":"fatal","time":"2024-02-22 17:07:32","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:07:32","level":"debug"}
+{"level":"fatal","time":"2024-02-22 17:07:54","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:07:54","level":"debug"}
+{"level":"fatal","time":"2024-02-22 17:09:21","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:09:21","level":"debug"}
+{"level":"fatal","time":"2024-02-22 17:15:52","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:15:52","level":"debug"}
+{"level":"fatal","time":"2024-02-22 17:18:01","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:18:01","level":"debug"}
+{"level":"info","time":"2024-02-22 17:18:23","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-22 17:18:23","level":"debug"}
+{"level":"info","time":"2024-02-22 17:18:33","file":"cache/instance.go:51","msg":"cache drive set key error, key: %s, val: %vdyJ1QzAC0AsmSxO04UXF[7 12 0 4 53 53 48 57]","time":"2024-02-22 17:18:23","level":"debug"}
+{"level":"info","time":"2024-02-22 17:20:06","file":"cache/instance.go:51","msg":"cache drive set key error, key: %s, val: %vcSaBmESBx6rh03S6M8eZ[7 12 0 4 51 51 48 57]","time":"2024-02-22 17:18:23","level":"debug"}
+{"level":"info","time":"2024-02-22 17:20:06","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-22 17:18:23","level":"debug"}
+{"level":"info","time":"2024-02-22 17:20:06","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-22 17:18:23","level":"debug"}
+{"level":"fatal","time":"2024-02-22 17:20:23","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:20:23","level":"debug"}
+{"level":"fatal","time":"2024-02-22 17:21:52","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:21:52","level":"debug"}
+{"level":"fatal","time":"2024-02-22 17:50:41","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:50:41","level":"debug"}
