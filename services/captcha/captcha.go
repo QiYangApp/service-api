@@ -20,7 +20,6 @@ type ImageParam struct {
 type ImageResp struct {
 	Id      string `json:"id"`
 	Captcha string `json:"captcha"`
-	Code    string `json:"code"`
 	Answer  string `json:"answer"`
 }
 

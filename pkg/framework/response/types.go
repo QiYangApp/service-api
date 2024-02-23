@@ -1,33 +1,33 @@
 package response
 
-type ResponseStateEnum string
-type ResponseTypeEnum string
+type StateEnum string
+type TypeEnum string
 
 const (
-	Success ResponseStateEnum = "success"
-	Error   ResponseStateEnum = "error"
-	Warn    ResponseStateEnum = "warn"
-	Fail    ResponseStateEnum = "fail"
+	Success StateEnum = "success"
+	Error   StateEnum = "error"
+	Warn    StateEnum = "warn"
+	Fail    StateEnum = "fail"
 )
 
 const (
-	IMAGE     ResponseTypeEnum = "IMAGE"
-	FILE      ResponseTypeEnum = "FILE"
-	JSON      ResponseTypeEnum = "JSON"
-	String    ResponseTypeEnum = "String"
-	AsciiJson ResponseTypeEnum = "AsciiJSON"
-	ProtoBuf  ResponseTypeEnum = "ProtoBuf"
-	PureJson  ResponseTypeEnum = "PureJson"
-	XML       ResponseTypeEnum = "XML"
-	YAML      ResponseTypeEnum = "YAML"
-	DATA      ResponseTypeEnum = "DATA"
+	IMAGE     TypeEnum = "IMAGE"
+	FILE      TypeEnum = "FILE"
+	JSON      TypeEnum = "JSON"
+	String    TypeEnum = "String"
+	AsciiJson TypeEnum = "AsciiJSON"
+	ProtoBuf  TypeEnum = "ProtoBuf"
+	PureJson  TypeEnum = "PureJson"
+	XML       TypeEnum = "XML"
+	YAML      TypeEnum = "YAML"
+	DATA      TypeEnum = "DATA"
 )
 
 type ResponseMethods[T interface{}] interface {
 	// Single 单个返回
-	Single(data T) Response[T]
+	Single(data T) Response
 	// Pagination 分页
-	Pagination(list []T) Response[T]
+	Pagination(list []T) Response
 	// Multiple 多个返回
-	Multiple(data []T) Response[T]
+	Multiple(data []T) Response
 }

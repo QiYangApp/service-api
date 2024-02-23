@@ -10,15 +10,18 @@ import (
 type CaptchaRequest struct {
 	Msg
 	Token string `form:"token" binding:"required"`
+	Type  string `uri:"type" `
 }
 
 type CaptchaResponse struct {
 	Id      string `json:"id"`
 	Captcha string `json:"captcha"`
+	Token   string `json:"token"`
 }
 
 type CaptchaVerifyRequest struct {
 	Msg
+	Type   string `uri:"type"`
 	Token  string `form:"token" binding:"required"`
 	Id     string `form:"id" binding:"required"`
 	Answer string `form:"answer" binding:"required"`

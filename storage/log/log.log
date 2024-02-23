@@ -167,3 +167,92 @@
 {"level":"fatal","time":"2024-02-22 17:20:23","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:20:23","level":"debug"}
 {"level":"fatal","time":"2024-02-22 17:21:52","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:21:52","level":"debug"}
 {"level":"fatal","time":"2024-02-22 17:50:41","file":"cache/client.go:40","msg":"register default cache drive fail: ERR unknown subcommand 'setinfo'. Try CLIENT HELP.","time":"2024-02-22 17:50:41","level":"debug"}
+{"level":"info","time":"2024-02-23 11:52:02","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 11:52:02","level":"debug"}
+{"level":"info","time":"2024-02-23 11:57:08","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 11:52:02","level":"debug"}
+{"level":"info","time":"2024-02-23 11:57:08","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 11:52:02","level":"debug"}
+{"level":"info","time":"2024-02-23 11:57:19","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 11:57:19","level":"debug"}
+{"level":"error","time":"2024-02-23 11:59:21","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} }","time":"2024-02-23 11:57:19","level":"debug"}
+{"level":"error","time":"2024-02-23 11:59:21","file":"router/register.go:146","msg":"route handle fun error, uri method params bind, error method: %v&{{} }","time":"2024-02-23 11:57:19","level":"debug"}
+{"level":"info","time":"2024-02-23 12:00:07","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 11:57:19","level":"debug"}
+{"level":"info","time":"2024-02-23 12:00:07","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 11:57:19","level":"debug"}
+{"level":"info","time":"2024-02-23 12:00:16","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 12:00:16","level":"debug"}
+{"level":"info","time":"2024-02-23 12:12:26","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 12:00:16","level":"debug"}
+{"level":"info","time":"2024-02-23 12:12:26","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 12:00:16","level":"debug"}
+{"level":"info","time":"2024-02-23 12:12:38","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 12:12:38","level":"debug"}
+{"level":"info","time":"2024-02-23 12:14:41","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 12:12:38","level":"debug"}
+{"level":"info","time":"2024-02-23 12:14:41","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 12:12:38","level":"debug"}
+{"level":"info","time":"2024-02-23 12:15:12","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 12:15:12","level":"debug"}
+{"level":"info","time":"2024-02-23 12:21:48","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 12:15:12","level":"debug"}
+{"level":"info","time":"2024-02-23 12:21:48","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 12:15:12","level":"debug"}
+{"level":"info","time":"2024-02-23 12:21:58","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 12:21:58","level":"debug"}
+{"level":"info","time":"2024-02-23 12:22:35","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 12:21:58","level":"debug"}
+{"level":"info","time":"2024-02-23 12:22:35","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 12:21:58","level":"debug"}
+{"level":"info","time":"2024-02-23 12:22:53","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 12:22:53","level":"debug"}
+{"level":"info","time":"2024-02-23 12:23:04","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 12:22:53","level":"debug"}
+{"level":"info","time":"2024-02-23 12:23:04","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 12:22:53","level":"debug"}
+{"level":"info","time":"2024-02-23 12:23:12","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 12:23:12","level":"debug"}
+{"level":"info","time":"2024-02-23 12:24:07","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 12:23:12","level":"debug"}
+{"level":"info","time":"2024-02-23 12:24:07","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 12:23:12","level":"debug"}
+{"level":"info","time":"2024-02-23 12:24:18","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 12:24:18","level":"debug"}
+{"level":"info","time":"2024-02-23 12:25:06","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 12:24:18","level":"debug"}
+{"level":"info","time":"2024-02-23 12:25:06","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 12:24:18","level":"debug"}
+{"level":"info","time":"2024-02-23 12:25:18","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 12:25:18","level":"debug"}
+{"level":"info","time":"2024-02-23 14:22:00","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 12:25:18","level":"debug"}
+{"level":"info","time":"2024-02-23 14:22:00","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 12:25:18","level":"debug"}
+{"level":"info","time":"2024-02-23 14:22:33","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 14:22:33","level":"debug"}
+{"level":"info","time":"2024-02-23 14:23:44","msg":"Shutdown Server ...","time":"2024-02-23 14:22:33","level":"debug"}
+{"level":"info","time":"2024-02-23 14:23:44","msg":"Server exiting","time":"2024-02-23 14:22:33","level":"debug"}
+{"level":"info","time":"2024-02-23 14:23:56","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 14:23:56","level":"debug"}
+{"level":"info","time":"2024-02-23 14:30:19","msg":"Shutdown Server ...","time":"2024-02-23 14:23:56","level":"debug"}
+{"level":"info","time":"2024-02-23 14:30:19","msg":"Server exiting","time":"2024-02-23 14:23:56","level":"debug"}
+{"level":"info","time":"2024-02-23 14:30:59","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 14:30:59","level":"debug"}
+{"level":"info","time":"2024-02-23 14:31:21","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 14:30:59","level":"debug"}
+{"level":"info","time":"2024-02-23 14:31:21","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 14:30:59","level":"debug"}
+{"level":"info","time":"2024-02-23 14:31:27","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 14:31:27","level":"debug"}
+{"level":"error","time":"2024-02-23 14:31:32","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{}   }","time":"2024-02-23 14:31:27","level":"debug"}
+{"level":"error","time":"2024-02-23 14:31:32","file":"router/register.go:146","msg":"route handle fun error, uri method params bind, error method: %v&{{}   }","time":"2024-02-23 14:31:27","level":"debug"}
+{"level":"info","time":"2024-02-23 14:31:50","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 14:31:27","level":"debug"}
+{"level":"info","time":"2024-02-23 14:31:50","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 14:31:27","level":"debug"}
+{"level":"info","time":"2024-02-23 14:33:12","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 14:33:12","level":"debug"}
+{"level":"error","time":"2024-02-23 14:37:05","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{}   }","time":"2024-02-23 14:33:12","level":"debug"}
+{"level":"error","time":"2024-02-23 14:37:05","file":"router/register.go:146","msg":"route handle fun error, uri method params bind, error method: %v&{{}   }","time":"2024-02-23 14:33:12","level":"debug"}
+{"level":"error","time":"2024-02-23 14:37:12","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{}   }","time":"2024-02-23 14:33:12","level":"debug"}
+{"level":"error","time":"2024-02-23 14:37:12","file":"router/register.go:146","msg":"route handle fun error, uri method params bind, error method: %v&{{}   }","time":"2024-02-23 14:33:12","level":"debug"}
+{"level":"error","time":"2024-02-23 14:47:32","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{}   }","time":"2024-02-23 14:33:12","level":"debug"}
+{"level":"error","time":"2024-02-23 14:47:32","file":"router/register.go:146","msg":"route handle fun error, uri method params bind, error method: %v&{{}   }","time":"2024-02-23 14:33:12","level":"debug"}
+{"level":"info","time":"2024-02-23 14:47:32","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 14:33:12","level":"debug"}
+{"level":"info","time":"2024-02-23 14:47:32","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 14:33:12","level":"debug"}
+{"level":"info","time":"2024-02-23 14:47:57","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 14:47:57","level":"debug"}
+{"level":"error","time":"2024-02-23 14:48:04","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} }","time":"2024-02-23 14:47:57","level":"debug"}
+{"level":"error","time":"2024-02-23 14:48:04","file":"router/register.go:146","msg":"route handle fun error, uri method params bind, error method: %v&{{} }","time":"2024-02-23 14:47:57","level":"debug"}
+{"level":"info","time":"2024-02-23 15:38:17","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 15:38:17","level":"debug"}
+{"level":"info","time":"2024-02-23 15:49:48","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 15:49:48","level":"debug"}
+{"level":"info","time":"2024-02-23 15:50:05","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 15:49:48","level":"debug"}
+{"level":"info","time":"2024-02-23 15:50:05","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 15:49:48","level":"debug"}
+{"level":"info","time":"2024-02-23 15:50:33","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 15:50:33","level":"debug"}
+{"level":"error","time":"2024-02-23 15:51:10","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} 1@1.com }","time":"2024-02-23 15:50:33","level":"debug"}
+{"level":"info","time":"2024-02-23 15:52:02","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 15:52:02","level":"debug"}
+{"level":"info","time":"2024-02-23 15:52:17","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 15:52:17","level":"debug"}
+{"level":"error","time":"2024-02-23 15:52:41","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} 1@1.com }","time":"2024-02-23 15:52:17","level":"debug"}
+{"level":"error","time":"2024-02-23 15:53:02","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} 1@1.com }","time":"2024-02-23 15:52:17","level":"debug"}
+{"level":"error","time":"2024-02-23 15:53:17","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} 1@1.com }","time":"2024-02-23 15:52:17","level":"debug"}
+{"level":"error","time":"2024-02-23 15:53:44","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} 1@1.com }","time":"2024-02-23 15:52:17","level":"debug"}
+{"level":"error","time":"2024-02-23 15:53:46","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} 1@1.com }","time":"2024-02-23 15:52:17","level":"debug"}
+{"level":"error","time":"2024-02-23 15:54:00","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} 1 }","time":"2024-02-23 15:52:17","level":"debug"}
+{"level":"info","time":"2024-02-23 15:55:59","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 15:52:17","level":"debug"}
+{"level":"info","time":"2024-02-23 15:55:59","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 15:52:17","level":"debug"}
+{"level":"info","time":"2024-02-23 15:56:22","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 15:56:22","level":"debug"}
+{"level":"error","time":"2024-02-23 15:57:04","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} 1 }","time":"2024-02-23 15:56:22","level":"debug"}
+{"level":"info","time":"2024-02-23 15:57:04","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 15:56:22","level":"debug"}
+{"level":"info","time":"2024-02-23 15:57:04","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 15:56:22","level":"debug"}
+{"level":"info","time":"2024-02-23 15:57:17","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 15:57:17","level":"debug"}
+{"level":"error","time":"2024-02-23 15:57:30","file":"router/register.go:141","msg":"route handle fun error, method params bind, error method: %v&{{} 1 }","time":"2024-02-23 15:57:17","level":"debug"}
+{"level":"info","time":"2024-02-23 15:57:50","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 15:57:17","level":"debug"}
+{"level":"info","time":"2024-02-23 15:57:50","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 15:57:17","level":"debug"}
+{"level":"info","time":"2024-02-23 15:58:04","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 15:58:04","level":"debug"}
+{"level":"info","time":"2024-02-23 15:58:32","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 15:58:04","level":"debug"}
+{"level":"info","time":"2024-02-23 15:58:32","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 15:58:04","level":"debug"}
+{"level":"info","time":"2024-02-23 15:58:40","file":"framework/app.go:75","msg":"Server addr 127.0.0.1:3000","time":"2024-02-23 15:58:40","level":"debug"}
+{"level":"info","time":"2024-02-23 16:00:46","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 15:58:40","level":"debug"}
+{"level":"info","time":"2024-02-23 16:00:46","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 15:58:40","level":"debug"}
+{"level":"info","time":"2024-02-23 16:01:05","file":"framework/app.go:75","msg":"Server addr localhost:3000","time":"2024-02-23 16:01:05","level":"debug"}

@@ -26,9 +26,6 @@ func Register(containers ...inject) {
 	Cache = append(Cache, containers...)
 }
 
-// Apply all apis to the gin engine
-// @param e: gin.Engine
-// @param autowired: whether enable autowired properties
 func Apply(e *gin.Engine, autowired bool) {
 	for _, di := range Cache {
 		if autowired {

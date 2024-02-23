@@ -17,28 +17,24 @@ type RedisDrive struct {
 }
 
 func (c *RedisDrive) Connect(ctx context.Context, cfg map[string]any) error {
-	ctx = context.Background()
+	c.storage = redis.NewClient(
+		&redis.Options{
+			Addr:             cfg["addr"].(string),
+			Password:         cfg["password"].(string),     // no password set
+			DB:               int(cfg["database"].(int64)), // use default DB
+			PoolSize:         int(cfg["pool_size"].(int64)),
+			PoolTimeout:      time.Duration(cfg["pool_timeout"].(int64)) * time.Second,
+			WriteTimeout:     time.Duration(cfg["write_timeout"].(int64)) * time.Second,
+			ReadTimeout:      time.Duration(cfg["read_timeout"].(int64)) * time.Second,
+			DialTimeout:      time.Duration(cfg["dial_timeout"].(int64)) * time.Second,
+			DisableIndentity: true,
+		},
+	)
 
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-
-	err := rdb.Set(ctx, "key", "value", 0).Err()
+	_, err := c.storage.Ping(ctx).Result()
 	if err != nil {
-		panic(err)
+		return err
 	}
-	//
-	//err := c.storage.Set(ctx, "key", "value", 0).Err()
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//_, err = c.storage.Ping(ctx).Result()
-	//if err != nil {
-	//	return err
-	//}
 
 	return nil
 }

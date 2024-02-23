@@ -21,8 +21,8 @@ func Limiter() gin.HandlerFunc {
 		}
 	}
 
-	duration := config.Client().GetDuration("maxRequestTime")
-	maxRequests := config.Client().GetInt("maxRequests")
+	duration := config.Client().GetDuration("max_request_time")
+	maxRequests := config.Client().GetInt("max_requests")
 	limiter := helpers.NewLimiter(rate.Every(duration*time.Second), maxRequests, "request")
 
 	return func(c *gin.Context) {

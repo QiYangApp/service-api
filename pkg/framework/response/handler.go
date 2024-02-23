@@ -7,50 +7,40 @@ import (
 	"net/http"
 )
 
-type Response[T interface{}] struct {
-	Context   *gin.Context      `json:"-"`
-	Type      ResponseTypeEnum  `json:"-"`
-	RequestId uuid.UUID         `json:"request_id"`
-	Code      int               `json:"code"`
-	State     ResponseStateEnum `json:"state"`
-	Message   string            `json:"message"`
-	Timestamp string            `json:"timestamp"`
-	Data      T                 `json:"data,omitempty"`
-	List      []T               `json:"list,omitempty"`
-	Page      int               `json:"page,omitempty"`
-	Total     int               `json:"total,omitempty"`
+type Response struct {
+	Context   *gin.Context `json:"-"`
+	Type      TypeEnum     `json:"-"`
+	RequestId uuid.UUID    `json:"request_id"`
+	Code      int          `json:"code"`
+	State     StateEnum    `json:"state"`
+	Message   string       `json:"message"`
+	Timestamp string       `json:"timestamp"`
+	Data      any          `json:"data,omitempty"`
 }
 
-func (r *Response[T]) SetPage(page, total int) *Response[T] {
-	r.Page = page
-	r.Total = total
-
-	return r
-}
-
-func (r *Response[T]) SetData(data T) *Response[T] {
+func (r *Response) SetData(data any) *Response {
 	r.Data = data
 
 	return r
 }
 
-func (r *Response[T]) SetType(t ResponseTypeEnum) *Response[T] {
+func (r *Response) SetType(t TypeEnum) *Response {
 	r.Type = t
 
 	return r
 }
 
-func (r *Response[T]) GetType() ResponseTypeEnum {
+func (r *Response) GetType() TypeEnum {
 	return r.Type
 }
 
-func (r *Response[T]) SetCode(code int) *Response[T] {
+func (r *Response) SetCode(code int) *Response {
 	r.Code = code
 
 	return r
 }
 
-func (r *Response[T]) GetCode() int {
+func (r *Response) GetCode() int {
 	if r.Code != 0 {
 		return r.Code
 	}
@@ -58,13 +48,13 @@ func (r *Response[T]) GetCode() int {
 	return http.StatusOK
 }
 
-func (r *Response[T]) SetMessage(message string) *Response[T] {
+func (r *Response) SetMessage(message string) *Response {
 	r.Message = message
 
 	return r
 }
 
-func (r *Response[T]) GetMessage() string {
+func (r *Response) GetMessage() string {
 	if r.Message == "" {
 		return ""
 	}
@@ -77,13 +67,13 @@ func (r *Response[T]) GetMessage() string {
 	return msg
 }
 
-func (r *Response[T]) SetState(state ResponseStateEnum) *Response[T] {
+func (r *Response) SetState(state StateEnum) *Response {
 	r.State = state
 
 	return r
 }
 
-func (r *Response[T]) GetState() ResponseStateEnum {
+func (r *Response) GetState() StateEnum {
 	if r.State == "" {
 		return Success
 	}
@@ -91,16 +81,16 @@ func (r *Response[T]) GetState() ResponseStateEnum {
 	return r.State
 }
 
-func (r *Response[T]) RContext() *gin.Context {
+func (r *Response) RContext() *gin.Context {
 	return r.Context
 }
 
-func (r *Response[T]) ToSelf() *Response[T] {
+func (r *Response) ToSelf() *Response {
 	return r
 }
 
-func (r *Response[T]) ToStruct() *Response[T] {
-	return &Response[T]{
+func (r *Response) ToStruct() *Response {
+	return &Response{
 		Code:      r.GetCode(),
 		State:     r.GetState(),
 		Message:   r.GetMessage(),
@@ -110,13 +100,13 @@ func (r *Response[T]) ToStruct() *Response[T] {
 	}
 }
 
-func (r *Response[T]) ToJson() *gin.Context {
+func (r *Response) ToJson() *gin.Context {
 	r.Context.SecureJSON(r.GetCode(), r.ToStruct())
 
 	return r.Context
 }
 
-func (r *Response[T]) ToStream(data []byte) *gin.Context {
+func (r *Response) ToStream(data []byte) *gin.Context {
 	r.Context.File(string(data))
 
 	return r.Context

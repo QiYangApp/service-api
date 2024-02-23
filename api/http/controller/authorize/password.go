@@ -11,14 +11,15 @@ type PasswordSingUpApi struct {
 	AuthorizeService authorize.PasswordSignUpService
 }
 
-func (p *PasswordSingUpApi) Login(c *gin.Context, req entity.LoginRequest) *gin.Context {
+func (p *PasswordSingUpApi) Authorizing(c *gin.Context, req entity.LoginRequest) *gin.Context {
 
-	p.AuthorizeService.Authorized(req)
+	p.AuthorizeService.Authorizing(req)
 
 	return response.RSuccess(c, req).ToJson()
 }
 
-func (p *PasswordSingUpApi) Register(c *gin.Context, req any) *gin.Context {
+func (p *PasswordSingUpApi) Authorized(c *gin.Context, req entity.LoginRequest) *gin.Context {
+	p.AuthorizeService.Authorized(req)
 	return response.RSuccess(c, req).ToJson()
 }
 

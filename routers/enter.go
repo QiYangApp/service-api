@@ -8,6 +8,7 @@ import (
 )
 
 var RouterGroup = []router.Router{
+	&SwaggerRouter{},
 	&CaptchaRouter{},
 }
 

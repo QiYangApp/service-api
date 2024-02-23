@@ -70,7 +70,7 @@ func (t *App) Run(cmd *Cmd) {
 
 	_ = t.Engine.SetTrustedProxies(nil)
 
-	addr := config.Client().GetString("addr") + ":" + config.Client().GetString("port")
+	addr := config.Client().GetString("addr")
 
 	log.Client().Sugar().Infof("Server addr %s", addr)
 
@@ -78,8 +78,8 @@ func (t *App) Run(cmd *Cmd) {
 		Addr:                         addr,
 		Handler:                      t.Engine,
 		DisableGeneralOptionsHandler: true,
-		ReadTimeout:                  time.Duration(config.Client().GetInt("readTimeout")) * time.Second,
-		WriteTimeout:                 time.Duration(config.Client().GetInt("writeTimeout")) * time.Second,
+		ReadTimeout:                  time.Duration(config.Client().GetInt("read_timeout")) * time.Second,
+		WriteTimeout:                 time.Duration(config.Client().GetInt("write_timeout")) * time.Second,
 	}
 
 	go func() {
