@@ -13,13 +13,13 @@ func Instance() *Manage {
 	once.Do(func() {
 		instance = &Manage{
 			Param: &Param{
-				Debug:       config.Client().GetBool("debug"),
-				MaxBackups:  config.Client().GetInt("log.max_backups"),
-				MaxAge:      config.Client().GetInt("log.max_age"),
-				MaxSize:     config.Client().GetInt("log.max_size"),
-				Compress:    config.Client().GetBool("log.compress"),
-				LogFileName: config.Client().GetString("log.file_name") + ".log",
-				Level:       config.Client().GetString("log.level"),
+				Debug:       config.Client().GetBool("DEBUG"),
+				MaxBackups:  config.Client().GetInt("LOG.MAX_BACKUPS"),
+				MaxAge:      config.Client().GetInt("LOG.MAX_AGE"),
+				MaxSize:     config.Client().GetInt("LOG.MAX_SIZE"),
+				Compress:    config.Client().GetBool("LOG.COMPRESS"),
+				LogFileName: config.Client().GetString("LOG.FILE_NAME"),
+				Level:       config.Client().GetString("LOG.LEVEL"),
 			},
 		}
 		instance.Builder()

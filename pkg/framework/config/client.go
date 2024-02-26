@@ -1,7 +1,6 @@
 package config
 
 import (
-	"framework/helpers"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"sync"
@@ -16,11 +15,11 @@ type Manage struct {
 	Client *viper.Viper
 }
 
-func (c *Manage) ParseFile() *Manage {
+func (c *Manage) ParseFile(path string) *Manage {
 
 	c.Client.SetConfigType("toml")
 	c.Client.SetConfigName("config")
-	c.Client.AddConfigPath(helpers.Path.RootPath)
+	c.Client.AddConfigPath(path)
 
 	// 读取配置文件
 	if err := c.Client.ReadInConfig(); err != nil {

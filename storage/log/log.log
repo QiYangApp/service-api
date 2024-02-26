@@ -256,3 +256,4 @@
 {"level":"info","time":"2024-02-23 16:00:46","file":"framework/app.go:97","msg":"Shutdown Server ...","time":"2024-02-23 15:58:40","level":"debug"}
 {"level":"info","time":"2024-02-23 16:00:46","file":"framework/app.go:104","msg":"Server exiting","time":"2024-02-23 15:58:40","level":"debug"}
 {"level":"info","time":"2024-02-23 16:01:05","file":"framework/app.go:75","msg":"Server addr localhost:3000","time":"2024-02-23 16:01:05","level":"debug"}
+{"level":"info","time":"2024-02-23 18:08:20","file":"framework/app.go:75","msg":"Server addr localhost:3000","time":"2024-02-23 18:08:20","level":"debug"}

@@ -2,7 +2,8 @@ package main
 
 import (
 	"framework"
-	"service-api/api/providers"
+	"framework/cmd"
+	"service-api/internal/app/providers"
 )
 
 // @title QiYang
@@ -21,14 +22,15 @@ import (
 // @securityDefinitions.basic BasicAuth
 
 //go:generate  go run -mod=mod  github.com/swaggo/swag/cmd/swag init
-//go:generate go run -mod=mod entgo.io/ent/cmd/ent generate "./ent/schema"
+//go:generate go run -mod=mod entgo.io/ent/cmd/ent generate "./internal/ent/schema"
 func main() {
-	context := framework.Client()
-	context.Providers(
+	client := cmd.WebServerClient()
+
+	client.Providers = append(client.Providers,
 		&providers.Cron{},
 		&providers.Database{},
 		&providers.Router{},
 	)
 
-	context.Run(&framework.Cmd{})
+	framework.NewApp()
 }

@@ -1,0 +1,28 @@
+package authorize
+
+import (
+	"framework/response"
+	"github.com/gin-gonic/gin"
+	"service-api/internal/entity"
+	"service-api/internal/services/authorize"
+)
+
+type PasswordSingUpApi struct {
+	AuthorizeService authorize.PasswordSignUpService
+}
+
+func (p *PasswordSingUpApi) Authorizing(c *gin.Context, req entity.LoginRequest) *gin.Context {
+
+	p.AuthorizeService.Authorizing(req)
+
+	return response.RSuccess(c, req).ToJson()
+}
+
+func (p *PasswordSingUpApi) Authorized(c *gin.Context, req entity.LoginRequest) *gin.Context {
+	p.AuthorizeService.Authorized(req)
+	return response.RSuccess(c, req).ToJson()
+}
+
+type PasswordSingInApi struct {
+	AuthorizeService authorize.PasswordSignUpService
+}

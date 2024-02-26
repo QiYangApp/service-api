@@ -1,5 +1,6 @@
 # release or debug or test
-runMode = "debug"
+run_mode = "debug"
+run_user = "git"
 debug = true
 domain = "127.0.0.1"
 addr = 'localhost:3000'
@@ -8,6 +9,7 @@ write_timeout = 120
 read_timeout = 120
 max_requests = 10
 max_request_time = 60
+secret_key = "!#@fdewrewr&*("
 
 [database]
 driver = "pgx"
@@ -16,11 +18,17 @@ driver = "pgx"
 driver = "cache-redis"
 expires = 60
 
+[cron]
+#enable running cron tasks periodically.
+enabled = true
+#run cron tasks when gogs starts.
+run_at_start = false
+
 [[conns]]
 name = "pgx"
 driver = "pgx"
 read = { host = "localhost", port = 5432, username = "qiyang", password = "qiyang", database = "qiyang", max_open_conns = 100, max_idle_conns = 50 }
-write = { host = "localhost", port = 5432, username = "qiyang", password = "qiyang", database = "qiyang",max_open_conns = 100, max_idle_conns = 50 }
+write = { host = "localhost", port = 5432, username = "qiyang", password = "qiyang", database = "qiyang", max_open_conns = 100, max_idle_conns = 50 }
 [[conns]]
 name = "cache-redis"
 driver = "redis"
@@ -37,10 +45,10 @@ pool_size = 10
 pool_timeout = 30
 
 [log]
-#debug info warn error DPanic panic fatal
+#debug info warn error dpanic panic fatal
 level = "debug"
-file_name = "log"
-# default 120 M
+file_name = "record.log"
+# default 120 m
 max_size = 1
 # save days
 max_age = 7
@@ -48,7 +56,7 @@ max_backups = 30
 compress = true
 
 [token]
-privateKey = "/resources/certificate/token/RSAPrivate.key"
-publicKey = "/resources/certificate/token/RSAPublic.key"
+privatekey = "/resources/certificate/token/rsaprivate.key"
+publickey = "/resources/certificate/token/rsapublic.key"
 signing = "signing"
-expiresTime = 60
+expires_time = 60

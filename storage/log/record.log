@@ -1,0 +1,3 @@
+{"level":"info","time":"2024-02-26 18:21:01","file":"cmd/web.go:83","msg":"Server addr localhost:3000","time":"2024-02-26 18:21:01","level":"debug"}
+{"level":"info","time":"2024-02-26 18:21:13","file":"cmd/web.go:105","msg":"Shutdown Server ...","time":"2024-02-26 18:21:01","level":"debug"}
+{"level":"info","time":"2024-02-26 18:21:13","file":"cmd/web.go:112","msg":"Server exiting","time":"2024-02-26 18:21:01","level":"debug"}
