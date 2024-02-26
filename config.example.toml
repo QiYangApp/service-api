@@ -27,8 +27,8 @@ run_at_start = false
 [[conns]]
 name = "pgx"
 driver = "pgx"
-read = { host = "localhost", port = 5432, username = "qiyang", password = "qiyang", database = "qiyang", max_open_conns = 100, max_idle_conns = 50 }
-write = { host = "localhost", port = 5432, username = "qiyang", password = "qiyang", database = "qiyang", max_open_conns = 100, max_idle_conns = 50 }
+read = { host = "localhost", port = 5432, username = "qi_yang", password = "qi_yang", database = "qi_yang", max_open_conns = 100, max_idle_conns = 50 }
+write = { host = "localhost", port = 5432, username = "qi_yang", password = "qi_yang", database = "qi_yang", max_open_conns = 100, max_idle_conns = 50 }
 [[conns]]
 name = "cache-redis"
 driver = "redis"

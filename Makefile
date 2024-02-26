@@ -7,7 +7,7 @@ GOFILES=`find . -name "*.go" -type f -not -path "./vendor/*"`
 
 .PHONY: all clean setup build-linux build-osx build-windows lib air dev generate generate-api generate-ent
 
-all: clean setup build-linux build-osx build-windows lib dev air generate generate-api generate-ent
+all: clean setup build-linux build-osx build-windows dev air generate generate-swag generate-ent
 clean:
 	rm -rf build
 setup:
@@ -27,12 +27,12 @@ build-windows: setup
 dev: generate
 	go build ./main.go
 air: generate
-	air build -buildvcs=false -d
-generate-api:
-	go run ./pkg/framework/script/router/main.go
+	air web
+generate-swag:
+	go run -mod=mod  github.com/swaggo/swag/cmd/swag init --output  ./resources/swag
 generate-ent:
-	go run -mod=mod entgo.io/ent/cmd/ent generate "./ent/schema"
-generate: generate-api generate-ent
+	go run -mod=mod entgo.io/ent/cmd/ent generate "./internal/ent/schema"
+generate: generate-swag generate-ent
 
 
 gofmt:

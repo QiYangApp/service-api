@@ -21,7 +21,7 @@ import (
 // @BasePath /api
 // @securityDefinitions.basic BasicAuth
 
-//go:generate  go run -mod=mod  github.com/swaggo/swag/cmd/swag init --output  ./resources/swag
+//go:generate go run -mod=mod  github.com/swaggo/swag/cmd/swag init --output  ./resources/swag
 //go:generate go run -mod=mod entgo.io/ent/cmd/ent generate "./internal/ent/schema"
 func main() {
 	client := cmd.WebServerClient()

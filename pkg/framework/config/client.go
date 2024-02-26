@@ -23,7 +23,7 @@ func (c *Manage) ParseFile(path string) *Manage {
 
 	// 读取配置文件
 	if err := c.Client.ReadInConfig(); err != nil {
-		zap.S().Error(err)
+		zap.S().Panic(err)
 	}
 
 	return c
