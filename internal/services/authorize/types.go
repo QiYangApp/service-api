@@ -1,13 +1,16 @@
+// Copyright 2019 The Gitea Authors. All rights reserved.
+// SPDX-License-Identifier: MIT
+
 package authorize
 
-import "service-api/internal/entity"
+import "service-api/internal/app/http/validator"
 
 type Authorizing interface {
-	PreAuthorizationData(req entity.LoginRequest) *entity.LoginResponse
+	PreAuthData(req validator.PreAuthDataRequest) any
 
-	PreAuthorizationVerification(req entity.LoginRequest) *entity.LoginResponse
+	PreAuthVerify(req validator.PreAuthVerifyRequest) any
 
-	Authorizing(req entity.LoginRequest) *entity.LoginResponse
+	Authorizing(req validator.AuthorizingRequest) any
 
-	Authorized(req entity.LoginRequest) *entity.LoginResponse
+	Authorized(req validator.AuthorizedRequest) any
 }

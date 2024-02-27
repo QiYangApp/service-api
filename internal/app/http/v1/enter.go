@@ -1,13 +1,11 @@
-package api
-
-import "service-api/internal/app/http/api/authorize"
+package v1
 
 type AbstractController struct {
 }
 
 type ApiGroup struct {
-	AuthorizeApi authorize.GroupApi
 	CaptchaApi
+	AuthApi
 }
 
 var Client = new(ApiGroup)

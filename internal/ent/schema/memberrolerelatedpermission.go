@@ -4,8 +4,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"entgo.io/ent/schema/mixin"
 	"github.com/google/uuid"
+	"time"
 )
 
 // MemberRoleRelatedPermission holds the schema definition for the MemberRoleRelatedPermission entity.
@@ -19,6 +19,8 @@ func (MemberRoleRelatedPermission) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).Comment(""),
 		field.UUID("role_id", uuid.UUID{}).Comment("规则id"),
 		field.UUID("permission_group_id", uuid.UUID{}).Comment("权限分组id"),
+		field.Time("create_time").Default(time.Now).Immutable(),
+		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
 	}
 }
 
@@ -31,11 +33,5 @@ func (MemberRoleRelatedPermission) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("role_id", "permission_group_id").
 			Unique(),
-	}
-}
-
-func (MemberRoleRelatedPermission) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		mixin.Time{},
 	}
 }

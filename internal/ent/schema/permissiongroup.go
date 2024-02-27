@@ -4,9 +4,9 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"entgo.io/ent/schema/mixin"
 	"github.com/google/uuid"
 	"service-api/internal/enums"
+	"time"
 )
 
 // PermissionGroup holds the schema definition for the PermissionGroup entity.
@@ -24,6 +24,8 @@ func (PermissionGroup) Fields() []ent.Field {
 		field.Int32("left").Default(0).Comment(""),
 		field.Int32("right").Default(0).Comment(""),
 		field.String("state").Default(enums.ON).NotEmpty().Comment("状态 开启 on 关闭 off"),
+		field.Time("create_time").Default(time.Now).Immutable(),
+		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
 	}
 }
 
@@ -36,11 +38,5 @@ func (PermissionGroup) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("left", "right"),
 		index.Fields("state", "sort", "permission_name"),
-	}
-}
-
-func (PermissionGroup) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		mixin.Time{},
 	}
 }

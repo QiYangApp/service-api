@@ -47,3 +47,14 @@
 {"level":"info","time":"2024-02-26 23:42:05","file":"cmd/web.go:83","msg":"Server addr localhost:3000","time":"2024-02-26 23:42:05","level":"debug"}
 {"level":"info","time":"2024-02-26 23:42:05","file":"cmd/web.go:83","msg":"Server addr localhost:3000","time":"2024-02-26 23:42:05","level":"debug"}
 {"level":"fatal","time":"2024-02-26 23:42:05","file":"cmd/web.go:96","msg":"listen: listen tcp 127.0.0.1:3000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.\n","time":"2024-02-26 23:42:05","level":"debug"}
+{"level":"info","time":"2024-02-27 11:59:02","file":"cmd/web.go:83","msg":"Server addr localhost:3000","time":"2024-02-27 11:59:02","level":"debug"}
+{"level":"info","time":"2024-02-27 11:59:28","file":"cmd/web.go:105","msg":"Shutdown Server ...","time":"2024-02-27 11:59:02","level":"debug"}
+{"level":"info","time":"2024-02-27 11:59:28","file":"cmd/web.go:112","msg":"Server exiting","time":"2024-02-27 11:59:02","level":"debug"}
+{"level":"info","time":"2024-02-27 11:59:53","file":"cmd/web.go:83","msg":"Server addr localhost:3000","time":"2024-02-27 11:59:53","level":"debug"}
+{"level":"info","time":"2024-02-27 12:00:11","file":"cmd/web.go:105","msg":"Shutdown Server ...","time":"2024-02-27 11:59:53","level":"debug"}
+{"level":"info","time":"2024-02-27 12:00:11","file":"cmd/web.go:112","msg":"Server exiting","time":"2024-02-27 11:59:53","level":"debug"}
+{"level":"info","time":"2024-02-27 12:01:12","file":"cmd/web.go:83","msg":"Server addr localhost:3000","time":"2024-02-27 12:01:12","level":"debug"}
+{"level":"info","time":"2024-02-27 14:45:06","file":"cmd/web.go:83","msg":"Server addr localhost:3000","time":"2024-02-27 14:45:06","level":"debug"}
+{"level":"info","time":"2024-02-27 14:45:59","file":"cmd/web.go:83","msg":"Server addr localhost:3000","time":"2024-02-27 14:45:59","level":"debug"}
+{"level":"info","time":"2024-02-27 14:48:20","file":"cmd/web.go:105","msg":"Shutdown Server ...","time":"2024-02-27 14:45:59","level":"debug"}
+{"level":"info","time":"2024-02-27 14:48:20","file":"cmd/web.go:112","msg":"Server exiting","time":"2024-02-27 14:45:59","level":"debug"}

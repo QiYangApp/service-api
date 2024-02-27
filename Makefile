@@ -29,9 +29,9 @@ dev: generate
 air: generate
 	air web
 generate-swag:
-	go run -mod=mod  github.com/swaggo/swag/cmd/swag init --output  ./resources/swag
+	go run -mod=mod -buildvcs=false github.com/swaggo/swag/cmd/swag init --output  ./resources/swag
 generate-ent:
-	go run -mod=mod entgo.io/ent/cmd/ent generate "./internal/ent/schema"
+	go run -mod=mod -buildvcs=false entgo.io/ent/cmd/ent generate "./internal/ent/schema"
 generate: generate-swag generate-ent
 
 

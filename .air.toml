@@ -6,7 +6,7 @@ tmp_dir = "tmp"
 args_bin = []
 bin = "tmp\\main.exe"
 cmd = "go build -o ./tmp/main.exe ./"
-delay = 0
+delay = 3
 exclude_dir = [
     "docs",
     "tmp",
@@ -14,7 +14,7 @@ exclude_dir = [
     "testdata",
     "storage",
     "public",
-    "internal/ent"
+    "internal\\ent"
 ]
 exclude_file = []
 exclude_regex = ["_test.go"]

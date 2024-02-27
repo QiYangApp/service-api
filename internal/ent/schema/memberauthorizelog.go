@@ -4,8 +4,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"entgo.io/ent/schema/mixin"
 	"github.com/google/uuid"
+	"time"
 )
 
 // MemberAuthorizeLog holds the schema definition for the MemberAuthorizeLog entity.
@@ -25,6 +25,8 @@ func (MemberAuthorizeLog) Fields() []ent.Field {
 		field.String("client_ip").NotEmpty().MaxLen(32),
 		field.String("remote_ip").NotEmpty().MaxLen(32),
 		field.String("snapshot").MaxLen(254),
+		field.Time("create_time").Default(time.Now).Immutable(),
+		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
 	}
 }
 
@@ -36,11 +38,5 @@ func (MemberAuthorizeLog) Edges() []ent.Edge {
 func (MemberAuthorizeLog) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("member_id", "channel", "device"),
-	}
-}
-
-func (MemberAuthorizeLog) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		mixin.Time{},
 	}
 }

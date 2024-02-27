@@ -4,8 +4,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"entgo.io/ent/schema/mixin"
 	"github.com/google/uuid"
+	"time"
 )
 
 // SourceData holds the schema definition for the SourceData entity.
@@ -22,6 +22,8 @@ func (SourceData) Fields() []ent.Field {
 		field.String("sub_type").MaxLen(32).Default("").Comment("子类型"),
 		field.String("info").Default("").Comment("信息"),
 		field.Text("snapshot").Default("").Comment("数据"),
+		field.Time("create_time").Default(time.Now).Immutable(),
+		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
 	}
 }
 
@@ -34,11 +36,5 @@ func (SourceData) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("member_id"),
 		index.Fields("type", "sub_type"),
-	}
-}
-
-func (SourceData) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		mixin.Time{},
 	}
 }

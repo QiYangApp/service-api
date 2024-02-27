@@ -2,13 +2,13 @@ package schema
 
 import (
 	"github.com/google/uuid"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"entgo.io/ent/schema/mixin"
 )
 
 // Member holds the schema definition for the Member entity.
@@ -32,11 +32,14 @@ func (Member) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).Comment("UUID of the"),
 		field.String("email").NotEmpty().MaxLen(128),
 		field.String("avatar"),
-		field.String("password_sing").NotEmpty().MaxLen(120),
-		field.String("password").NotEmpty().MaxLen(32),
-		field.String("mobile").MaxLen(32),
+		field.String("passwd_salt").NotEmpty().MaxLen(120),
+		field.String("passwd_hash_algo").NotEmpty().MaxLen(32),
+		field.String("passwd").NotEmpty().MaxLen(32),
 		field.String("nickname").NotEmpty().MaxLen(32),
-		field.String("state").NotEmpty().MaxLen(32),
+		field.Bool("is_restricted").Default(false),
+		field.Bool("is_active").Default(false).Comment("true 已激活"),
+		field.Time("create_time").Default(time.Now).Immutable(),
+		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
 	}
 }
 
@@ -47,15 +50,7 @@ func (Member) Edges() []ent.Edge {
 
 func (Member) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("mobile").
-			Unique(),
 		index.Fields("email").
 			Unique(),
-	}
-}
-
-func (Member) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		mixin.Time{},
 	}
 }
