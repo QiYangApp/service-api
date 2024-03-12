@@ -3,8 +3,8 @@ package cache
 import (
 	"context"
 	"errors"
-	"framework/helpers"
 	"framework/log"
+	"framework/utils"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 	"sync"
@@ -35,7 +35,7 @@ func Client() Drive {
 }
 
 func SetEx(key string, val interface{}, exp time.Duration) bool {
-	payload, SerializeErr := helpers.Serialize(val)
+	payload, SerializeErr := utils.Serialize(val)
 	if SerializeErr != nil {
 		log.Client().Warn(
 			"cache",
@@ -56,7 +56,7 @@ func SetEx(key string, val interface{}, exp time.Duration) bool {
 }
 
 func SetNx(key string, val interface{}, exp time.Duration) bool {
-	payload, SerializeErr := helpers.Serialize(val)
+	payload, SerializeErr := utils.Serialize(val)
 	if SerializeErr != nil {
 		log.Client().Warn(
 			"cache",
@@ -86,7 +86,7 @@ func Get(key string, ptrValue interface{}) error {
 		return err
 	}
 
-	return helpers.Deserialize([]byte(payload), ptrValue)
+	return utils.Deserialize([]byte(payload), ptrValue)
 }
 
 func Exists(key string) bool {

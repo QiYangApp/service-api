@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	"framework/helpers"
 	"fmt"
+	"framework/utils"
 	"github.com/BurntSushi/toml"
 	"github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
@@ -54,7 +54,7 @@ func I18nUrl() gin.HandlerFunc {
 func I18nLocal() gin.HandlerFunc {
 	return i18n.Localize(
 		i18n.WithBundle(&i18n.BundleCfg{
-			RootPath:         helpers.Path.I18Path,
+			RootPath:         utils.Path.I18Path,
 			AcceptLanguage:   []language.Tag{language.Chinese, language.SimplifiedChinese, language.English},
 			DefaultLanguage:  language.SimplifiedChinese,
 			UnmarshalFunc:    toml.Unmarshal,

@@ -1,8 +1,8 @@
 package captcha
 
 import (
-	"framework/helpers"
 	"framework/log"
+	"framework/utils"
 )
 
 func GenTokenString(t, token string) string {
@@ -14,5 +14,5 @@ func GenTokenString(t, token string) string {
 		return ""
 	}
 
-	return helpers.Md5(t + "-" + token)
+	return utils.Md5(t + "-" + token)
 }

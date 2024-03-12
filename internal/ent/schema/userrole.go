@@ -4,20 +4,19 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"github.com/google/uuid"
 	"service-api/internal/enums"
 	"time"
 )
 
-// MemberRole holds the schema definition for the MemberRole entity.
-type MemberRole struct {
+// UserRole holds the schema definition for the MemberRole entity.
+type UserRole struct {
 	ent.Schema
 }
 
 // Fields of the MemberRole.
-func (MemberRole) Fields() []ent.Field {
+func (UserRole) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New),
+		field.Int("id"),
 		field.String("role_name").MaxLen(64).NotEmpty().Comment("规则名称"),
 		field.String("state").Default(enums.ON).NotEmpty().MaxLen(32).Comment("状态 on 开启 off 关闭"),
 		field.Time("create_time").Default(time.Now).Immutable(),
@@ -26,11 +25,11 @@ func (MemberRole) Fields() []ent.Field {
 }
 
 // Edges of the MemberRole.
-func (MemberRole) Edges() []ent.Edge {
+func (UserRole) Edges() []ent.Edge {
 	return nil
 }
 
-func (MemberRole) Indexes() []ent.Index {
+func (UserRole) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("state", "role_name").
 			Unique(),

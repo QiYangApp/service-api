@@ -1,12 +1,12 @@
 package providers
 
 import (
-	"service-api/internal/repo"
+	"service-api/internal/models"
 )
 
 type Database struct {
 }
 
 func (*Database) Register() {
-	repo.New()
+	models.New()
 }

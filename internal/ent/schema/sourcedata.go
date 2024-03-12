@@ -16,8 +16,8 @@ type SourceData struct {
 // Fields of the SourceData.
 func (SourceData) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New).Comment(""),
-		field.UUID("member_id", uuid.UUID{}).Comment("会员id"),
+		field.Int("id"),
+		field.UUID("user_id", uuid.UUID{}).Comment("会员id"),
 		field.String("type").MaxLen(32).Default("").NotEmpty().Comment("类型"),
 		field.String("sub_type").MaxLen(32).Default("").Comment("子类型"),
 		field.String("info").Default("").Comment("信息"),
@@ -34,7 +34,7 @@ func (SourceData) Edges() []ent.Edge {
 
 func (SourceData) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("member_id"),
+		index.Fields("user_id"),
 		index.Fields("type", "sub_type"),
 	}
 }

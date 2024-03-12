@@ -1,8 +1,8 @@
 package main
 
 import (
-	"framework/helpers"
 	"framework/router"
+	"framework/utils"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 		Controller: make([]router.Inject, 0),
 	}
 
-	scan.RecursionPkgDir(helpers.Path.ControllerPath, "service-api/api/http/controller", "controller")
+	scan.RecursionPkgDir(utils.Path.ControllerPath, "service-api/api/http/controller", "controller")
 
-	router.GenerateApi(scan, helpers.Path.RootPath)
+	router.GenerateApi(scan, utils.Path.RootPath)
 }

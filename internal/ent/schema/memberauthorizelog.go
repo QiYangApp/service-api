@@ -8,16 +8,16 @@ import (
 	"time"
 )
 
-// MemberAuthorizeLog holds the schema definition for the MemberAuthorizeLog entity.
-type MemberAuthorizeLog struct {
+// UserAuthorizeLog holds the schema definition for the MemberAuthorizeLog entity.
+type UserAuthorizeLog struct {
 	ent.Schema
 }
 
 // Fields of the MemberAuthorizeLog.
-func (MemberAuthorizeLog) Fields() []ent.Field {
+func (UserAuthorizeLog) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New).Comment("UUID of the"),
-		field.UUID("member_id", uuid.UUID{}).Default(uuid.New).Comment("member UUID of the"),
+		field.Int("id"),
+		field.UUID("user_id", uuid.UUID{}).Default(uuid.New).Comment("member UUID of the"),
 		field.String("token").NotEmpty().Comment("授权token").MaxLen(254),
 		field.String("channel").MaxLen(64).Comment("登录渠道"),
 		field.String("device").MaxLen(64).Comment("登录设备"),
@@ -31,12 +31,12 @@ func (MemberAuthorizeLog) Fields() []ent.Field {
 }
 
 // Edges of the MemberAuthorizeLog.
-func (MemberAuthorizeLog) Edges() []ent.Edge {
+func (UserAuthorizeLog) Edges() []ent.Edge {
 	return nil
 }
 
-func (MemberAuthorizeLog) Indexes() []ent.Index {
+func (UserAuthorizeLog) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("member_id", "channel", "device"),
+		index.Fields("user_id", "channel", "device"),
 	}
 }

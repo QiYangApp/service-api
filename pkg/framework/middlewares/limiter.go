@@ -2,9 +2,9 @@ package middlewares
 
 import (
 	"framework/config"
-	"framework/helpers"
 	"framework/log"
 	"framework/response"
+	"framework/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"golang.org/x/time/rate"
@@ -23,7 +23,7 @@ func Limiter() gin.HandlerFunc {
 
 	duration := config.Client().GetDuration("max_request_time")
 	maxRequests := config.Client().GetInt("max_requests")
-	limiter := helpers.NewLimiter(rate.Every(duration*time.Second), maxRequests, "request")
+	limiter := utils.NewLimiter(rate.Every(duration*time.Second), maxRequests, "request")
 
 	return func(c *gin.Context) {
 		// 限流逻辑

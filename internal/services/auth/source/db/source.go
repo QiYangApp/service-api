@@ -3,6 +3,12 @@
 
 package db
 
+import (
+	"service-api/internal/ent"
+
+	"github.com/gin-gonic/gin"
+)
+
 // Source is a password authentication service
 type Source struct{}
 
@@ -18,7 +24,7 @@ func (source *Source) ToDB() ([]byte, error) {
 
 // Authenticate queries if login/password is valid against the PAM,
 // and create a local user if success when enabled.
-func (source *Source) Authenticate(ctx context.Context, user *user_model.User, login, password string) (*user_model.User, error) {
+func (source *Source) Authenticate(ctx gin.Context, user *ent.User, login, password string) (*ent.User, error) {
 	return Authenticate(ctx, user, login, password)
 }
 

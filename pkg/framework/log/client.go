@@ -1,7 +1,7 @@
 package log
 
 import (
-	"framework/helpers"
+	"framework/utils"
 	"os"
 	"time"
 
@@ -98,11 +98,11 @@ func (b *Manage) hook() []zapcore.WriteSyncer {
 	hooks := []zapcore.WriteSyncer{
 		zapcore.AddSync(
 			&lumberjack.Logger{
-				Filename:   helpers.Path.Join(helpers.Path.LogPath, b.LogFileName), // 日志文件路径
-				MaxSize:    b.MaxSize,                                              // 每个日志文件保存的大小 单位:M
-				MaxAge:     b.MaxAge,                                               // 文件最多保存多少天
-				MaxBackups: b.MaxBackups,                                           // 日志文件最多保存多少个备份
-				Compress:   b.Compress,                                             // 是否压缩
+				Filename:   utils.Path.Join(utils.Path.LogPath, b.LogFileName), // 日志文件路径
+				MaxSize:    b.MaxSize,                                          // 每个日志文件保存的大小 单位:M
+				MaxAge:     b.MaxAge,                                           // 文件最多保存多少天
+				MaxBackups: b.MaxBackups,                                       // 日志文件最多保存多少个备份
+				Compress:   b.Compress,                                         // 是否压缩
 			},
 		),
 	}

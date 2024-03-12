@@ -16,8 +16,8 @@ type Wakatime struct {
 // Fields of the Wakatime.
 func (Wakatime) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New).Comment(""),
-		field.UUID("member_id", uuid.UUID{}).Comment("会员id"),
+		field.Int("id"),
+		field.UUID("user_id", uuid.UUID{}).Comment("会员id"),
 		field.String("key").NotEmpty().Comment("密钥"),
 		field.String("api").NotEmpty().Comment("地址"),
 		field.String("state").NotEmpty().Comment("状态"),
@@ -33,7 +33,7 @@ func (Wakatime) Edges() []ent.Edge {
 
 func (Wakatime) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("member_id"),
+		index.Fields("user_id"),
 		index.Fields("key"),
 	}
 }

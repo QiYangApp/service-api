@@ -8,10 +8,10 @@ import (
 	"context"
 	"errors"
 	"framework/config"
-	"framework/helpers"
 	"framework/log"
 	"framework/middlewares"
 	"framework/providers"
+	"framework/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
 	"go.uber.org/zap"
@@ -137,7 +137,7 @@ func WebServerClient() *WebServer {
 
 func runWeb(c *cli.Context) {
 
-	path := helpers.Path.RootPath
+	path := utils.Path.RootPath
 	if c.IsSet("config") {
 		path = c.GlobalString("config")
 	}

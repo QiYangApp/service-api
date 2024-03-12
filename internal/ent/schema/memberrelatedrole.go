@@ -8,16 +8,16 @@ import (
 	"time"
 )
 
-// MemberRelatedRole holds the schema definition for the MemberRelatedRole entity.
-type MemberRelatedRole struct {
+// UserRelatedRole holds the schema definition for the MemberRelatedRole entity.
+type UserRelatedRole struct {
 	ent.Schema
 }
 
 // Fields of the MemberRelatedRole.
-func (MemberRelatedRole) Fields() []ent.Field {
+func (UserRelatedRole) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New),
-		field.UUID("member_id", uuid.UUID{}).Comment("会员id"),
+		field.Int("id"),
+		field.UUID("user_id", uuid.UUID{}).Comment("会员id"),
 		field.UUID("role_id", uuid.UUID{}).Comment("角色"),
 		field.Time("create_time").Default(time.Now).Immutable(),
 		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
@@ -25,13 +25,13 @@ func (MemberRelatedRole) Fields() []ent.Field {
 }
 
 // Edges of the MemberRelatedRole.
-func (MemberRelatedRole) Edges() []ent.Edge {
+func (UserRelatedRole) Edges() []ent.Edge {
 	return nil
 }
 
-func (MemberRelatedRole) Indexes() []ent.Index {
+func (UserRelatedRole) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("member_id", "role_id").
+		index.Fields("user_id", "role_id").
 			Unique(),
 	}
 }

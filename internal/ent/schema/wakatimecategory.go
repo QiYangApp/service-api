@@ -25,7 +25,7 @@ func (WakatimeCategory) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New).Comment(""),
 		field.UUID("wakatime_id", uuid.UUID{}).Comment("wakatime id"),
-		field.UUID("member_id", uuid.UUID{}).Comment("会员id"),
+		field.UUID("user_id", uuid.UUID{}).Comment("会员id"),
 		field.String("name").NotEmpty().Default("").Comment("名称"),
 		field.Int64("total_seconds").Default(0).Comment("总时长(秒"),
 	}
@@ -34,7 +34,7 @@ func (WakatimeCategory) Fields() []ent.Field {
 func (WakatimeCategory) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("wakatime_id"),
-		index.Fields("member_id", "name"),
+		index.Fields("user_id", "name"),
 	}
 }
 
