@@ -4,6 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"time"
 )
 
 // Accounts holds the schema definition for the UserAccounts entity.
@@ -21,6 +22,8 @@ func (Accounts) Fields() []ent.Field {
 		field.String("desc"),
 		field.Bool("is_activated"),
 		field.Bool("is_primary").Default(false),
+		field.Time("create_time").Default(time.Now).Immutable(),
+		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
 	}
 }
 

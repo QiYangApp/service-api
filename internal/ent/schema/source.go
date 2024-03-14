@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"service-api/internal/modules/timeutil"
 	"time"
 
 	"entgo.io/ent"
@@ -17,13 +18,13 @@ type Source struct {
 func (Source) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id"),
-		field.String("type"),
+		field.Int("type"),
 		field.String("name"),
 		field.Bool("is_active"),
-		field.Bool("is_sync_endable"),
+		field.Bool("is_sync_enabled"),
 		field.Text("cfg"),
-		field.Time("create_time").Default(time.Now).Immutable(),
-		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
+		field.Time("create_time").GoType(timeutil.TimeStamp(0)).Default(time.Now).Immutable(),
+		field.Time("update_time").GoType(timeutil.TimeStamp(0)).Default(time.Now).UpdateDefault(time.Now),
 	}
 }
 
@@ -34,7 +35,7 @@ func (Source) Edges() []ent.Edge {
 
 func (Source) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("is_active", "is_sync_endable"),
+		index.Fields("is_active", "is_sync_enabled"),
 		index.Fields("create_time"),
 		index.Fields("update_time"),
 		index.Fields("name").Unique(),

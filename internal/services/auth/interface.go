@@ -5,6 +5,7 @@ package auth
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"service-api/internal/ent"
 )
@@ -23,7 +24,7 @@ type Method interface {
 	// in the authentication data (username or email).
 	// Second argument returns err if verification fails, otherwise
 	// First return argument returns nil if no matched verification condition
-	Verify(http *http.Request, w http.ResponseWriter, store DataStore, sess SessionStore) (*ent.User, error)
+	Verify(ctx *gin.Context, http *http.Request, w http.ResponseWriter, store DataStore, sess SessionStore) (*ent.User, error)
 
 	Name() string
 }

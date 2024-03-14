@@ -3,7 +3,7 @@ package main
 import (
 	"framework"
 	"framework/cmd"
-	"service-api/internal/app/providers"
+	providers "service-api/internal/providers"
 )
 
 // @title QiYang
@@ -29,6 +29,7 @@ func main() {
 	client := cmd.WebServerClient()
 
 	client.Providers = append(client.Providers,
+		&providers.Setting{},
 		&providers.Cron{},
 		&providers.Database{},
 		&providers.Router{},
