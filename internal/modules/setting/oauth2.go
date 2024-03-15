@@ -7,7 +7,7 @@ import (
 	"framework/log"
 	"github.com/spf13/viper"
 	"math"
-	"path/filepath"
+	"service-api/internal/modules/generate"
 	"sync/atomic"
 )
 
@@ -110,46 +110,46 @@ var OAuth2 = struct {
 }
 
 func loadOAuth2From(cfg *viper.Viper) {
-	if err := sec.MapTo(&OAuth2); err != nil {
-		log.Client().Sugar().Fatal("Failed to map OAuth2 settings: %v", err)
-		return
-	}
-
-	// Handle the rename of ENABLE to ENABLED
-	deprecatedSetting(rootCfg, "oauth2", "ENABLE", "oauth2", "ENABLED", "v1.23.0")
-	if sec.HasKey("ENABLE") && !sec.HasKey("ENABLED") {
-		OAuth2.Enabled = sec.Key("ENABLE").MustBool(OAuth2.Enabled)
-	}
-
-	if !OAuth2.Enabled {
-		return
-	}
-
-	jwtSecretBase64 := loadSecret(sec, "JWT_SECRET_URI", "JWT_SECRET")
-
-	if !filepath.IsAbs(OAuth2.JWTSigningPrivateKeyFile) {
-		OAuth2.JWTSigningPrivateKeyFile = filepath.Join(AppDataPath, OAuth2.JWTSigningPrivateKeyFile)
-	}
-
-	if InstallLock {
-		jwtSecretBytes, err := generate.DecodeJwtSecretBase64(jwtSecretBase64)
-		if err != nil {
-			jwtSecretBytes, jwtSecretBase64, err = generate.NewJwtSecretWithBase64()
-			if err != nil {
-				log.Client().Sugar().Fatal("error generating JWT secret: %v", err)
-			}
-			saveCfg, err := rootCfg.PrepareSaving()
-			if err != nil {
-				log.Client().Sugar().Fatal("save oauth2.JWT_SECRET failed: %v", err)
-			}
-			rootCfg.Section("oauth2").Key("JWT_SECRET").SetValue(jwtSecretBase64)
-			saveCfg.Section("oauth2").Key("JWT_SECRET").SetValue(jwtSecretBase64)
-			if err := saveCfg.Save(); err != nil {
-				log.Client().Sugar().Fatal("save oauth2.JWT_SECRET failed: %v", err)
-			}
-		}
-		generalSigningSecret.Store(&jwtSecretBytes)
-	}
+	//if err := sec.MapTo(&OAuth2); err != nil {
+	//	log.Client().Sugar().Fatal("Failed to map OAuth2 settings: %v", err)
+	//	return
+	//}
+	//
+	//// Handle the rename of ENABLE to ENABLED
+	//deprecatedSetting(rootCfg, "oauth2", "ENABLE", "oauth2", "ENABLED", "v1.23.0")
+	//if sec.HasKey("ENABLE") && !sec.HasKey("ENABLED") {
+	//	OAuth2.Enabled = sec.Key("ENABLE").MustBool(OAuth2.Enabled)
+	//}
+	//
+	//if !OAuth2.Enabled {
+	//	return
+	//}
+	//
+	//jwtSecretBase64 := loadSecret(sec, "JWT_SECRET_URI", "JWT_SECRET")
+	//
+	//if !filepath.IsAbs(OAuth2.JWTSigningPrivateKeyFile) {
+	//	OAuth2.JWTSigningPrivateKeyFile = filepath.Join(AppDataPath, OAuth2.JWTSigningPrivateKeyFile)
+	//}
+	//
+	//if InstallLock {
+	//	jwtSecretBytes, err := generate.DecodeJwtSecretBase64(jwtSecretBase64)
+	//	if err != nil {
+	//		jwtSecretBytes, jwtSecretBase64, err = generate.NewJwtSecretWithBase64()
+	//		if err != nil {
+	//			log.Client().Sugar().Fatal("error generating JWT secret: %v", err)
+	//		}
+	//		saveCfg, err := rootCfg.PrepareSaving()
+	//		if err != nil {
+	//			log.Client().Sugar().Fatal("save oauth2.JWT_SECRET failed: %v", err)
+	//		}
+	//		rootCfg.Section("oauth2").Key("JWT_SECRET").SetValue(jwtSecretBase64)
+	//		saveCfg.Section("oauth2").Key("JWT_SECRET").SetValue(jwtSecretBase64)
+	//		if err := saveCfg.Save(); err != nil {
+	//			log.Client().Sugar().Fatal("save oauth2.JWT_SECRET failed: %v", err)
+	//		}
+	//	}
+	//	generalSigningSecret.Store(&jwtSecretBytes)
+	//}
 }
 
 // generalSigningSecret is used as container for a []byte value

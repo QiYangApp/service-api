@@ -14,7 +14,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	setting "service-api/internal/modules/settings"
+	"service-api/internal/modules/setting"
 	"strconv"
 	"strings"
 	"time"

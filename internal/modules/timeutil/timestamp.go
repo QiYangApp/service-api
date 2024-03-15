@@ -11,6 +11,10 @@ import (
 // TimeStamp defines a timestamp
 type TimeStamp int64
 
+func (t TimeStamp) Int() int64 {
+	return int64(t)
+}
+
 var (
 	// mockNow is NOT concurrency-safe!!
 	mockNow time.Time

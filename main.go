@@ -21,10 +21,10 @@ import (
 // @BasePath /api
 // @securityDefinitions.basic BasicAuth
 
-// go run -mod=mod entgo.io/ent/cmd/ent new --target "./internal/ent/schema"
+// go run -mod=mod entgo.io/ent/cmd/ent new --target "./internal/ent/schema" --template "./internal/ent/schema/template/entinit.tmpl"
 //
 //go:generate go run -mod=mod  github.com/swaggo/swag/cmd/swag init --output  ./resources/swag
-//go:generate go run -mod=mod entgo.io/ent/cmd/ent generate "./internal/ent/schema"
+//go:generate go run -mod=mod entgo.io/ent/cmd/ent generate "./internal/ent/schema" --template "./internal/ent/schema/template/gen"
 func main() {
 	client := cmd.WebServerClient()
 
