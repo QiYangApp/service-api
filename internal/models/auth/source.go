@@ -5,90 +5,27 @@
 package auth
 
 import (
+	"context"
 	"reflect"
 	"service-api/internal/ent"
+	"service-api/internal/entity/models/auth"
 )
 
-// Type represents an login type.
-type Type int
-
-// Note: new type must append to the end of list to maintain compatibility.
-const (
-	NoType Type = iota
-	Plain       // 1
-	LDAP        // 2
-	SMTP        // 3
-	PAM         // 4
-	DLDAP       // 5
-	OAuth2      // 6
-	SSPI        // 7
-)
-
-// String returns the string name of the LoginType
-func (typ Type) String() string {
-	return Names[typ]
-}
-
-// Int returns the int value of the LoginType
-func (typ Type) Int() int {
-	return int(typ)
-}
-
-// Names contains the name of LoginType values.
-var Names = map[Type]string{
-	LDAP:   "LDAP (via BindDN)",
-	DLDAP:  "LDAP (simple auth)", // Via direct bind
-	SMTP:   "SMTP",
-	PAM:    "PAM",
-	OAuth2: "OAuth2",
-	SSPI:   "SPNEGO with SSPI",
-}
-
-// Config represents login config as far as the db is concerned
-type Config interface {
-}
-
-// SkipVerifiable configurations provide a IsSkipVerify to check if SkipVerify is set
-type SkipVerifiable interface {
-	IsSkipVerify() bool
-}
-
-// HasTLSer configurations provide a HasTLS to check if TLS can be enabled
-type HasTLSer interface {
-	HasTLS() bool
-}
-
-// UseTLSer configurations provide a HasTLS to check if TLS is enabled
-type UseTLSer interface {
-	UseTLS() bool
-}
-
-// SSHKeyProvider configurations provide ProvidesSSHKeys to check if they provide SSHKeys
-type SSHKeyProvider interface {
-	ProvidesSSHKeys() bool
-}
-
-// RegisterableSource configurations provide RegisterSource which needs to be run on creation
-type RegisterableSource interface {
-	RegisterSource() error
-	UnregisterSource() error
-}
-
-var registeredConfigs = map[Type]func() Config{}
+var registeredConfigs = map[auth.Type]func() auth.Config{}
 
 // RegisterTypeConfig register a config for a provided type
-func RegisterTypeConfig(typ Type, exemplar Config) {
+func RegisterTypeConfig(typ auth.Type, exemplar auth.Config) {
 	if reflect.TypeOf(exemplar).Kind() == reflect.Ptr {
 		// Pointer:
-		registeredConfigs[typ] = func() Config {
-			return reflect.New(reflect.ValueOf(exemplar).Elem().Type()).Interface().(Config)
+		registeredConfigs[typ] = func() auth.Config {
+			return reflect.New(reflect.ValueOf(exemplar).Elem().Type()).Interface().(auth.Config)
 		}
 		return
 	}
 
 	// Not a Pointer
-	registeredConfigs[typ] = func() Config {
-		return reflect.New(reflect.TypeOf(exemplar)).Elem().Interface().(Config)
+	registeredConfigs[typ] = func() auth.Config {
+		return reflect.New(reflect.TypeOf(exemplar)).Elem().Interface().(auth.Config)
 	}
 }
 
@@ -174,27 +111,27 @@ type SourceSettable interface {
 //	}
 //	return exist
 //}
-//
-//// GetSourceByID returns login source by given ID.
-//func GetSourceByID(ctx context.Context, id int64) (*Source, error) {
-//	source := new(Source)
-//	if id == 0 {
-//		source.Cfg = registeredConfigs[NoType]()
-//		// Set this source to active
-//		// FIXME: allow disabling of db based password authentication in future
-//		source.IsActive = true
-//		return source, nil
-//	}
-//
-//	has, err := db.GetEngine(ctx).ID(id).Get(source)
-//	if err != nil {
-//		return nil, err
-//	} else if !has {
-//		return nil, ErrSourceNotExist{id}
-//	}
-//	return source, nil
-//}
-//
+
+// GetSourceByID returns login source by given ID.
+func GetSourceByID(ctx context.Context, id int64) (*ent.Source, error) {
+	source := new(ent.Source)
+	if id == 0 {
+		source.Cfg = registeredConfigs[auth.NoType]()
+		// Set this source to active
+		// FIXME: allow disabling of db based password authentication in future
+		source.IsActive = true
+		return source, nil
+	}
+
+	has, err := db.GetEngine(ctx).ID(id).Get(source)
+	if err != nil {
+		return nil, err
+	} else if !has {
+		return nil, ErrSourceNotExist{id}
+	}
+	return source, nil
+}
+
 //// UpdateSource updates a Source record in DB.
 //func UpdateSource(ctx context.Context, source *Source) error {
 //	var originalSource *Source

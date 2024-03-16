@@ -4,6 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"service-api/internal/entity/models/auth"
 	"service-api/internal/modules/timeutil"
 )
 
@@ -16,11 +17,11 @@ type Source struct {
 func (Source) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id"),
-		field.Int("type"),
+		field.Int("type").GoType(auth.Type(0)),
 		field.String("name"),
 		field.Bool("is_active"),
 		field.Bool("is_sync_enabled"),
-		field.Text("cfg"),
+		field.Text("cfg").GoType(auth.Config),
 		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
 		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).UpdateDefault(timeutil.TimeStampNow()),
 	}
