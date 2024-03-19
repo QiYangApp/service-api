@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"service-api/internal/entity/models/auth"
 	"time"
 
 	"entgo.io/ent"
@@ -37,8 +38,8 @@ func (User) Fields() []ent.Field {
 		field.String("nickname").NotEmpty().MaxLen(32),
 		field.String("language").NotEmpty().MaxLen(32),
 		field.String("login_name").NotEmpty(),
-		field.Int("login_source").Default(0),
-		field.Int("login_type").Default(0),
+		field.Int64("login_source").Default(0),
+		field.Int("login_type").GoType(auth.Type(0)),
 		field.Bool("is_restricted").Default(false),
 		field.Bool("is_active").Default(false).Comment("true is activated"),
 		field.Bool("prohibit_login").Default(false).Comment("is web login"),

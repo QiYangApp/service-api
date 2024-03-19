@@ -2,11 +2,7 @@ package auth
 
 import (
 	"database/sql/driver"
-	"encoding/hex"
-	"entgo.io/ent/dialect/sql"
-	"entgo.io/ent/schema/field"
-	"fmt"
-	"strings"
+	"service-api/internal/ent"
 )
 
 type Cfg interface {
@@ -14,33 +10,12 @@ type Cfg interface {
 
 // Config represents login config as far as the db is concerned
 type Config struct {
-	context string
+	Cfg Cfg
 }
 
 // Value implements the TypeValueScanner.Value method.
-func (p Config) Value(s string) (driver.Value, error) {
-	return p.context + ":" + hex.EncodeToString([]byte(s)), nil
-}
-
-// ScanValue implements the TypeValueScanner.ScanValue method.
-func (Config) ScanValue() field.ValueScanner {
-	return &sql.NullString{}
-}
-
-// FromValue implements the TypeValueScanner.FromValue method.
-func (p Config) FromValue(v driver.Value) (string, error) {
-	s, ok := v.(*sql.NullString)
-	if !ok {
-		return "", fmt.Errorf("unexpected input for FromValue: %T", v)
-	}
-	if !s.Valid {
-		return "", nil
-	}
-	d, err := hex.DecodeString(strings.TrimPrefix(s.String, p.context+":"))
-	if err != nil {
-		return "", err
-	}
-	return string(d), nil
+func (p *Config) Value() (driver.Value, error) {
+	return p.Cfg, nil
 }
 
 // SkipVerifiable configurations provide a IsSkipVerify to check if SkipVerify is set
@@ -67,4 +42,9 @@ type SSHKeyProvider interface {
 type RegisterableSource interface {
 	RegisterSource() error
 	UnregisterSource() error
+}
+
+// SourceSettable configurations can have their authSource set on them
+type SourceSettable interface {
+	SetAuthSource(*ent.Source)
 }

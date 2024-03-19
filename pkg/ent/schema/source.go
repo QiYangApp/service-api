@@ -16,12 +16,12 @@ type Source struct {
 // Fields of the Source.
 func (Source) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.Int("type").GoType(auth.Type(0)),
 		field.String("name"),
 		field.Bool("is_active"),
 		field.Bool("is_sync_enabled"),
-		field.JSON("cfg", auth.Cfg("")),
+		field.JSON("cfg", auth.Config{}),
 		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
 		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).UpdateDefault(timeutil.TimeStampNow()),
 	}
