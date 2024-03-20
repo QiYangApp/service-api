@@ -1,11 +1,13 @@
 package api
 
+import v1 "service-api/internal/app/api/v1"
+
 type AbstractController struct {
 }
 
-type ApiGroup struct {
-	CaptchaApi
-	AuthApi
+type Group struct {
+	v1.CaptchaApi
+	v1.AuthApi
 }
 
-var Client = new(ApiGroup)
+var Client = new(Group)

@@ -1,11 +1,11 @@
 package schema
 
 import (
+	"ent/utils/timeutil"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
-	"time"
 )
 
 // PermissionRelatedRouter holds the schema definition for the PermissionRelatedRouter entity.
@@ -19,8 +19,8 @@ func (PermissionRelatedRouter) Fields() []ent.Field {
 		field.Int("id"),
 		field.UUID("router_id", uuid.UUID{}).Comment("路由id"),
 		field.UUID("permission_group_id", uuid.UUID{}).Comment("权限分组"),
-		field.Time("create_time").Default(time.Now).Immutable(),
-		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
+		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 

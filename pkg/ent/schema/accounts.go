@@ -1,10 +1,10 @@
 package schema
 
 import (
+	"ent/utils/timeutil"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"time"
 )
 
 // Accounts holds the schema definition for the UserAccounts entity.
@@ -15,15 +15,15 @@ type Accounts struct {
 // Fields of the UserAccounts.
 func (Accounts) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.Int("user_id"),
 		field.String("account"),
 		field.Uint8("type"),
 		field.String("desc"),
 		field.Bool("is_activated"),
 		field.Bool("is_primary").Default(false),
-		field.Time("create_time").Default(time.Now).Immutable(),
-		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
+		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 

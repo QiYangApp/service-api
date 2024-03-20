@@ -1,10 +1,10 @@
 package schema
 
 import (
+	"ent/utils/timeutil"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"time"
 )
 
 // AccessToken holds the schema definition for the AccessToken entity.
@@ -15,7 +15,7 @@ type AccessToken struct {
 // Fields of the AccessToken.
 func (AccessToken) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.Int("user_id"),
 		field.String("name"),
 		field.String("token"),
@@ -25,8 +25,8 @@ func (AccessToken) Fields() []ent.Field {
 		field.String("scope"),
 		field.String("has_recent_activity"),
 		field.String("has_used"),
-		field.Time("create_time").Default(time.Now).Immutable(),
-		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
+		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 

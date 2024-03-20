@@ -4,9 +4,8 @@
 package optional_test
 
 import (
+	"service-api/internal/modules/optional"
 	"testing"
-
-	"code.gitea.io/gitea/modules/optional"
 
 	"github.com/stretchr/testify/assert"
 )

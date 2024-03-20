@@ -3,7 +3,7 @@ package routers
 import (
 	"framework/router"
 	"github.com/gin-gonic/gin"
-	v1 "service-api/internal/app/http/v1"
+	"service-api/internal/app/api"
 )
 
 type CaptchaRouter struct {
@@ -15,7 +15,7 @@ func (c *CaptchaRouter) IsPrivate() bool {
 
 func (*CaptchaRouter) Handle(r *gin.RouterGroup) {
 	// 获取验证码
-	r.GET("/captcha/:type", router.Bind(v1.Client.CaptchaApi.Index))
+	r.GET("/captcha/:type", router.Bind(api.Client.CaptchaApi.Index))
 	// 验证验证码
-	r.POST("/captcha/:type", router.Bind(v1.Client.CaptchaApi.Verify))
+	r.POST("/captcha/:type", router.Bind(api.Client.CaptchaApi.Verify))
 }

@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"service-api/internal/entity/models/auth"
+	"ent/types/auth"
 	"time"
 
 	"entgo.io/ent"

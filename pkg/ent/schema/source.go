@@ -1,11 +1,11 @@
 package schema
 
 import (
+	"ent/types/auth"
+	"ent/utils/timeutil"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"service-api/internal/entity/models/auth"
-	"service-api/internal/modules/timeutil"
 )
 
 // Source holds the schema definition for the Source entity.
@@ -23,7 +23,7 @@ func (Source) Fields() []ent.Field {
 		field.Bool("is_sync_enabled"),
 		field.JSON("cfg", auth.Config{}),
 		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
-		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).UpdateDefault(timeutil.TimeStampNow()),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 

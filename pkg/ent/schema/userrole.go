@@ -1,10 +1,10 @@
 package schema
 
 import (
+	"ent/enums/state"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"service-api/internal/enums"
 	"time"
 )
 
@@ -18,7 +18,7 @@ func (UserRole) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id"),
 		field.String("role_name").MaxLen(64).NotEmpty().Comment("规则名称"),
-		field.String("state").Default(enums.ON).NotEmpty().MaxLen(32).Comment("状态 on 开启 off 关闭"),
+		field.Int("state").GoType(state.SwitchState(0)).Default(1),
 		field.Time("create_time").Default(time.Now).Immutable(),
 		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
 	}
