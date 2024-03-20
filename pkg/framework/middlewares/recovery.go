@@ -10,7 +10,7 @@ import (
 )
 
 func Recovery() gin.HandlerFunc {
-	if config.Client().GetBool("debug") {
+	if config.Client.GetBool("debug") {
 		return gin.Recovery()
 	}
 
@@ -19,7 +19,7 @@ func Recovery() gin.HandlerFunc {
 			// 自定义输出内容
 			errMsg := fmt.Sprintf("%v", err)
 
-			log.Client().Sugar().Errorf("url: %s, err: %s", c.Request.URL, errMsg)
+			log.Client.Sugar().Errorf("url: %s, err: %s", c.Request.URL, errMsg)
 
 			c.AbortWithStatusJSON(
 				http.StatusInternalServerError,

@@ -4,7 +4,7 @@ import (
 	"framework/cmd"
 	"framework/router"
 	"github.com/gin-gonic/gin"
-	"service-api/internal/middlewares"
+	"service-api/internal/app/api/middlewares"
 )
 
 var RouterGroup = []router.Router{

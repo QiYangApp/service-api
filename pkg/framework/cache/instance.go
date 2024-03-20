@@ -30,14 +30,12 @@ func Instance() *Manage {
 	return singleton
 }
 
-func Client() Drive {
-	return Instance().drives[singleton.drive]
-}
+var Client = Instance().drives[singleton.drive]
 
 func SetEx(key string, val interface{}, exp time.Duration) bool {
 	payload, SerializeErr := utils.Serialize(val)
 	if SerializeErr != nil {
-		log.Client().Warn(
+		log.Client.Warn(
 			"cache",
 			zap.String("mes", "cache drive SerializeErr key error"),
 			zap.String("key", key),
@@ -48,7 +46,7 @@ func SetEx(key string, val interface{}, exp time.Duration) bool {
 
 	state, err := singleton.GetDefaultCacheDrive().SetEx(context.TODO(), key, payload, exp)
 	if err != nil {
-		log.Client().Sugar().Info("cache drive set key error, key: %s, val: %v", key, payload)
+		log.Client.Sugar().Info("cache drive set key error, key: %s, val: %v", key, payload)
 		return false
 	}
 
@@ -58,7 +56,7 @@ func SetEx(key string, val interface{}, exp time.Duration) bool {
 func SetNx(key string, val interface{}, exp time.Duration) bool {
 	payload, SerializeErr := utils.Serialize(val)
 	if SerializeErr != nil {
-		log.Client().Warn(
+		log.Client.Warn(
 			"cache",
 			zap.String("mes", "cache drive SerializeErr key error"),
 			zap.String("key", key),
@@ -69,7 +67,7 @@ func SetNx(key string, val interface{}, exp time.Duration) bool {
 
 	state, err := singleton.GetDefaultCacheDrive().SetNx(context.TODO(), key, payload, exp)
 	if err != nil {
-		log.Client().Sugar().Infof("cache drive set key error, key: %s, val: %v", key, payload)
+		log.Client.Sugar().Infof("cache drive set key error, key: %s, val: %v", key, payload)
 		return false
 	}
 

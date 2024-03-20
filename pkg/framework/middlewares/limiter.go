@@ -14,22 +14,22 @@ import (
 
 func Limiter() gin.HandlerFunc {
 
-	if config.Client().GetBool("debug") {
+	if config.Client.GetBool("debug") {
 		return func(c *gin.Context) {
 			// 中间件逻辑
 			c.Next()
 		}
 	}
 
-	duration := config.Client().GetDuration("max_request_time")
-	maxRequests := config.Client().GetInt("max_requests")
+	duration := config.Client.GetDuration("max_request_time")
+	maxRequests := config.Client.GetInt("max_requests")
 	limiter := utils.NewLimiter(rate.Every(duration*time.Second), maxRequests, "request")
 
 	return func(c *gin.Context) {
 		// 限流逻辑
 		if limiter.Allow() == false {
 			// 在请求处理之后记录响应信息
-			log.Client().Info(
+			log.Client.Info(
 				"limiter",
 				zap.String("url", c.Request.URL.String()),
 				zap.Any("headers", c.Request.Header),

@@ -11,7 +11,7 @@ func Conf() {
 
 	//_, _ = cron.Instance().AddJob(cron.TaskTime().EverySecond(10), &command.WakatimeSourceData{})
 	_, _ = cron.Instance().AddFun(cron.TaskTime().EverySecond(1), func() {
-		//log.Client().Debug("test", zap.String("TEST", "test"))
+		//log.Client.Debug("test", zap.String("TEST", "test"))
 	})
 
 }

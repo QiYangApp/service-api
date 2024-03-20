@@ -11,7 +11,7 @@ import (
 )
 
 func LoadCommonSettings() {
-	if err := loadCommonSettingsFrom(config.Client()); err != nil {
+	if err := loadCommonSettingsFrom(config.Client); err != nil {
 		log.Fatal("Unable to load settings from config: %v", err)
 	}
 }

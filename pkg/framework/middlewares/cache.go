@@ -1,11 +1,11 @@
 package middlewares
 
 import (
-	"framework/cache"
-	"framework/log"
 	"bytes"
 	"crypto/sha1"
 	"encoding/hex"
+	"framework/cache"
+	"framework/log"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
@@ -33,7 +33,7 @@ func Cache(duration time.Duration, handle func(*gin.Context) string) gin.Handler
 
 		if err = cache.Get(key, &resp); err != nil {
 			// 在请求处理之后记录响应信息
-			log.Client().Sugar().Debugw(
+			log.Client.Sugar().Debugw(
 				"cache",
 				zap.String("url", c.Request.URL.String()),
 				zap.Any("headers", c.Request.Header),

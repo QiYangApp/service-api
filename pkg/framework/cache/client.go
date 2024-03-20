@@ -37,7 +37,7 @@ func (c *Manage) init() *Manage {
 
 	_, err := c.setDefaultDrive(c.drive)
 	if err != nil {
-		log.Client().Sugar().Fatalf("register default cache drive fail: %v", err)
+		log.Client.Sugar().Fatalf("register default cache drive fail: %v", err)
 	}
 
 	return c
@@ -57,7 +57,7 @@ func (c *Manage) setDefaultDrive(key string) (Drive, error) {
 func (c *Manage) GetDefaultCacheDrive() Drive {
 	var err error
 	if c.drive == "" {
-		log.Client().Fatal("drive not found")
+		log.Client.Fatal("drive not found")
 	}
 
 	if c.drives[c.drive] == nil {
@@ -66,7 +66,7 @@ func (c *Manage) GetDefaultCacheDrive() Drive {
 
 	c.drives[c.drive], err = c.Register(c.drive)
 	if err != nil {
-		log.Client().Sugar().Fatalf("register cache drive fail: %v", err)
+		log.Client.Sugar().Fatalf("register cache drive fail: %v", err)
 	}
 
 	return c.drives[c.drive]
@@ -78,7 +78,7 @@ func (c *Manage) Register(key string) (Drive, error) {
 		return c.drives[key], nil
 	}
 
-	conns := config.Client().Get("conns").([]interface{})
+	conns := config.Client.Get("conns").([]interface{})
 	var conn map[string]any
 	for _, t := range conns {
 		conn = t.(map[string]any)
@@ -88,7 +88,7 @@ func (c *Manage) Register(key string) (Drive, error) {
 	}
 
 	if len(conn) == 0 {
-		log.Client().Panic("cache database config conns empty")
+		log.Client.Panic("cache database config conns empty")
 	}
 
 	c.drives[key], err = c.Connect(key, conn["driver"].(string), conn)

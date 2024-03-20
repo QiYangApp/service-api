@@ -88,12 +88,12 @@ func RouteBind(e *gin.Engine, method string, path string, fn reflect.Method, typ
 
 func RouteHandle(fn reflect.Method, valueOf reflect.Value, typeOf reflect.Type) gin.HandlerFunc {
 	if fn.Func.Type().NumIn() <= 1 {
-		log.Client().Sugar().Fatal("route handle fun error, method name: %v", fn.Name)
+		log.Client.Sugar().Fatal("route handle fun error, method name: %v", fn.Name)
 	}
 
 	reqType := fn.Func.Type().In(1)
 	if reqType != reflect.TypeOf(&gin.Context{}) {
-		log.Client().Sugar().Fatal("route handle fun error, method first params require *gin.Context{},  error method: %v", fn.Name)
+		log.Client.Sugar().Fatal("route handle fun error, method first params require *gin.Context{},  error method: %v", fn.Name)
 	}
 
 	var reqLen = fn.Func.Type().NumIn()
@@ -138,12 +138,12 @@ func RouteHandle(fn reflect.Method, valueOf reflect.Value, typeOf reflect.Type) 
 func unmarshal(c *gin.Context, v interface{}) error {
 	err := c.ShouldBind(v)
 	if err != nil {
-		log.Client().Sugar().Error("route handle fun error, method params bind, error method: %v", v)
+		log.Client.Sugar().Error("route handle fun error, method params bind, error method: %v", v)
 	}
 
 	err = c.ShouldBindUri(v)
 	if err != nil {
-		log.Client().Sugar().Error("route handle fun error, uri method params bind, error method: %v", v)
+		log.Client.Sugar().Error("route handle fun error, uri method params bind, error method: %v", v)
 	}
 
 	return err

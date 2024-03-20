@@ -68,13 +68,13 @@ func (c *RedisDrive) Refresh(ctx context.Context, key string, exp time.Duration)
 
 	valState, err := c.Get(ctx, key)
 	if err != nil {
-		log.Client().Sugar().Warnf("cache drive refresh fail, get origin data fail, key, %s", err)
+		log.Client.Sugar().Warnf("cache drive refresh fail, get origin data fail, key, %s", err)
 		return false
 	}
 
 	state, err := c.SetNx(ctx, key, valState, exp)
 	if err != nil {
-		log.Client().Sugar().Warnf("cache drive refresh fail, set new data fail, key, %s", err)
+		log.Client.Sugar().Warnf("cache drive refresh fail, set new data fail, key, %s", err)
 		return false
 	}
 

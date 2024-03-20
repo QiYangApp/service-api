@@ -10,7 +10,7 @@ func GenTokenString(t, token string) string {
 	case "login":
 		break
 	default:
-		log.Client().Error("captcha gen token string type not exists!")
+		log.Client.Error("captcha gen token string type not exists!")
 		return ""
 	}
 

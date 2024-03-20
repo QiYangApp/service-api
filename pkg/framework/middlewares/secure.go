@@ -8,10 +8,10 @@ import (
 
 func Secure() gin.HandlerFunc {
 	return secure.New(secure.Config{
-		IsDevelopment:         config.Client().GetBool("debug"),
-		AllowedHosts:          []string{config.Client().GetString("domain"), config.Client().GetString("addr")},
+		IsDevelopment:         config.Client.GetBool("debug"),
+		AllowedHosts:          []string{config.Client.GetString("domain"), config.Client.GetString("addr")},
 		SSLRedirect:           false,
-		SSLHost:               config.Client().GetString("domain"),
+		SSLHost:               config.Client.GetString("domain"),
 		STSSeconds:            315360000,
 		STSIncludeSubdomains:  true,
 		FrameDeny:             true,

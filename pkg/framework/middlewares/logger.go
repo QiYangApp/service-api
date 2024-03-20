@@ -9,7 +9,7 @@ import (
 )
 
 func Logger() gin.HandlerFunc {
-	if config.Client().GetBool("debug") {
+	if config.Client.GetBool("debug") {
 		return gin.Logger()
 	}
 
@@ -19,7 +19,7 @@ func Logger() gin.HandlerFunc {
 		c.Next()
 
 		// 在请求处理之后记录响应信息
-		log.Client().Sugar().Infow(
+		log.Client.Sugar().Infow(
 			"request",
 			zap.String("url", c.Request.URL.String()),
 			zap.Any("headers", c.Request.Header),

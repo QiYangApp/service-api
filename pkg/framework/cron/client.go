@@ -1,7 +1,6 @@
 package cron
 
 import (
-	"github.com/robfig/cron/v3"
 	"sync"
 )
 
@@ -16,9 +15,7 @@ func Instance() *Manage {
 	return singleton
 }
 
-func Client() *cron.Cron {
-	return Instance().cron
-}
+var Client = Instance().cron
 
 func TaskTime() TimeInterface {
 	return &Time{

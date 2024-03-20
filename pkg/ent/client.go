@@ -15,15 +15,16 @@ var Client *models.Client = nil
 
 var once = sync.Once{}
 
-func New(opts []models.Option, migratePath string) *models.Client {
+func New(opts []models.Option, migratePath string, debug bool) *models.Client {
 	once.Do(func() {
-		Client = NewClient(opts, migratePath)
+		models.SetDebugState(debug)
+		Client = NewClient(opts, migratePath, debug)
 	})
 
 	return Client
 }
 
-func NewClient(opts []models.Option, migratePath string) *models.Client {
+func NewClient(opts []models.Option, migratePath string, debug bool) *models.Client {
 	client := models.NewClient(opts...)
 
 	err := client.Schema.Create(
@@ -38,10 +39,9 @@ func NewClient(opts []models.Option, migratePath string) *models.Client {
 		log.Panicf("failed creating schema resources: %v", err)
 		return nil
 	}
-
-	//schemaDir, _ := filepath.Abs(path + "/models/ent/schema")
-	//if err := entc.Generate(schemaDir, &gen.Config{}); err != nil {
-	//	return nil, errors.New(fmt.Sprintf("running ent code generate: %v", err))
+	//
+	//if err := schemaInitRun(debug); err != nil {
+	//
 	//}
 
 	err = write(migratePath, client)
@@ -68,3 +68,12 @@ func write(path string, client *models.Client) error {
 
 	return nil
 }
+
+//func schemaInitRun(debug bool) error {
+//	schemaDir, _ := filepath.Abs("/ent/schema")
+//	if err := entc.Generate(schemaDir, &gen.Config{}); err != nil {
+//		return errors.New(fmt.Sprintf("running ent code generate: %v", err))
+//	}
+//
+//	return nil
+//}

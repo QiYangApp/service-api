@@ -13,7 +13,7 @@ type Logger struct {
 func (c Logger) Info(msg string, keysAndValues ...interface{}) {
 	//keysAndValues = formatTimes(keysAndValues)
 	//
-	//log.Client().Sugar().Debug(
+	//log.Client.Sugar().Debug(
 	//	zap.String("name", "cron"),
 	//	zap.String("msg", msg),
 	//	zap.Any("data", keysAndValues),
@@ -24,7 +24,7 @@ func (c Logger) Info(msg string, keysAndValues ...interface{}) {
 func (c Logger) Error(err error, msg string, keysAndValues ...interface{}) {
 	keysAndValues = formatTimes(keysAndValues)
 
-	log.Client().Sugar().Error(
+	log.Client.Sugar().Error(
 		zap.Error(err),
 		zap.String("msg", msg),
 		zap.Any("data", keysAndValues),

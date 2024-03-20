@@ -3,6 +3,7 @@ package repo
 import (
 	"ent"
 	"ent/models"
+	"framework/config"
 	"framework/db"
 	"framework/utils"
 	"sync"
@@ -20,6 +21,6 @@ func Init() {
 
 		Client = ent.NewClient([]models.Option{
 			models.Driver(&db.MultiDriver{R: conns.Read(), W: conns.Write()}),
-		}, utils.Path.Join(utils.Path.StoragePath, "migrate.sql"))
+		}, utils.Path.Join(utils.Path.StoragePath, "migrate.sql"), config.Client.GetBool("debug"))
 	})
 }

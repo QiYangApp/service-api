@@ -44,6 +44,4 @@ func Instance() *Manage {
 	return singleton
 }
 
-func Client() *viper.Viper {
-	return Instance().Client
-}
+var Client *viper.Viper = Instance().Client

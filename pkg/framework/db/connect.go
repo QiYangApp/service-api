@@ -53,7 +53,7 @@ func (i *Connect) dbType(t string) string {
 func (p *Connect) Connect(t string, cfg ConfigConnsSingle) *sql.DB {
 	db, err := sql.Open(t, p.parseUrl(cfg))
 	if err != nil {
-		log.Client().Sugar().Fatalf("connecting to the database failed %v", err)
+		log.Client.Sugar().Fatalf("connecting to the database failed %v", err)
 	}
 
 	// 设置数据库连接池相关配置
@@ -62,7 +62,7 @@ func (p *Connect) Connect(t string, cfg ConfigConnsSingle) *sql.DB {
 	db.SetConnMaxLifetime(time.Minute)
 
 	if err = db.Ping(); err != nil {
-		log.Client().Sugar().Fatalf("ping to the database failed %v", err)
+		log.Client.Sugar().Fatalf("ping to the database failed %v", err)
 	}
 
 	return db

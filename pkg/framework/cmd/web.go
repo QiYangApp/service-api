@@ -78,22 +78,22 @@ func (t *WebServer) Run(cmd *WebCmd) {
 
 	_ = t.Engine.SetTrustedProxies(nil)
 
-	addr := config.Client().GetString("ADDR")
+	addr := config.Client.GetString("ADDR")
 
-	log.Client().Sugar().Infof("Server addr %s", addr)
+	log.Client.Sugar().Infof("Server addr %s", addr)
 
 	srv := &http.Server{
 		Addr:                         addr,
 		Handler:                      t.Engine,
 		DisableGeneralOptionsHandler: true,
-		ReadTimeout:                  time.Duration(config.Client().GetInt("READ_TIMEOUT")) * time.Second,
-		WriteTimeout:                 time.Duration(config.Client().GetInt("WRITE_TIMEOUT")) * time.Second,
+		ReadTimeout:                  time.Duration(config.Client.GetInt("READ_TIMEOUT")) * time.Second,
+		WriteTimeout:                 time.Duration(config.Client.GetInt("WRITE_TIMEOUT")) * time.Second,
 	}
 
 	go func() {
 		// 服务连接
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Client().Sugar().Fatalf("listen: %s\n", err)
+			log.Client.Sugar().Fatalf("listen: %s\n", err)
 		}
 	}()
 
@@ -102,14 +102,14 @@ func (t *WebServer) Run(cmd *WebCmd) {
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 
-	log.Client().Info("Shutdown Server ...")
+	log.Client.Info("Shutdown Server ...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Client().Warn("Shutdown Server ...", zap.Error(err))
+		log.Client.Warn("Shutdown Server ...", zap.Error(err))
 	}
-	log.Client().Info("Server exiting")
+	log.Client.Info("Server exiting")
 }
 
 func WebServerClient() *WebServer {
@@ -145,9 +145,9 @@ func runWeb(c *cli.Context) {
 	config.Instance().ParseFile(path)
 
 	runCmd := &WebCmd{
-		Debug:   config.Client().GetBool("debug"),
-		RunMode: config.Client().GetString("run_mode"),
-		Addr:    config.Client().GetString("addr"),
+		Debug:   config.Client.GetBool("debug"),
+		RunMode: config.Client.GetString("run_mode"),
+		Addr:    config.Client.GetString("addr"),
 	}
 
 	if c.IsSet("addr") {

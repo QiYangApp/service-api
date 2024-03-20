@@ -20,9 +20,9 @@ func loadTimeFrom(cfg *viper.Viper) {
 		var err error
 		DefaultUILocation, err = time.LoadLocation(zone)
 		if err != nil {
-			log.Client().Sugar().Fatalf("Load time zone failed: %v", err)
+			log.Client.Sugar().Fatalf("Load time zone failed: %v", err)
 		} else {
-			log.Client().Sugar().Infof("Default UI Location is %v", zone)
+			log.Client.Sugar().Infof("Default UI Location is %v", zone)
 		}
 	}
 	if DefaultUILocation == nil {

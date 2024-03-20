@@ -22,8 +22,8 @@ func (*SwaggerRouter) Handle(r *gin.RouterGroup) {
 		return
 	}
 
-	swag.SwaggerInfo.Host = config.Client().GetString("addr")
-	swag.SwaggerInfo.Version = config.Client().GetString("version")
+	swag.SwaggerInfo.Host = config.Client.GetString("addr")
+	swag.SwaggerInfo.Version = config.Client.GetString("version")
 
 	r.GET("/swagger/*any", gs.WrapHandler(swaggerfiles.Handler))
 }

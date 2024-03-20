@@ -1,10 +1,10 @@
 package db
 
 import (
-	"framework/config"
-	"framework/log"
 	"encoding/json"
 	entsql "entgo.io/ent/dialect/sql"
+	"framework/config"
+	"framework/log"
 )
 
 type DB struct {
@@ -13,12 +13,12 @@ type DB struct {
 }
 
 func (i *DB) Init() {
-	var driver = config.Client().GetString("database.driver")
+	var driver = config.Client.GetString("database.driver")
 	if driver == "" {
-		log.Client().Panic("database config type error, name: " + driver)
+		log.Client.Panic("database config type error, name: " + driver)
 	}
 
-	conns := config.Client().Get("conns").([]interface{})
+	conns := config.Client.Get("conns").([]interface{})
 	var conn map[string]any
 	for _, t := range conns {
 		conn = t.(map[string]any)
@@ -28,7 +28,7 @@ func (i *DB) Init() {
 	}
 
 	if len(conn) == 0 {
-		log.Client().Panic("database config conns database empty")
+		log.Client.Panic("database config conns database empty")
 	}
 
 	var cfg ConfigConnsMany
@@ -40,7 +40,7 @@ func (i *DB) Init() {
 	}
 
 	if err != nil {
-		log.Client().Sugar().Panic(err)
+		log.Client.Sugar().Panic(err)
 	}
 
 	i.Driver = driver

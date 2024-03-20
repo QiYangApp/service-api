@@ -8,7 +8,7 @@ func (c *AccessTokenClient) Debug() *AccessTokenClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &AccessTokenClient{config: cfg}
 }
 
@@ -16,7 +16,7 @@ func (c *AccountsClient) Debug() *AccountsClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &AccountsClient{config: cfg}
 }
 
@@ -24,7 +24,7 @@ func (c *MemberRoleRelatedPermissionClient) Debug() *MemberRoleRelatedPermission
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &MemberRoleRelatedPermissionClient{config: cfg}
 }
 
@@ -32,7 +32,7 @@ func (c *PermissionGroupClient) Debug() *PermissionGroupClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &PermissionGroupClient{config: cfg}
 }
 
@@ -40,7 +40,7 @@ func (c *PermissionRelatedRouterClient) Debug() *PermissionRelatedRouterClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &PermissionRelatedRouterClient{config: cfg}
 }
 
@@ -48,7 +48,7 @@ func (c *RouterClient) Debug() *RouterClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &RouterClient{config: cfg}
 }
 
@@ -56,7 +56,7 @@ func (c *SourceClient) Debug() *SourceClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &SourceClient{config: cfg}
 }
 
@@ -64,7 +64,7 @@ func (c *SourceDataClient) Debug() *SourceDataClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &SourceDataClient{config: cfg}
 }
 
@@ -72,7 +72,7 @@ func (c *UserClient) Debug() *UserClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &UserClient{config: cfg}
 }
 
@@ -80,7 +80,7 @@ func (c *UserAuthSourceClient) Debug() *UserAuthSourceClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &UserAuthSourceClient{config: cfg}
 }
 
@@ -88,7 +88,7 @@ func (c *UserRelatedRoleClient) Debug() *UserRelatedRoleClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &UserRelatedRoleClient{config: cfg}
 }
 
@@ -96,7 +96,7 @@ func (c *UserRoleClient) Debug() *UserRoleClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &UserRoleClient{config: cfg}
 }
 
@@ -104,7 +104,7 @@ func (c *WakatimeClient) Debug() *WakatimeClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeClient{config: cfg}
 }
 
@@ -112,7 +112,7 @@ func (c *WakatimeCategoryClient) Debug() *WakatimeCategoryClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeCategoryClient{config: cfg}
 }
 
@@ -120,7 +120,7 @@ func (c *WakatimeDependencyClient) Debug() *WakatimeDependencyClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeDependencyClient{config: cfg}
 }
 
@@ -128,7 +128,7 @@ func (c *WakatimeDurationClient) Debug() *WakatimeDurationClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeDurationClient{config: cfg}
 }
 
@@ -136,7 +136,7 @@ func (c *WakatimeEditorClient) Debug() *WakatimeEditorClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeEditorClient{config: cfg}
 }
 
@@ -144,7 +144,7 @@ func (c *WakatimeEntityClient) Debug() *WakatimeEntityClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeEntityClient{config: cfg}
 }
 
@@ -152,7 +152,7 @@ func (c *WakatimeGrandTotalClient) Debug() *WakatimeGrandTotalClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeGrandTotalClient{config: cfg}
 }
 
@@ -160,7 +160,7 @@ func (c *WakatimeHeartBeatClient) Debug() *WakatimeHeartBeatClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeHeartBeatClient{config: cfg}
 }
 
@@ -168,7 +168,7 @@ func (c *WakatimeLanguageClient) Debug() *WakatimeLanguageClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeLanguageClient{config: cfg}
 }
 
@@ -176,7 +176,7 @@ func (c *WakatimeProjectClient) Debug() *WakatimeProjectClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeProjectClient{config: cfg}
 }
 
@@ -184,7 +184,7 @@ func (c *WakatimeProjectDurationClient) Debug() *WakatimeProjectDurationClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeProjectDurationClient{config: cfg}
 }
 
@@ -192,7 +192,7 @@ func (c *WakatimeProjectInfoClient) Debug() *WakatimeProjectInfoClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeProjectInfoClient{config: cfg}
 }
 
@@ -200,6 +200,6 @@ func (c *WakatimeSystemClient) Debug() *WakatimeSystemClient {
 	if c.debug {
 		return c
 	}
-	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: true, hooks: c.hooks}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeSystemClient{config: cfg}
 }

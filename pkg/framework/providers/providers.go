@@ -21,5 +21,5 @@ type CacheProviders struct {
 }
 
 func (c *CacheProviders) Register() {
-	cache.NewInstance(config.Client().GetString("CACHE.DRIVER"))
+	cache.NewInstance(config.Client.GetString("CACHE.DRIVER"))
 }
