@@ -40,7 +40,7 @@ func (wld *WakatimeLanguageDelete) ExecX(ctx context.Context) int {
 }
 
 func (wld *WakatimeLanguageDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(wakatimelanguage.Table, sqlgraph.NewFieldSpec(wakatimelanguage.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(wakatimelanguage.Table, sqlgraph.NewFieldSpec(wakatimelanguage.FieldID, field.TypeInt64))
 	if ps := wld.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

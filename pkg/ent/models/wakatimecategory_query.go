@@ -12,7 +12,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/uuid"
 )
 
 // WakatimeCategoryQuery is the builder for querying WakatimeCategory entities.
@@ -22,6 +21,8 @@ type WakatimeCategoryQuery struct {
 	order      []wakatimecategory.OrderOption
 	inters     []Interceptor
 	predicates []predicate.WakatimeCategory
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*WakatimeCategory) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -82,8 +83,8 @@ func (wcq *WakatimeCategoryQuery) FirstX(ctx context.Context) *WakatimeCategory 
 
 // FirstID returns the first WakatimeCategory ID from the query.
 // Returns a *NotFoundError when no WakatimeCategory ID was found.
-func (wcq *WakatimeCategoryQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (wcq *WakatimeCategoryQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wcq.Limit(1).IDs(setContextOp(ctx, wcq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -95,7 +96,7 @@ func (wcq *WakatimeCategoryQuery) FirstID(ctx context.Context) (id uuid.UUID, er
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wcq *WakatimeCategoryQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (wcq *WakatimeCategoryQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := wcq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -133,8 +134,8 @@ func (wcq *WakatimeCategoryQuery) OnlyX(ctx context.Context) *WakatimeCategory {
 // OnlyID is like Only, but returns the only WakatimeCategory ID in the query.
 // Returns a *NotSingularError when more than one WakatimeCategory ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wcq *WakatimeCategoryQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (wcq *WakatimeCategoryQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wcq.Limit(2).IDs(setContextOp(ctx, wcq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -150,7 +151,7 @@ func (wcq *WakatimeCategoryQuery) OnlyID(ctx context.Context) (id uuid.UUID, err
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wcq *WakatimeCategoryQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (wcq *WakatimeCategoryQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := wcq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -178,7 +179,7 @@ func (wcq *WakatimeCategoryQuery) AllX(ctx context.Context) []*WakatimeCategory 
 }
 
 // IDs executes the query and returns a list of WakatimeCategory IDs.
-func (wcq *WakatimeCategoryQuery) IDs(ctx context.Context) (ids []uuid.UUID, err error) {
+func (wcq *WakatimeCategoryQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if wcq.ctx.Unique == nil && wcq.path != nil {
 		wcq.Unique(true)
 	}
@@ -190,7 +191,7 @@ func (wcq *WakatimeCategoryQuery) IDs(ctx context.Context) (ids []uuid.UUID, err
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wcq *WakatimeCategoryQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (wcq *WakatimeCategoryQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := wcq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -343,6 +344,9 @@ func (wcq *WakatimeCategoryQuery) sqlAll(ctx context.Context, hooks ...queryHook
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(wcq.modifiers) > 0 {
+		_spec.Modifiers = wcq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -352,11 +356,19 @@ func (wcq *WakatimeCategoryQuery) sqlAll(ctx context.Context, hooks ...queryHook
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range wcq.loadTotal {
+		if err := wcq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (wcq *WakatimeCategoryQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wcq.querySpec()
+	if len(wcq.modifiers) > 0 {
+		_spec.Modifiers = wcq.modifiers
+	}
 	_spec.Node.Columns = wcq.ctx.Fields
 	if len(wcq.ctx.Fields) > 0 {
 		_spec.Unique = wcq.ctx.Unique != nil && *wcq.ctx.Unique
@@ -365,7 +377,7 @@ func (wcq *WakatimeCategoryQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (wcq *WakatimeCategoryQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatimecategory.Table, wakatimecategory.Columns, sqlgraph.NewFieldSpec(wakatimecategory.FieldID, field.TypeUUID))
+	_spec := sqlgraph.NewQuerySpec(wakatimecategory.Table, wakatimecategory.Columns, sqlgraph.NewFieldSpec(wakatimecategory.FieldID, field.TypeInt64))
 	_spec.From = wcq.sql
 	if unique := wcq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

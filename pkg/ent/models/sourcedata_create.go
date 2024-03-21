@@ -112,7 +112,7 @@ func (sdc *SourceDataCreate) SetNillableUpdateTime(t *time.Time) *SourceDataCrea
 }
 
 // SetID sets the "id" field.
-func (sdc *SourceDataCreate) SetID(i int) *SourceDataCreate {
+func (sdc *SourceDataCreate) SetID(i int64) *SourceDataCreate {
 	sdc.mutation.SetID(i)
 	return sdc
 }
@@ -227,7 +227,7 @@ func (sdc *SourceDataCreate) sqlSave(ctx context.Context) (*SourceData, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	sdc.mutation.id = &_node.ID
 	sdc.mutation.done = true
@@ -237,7 +237,7 @@ func (sdc *SourceDataCreate) sqlSave(ctx context.Context) (*SourceData, error) {
 func (sdc *SourceDataCreate) createSpec() (*SourceData, *sqlgraph.CreateSpec) {
 	var (
 		_node = &SourceData{config: sdc.config}
-		_spec = sqlgraph.NewCreateSpec(sourcedata.Table, sqlgraph.NewFieldSpec(sourcedata.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(sourcedata.Table, sqlgraph.NewFieldSpec(sourcedata.FieldID, field.TypeInt64))
 	)
 	if id, ok := sdc.mutation.ID(); ok {
 		_node.ID = id
@@ -321,7 +321,7 @@ func (sdcb *SourceDataCreateBulk) Save(ctx context.Context) ([]*SourceData, erro
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

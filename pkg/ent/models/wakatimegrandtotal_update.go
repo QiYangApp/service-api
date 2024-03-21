@@ -60,7 +60,7 @@ func (wgtu *WakatimeGrandTotalUpdate) ExecX(ctx context.Context) {
 }
 
 func (wgtu *WakatimeGrandTotalUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := sqlgraph.NewUpdateSpec(wakatimegrandtotal.Table, wakatimegrandtotal.Columns, sqlgraph.NewFieldSpec(wakatimegrandtotal.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(wakatimegrandtotal.Table, wakatimegrandtotal.Columns, sqlgraph.NewFieldSpec(wakatimegrandtotal.FieldID, field.TypeInt64))
 	if ps := wgtu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -134,7 +134,7 @@ func (wgtuo *WakatimeGrandTotalUpdateOne) ExecX(ctx context.Context) {
 }
 
 func (wgtuo *WakatimeGrandTotalUpdateOne) sqlSave(ctx context.Context) (_node *WakatimeGrandTotal, err error) {
-	_spec := sqlgraph.NewUpdateSpec(wakatimegrandtotal.Table, wakatimegrandtotal.Columns, sqlgraph.NewFieldSpec(wakatimegrandtotal.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(wakatimegrandtotal.Table, wakatimegrandtotal.Columns, sqlgraph.NewFieldSpec(wakatimegrandtotal.FieldID, field.TypeInt64))
 	id, ok := wgtuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`models: missing "WakatimeGrandTotal.id" for update`)}

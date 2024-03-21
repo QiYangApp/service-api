@@ -40,7 +40,7 @@ func (wgtd *WakatimeGrandTotalDelete) ExecX(ctx context.Context) int {
 }
 
 func (wgtd *WakatimeGrandTotalDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(wakatimegrandtotal.Table, sqlgraph.NewFieldSpec(wakatimegrandtotal.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(wakatimegrandtotal.Table, sqlgraph.NewFieldSpec(wakatimegrandtotal.FieldID, field.TypeInt64))
 	if ps := wgtd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

@@ -21,6 +21,8 @@ type WakatimeHeartBeatQuery struct {
 	order      []wakatimeheartbeat.OrderOption
 	inters     []Interceptor
 	predicates []predicate.WakatimeHeartBeat
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*WakatimeHeartBeat) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (whbq *WakatimeHeartBeatQuery) FirstX(ctx context.Context) *WakatimeHeartBe
 
 // FirstID returns the first WakatimeHeartBeat ID from the query.
 // Returns a *NotFoundError when no WakatimeHeartBeat ID was found.
-func (whbq *WakatimeHeartBeatQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (whbq *WakatimeHeartBeatQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = whbq.Limit(1).IDs(setContextOp(ctx, whbq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (whbq *WakatimeHeartBeatQuery) FirstID(ctx context.Context) (id int, err er
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (whbq *WakatimeHeartBeatQuery) FirstIDX(ctx context.Context) int {
+func (whbq *WakatimeHeartBeatQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := whbq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (whbq *WakatimeHeartBeatQuery) OnlyX(ctx context.Context) *WakatimeHeartBea
 // OnlyID is like Only, but returns the only WakatimeHeartBeat ID in the query.
 // Returns a *NotSingularError when more than one WakatimeHeartBeat ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (whbq *WakatimeHeartBeatQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (whbq *WakatimeHeartBeatQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = whbq.Limit(2).IDs(setContextOp(ctx, whbq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (whbq *WakatimeHeartBeatQuery) OnlyID(ctx context.Context) (id int, err err
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (whbq *WakatimeHeartBeatQuery) OnlyIDX(ctx context.Context) int {
+func (whbq *WakatimeHeartBeatQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := whbq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (whbq *WakatimeHeartBeatQuery) AllX(ctx context.Context) []*WakatimeHeartBe
 }
 
 // IDs executes the query and returns a list of WakatimeHeartBeat IDs.
-func (whbq *WakatimeHeartBeatQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (whbq *WakatimeHeartBeatQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if whbq.ctx.Unique == nil && whbq.path != nil {
 		whbq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (whbq *WakatimeHeartBeatQuery) IDs(ctx context.Context) (ids []int, err err
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (whbq *WakatimeHeartBeatQuery) IDsX(ctx context.Context) []int {
+func (whbq *WakatimeHeartBeatQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := whbq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -320,6 +322,9 @@ func (whbq *WakatimeHeartBeatQuery) sqlAll(ctx context.Context, hooks ...queryHo
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(whbq.modifiers) > 0 {
+		_spec.Modifiers = whbq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -329,11 +334,19 @@ func (whbq *WakatimeHeartBeatQuery) sqlAll(ctx context.Context, hooks ...queryHo
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range whbq.loadTotal {
+		if err := whbq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (whbq *WakatimeHeartBeatQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := whbq.querySpec()
+	if len(whbq.modifiers) > 0 {
+		_spec.Modifiers = whbq.modifiers
+	}
 	_spec.Node.Columns = whbq.ctx.Fields
 	if len(whbq.ctx.Fields) > 0 {
 		_spec.Unique = whbq.ctx.Unique != nil && *whbq.ctx.Unique
@@ -342,7 +355,7 @@ func (whbq *WakatimeHeartBeatQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (whbq *WakatimeHeartBeatQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatimeheartbeat.Table, wakatimeheartbeat.Columns, sqlgraph.NewFieldSpec(wakatimeheartbeat.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(wakatimeheartbeat.Table, wakatimeheartbeat.Columns, sqlgraph.NewFieldSpec(wakatimeheartbeat.FieldID, field.TypeInt64))
 	_spec.From = whbq.sql
 	if unique := whbq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

@@ -40,7 +40,7 @@ func (pgd *PermissionGroupDelete) ExecX(ctx context.Context) int {
 }
 
 func (pgd *PermissionGroupDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(permissiongroup.Table, sqlgraph.NewFieldSpec(permissiongroup.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(permissiongroup.Table, sqlgraph.NewFieldSpec(permissiongroup.FieldID, field.TypeInt64))
 	if ps := pgd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

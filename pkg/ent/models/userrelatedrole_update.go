@@ -105,7 +105,7 @@ func (urru *UserRelatedRoleUpdate) defaults() {
 }
 
 func (urru *UserRelatedRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := sqlgraph.NewUpdateSpec(userrelatedrole.Table, userrelatedrole.Columns, sqlgraph.NewFieldSpec(userrelatedrole.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(userrelatedrole.Table, userrelatedrole.Columns, sqlgraph.NewFieldSpec(userrelatedrole.FieldID, field.TypeInt64))
 	if ps := urru.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -231,7 +231,7 @@ func (urruo *UserRelatedRoleUpdateOne) defaults() {
 }
 
 func (urruo *UserRelatedRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRelatedRole, err error) {
-	_spec := sqlgraph.NewUpdateSpec(userrelatedrole.Table, userrelatedrole.Columns, sqlgraph.NewFieldSpec(userrelatedrole.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(userrelatedrole.Table, userrelatedrole.Columns, sqlgraph.NewFieldSpec(userrelatedrole.FieldID, field.TypeInt64))
 	id, ok := urruo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`models: missing "UserRelatedRole.id" for update`)}

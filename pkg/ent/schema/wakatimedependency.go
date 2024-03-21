@@ -21,7 +21,7 @@ func (WakatimeDependency) Edges() []ent.Edge {
 
 func (WakatimeDependency) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New).Comment(""),
+		field.Int64("id"),
 		field.UUID("wakatime_id", uuid.UUID{}).Comment("wakatime id"),
 		field.UUID("user_id", uuid.UUID{}).Comment("会员id"),
 		field.String("name").NotEmpty().Default("").Comment("名称"),

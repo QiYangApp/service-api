@@ -13,6 +13,7 @@ secret_key = "!#@fdewrewr&*("
 
 [database]
 driver = "pgx"
+schema_init = true
 
 [cache]
 driver = "cache-redis"

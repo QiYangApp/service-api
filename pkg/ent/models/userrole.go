@@ -17,7 +17,7 @@ import (
 type UserRole struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// 规则名称
 	RoleName string `json:"role_name,omitempty"`
 	// State holds the value of the "state" field.
@@ -60,7 +60,7 @@ func (ur *UserRole) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			ur.ID = int(value.Int64)
+			ur.ID = int64(value.Int64)
 		case userrole.FieldRoleName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field role_name", values[i])

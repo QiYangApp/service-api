@@ -153,7 +153,7 @@ func (wdu *WakatimeDependencyUpdate) sqlSave(ctx context.Context) (n int, err er
 	if err := wdu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(wakatimedependency.Table, wakatimedependency.Columns, sqlgraph.NewFieldSpec(wakatimedependency.FieldID, field.TypeUUID))
+	_spec := sqlgraph.NewUpdateSpec(wakatimedependency.Table, wakatimedependency.Columns, sqlgraph.NewFieldSpec(wakatimedependency.FieldID, field.TypeInt64))
 	if ps := wdu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -336,7 +336,7 @@ func (wduo *WakatimeDependencyUpdateOne) sqlSave(ctx context.Context) (_node *Wa
 	if err := wduo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(wakatimedependency.Table, wakatimedependency.Columns, sqlgraph.NewFieldSpec(wakatimedependency.FieldID, field.TypeUUID))
+	_spec := sqlgraph.NewUpdateSpec(wakatimedependency.Table, wakatimedependency.Columns, sqlgraph.NewFieldSpec(wakatimedependency.FieldID, field.TypeInt64))
 	id, ok := wduo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`models: missing "WakatimeDependency.id" for update`)}

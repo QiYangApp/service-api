@@ -645,10 +645,6 @@ func init() {
 	wakatimecategoryDescTotalSeconds := wakatimecategoryFields[4].Descriptor()
 	// wakatimecategory.DefaultTotalSeconds holds the default value on creation for the total_seconds field.
 	wakatimecategory.DefaultTotalSeconds = wakatimecategoryDescTotalSeconds.Default.(int64)
-	// wakatimecategoryDescID is the schema descriptor for id field.
-	wakatimecategoryDescID := wakatimecategoryFields[0].Descriptor()
-	// wakatimecategory.DefaultID holds the default value on creation for the id field.
-	wakatimecategory.DefaultID = wakatimecategoryDescID.Default.(func() uuid.UUID)
 	wakatimedependencyMixin := schema.WakatimeDependency{}.Mixin()
 	wakatimedependencyMixinFields0 := wakatimedependencyMixin[0].Fields()
 	_ = wakatimedependencyMixinFields0
@@ -674,8 +670,4 @@ func init() {
 	wakatimedependencyDescTotalSeconds := wakatimedependencyFields[4].Descriptor()
 	// wakatimedependency.DefaultTotalSeconds holds the default value on creation for the total_seconds field.
 	wakatimedependency.DefaultTotalSeconds = wakatimedependencyDescTotalSeconds.Default.(int64)
-	// wakatimedependencyDescID is the schema descriptor for id field.
-	wakatimedependencyDescID := wakatimedependencyFields[0].Descriptor()
-	// wakatimedependency.DefaultID holds the default value on creation for the id field.
-	wakatimedependency.DefaultID = wakatimedependencyDescID.Default.(func() uuid.UUID)
 }

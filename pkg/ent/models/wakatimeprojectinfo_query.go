@@ -21,6 +21,8 @@ type WakatimeProjectInfoQuery struct {
 	order      []wakatimeprojectinfo.OrderOption
 	inters     []Interceptor
 	predicates []predicate.WakatimeProjectInfo
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*WakatimeProjectInfo) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (wpiq *WakatimeProjectInfoQuery) FirstX(ctx context.Context) *WakatimeProje
 
 // FirstID returns the first WakatimeProjectInfo ID from the query.
 // Returns a *NotFoundError when no WakatimeProjectInfo ID was found.
-func (wpiq *WakatimeProjectInfoQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wpiq *WakatimeProjectInfoQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wpiq.Limit(1).IDs(setContextOp(ctx, wpiq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (wpiq *WakatimeProjectInfoQuery) FirstID(ctx context.Context) (id int, err 
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wpiq *WakatimeProjectInfoQuery) FirstIDX(ctx context.Context) int {
+func (wpiq *WakatimeProjectInfoQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := wpiq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (wpiq *WakatimeProjectInfoQuery) OnlyX(ctx context.Context) *WakatimeProjec
 // OnlyID is like Only, but returns the only WakatimeProjectInfo ID in the query.
 // Returns a *NotSingularError when more than one WakatimeProjectInfo ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wpiq *WakatimeProjectInfoQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wpiq *WakatimeProjectInfoQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wpiq.Limit(2).IDs(setContextOp(ctx, wpiq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (wpiq *WakatimeProjectInfoQuery) OnlyID(ctx context.Context) (id int, err e
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wpiq *WakatimeProjectInfoQuery) OnlyIDX(ctx context.Context) int {
+func (wpiq *WakatimeProjectInfoQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := wpiq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (wpiq *WakatimeProjectInfoQuery) AllX(ctx context.Context) []*WakatimeProje
 }
 
 // IDs executes the query and returns a list of WakatimeProjectInfo IDs.
-func (wpiq *WakatimeProjectInfoQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (wpiq *WakatimeProjectInfoQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if wpiq.ctx.Unique == nil && wpiq.path != nil {
 		wpiq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (wpiq *WakatimeProjectInfoQuery) IDs(ctx context.Context) (ids []int, err e
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wpiq *WakatimeProjectInfoQuery) IDsX(ctx context.Context) []int {
+func (wpiq *WakatimeProjectInfoQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := wpiq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -320,6 +322,9 @@ func (wpiq *WakatimeProjectInfoQuery) sqlAll(ctx context.Context, hooks ...query
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(wpiq.modifiers) > 0 {
+		_spec.Modifiers = wpiq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -329,11 +334,19 @@ func (wpiq *WakatimeProjectInfoQuery) sqlAll(ctx context.Context, hooks ...query
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range wpiq.loadTotal {
+		if err := wpiq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (wpiq *WakatimeProjectInfoQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wpiq.querySpec()
+	if len(wpiq.modifiers) > 0 {
+		_spec.Modifiers = wpiq.modifiers
+	}
 	_spec.Node.Columns = wpiq.ctx.Fields
 	if len(wpiq.ctx.Fields) > 0 {
 		_spec.Unique = wpiq.ctx.Unique != nil && *wpiq.ctx.Unique
@@ -342,7 +355,7 @@ func (wpiq *WakatimeProjectInfoQuery) sqlCount(ctx context.Context) (int, error)
 }
 
 func (wpiq *WakatimeProjectInfoQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatimeprojectinfo.Table, wakatimeprojectinfo.Columns, sqlgraph.NewFieldSpec(wakatimeprojectinfo.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(wakatimeprojectinfo.Table, wakatimeprojectinfo.Columns, sqlgraph.NewFieldSpec(wakatimeprojectinfo.FieldID, field.TypeInt64))
 	_spec.From = wpiq.sql
 	if unique := wpiq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

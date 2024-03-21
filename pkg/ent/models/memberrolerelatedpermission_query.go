@@ -21,6 +21,8 @@ type MemberRoleRelatedPermissionQuery struct {
 	order      []memberrolerelatedpermission.OrderOption
 	inters     []Interceptor
 	predicates []predicate.MemberRoleRelatedPermission
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*MemberRoleRelatedPermission) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (mrrpq *MemberRoleRelatedPermissionQuery) FirstX(ctx context.Context) *Memb
 
 // FirstID returns the first MemberRoleRelatedPermission ID from the query.
 // Returns a *NotFoundError when no MemberRoleRelatedPermission ID was found.
-func (mrrpq *MemberRoleRelatedPermissionQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (mrrpq *MemberRoleRelatedPermissionQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = mrrpq.Limit(1).IDs(setContextOp(ctx, mrrpq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (mrrpq *MemberRoleRelatedPermissionQuery) FirstID(ctx context.Context) (id 
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (mrrpq *MemberRoleRelatedPermissionQuery) FirstIDX(ctx context.Context) int {
+func (mrrpq *MemberRoleRelatedPermissionQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := mrrpq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (mrrpq *MemberRoleRelatedPermissionQuery) OnlyX(ctx context.Context) *Membe
 // OnlyID is like Only, but returns the only MemberRoleRelatedPermission ID in the query.
 // Returns a *NotSingularError when more than one MemberRoleRelatedPermission ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (mrrpq *MemberRoleRelatedPermissionQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (mrrpq *MemberRoleRelatedPermissionQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = mrrpq.Limit(2).IDs(setContextOp(ctx, mrrpq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (mrrpq *MemberRoleRelatedPermissionQuery) OnlyID(ctx context.Context) (id i
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (mrrpq *MemberRoleRelatedPermissionQuery) OnlyIDX(ctx context.Context) int {
+func (mrrpq *MemberRoleRelatedPermissionQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := mrrpq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (mrrpq *MemberRoleRelatedPermissionQuery) AllX(ctx context.Context) []*Memb
 }
 
 // IDs executes the query and returns a list of MemberRoleRelatedPermission IDs.
-func (mrrpq *MemberRoleRelatedPermissionQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (mrrpq *MemberRoleRelatedPermissionQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if mrrpq.ctx.Unique == nil && mrrpq.path != nil {
 		mrrpq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (mrrpq *MemberRoleRelatedPermissionQuery) IDs(ctx context.Context) (ids []i
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (mrrpq *MemberRoleRelatedPermissionQuery) IDsX(ctx context.Context) []int {
+func (mrrpq *MemberRoleRelatedPermissionQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := mrrpq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -342,6 +344,9 @@ func (mrrpq *MemberRoleRelatedPermissionQuery) sqlAll(ctx context.Context, hooks
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(mrrpq.modifiers) > 0 {
+		_spec.Modifiers = mrrpq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -351,11 +356,19 @@ func (mrrpq *MemberRoleRelatedPermissionQuery) sqlAll(ctx context.Context, hooks
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range mrrpq.loadTotal {
+		if err := mrrpq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (mrrpq *MemberRoleRelatedPermissionQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := mrrpq.querySpec()
+	if len(mrrpq.modifiers) > 0 {
+		_spec.Modifiers = mrrpq.modifiers
+	}
 	_spec.Node.Columns = mrrpq.ctx.Fields
 	if len(mrrpq.ctx.Fields) > 0 {
 		_spec.Unique = mrrpq.ctx.Unique != nil && *mrrpq.ctx.Unique
@@ -364,7 +377,7 @@ func (mrrpq *MemberRoleRelatedPermissionQuery) sqlCount(ctx context.Context) (in
 }
 
 func (mrrpq *MemberRoleRelatedPermissionQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(memberrolerelatedpermission.Table, memberrolerelatedpermission.Columns, sqlgraph.NewFieldSpec(memberrolerelatedpermission.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(memberrolerelatedpermission.Table, memberrolerelatedpermission.Columns, sqlgraph.NewFieldSpec(memberrolerelatedpermission.FieldID, field.TypeInt64))
 	_spec.From = mrrpq.sql
 	if unique := mrrpq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

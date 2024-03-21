@@ -17,7 +17,7 @@ import (
 type Wakatime struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// 会员id
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// 密钥
@@ -66,7 +66,7 @@ func (w *Wakatime) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			w.ID = int(value.Int64)
+			w.ID = int64(value.Int64)
 		case wakatime.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])

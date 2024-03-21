@@ -98,7 +98,7 @@ func (rc *RouterCreate) SetUpdateTime(ts timeutil.TimeStamp) *RouterCreate {
 }
 
 // SetID sets the "id" field.
-func (rc *RouterCreate) SetID(i int) *RouterCreate {
+func (rc *RouterCreate) SetID(i int64) *RouterCreate {
 	rc.mutation.SetID(i)
 	return rc
 }
@@ -211,7 +211,7 @@ func (rc *RouterCreate) sqlSave(ctx context.Context) (*Router, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	rc.mutation.id = &_node.ID
 	rc.mutation.done = true
@@ -221,7 +221,7 @@ func (rc *RouterCreate) sqlSave(ctx context.Context) (*Router, error) {
 func (rc *RouterCreate) createSpec() (*Router, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Router{config: rc.config}
-		_spec = sqlgraph.NewCreateSpec(router.Table, sqlgraph.NewFieldSpec(router.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(router.Table, sqlgraph.NewFieldSpec(router.FieldID, field.TypeInt64))
 	)
 	if id, ok := rc.mutation.ID(); ok {
 		_node.ID = id
@@ -301,7 +301,7 @@ func (rcb *RouterCreateBulk) Save(ctx context.Context) ([]*Router, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

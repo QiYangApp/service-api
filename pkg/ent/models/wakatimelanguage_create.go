@@ -67,7 +67,7 @@ func (wlc *WakatimeLanguageCreate) sqlSave(ctx context.Context) (*WakatimeLangua
 		return nil, err
 	}
 	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	_node.ID = int64(id)
 	wlc.mutation.id = &_node.ID
 	wlc.mutation.done = true
 	return _node, nil
@@ -76,7 +76,7 @@ func (wlc *WakatimeLanguageCreate) sqlSave(ctx context.Context) (*WakatimeLangua
 func (wlc *WakatimeLanguageCreate) createSpec() (*WakatimeLanguage, *sqlgraph.CreateSpec) {
 	var (
 		_node = &WakatimeLanguage{config: wlc.config}
-		_spec = sqlgraph.NewCreateSpec(wakatimelanguage.Table, sqlgraph.NewFieldSpec(wakatimelanguage.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(wakatimelanguage.Table, sqlgraph.NewFieldSpec(wakatimelanguage.FieldID, field.TypeInt64))
 	)
 	return _node, _spec
 }
@@ -127,7 +127,7 @@ func (wlcb *WakatimeLanguageCreateBulk) Save(ctx context.Context) ([]*WakatimeLa
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

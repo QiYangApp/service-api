@@ -62,7 +62,7 @@ func (mrrpc *MemberRoleRelatedPermissionCreate) SetNillableUpdateTime(t *time.Ti
 }
 
 // SetID sets the "id" field.
-func (mrrpc *MemberRoleRelatedPermissionCreate) SetID(i int) *MemberRoleRelatedPermissionCreate {
+func (mrrpc *MemberRoleRelatedPermissionCreate) SetID(i int64) *MemberRoleRelatedPermissionCreate {
 	mrrpc.mutation.SetID(i)
 	return mrrpc
 }
@@ -142,7 +142,7 @@ func (mrrpc *MemberRoleRelatedPermissionCreate) sqlSave(ctx context.Context) (*M
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	mrrpc.mutation.id = &_node.ID
 	mrrpc.mutation.done = true
@@ -152,7 +152,7 @@ func (mrrpc *MemberRoleRelatedPermissionCreate) sqlSave(ctx context.Context) (*M
 func (mrrpc *MemberRoleRelatedPermissionCreate) createSpec() (*MemberRoleRelatedPermission, *sqlgraph.CreateSpec) {
 	var (
 		_node = &MemberRoleRelatedPermission{config: mrrpc.config}
-		_spec = sqlgraph.NewCreateSpec(memberrolerelatedpermission.Table, sqlgraph.NewFieldSpec(memberrolerelatedpermission.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(memberrolerelatedpermission.Table, sqlgraph.NewFieldSpec(memberrolerelatedpermission.FieldID, field.TypeInt64))
 	)
 	if id, ok := mrrpc.mutation.ID(); ok {
 		_node.ID = id
@@ -224,7 +224,7 @@ func (mrrpcb *MemberRoleRelatedPermissionCreateBulk) Save(ctx context.Context) (
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

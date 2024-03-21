@@ -15,7 +15,7 @@ import (
 type WakatimeHeartBeat struct {
 	config
 	// ID of the ent.
-	ID           int `json:"id,omitempty"`
+	ID           int64 `json:"id,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -46,7 +46,7 @@ func (whb *WakatimeHeartBeat) assignValues(columns []string, values []any) error
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			whb.ID = int(value.Int64)
+			whb.ID = int64(value.Int64)
 		default:
 			whb.selectValues.Set(columns[i], values[i])
 		}

@@ -15,7 +15,7 @@ import (
 type WakatimeSystem struct {
 	config
 	// ID of the ent.
-	ID           int `json:"id,omitempty"`
+	ID           int64 `json:"id,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -46,7 +46,7 @@ func (ws *WakatimeSystem) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			ws.ID = int(value.Int64)
+			ws.ID = int64(value.Int64)
 		default:
 			ws.selectValues.Set(columns[i], values[i])
 		}

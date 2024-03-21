@@ -21,6 +21,8 @@ type WakatimeQuery struct {
 	order      []wakatime.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Wakatime
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*Wakatime) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (wq *WakatimeQuery) FirstX(ctx context.Context) *Wakatime {
 
 // FirstID returns the first Wakatime ID from the query.
 // Returns a *NotFoundError when no Wakatime ID was found.
-func (wq *WakatimeQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wq *WakatimeQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wq.Limit(1).IDs(setContextOp(ctx, wq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (wq *WakatimeQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wq *WakatimeQuery) FirstIDX(ctx context.Context) int {
+func (wq *WakatimeQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := wq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (wq *WakatimeQuery) OnlyX(ctx context.Context) *Wakatime {
 // OnlyID is like Only, but returns the only Wakatime ID in the query.
 // Returns a *NotSingularError when more than one Wakatime ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wq *WakatimeQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wq *WakatimeQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wq.Limit(2).IDs(setContextOp(ctx, wq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (wq *WakatimeQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wq *WakatimeQuery) OnlyIDX(ctx context.Context) int {
+func (wq *WakatimeQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := wq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (wq *WakatimeQuery) AllX(ctx context.Context) []*Wakatime {
 }
 
 // IDs executes the query and returns a list of Wakatime IDs.
-func (wq *WakatimeQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (wq *WakatimeQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if wq.ctx.Unique == nil && wq.path != nil {
 		wq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (wq *WakatimeQuery) IDs(ctx context.Context) (ids []int, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wq *WakatimeQuery) IDsX(ctx context.Context) []int {
+func (wq *WakatimeQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := wq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -342,6 +344,9 @@ func (wq *WakatimeQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Wak
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(wq.modifiers) > 0 {
+		_spec.Modifiers = wq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -351,11 +356,19 @@ func (wq *WakatimeQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Wak
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range wq.loadTotal {
+		if err := wq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (wq *WakatimeQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wq.querySpec()
+	if len(wq.modifiers) > 0 {
+		_spec.Modifiers = wq.modifiers
+	}
 	_spec.Node.Columns = wq.ctx.Fields
 	if len(wq.ctx.Fields) > 0 {
 		_spec.Unique = wq.ctx.Unique != nil && *wq.ctx.Unique
@@ -364,7 +377,7 @@ func (wq *WakatimeQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (wq *WakatimeQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatime.Table, wakatime.Columns, sqlgraph.NewFieldSpec(wakatime.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(wakatime.Table, wakatime.Columns, sqlgraph.NewFieldSpec(wakatime.FieldID, field.TypeInt64))
 	_spec.From = wq.sql
 	if unique := wq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

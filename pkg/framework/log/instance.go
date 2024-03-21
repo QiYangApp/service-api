@@ -2,11 +2,17 @@ package log
 
 import (
 	"framework/config"
+	"go.uber.org/zap"
 	"sync"
 )
 
 var instance *Manage = nil
 var once = sync.Once{}
+var Client *zap.Logger = nil
+
+func init() {
+	Instance()
+}
 
 func Instance() *Manage {
 	once.Do(func() {
@@ -22,9 +28,9 @@ func Instance() *Manage {
 			},
 		}
 		instance.Builder()
+
+		Client = instance.Client
 	})
 
 	return instance
 }
-
-var Client = Instance().Client

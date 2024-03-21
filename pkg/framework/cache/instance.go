@@ -14,6 +14,8 @@ import (
 var singleton *Manage
 var once = sync.Once{}
 
+var Client Drive = nil
+
 func NewInstance(drive string) Manage {
 	once.Do(func() {
 		singleton = &Manage{
@@ -21,6 +23,8 @@ func NewInstance(drive string) Manage {
 		}
 
 		singleton.init()
+
+		Client = singleton.GetDefaultCacheDrive()
 	})
 
 	return *singleton
@@ -29,8 +33,6 @@ func NewInstance(drive string) Manage {
 func Instance() *Manage {
 	return singleton
 }
-
-var Client = Instance().drives[singleton.drive]
 
 func SetEx(key string, val interface{}, exp time.Duration) bool {
 	payload, SerializeErr := utils.Serialize(val)

@@ -16,7 +16,7 @@ type PermissionGroup struct {
 // Fields of the PermissionGroup.
 func (PermissionGroup) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.String("permission_name").MaxLen(32).Default("").NotEmpty().Comment("权限名称"),
 		field.String("ioc").Default("").MaxLen(254).NotEmpty().Comment(""),
 		field.Int32("sort").Default(0).Comment("排序"),

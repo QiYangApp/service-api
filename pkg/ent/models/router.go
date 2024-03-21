@@ -17,7 +17,7 @@ import (
 type Router struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// 路由名称
 	RouteName string `json:"route_name,omitempty"`
 	// 路由
@@ -62,7 +62,7 @@ func (r *Router) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			r.ID = int(value.Int64)
+			r.ID = int64(value.Int64)
 		case router.FieldRouteName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field route_name", values[i])

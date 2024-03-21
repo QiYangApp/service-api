@@ -21,6 +21,8 @@ type WakatimeEditorQuery struct {
 	order      []wakatimeeditor.OrderOption
 	inters     []Interceptor
 	predicates []predicate.WakatimeEditor
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*WakatimeEditor) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (weq *WakatimeEditorQuery) FirstX(ctx context.Context) *WakatimeEditor {
 
 // FirstID returns the first WakatimeEditor ID from the query.
 // Returns a *NotFoundError when no WakatimeEditor ID was found.
-func (weq *WakatimeEditorQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (weq *WakatimeEditorQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = weq.Limit(1).IDs(setContextOp(ctx, weq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (weq *WakatimeEditorQuery) FirstID(ctx context.Context) (id int, err error)
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (weq *WakatimeEditorQuery) FirstIDX(ctx context.Context) int {
+func (weq *WakatimeEditorQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := weq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (weq *WakatimeEditorQuery) OnlyX(ctx context.Context) *WakatimeEditor {
 // OnlyID is like Only, but returns the only WakatimeEditor ID in the query.
 // Returns a *NotSingularError when more than one WakatimeEditor ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (weq *WakatimeEditorQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (weq *WakatimeEditorQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = weq.Limit(2).IDs(setContextOp(ctx, weq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (weq *WakatimeEditorQuery) OnlyID(ctx context.Context) (id int, err error) 
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (weq *WakatimeEditorQuery) OnlyIDX(ctx context.Context) int {
+func (weq *WakatimeEditorQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := weq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (weq *WakatimeEditorQuery) AllX(ctx context.Context) []*WakatimeEditor {
 }
 
 // IDs executes the query and returns a list of WakatimeEditor IDs.
-func (weq *WakatimeEditorQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (weq *WakatimeEditorQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if weq.ctx.Unique == nil && weq.path != nil {
 		weq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (weq *WakatimeEditorQuery) IDs(ctx context.Context) (ids []int, err error) 
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (weq *WakatimeEditorQuery) IDsX(ctx context.Context) []int {
+func (weq *WakatimeEditorQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := weq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -320,6 +322,9 @@ func (weq *WakatimeEditorQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(weq.modifiers) > 0 {
+		_spec.Modifiers = weq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -329,11 +334,19 @@ func (weq *WakatimeEditorQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range weq.loadTotal {
+		if err := weq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (weq *WakatimeEditorQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := weq.querySpec()
+	if len(weq.modifiers) > 0 {
+		_spec.Modifiers = weq.modifiers
+	}
 	_spec.Node.Columns = weq.ctx.Fields
 	if len(weq.ctx.Fields) > 0 {
 		_spec.Unique = weq.ctx.Unique != nil && *weq.ctx.Unique
@@ -342,7 +355,7 @@ func (weq *WakatimeEditorQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (weq *WakatimeEditorQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatimeeditor.Table, wakatimeeditor.Columns, sqlgraph.NewFieldSpec(wakatimeeditor.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(wakatimeeditor.Table, wakatimeeditor.Columns, sqlgraph.NewFieldSpec(wakatimeeditor.FieldID, field.TypeInt64))
 	_spec.From = weq.sql
 	if unique := weq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

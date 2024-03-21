@@ -21,6 +21,8 @@ type PermissionGroupQuery struct {
 	order      []permissiongroup.OrderOption
 	inters     []Interceptor
 	predicates []predicate.PermissionGroup
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*PermissionGroup) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (pgq *PermissionGroupQuery) FirstX(ctx context.Context) *PermissionGroup {
 
 // FirstID returns the first PermissionGroup ID from the query.
 // Returns a *NotFoundError when no PermissionGroup ID was found.
-func (pgq *PermissionGroupQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (pgq *PermissionGroupQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = pgq.Limit(1).IDs(setContextOp(ctx, pgq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (pgq *PermissionGroupQuery) FirstID(ctx context.Context) (id int, err error
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (pgq *PermissionGroupQuery) FirstIDX(ctx context.Context) int {
+func (pgq *PermissionGroupQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := pgq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (pgq *PermissionGroupQuery) OnlyX(ctx context.Context) *PermissionGroup {
 // OnlyID is like Only, but returns the only PermissionGroup ID in the query.
 // Returns a *NotSingularError when more than one PermissionGroup ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (pgq *PermissionGroupQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (pgq *PermissionGroupQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = pgq.Limit(2).IDs(setContextOp(ctx, pgq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (pgq *PermissionGroupQuery) OnlyID(ctx context.Context) (id int, err error)
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (pgq *PermissionGroupQuery) OnlyIDX(ctx context.Context) int {
+func (pgq *PermissionGroupQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := pgq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (pgq *PermissionGroupQuery) AllX(ctx context.Context) []*PermissionGroup {
 }
 
 // IDs executes the query and returns a list of PermissionGroup IDs.
-func (pgq *PermissionGroupQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (pgq *PermissionGroupQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if pgq.ctx.Unique == nil && pgq.path != nil {
 		pgq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (pgq *PermissionGroupQuery) IDs(ctx context.Context) (ids []int, err error)
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (pgq *PermissionGroupQuery) IDsX(ctx context.Context) []int {
+func (pgq *PermissionGroupQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := pgq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -342,6 +344,9 @@ func (pgq *PermissionGroupQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(pgq.modifiers) > 0 {
+		_spec.Modifiers = pgq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -351,11 +356,19 @@ func (pgq *PermissionGroupQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range pgq.loadTotal {
+		if err := pgq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (pgq *PermissionGroupQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := pgq.querySpec()
+	if len(pgq.modifiers) > 0 {
+		_spec.Modifiers = pgq.modifiers
+	}
 	_spec.Node.Columns = pgq.ctx.Fields
 	if len(pgq.ctx.Fields) > 0 {
 		_spec.Unique = pgq.ctx.Unique != nil && *pgq.ctx.Unique
@@ -364,7 +377,7 @@ func (pgq *PermissionGroupQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (pgq *PermissionGroupQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(permissiongroup.Table, permissiongroup.Columns, sqlgraph.NewFieldSpec(permissiongroup.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(permissiongroup.Table, permissiongroup.Columns, sqlgraph.NewFieldSpec(permissiongroup.FieldID, field.TypeInt64))
 	_spec.From = pgq.sql
 	if unique := pgq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

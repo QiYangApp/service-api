@@ -74,7 +74,7 @@ func (wc *WakatimeCreate) SetNillableUpdateTime(t *time.Time) *WakatimeCreate {
 }
 
 // SetID sets the "id" field.
-func (wc *WakatimeCreate) SetID(i int) *WakatimeCreate {
+func (wc *WakatimeCreate) SetID(i int64) *WakatimeCreate {
 	wc.mutation.SetID(i)
 	return wc
 }
@@ -175,7 +175,7 @@ func (wc *WakatimeCreate) sqlSave(ctx context.Context) (*Wakatime, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	wc.mutation.id = &_node.ID
 	wc.mutation.done = true
@@ -185,7 +185,7 @@ func (wc *WakatimeCreate) sqlSave(ctx context.Context) (*Wakatime, error) {
 func (wc *WakatimeCreate) createSpec() (*Wakatime, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Wakatime{config: wc.config}
-		_spec = sqlgraph.NewCreateSpec(wakatime.Table, sqlgraph.NewFieldSpec(wakatime.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(wakatime.Table, sqlgraph.NewFieldSpec(wakatime.FieldID, field.TypeInt64))
 	)
 	if id, ok := wc.mutation.ID(); ok {
 		_node.ID = id
@@ -265,7 +265,7 @@ func (wcb *WakatimeCreateBulk) Save(ctx context.Context) ([]*Wakatime, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

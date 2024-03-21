@@ -16,7 +16,7 @@ type PermissionRelatedRouter struct {
 // Fields of the PermissionRelatedRouter.
 func (PermissionRelatedRouter) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.UUID("router_id", uuid.UUID{}).Comment("路由id"),
 		field.UUID("permission_group_id", uuid.UUID{}).Comment("权限分组"),
 		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),

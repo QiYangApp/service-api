@@ -214,7 +214,7 @@ func (pgu *PermissionGroupUpdate) sqlSave(ctx context.Context) (n int, err error
 	if err := pgu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(permissiongroup.Table, permissiongroup.Columns, sqlgraph.NewFieldSpec(permissiongroup.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(permissiongroup.Table, permissiongroup.Columns, sqlgraph.NewFieldSpec(permissiongroup.FieldID, field.TypeInt64))
 	if ps := pgu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -476,7 +476,7 @@ func (pguo *PermissionGroupUpdateOne) sqlSave(ctx context.Context) (_node *Permi
 	if err := pguo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(permissiongroup.Table, permissiongroup.Columns, sqlgraph.NewFieldSpec(permissiongroup.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(permissiongroup.Table, permissiongroup.Columns, sqlgraph.NewFieldSpec(permissiongroup.FieldID, field.TypeInt64))
 	id, ok := pguo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`models: missing "PermissionGroup.id" for update`)}

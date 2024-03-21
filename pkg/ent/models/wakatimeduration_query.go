@@ -21,6 +21,8 @@ type WakatimeDurationQuery struct {
 	order      []wakatimeduration.OrderOption
 	inters     []Interceptor
 	predicates []predicate.WakatimeDuration
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*WakatimeDuration) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (wdq *WakatimeDurationQuery) FirstX(ctx context.Context) *WakatimeDuration 
 
 // FirstID returns the first WakatimeDuration ID from the query.
 // Returns a *NotFoundError when no WakatimeDuration ID was found.
-func (wdq *WakatimeDurationQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wdq *WakatimeDurationQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wdq.Limit(1).IDs(setContextOp(ctx, wdq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (wdq *WakatimeDurationQuery) FirstID(ctx context.Context) (id int, err erro
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wdq *WakatimeDurationQuery) FirstIDX(ctx context.Context) int {
+func (wdq *WakatimeDurationQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := wdq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (wdq *WakatimeDurationQuery) OnlyX(ctx context.Context) *WakatimeDuration {
 // OnlyID is like Only, but returns the only WakatimeDuration ID in the query.
 // Returns a *NotSingularError when more than one WakatimeDuration ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wdq *WakatimeDurationQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wdq *WakatimeDurationQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wdq.Limit(2).IDs(setContextOp(ctx, wdq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (wdq *WakatimeDurationQuery) OnlyID(ctx context.Context) (id int, err error
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wdq *WakatimeDurationQuery) OnlyIDX(ctx context.Context) int {
+func (wdq *WakatimeDurationQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := wdq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (wdq *WakatimeDurationQuery) AllX(ctx context.Context) []*WakatimeDuration 
 }
 
 // IDs executes the query and returns a list of WakatimeDuration IDs.
-func (wdq *WakatimeDurationQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (wdq *WakatimeDurationQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if wdq.ctx.Unique == nil && wdq.path != nil {
 		wdq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (wdq *WakatimeDurationQuery) IDs(ctx context.Context) (ids []int, err error
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wdq *WakatimeDurationQuery) IDsX(ctx context.Context) []int {
+func (wdq *WakatimeDurationQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := wdq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -320,6 +322,9 @@ func (wdq *WakatimeDurationQuery) sqlAll(ctx context.Context, hooks ...queryHook
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(wdq.modifiers) > 0 {
+		_spec.Modifiers = wdq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -329,11 +334,19 @@ func (wdq *WakatimeDurationQuery) sqlAll(ctx context.Context, hooks ...queryHook
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range wdq.loadTotal {
+		if err := wdq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (wdq *WakatimeDurationQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wdq.querySpec()
+	if len(wdq.modifiers) > 0 {
+		_spec.Modifiers = wdq.modifiers
+	}
 	_spec.Node.Columns = wdq.ctx.Fields
 	if len(wdq.ctx.Fields) > 0 {
 		_spec.Unique = wdq.ctx.Unique != nil && *wdq.ctx.Unique
@@ -342,7 +355,7 @@ func (wdq *WakatimeDurationQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (wdq *WakatimeDurationQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatimeduration.Table, wakatimeduration.Columns, sqlgraph.NewFieldSpec(wakatimeduration.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(wakatimeduration.Table, wakatimeduration.Columns, sqlgraph.NewFieldSpec(wakatimeduration.FieldID, field.TypeInt64))
 	_spec.From = wdq.sql
 	if unique := wdq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

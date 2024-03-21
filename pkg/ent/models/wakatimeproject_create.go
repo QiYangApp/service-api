@@ -67,7 +67,7 @@ func (wpc *WakatimeProjectCreate) sqlSave(ctx context.Context) (*WakatimeProject
 		return nil, err
 	}
 	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	_node.ID = int64(id)
 	wpc.mutation.id = &_node.ID
 	wpc.mutation.done = true
 	return _node, nil
@@ -76,7 +76,7 @@ func (wpc *WakatimeProjectCreate) sqlSave(ctx context.Context) (*WakatimeProject
 func (wpc *WakatimeProjectCreate) createSpec() (*WakatimeProject, *sqlgraph.CreateSpec) {
 	var (
 		_node = &WakatimeProject{config: wpc.config}
-		_spec = sqlgraph.NewCreateSpec(wakatimeproject.Table, sqlgraph.NewFieldSpec(wakatimeproject.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(wakatimeproject.Table, sqlgraph.NewFieldSpec(wakatimeproject.FieldID, field.TypeInt64))
 	)
 	return _node, _spec
 }
@@ -127,7 +127,7 @@ func (wpcb *WakatimeProjectCreateBulk) Save(ctx context.Context) ([]*WakatimePro
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

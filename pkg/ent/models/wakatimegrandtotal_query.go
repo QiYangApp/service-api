@@ -21,6 +21,8 @@ type WakatimeGrandTotalQuery struct {
 	order      []wakatimegrandtotal.OrderOption
 	inters     []Interceptor
 	predicates []predicate.WakatimeGrandTotal
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*WakatimeGrandTotal) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (wgtq *WakatimeGrandTotalQuery) FirstX(ctx context.Context) *WakatimeGrandT
 
 // FirstID returns the first WakatimeGrandTotal ID from the query.
 // Returns a *NotFoundError when no WakatimeGrandTotal ID was found.
-func (wgtq *WakatimeGrandTotalQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wgtq *WakatimeGrandTotalQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wgtq.Limit(1).IDs(setContextOp(ctx, wgtq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (wgtq *WakatimeGrandTotalQuery) FirstID(ctx context.Context) (id int, err e
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wgtq *WakatimeGrandTotalQuery) FirstIDX(ctx context.Context) int {
+func (wgtq *WakatimeGrandTotalQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := wgtq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (wgtq *WakatimeGrandTotalQuery) OnlyX(ctx context.Context) *WakatimeGrandTo
 // OnlyID is like Only, but returns the only WakatimeGrandTotal ID in the query.
 // Returns a *NotSingularError when more than one WakatimeGrandTotal ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wgtq *WakatimeGrandTotalQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wgtq *WakatimeGrandTotalQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wgtq.Limit(2).IDs(setContextOp(ctx, wgtq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (wgtq *WakatimeGrandTotalQuery) OnlyID(ctx context.Context) (id int, err er
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wgtq *WakatimeGrandTotalQuery) OnlyIDX(ctx context.Context) int {
+func (wgtq *WakatimeGrandTotalQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := wgtq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (wgtq *WakatimeGrandTotalQuery) AllX(ctx context.Context) []*WakatimeGrandT
 }
 
 // IDs executes the query and returns a list of WakatimeGrandTotal IDs.
-func (wgtq *WakatimeGrandTotalQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (wgtq *WakatimeGrandTotalQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if wgtq.ctx.Unique == nil && wgtq.path != nil {
 		wgtq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (wgtq *WakatimeGrandTotalQuery) IDs(ctx context.Context) (ids []int, err er
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wgtq *WakatimeGrandTotalQuery) IDsX(ctx context.Context) []int {
+func (wgtq *WakatimeGrandTotalQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := wgtq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -320,6 +322,9 @@ func (wgtq *WakatimeGrandTotalQuery) sqlAll(ctx context.Context, hooks ...queryH
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(wgtq.modifiers) > 0 {
+		_spec.Modifiers = wgtq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -329,11 +334,19 @@ func (wgtq *WakatimeGrandTotalQuery) sqlAll(ctx context.Context, hooks ...queryH
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range wgtq.loadTotal {
+		if err := wgtq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (wgtq *WakatimeGrandTotalQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wgtq.querySpec()
+	if len(wgtq.modifiers) > 0 {
+		_spec.Modifiers = wgtq.modifiers
+	}
 	_spec.Node.Columns = wgtq.ctx.Fields
 	if len(wgtq.ctx.Fields) > 0 {
 		_spec.Unique = wgtq.ctx.Unique != nil && *wgtq.ctx.Unique
@@ -342,7 +355,7 @@ func (wgtq *WakatimeGrandTotalQuery) sqlCount(ctx context.Context) (int, error) 
 }
 
 func (wgtq *WakatimeGrandTotalQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatimegrandtotal.Table, wakatimegrandtotal.Columns, sqlgraph.NewFieldSpec(wakatimegrandtotal.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(wakatimegrandtotal.Table, wakatimegrandtotal.Columns, sqlgraph.NewFieldSpec(wakatimegrandtotal.FieldID, field.TypeInt64))
 	_spec.From = wgtq.sql
 	if unique := wgtq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

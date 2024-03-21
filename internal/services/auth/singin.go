@@ -62,7 +62,7 @@ func UserSingIn(ctx context.Context, username, passwd string) (*models.User, *mo
 			return nil, nil, authtype.ErrUnsupportedLoginType
 		}
 
-		if user, err := authenticator.Authenticate(ctx, user, user.LoginName, passwd); err != nil {
+		if user, err = authenticator.Authenticate(ctx, user, user.LoginName, passwd); err != nil {
 			return nil, nil, err
 		}
 
@@ -73,11 +73,17 @@ func UserSingIn(ctx context.Context, username, passwd string) (*models.User, *mo
 		return user, sourceType, nil
 	}
 
-	if userSourceType
+	//if userSourceType == authtype.SMTP {
+	//	log.Client.Sugar().Debugf("Failed to login '%s' via '%s': %v", username, source.Name, err)
+	//} else {
+	//	log.Client.Sugar().Warnf("Failed to login '%s' via '%s': %v", username, source.Name, err)
+	//}
 
 	return nil, nil, nil
 }
 
-func userSingInAllSource(ctx context.Context, username, passwd string) (*models.User, *models.Source, error) {
+func UserSingInAllSource(ctx context.Context, username, passwd string) (*models.User, *models.Source, error) {
+	//sources, err :=
 
+	return nil, nil, nil
 }

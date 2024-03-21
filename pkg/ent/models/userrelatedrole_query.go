@@ -21,6 +21,8 @@ type UserRelatedRoleQuery struct {
 	order      []userrelatedrole.OrderOption
 	inters     []Interceptor
 	predicates []predicate.UserRelatedRole
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*UserRelatedRole) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (urrq *UserRelatedRoleQuery) FirstX(ctx context.Context) *UserRelatedRole {
 
 // FirstID returns the first UserRelatedRole ID from the query.
 // Returns a *NotFoundError when no UserRelatedRole ID was found.
-func (urrq *UserRelatedRoleQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (urrq *UserRelatedRoleQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = urrq.Limit(1).IDs(setContextOp(ctx, urrq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (urrq *UserRelatedRoleQuery) FirstID(ctx context.Context) (id int, err erro
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (urrq *UserRelatedRoleQuery) FirstIDX(ctx context.Context) int {
+func (urrq *UserRelatedRoleQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := urrq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (urrq *UserRelatedRoleQuery) OnlyX(ctx context.Context) *UserRelatedRole {
 // OnlyID is like Only, but returns the only UserRelatedRole ID in the query.
 // Returns a *NotSingularError when more than one UserRelatedRole ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (urrq *UserRelatedRoleQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (urrq *UserRelatedRoleQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = urrq.Limit(2).IDs(setContextOp(ctx, urrq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (urrq *UserRelatedRoleQuery) OnlyID(ctx context.Context) (id int, err error
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (urrq *UserRelatedRoleQuery) OnlyIDX(ctx context.Context) int {
+func (urrq *UserRelatedRoleQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := urrq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (urrq *UserRelatedRoleQuery) AllX(ctx context.Context) []*UserRelatedRole {
 }
 
 // IDs executes the query and returns a list of UserRelatedRole IDs.
-func (urrq *UserRelatedRoleQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (urrq *UserRelatedRoleQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if urrq.ctx.Unique == nil && urrq.path != nil {
 		urrq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (urrq *UserRelatedRoleQuery) IDs(ctx context.Context) (ids []int, err error
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (urrq *UserRelatedRoleQuery) IDsX(ctx context.Context) []int {
+func (urrq *UserRelatedRoleQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := urrq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -342,6 +344,9 @@ func (urrq *UserRelatedRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(urrq.modifiers) > 0 {
+		_spec.Modifiers = urrq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -351,11 +356,19 @@ func (urrq *UserRelatedRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range urrq.loadTotal {
+		if err := urrq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (urrq *UserRelatedRoleQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := urrq.querySpec()
+	if len(urrq.modifiers) > 0 {
+		_spec.Modifiers = urrq.modifiers
+	}
 	_spec.Node.Columns = urrq.ctx.Fields
 	if len(urrq.ctx.Fields) > 0 {
 		_spec.Unique = urrq.ctx.Unique != nil && *urrq.ctx.Unique
@@ -364,7 +377,7 @@ func (urrq *UserRelatedRoleQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (urrq *UserRelatedRoleQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(userrelatedrole.Table, userrelatedrole.Columns, sqlgraph.NewFieldSpec(userrelatedrole.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(userrelatedrole.Table, userrelatedrole.Columns, sqlgraph.NewFieldSpec(userrelatedrole.FieldID, field.TypeInt64))
 	_spec.From = urrq.sql
 	if unique := urrq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

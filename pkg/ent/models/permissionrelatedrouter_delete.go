@@ -40,7 +40,7 @@ func (prrd *PermissionRelatedRouterDelete) ExecX(ctx context.Context) int {
 }
 
 func (prrd *PermissionRelatedRouterDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(permissionrelatedrouter.Table, sqlgraph.NewFieldSpec(permissionrelatedrouter.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(permissionrelatedrouter.Table, sqlgraph.NewFieldSpec(permissionrelatedrouter.FieldID, field.TypeInt64))
 	if ps := prrd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

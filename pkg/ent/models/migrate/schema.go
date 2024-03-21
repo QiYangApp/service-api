@@ -21,7 +21,7 @@ var (
 		{Name: "scope", Type: field.TypeString},
 		{Name: "has_recent_activity", Type: field.TypeString},
 		{Name: "has_used", Type: field.TypeString},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1710994217},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// AccessTokensTable holds the schema information for the "access_tokens" table.
@@ -62,7 +62,7 @@ var (
 		{Name: "is_private", Type: field.TypeBool, Default: true},
 		{Name: "is_activated", Type: field.TypeBool},
 		{Name: "is_primary", Type: field.TypeBool, Default: false},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1710994217},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// AccountsTable holds the schema information for the "accounts" table.
@@ -85,7 +85,7 @@ var (
 	}
 	// MemberRoleRelatedPermissionsColumns holds the columns for the "member_role_related_permissions" table.
 	MemberRoleRelatedPermissionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "role_id", Type: field.TypeUUID},
 		{Name: "permission_group_id", Type: field.TypeUUID},
 		{Name: "create_time", Type: field.TypeTime},
@@ -106,14 +106,14 @@ var (
 	}
 	// PermissionGroupsColumns holds the columns for the "permission_groups" table.
 	PermissionGroupsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "permission_name", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "ioc", Type: field.TypeString, Size: 254, Default: ""},
 		{Name: "sort", Type: field.TypeInt32, Default: 0},
 		{Name: "left", Type: field.TypeInt32, Default: 0},
 		{Name: "right", Type: field.TypeInt32, Default: 0},
 		{Name: "state", Type: field.TypeInt, Default: 1},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1710994217},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// PermissionGroupsTable holds the schema information for the "permission_groups" table.
@@ -136,10 +136,10 @@ var (
 	}
 	// PermissionRelatedRoutersColumns holds the columns for the "permission_related_routers" table.
 	PermissionRelatedRoutersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "router_id", Type: field.TypeUUID},
 		{Name: "permission_group_id", Type: field.TypeUUID},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1710994217},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// PermissionRelatedRoutersTable holds the schema information for the "permission_related_routers" table.
@@ -157,12 +157,12 @@ var (
 	}
 	// RoutersColumns holds the columns for the "routers" table.
 	RoutersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "route_name", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "route", Type: field.TypeString, Size: 254, Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 254, Default: ""},
 		{Name: "state", Type: field.TypeInt, Default: 1},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1710994217},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// RoutersTable holds the schema information for the "routers" table.
@@ -191,7 +191,7 @@ var (
 		{Name: "is_active", Type: field.TypeBool},
 		{Name: "is_sync_enabled", Type: field.TypeBool},
 		{Name: "cfg", Type: field.TypeJSON},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1710994217},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// SourcesTable holds the schema information for the "sources" table.
@@ -224,7 +224,7 @@ var (
 	}
 	// SourceDataColumns holds the columns for the "source_data" table.
 	SourceDataColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "type", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "sub_type", Type: field.TypeString, Size: 32, Default: ""},
@@ -253,7 +253,7 @@ var (
 	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "avatar", Type: field.TypeString},
 		{Name: "email", Type: field.TypeString, Size: 128},
 		{Name: "name", Type: field.TypeString, Size: 32},
@@ -288,7 +288,7 @@ var (
 	}
 	// UserAuthSourcesColumns holds the columns for the "user_auth_sources" table.
 	UserAuthSourcesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "token", Type: field.TypeString, Size: 254},
 		{Name: "channel", Type: field.TypeString, Size: 64},
@@ -318,7 +318,7 @@ var (
 	}
 	// UserRelatedRolesColumns holds the columns for the "user_related_roles" table.
 	UserRelatedRolesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "role_id", Type: field.TypeUUID},
 		{Name: "create_time", Type: field.TypeTime},
@@ -339,7 +339,7 @@ var (
 	}
 	// UserRolesColumns holds the columns for the "user_roles" table.
 	UserRolesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "role_name", Type: field.TypeString, Size: 64},
 		{Name: "state", Type: field.TypeInt, Default: 1},
 		{Name: "create_time", Type: field.TypeTime},
@@ -360,7 +360,7 @@ var (
 	}
 	// WakatimesColumns holds the columns for the "wakatimes" table.
 	WakatimesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "user_id", Type: field.TypeUUID},
 		{Name: "key", Type: field.TypeString},
 		{Name: "api", Type: field.TypeString},
@@ -388,7 +388,7 @@ var (
 	}
 	// WakatimeCategoriesColumns holds the columns for the "wakatime_categories" table.
 	WakatimeCategoriesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "wakatime_id", Type: field.TypeUUID, Comment: "wakatime id"},
@@ -417,7 +417,7 @@ var (
 	}
 	// WakatimeDependenciesColumns holds the columns for the "wakatime_dependencies" table.
 	WakatimeDependenciesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "wakatime_id", Type: field.TypeUUID, Comment: "wakatime id"},
@@ -446,7 +446,7 @@ var (
 	}
 	// WakatimeDurationsColumns holds the columns for the "wakatime_durations" table.
 	WakatimeDurationsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 	}
 	// WakatimeDurationsTable holds the schema information for the "wakatime_durations" table.
 	WakatimeDurationsTable = &schema.Table{
@@ -456,7 +456,7 @@ var (
 	}
 	// WakatimeEditorsColumns holds the columns for the "wakatime_editors" table.
 	WakatimeEditorsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 	}
 	// WakatimeEditorsTable holds the schema information for the "wakatime_editors" table.
 	WakatimeEditorsTable = &schema.Table{
@@ -466,7 +466,7 @@ var (
 	}
 	// WakatimeEntitiesColumns holds the columns for the "wakatime_entities" table.
 	WakatimeEntitiesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 	}
 	// WakatimeEntitiesTable holds the schema information for the "wakatime_entities" table.
 	WakatimeEntitiesTable = &schema.Table{
@@ -476,7 +476,7 @@ var (
 	}
 	// WakatimeGrandTotalsColumns holds the columns for the "wakatime_grand_totals" table.
 	WakatimeGrandTotalsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 	}
 	// WakatimeGrandTotalsTable holds the schema information for the "wakatime_grand_totals" table.
 	WakatimeGrandTotalsTable = &schema.Table{
@@ -486,7 +486,7 @@ var (
 	}
 	// WakatimeHeartBeatsColumns holds the columns for the "wakatime_heart_beats" table.
 	WakatimeHeartBeatsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 	}
 	// WakatimeHeartBeatsTable holds the schema information for the "wakatime_heart_beats" table.
 	WakatimeHeartBeatsTable = &schema.Table{
@@ -496,7 +496,7 @@ var (
 	}
 	// WakatimeLanguagesColumns holds the columns for the "wakatime_languages" table.
 	WakatimeLanguagesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 	}
 	// WakatimeLanguagesTable holds the schema information for the "wakatime_languages" table.
 	WakatimeLanguagesTable = &schema.Table{
@@ -506,7 +506,7 @@ var (
 	}
 	// WakatimeProjectsColumns holds the columns for the "wakatime_projects" table.
 	WakatimeProjectsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 	}
 	// WakatimeProjectsTable holds the schema information for the "wakatime_projects" table.
 	WakatimeProjectsTable = &schema.Table{
@@ -516,7 +516,7 @@ var (
 	}
 	// WakatimeProjectDurationsColumns holds the columns for the "wakatime_project_durations" table.
 	WakatimeProjectDurationsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 	}
 	// WakatimeProjectDurationsTable holds the schema information for the "wakatime_project_durations" table.
 	WakatimeProjectDurationsTable = &schema.Table{
@@ -526,7 +526,7 @@ var (
 	}
 	// WakatimeProjectInfosColumns holds the columns for the "wakatime_project_infos" table.
 	WakatimeProjectInfosColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 	}
 	// WakatimeProjectInfosTable holds the schema information for the "wakatime_project_infos" table.
 	WakatimeProjectInfosTable = &schema.Table{
@@ -536,7 +536,7 @@ var (
 	}
 	// WakatimeSystemsColumns holds the columns for the "wakatime_systems" table.
 	WakatimeSystemsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt64, Increment: true},
 	}
 	// WakatimeSystemsTable holds the schema information for the "wakatime_systems" table.
 	WakatimeSystemsTable = &schema.Table{

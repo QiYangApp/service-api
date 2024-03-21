@@ -40,7 +40,7 @@ func (wd *WakatimeDelete) ExecX(ctx context.Context) int {
 }
 
 func (wd *WakatimeDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(wakatime.Table, sqlgraph.NewFieldSpec(wakatime.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(wakatime.Table, sqlgraph.NewFieldSpec(wakatime.FieldID, field.TypeInt64))
 	if ps := wd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

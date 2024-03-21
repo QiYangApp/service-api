@@ -17,7 +17,7 @@ import (
 type PermissionRelatedRouter struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// 路由id
 	RouterID uuid.UUID `json:"router_id,omitempty"`
 	// 权限分组
@@ -58,7 +58,7 @@ func (prr *PermissionRelatedRouter) assignValues(columns []string, values []any)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			prr.ID = int(value.Int64)
+			prr.ID = int64(value.Int64)
 		case permissionrelatedrouter.FieldRouterID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field router_id", values[i])

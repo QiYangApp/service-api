@@ -21,6 +21,8 @@ type UserAuthSourceQuery struct {
 	order      []userauthsource.OrderOption
 	inters     []Interceptor
 	predicates []predicate.UserAuthSource
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*UserAuthSource) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (uasq *UserAuthSourceQuery) FirstX(ctx context.Context) *UserAuthSource {
 
 // FirstID returns the first UserAuthSource ID from the query.
 // Returns a *NotFoundError when no UserAuthSource ID was found.
-func (uasq *UserAuthSourceQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (uasq *UserAuthSourceQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = uasq.Limit(1).IDs(setContextOp(ctx, uasq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (uasq *UserAuthSourceQuery) FirstID(ctx context.Context) (id int, err error
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (uasq *UserAuthSourceQuery) FirstIDX(ctx context.Context) int {
+func (uasq *UserAuthSourceQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := uasq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (uasq *UserAuthSourceQuery) OnlyX(ctx context.Context) *UserAuthSource {
 // OnlyID is like Only, but returns the only UserAuthSource ID in the query.
 // Returns a *NotSingularError when more than one UserAuthSource ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (uasq *UserAuthSourceQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (uasq *UserAuthSourceQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = uasq.Limit(2).IDs(setContextOp(ctx, uasq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (uasq *UserAuthSourceQuery) OnlyID(ctx context.Context) (id int, err error)
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (uasq *UserAuthSourceQuery) OnlyIDX(ctx context.Context) int {
+func (uasq *UserAuthSourceQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := uasq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (uasq *UserAuthSourceQuery) AllX(ctx context.Context) []*UserAuthSource {
 }
 
 // IDs executes the query and returns a list of UserAuthSource IDs.
-func (uasq *UserAuthSourceQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (uasq *UserAuthSourceQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if uasq.ctx.Unique == nil && uasq.path != nil {
 		uasq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (uasq *UserAuthSourceQuery) IDs(ctx context.Context) (ids []int, err error)
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (uasq *UserAuthSourceQuery) IDsX(ctx context.Context) []int {
+func (uasq *UserAuthSourceQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := uasq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -342,6 +344,9 @@ func (uasq *UserAuthSourceQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(uasq.modifiers) > 0 {
+		_spec.Modifiers = uasq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -351,11 +356,19 @@ func (uasq *UserAuthSourceQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range uasq.loadTotal {
+		if err := uasq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (uasq *UserAuthSourceQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := uasq.querySpec()
+	if len(uasq.modifiers) > 0 {
+		_spec.Modifiers = uasq.modifiers
+	}
 	_spec.Node.Columns = uasq.ctx.Fields
 	if len(uasq.ctx.Fields) > 0 {
 		_spec.Unique = uasq.ctx.Unique != nil && *uasq.ctx.Unique
@@ -364,7 +377,7 @@ func (uasq *UserAuthSourceQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (uasq *UserAuthSourceQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(userauthsource.Table, userauthsource.Columns, sqlgraph.NewFieldSpec(userauthsource.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(userauthsource.Table, userauthsource.Columns, sqlgraph.NewFieldSpec(userauthsource.FieldID, field.TypeInt64))
 	_spec.From = uasq.sql
 	if unique := uasq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

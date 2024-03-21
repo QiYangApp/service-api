@@ -16,7 +16,7 @@ type Wakatime struct {
 // Fields of the Wakatime.
 func (Wakatime) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.UUID("user_id", uuid.UUID{}).Comment("会员id"),
 		field.String("key").NotEmpty().Comment("密钥"),
 		field.String("api").NotEmpty().Comment("地址"),

@@ -40,7 +40,7 @@ func (uasd *UserAuthSourceDelete) ExecX(ctx context.Context) int {
 }
 
 func (uasd *UserAuthSourceDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(userauthsource.Table, sqlgraph.NewFieldSpec(userauthsource.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(userauthsource.Table, sqlgraph.NewFieldSpec(userauthsource.FieldID, field.TypeInt64))
 	if ps := uasd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

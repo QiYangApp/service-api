@@ -62,7 +62,7 @@ func (urrc *UserRelatedRoleCreate) SetNillableUpdateTime(t *time.Time) *UserRela
 }
 
 // SetID sets the "id" field.
-func (urrc *UserRelatedRoleCreate) SetID(i int) *UserRelatedRoleCreate {
+func (urrc *UserRelatedRoleCreate) SetID(i int64) *UserRelatedRoleCreate {
 	urrc.mutation.SetID(i)
 	return urrc
 }
@@ -142,7 +142,7 @@ func (urrc *UserRelatedRoleCreate) sqlSave(ctx context.Context) (*UserRelatedRol
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	urrc.mutation.id = &_node.ID
 	urrc.mutation.done = true
@@ -152,7 +152,7 @@ func (urrc *UserRelatedRoleCreate) sqlSave(ctx context.Context) (*UserRelatedRol
 func (urrc *UserRelatedRoleCreate) createSpec() (*UserRelatedRole, *sqlgraph.CreateSpec) {
 	var (
 		_node = &UserRelatedRole{config: urrc.config}
-		_spec = sqlgraph.NewCreateSpec(userrelatedrole.Table, sqlgraph.NewFieldSpec(userrelatedrole.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(userrelatedrole.Table, sqlgraph.NewFieldSpec(userrelatedrole.FieldID, field.TypeInt64))
 	)
 	if id, ok := urrc.mutation.ID(); ok {
 		_node.ID = id
@@ -224,7 +224,7 @@ func (urrcb *UserRelatedRoleCreateBulk) Save(ctx context.Context) ([]*UserRelate
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

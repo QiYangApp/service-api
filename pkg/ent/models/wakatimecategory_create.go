@@ -90,16 +90,8 @@ func (wcc *WakatimeCategoryCreate) SetNillableTotalSeconds(i *int64) *WakatimeCa
 }
 
 // SetID sets the "id" field.
-func (wcc *WakatimeCategoryCreate) SetID(u uuid.UUID) *WakatimeCategoryCreate {
-	wcc.mutation.SetID(u)
-	return wcc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (wcc *WakatimeCategoryCreate) SetNillableID(u *uuid.UUID) *WakatimeCategoryCreate {
-	if u != nil {
-		wcc.SetID(*u)
-	}
+func (wcc *WakatimeCategoryCreate) SetID(i int64) *WakatimeCategoryCreate {
+	wcc.mutation.SetID(i)
 	return wcc
 }
 
@@ -154,10 +146,6 @@ func (wcc *WakatimeCategoryCreate) defaults() {
 		v := wakatimecategory.DefaultTotalSeconds
 		wcc.mutation.SetTotalSeconds(v)
 	}
-	if _, ok := wcc.mutation.ID(); !ok {
-		v := wakatimecategory.DefaultID()
-		wcc.mutation.SetID(v)
-	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -199,12 +187,9 @@ func (wcc *WakatimeCategoryCreate) sqlSave(ctx context.Context) (*WakatimeCatego
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int64(id)
 	}
 	wcc.mutation.id = &_node.ID
 	wcc.mutation.done = true
@@ -214,11 +199,11 @@ func (wcc *WakatimeCategoryCreate) sqlSave(ctx context.Context) (*WakatimeCatego
 func (wcc *WakatimeCategoryCreate) createSpec() (*WakatimeCategory, *sqlgraph.CreateSpec) {
 	var (
 		_node = &WakatimeCategory{config: wcc.config}
-		_spec = sqlgraph.NewCreateSpec(wakatimecategory.Table, sqlgraph.NewFieldSpec(wakatimecategory.FieldID, field.TypeUUID))
+		_spec = sqlgraph.NewCreateSpec(wakatimecategory.Table, sqlgraph.NewFieldSpec(wakatimecategory.FieldID, field.TypeInt64))
 	)
 	if id, ok := wcc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := wcc.mutation.CreateTime(); ok {
 		_spec.SetField(wakatimecategory.FieldCreateTime, field.TypeTime, value)
@@ -292,6 +277,10 @@ func (wccb *WakatimeCategoryCreateBulk) Save(ctx context.Context) ([]*WakatimeCa
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int64(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})

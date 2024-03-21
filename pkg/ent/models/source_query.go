@@ -21,6 +21,8 @@ type SourceQuery struct {
 	order      []source.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Source
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*Source) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -342,6 +344,9 @@ func (sq *SourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Sourc
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(sq.modifiers) > 0 {
+		_spec.Modifiers = sq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -351,11 +356,19 @@ func (sq *SourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Sourc
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range sq.loadTotal {
+		if err := sq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (sq *SourceQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := sq.querySpec()
+	if len(sq.modifiers) > 0 {
+		_spec.Modifiers = sq.modifiers
+	}
 	_spec.Node.Columns = sq.ctx.Fields
 	if len(sq.ctx.Fields) > 0 {
 		_spec.Unique = sq.ctx.Unique != nil && *sq.ctx.Unique

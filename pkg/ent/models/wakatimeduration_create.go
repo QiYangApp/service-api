@@ -67,7 +67,7 @@ func (wdc *WakatimeDurationCreate) sqlSave(ctx context.Context) (*WakatimeDurati
 		return nil, err
 	}
 	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	_node.ID = int64(id)
 	wdc.mutation.id = &_node.ID
 	wdc.mutation.done = true
 	return _node, nil
@@ -76,7 +76,7 @@ func (wdc *WakatimeDurationCreate) sqlSave(ctx context.Context) (*WakatimeDurati
 func (wdc *WakatimeDurationCreate) createSpec() (*WakatimeDuration, *sqlgraph.CreateSpec) {
 	var (
 		_node = &WakatimeDuration{config: wdc.config}
-		_spec = sqlgraph.NewCreateSpec(wakatimeduration.Table, sqlgraph.NewFieldSpec(wakatimeduration.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(wakatimeduration.Table, sqlgraph.NewFieldSpec(wakatimeduration.FieldID, field.TypeInt64))
 	)
 	return _node, _spec
 }
@@ -127,7 +127,7 @@ func (wdcb *WakatimeDurationCreateBulk) Save(ctx context.Context) ([]*WakatimeDu
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

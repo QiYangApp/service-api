@@ -140,7 +140,7 @@ func (uasc *UserAuthSourceCreate) SetNillableUpdateTime(t *time.Time) *UserAuthS
 }
 
 // SetID sets the "id" field.
-func (uasc *UserAuthSourceCreate) SetID(i int) *UserAuthSourceCreate {
+func (uasc *UserAuthSourceCreate) SetID(i int64) *UserAuthSourceCreate {
 	uasc.mutation.SetID(i)
 	return uasc
 }
@@ -299,7 +299,7 @@ func (uasc *UserAuthSourceCreate) sqlSave(ctx context.Context) (*UserAuthSource,
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	uasc.mutation.id = &_node.ID
 	uasc.mutation.done = true
@@ -309,7 +309,7 @@ func (uasc *UserAuthSourceCreate) sqlSave(ctx context.Context) (*UserAuthSource,
 func (uasc *UserAuthSourceCreate) createSpec() (*UserAuthSource, *sqlgraph.CreateSpec) {
 	var (
 		_node = &UserAuthSource{config: uasc.config}
-		_spec = sqlgraph.NewCreateSpec(userauthsource.Table, sqlgraph.NewFieldSpec(userauthsource.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(userauthsource.Table, sqlgraph.NewFieldSpec(userauthsource.FieldID, field.TypeInt64))
 	)
 	if id, ok := uasc.mutation.ID(); ok {
 		_node.ID = id
@@ -417,7 +417,7 @@ func (uascb *UserAuthSourceCreateBulk) Save(ctx context.Context) ([]*UserAuthSou
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

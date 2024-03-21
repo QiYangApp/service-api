@@ -29,7 +29,7 @@ func (User) Annotations() []schema.Annotation {
 // Fields of the Member.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.String("avatar"),
 		field.String("email").NotEmpty().MaxLen(128),
 		field.String("name").NotEmpty().MaxLen(32),

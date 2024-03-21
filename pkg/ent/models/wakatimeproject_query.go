@@ -21,6 +21,8 @@ type WakatimeProjectQuery struct {
 	order      []wakatimeproject.OrderOption
 	inters     []Interceptor
 	predicates []predicate.WakatimeProject
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*WakatimeProject) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (wpq *WakatimeProjectQuery) FirstX(ctx context.Context) *WakatimeProject {
 
 // FirstID returns the first WakatimeProject ID from the query.
 // Returns a *NotFoundError when no WakatimeProject ID was found.
-func (wpq *WakatimeProjectQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wpq *WakatimeProjectQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wpq.Limit(1).IDs(setContextOp(ctx, wpq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (wpq *WakatimeProjectQuery) FirstID(ctx context.Context) (id int, err error
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wpq *WakatimeProjectQuery) FirstIDX(ctx context.Context) int {
+func (wpq *WakatimeProjectQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := wpq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (wpq *WakatimeProjectQuery) OnlyX(ctx context.Context) *WakatimeProject {
 // OnlyID is like Only, but returns the only WakatimeProject ID in the query.
 // Returns a *NotSingularError when more than one WakatimeProject ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wpq *WakatimeProjectQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wpq *WakatimeProjectQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wpq.Limit(2).IDs(setContextOp(ctx, wpq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (wpq *WakatimeProjectQuery) OnlyID(ctx context.Context) (id int, err error)
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wpq *WakatimeProjectQuery) OnlyIDX(ctx context.Context) int {
+func (wpq *WakatimeProjectQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := wpq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (wpq *WakatimeProjectQuery) AllX(ctx context.Context) []*WakatimeProject {
 }
 
 // IDs executes the query and returns a list of WakatimeProject IDs.
-func (wpq *WakatimeProjectQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (wpq *WakatimeProjectQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if wpq.ctx.Unique == nil && wpq.path != nil {
 		wpq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (wpq *WakatimeProjectQuery) IDs(ctx context.Context) (ids []int, err error)
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wpq *WakatimeProjectQuery) IDsX(ctx context.Context) []int {
+func (wpq *WakatimeProjectQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := wpq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -320,6 +322,9 @@ func (wpq *WakatimeProjectQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(wpq.modifiers) > 0 {
+		_spec.Modifiers = wpq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -329,11 +334,19 @@ func (wpq *WakatimeProjectQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range wpq.loadTotal {
+		if err := wpq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (wpq *WakatimeProjectQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wpq.querySpec()
+	if len(wpq.modifiers) > 0 {
+		_spec.Modifiers = wpq.modifiers
+	}
 	_spec.Node.Columns = wpq.ctx.Fields
 	if len(wpq.ctx.Fields) > 0 {
 		_spec.Unique = wpq.ctx.Unique != nil && *wpq.ctx.Unique
@@ -342,7 +355,7 @@ func (wpq *WakatimeProjectQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (wpq *WakatimeProjectQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatimeproject.Table, wakatimeproject.Columns, sqlgraph.NewFieldSpec(wakatimeproject.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(wakatimeproject.Table, wakatimeproject.Columns, sqlgraph.NewFieldSpec(wakatimeproject.FieldID, field.TypeInt64))
 	_spec.From = wpq.sql
 	if unique := wpq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

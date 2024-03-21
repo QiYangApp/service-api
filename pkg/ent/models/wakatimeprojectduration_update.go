@@ -60,7 +60,7 @@ func (wpdu *WakatimeProjectDurationUpdate) ExecX(ctx context.Context) {
 }
 
 func (wpdu *WakatimeProjectDurationUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := sqlgraph.NewUpdateSpec(wakatimeprojectduration.Table, wakatimeprojectduration.Columns, sqlgraph.NewFieldSpec(wakatimeprojectduration.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(wakatimeprojectduration.Table, wakatimeprojectduration.Columns, sqlgraph.NewFieldSpec(wakatimeprojectduration.FieldID, field.TypeInt64))
 	if ps := wpdu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -134,7 +134,7 @@ func (wpduo *WakatimeProjectDurationUpdateOne) ExecX(ctx context.Context) {
 }
 
 func (wpduo *WakatimeProjectDurationUpdateOne) sqlSave(ctx context.Context) (_node *WakatimeProjectDuration, err error) {
-	_spec := sqlgraph.NewUpdateSpec(wakatimeprojectduration.Table, wakatimeprojectduration.Columns, sqlgraph.NewFieldSpec(wakatimeprojectduration.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(wakatimeprojectduration.Table, wakatimeprojectduration.Columns, sqlgraph.NewFieldSpec(wakatimeprojectduration.FieldID, field.TypeInt64))
 	id, ok := wpduo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`models: missing "WakatimeProjectDuration.id" for update`)}

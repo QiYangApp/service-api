@@ -16,7 +16,7 @@ type Router struct {
 // Fields of the Router.
 func (Router) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.String("route_name").MaxLen(32).Default("").NotEmpty().Comment("路由名称"),
 		field.String("route").MaxLen(254).Default("").NotEmpty().Comment("路由"),
 		field.String("description").MaxLen(254).Default("").NotEmpty().Comment("描述"),

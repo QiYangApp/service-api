@@ -21,6 +21,8 @@ type RouterQuery struct {
 	order      []router.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Router
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*Router) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (rq *RouterQuery) FirstX(ctx context.Context) *Router {
 
 // FirstID returns the first Router ID from the query.
 // Returns a *NotFoundError when no Router ID was found.
-func (rq *RouterQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (rq *RouterQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = rq.Limit(1).IDs(setContextOp(ctx, rq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (rq *RouterQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (rq *RouterQuery) FirstIDX(ctx context.Context) int {
+func (rq *RouterQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := rq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (rq *RouterQuery) OnlyX(ctx context.Context) *Router {
 // OnlyID is like Only, but returns the only Router ID in the query.
 // Returns a *NotSingularError when more than one Router ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (rq *RouterQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (rq *RouterQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = rq.Limit(2).IDs(setContextOp(ctx, rq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (rq *RouterQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (rq *RouterQuery) OnlyIDX(ctx context.Context) int {
+func (rq *RouterQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := rq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (rq *RouterQuery) AllX(ctx context.Context) []*Router {
 }
 
 // IDs executes the query and returns a list of Router IDs.
-func (rq *RouterQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (rq *RouterQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if rq.ctx.Unique == nil && rq.path != nil {
 		rq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (rq *RouterQuery) IDs(ctx context.Context) (ids []int, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (rq *RouterQuery) IDsX(ctx context.Context) []int {
+func (rq *RouterQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := rq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -342,6 +344,9 @@ func (rq *RouterQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Route
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(rq.modifiers) > 0 {
+		_spec.Modifiers = rq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -351,11 +356,19 @@ func (rq *RouterQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Route
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range rq.loadTotal {
+		if err := rq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (rq *RouterQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := rq.querySpec()
+	if len(rq.modifiers) > 0 {
+		_spec.Modifiers = rq.modifiers
+	}
 	_spec.Node.Columns = rq.ctx.Fields
 	if len(rq.ctx.Fields) > 0 {
 		_spec.Unique = rq.ctx.Unique != nil && *rq.ctx.Unique
@@ -364,7 +377,7 @@ func (rq *RouterQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (rq *RouterQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(router.Table, router.Columns, sqlgraph.NewFieldSpec(router.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(router.Table, router.Columns, sqlgraph.NewFieldSpec(router.FieldID, field.TypeInt64))
 	_spec.From = rq.sql
 	if unique := rq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

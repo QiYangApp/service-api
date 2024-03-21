@@ -126,7 +126,7 @@ func (pgc *PermissionGroupCreate) SetUpdateTime(ts timeutil.TimeStamp) *Permissi
 }
 
 // SetID sets the "id" field.
-func (pgc *PermissionGroupCreate) SetID(i int) *PermissionGroupCreate {
+func (pgc *PermissionGroupCreate) SetID(i int64) *PermissionGroupCreate {
 	pgc.mutation.SetID(i)
 	return pgc
 }
@@ -248,7 +248,7 @@ func (pgc *PermissionGroupCreate) sqlSave(ctx context.Context) (*PermissionGroup
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	pgc.mutation.id = &_node.ID
 	pgc.mutation.done = true
@@ -258,7 +258,7 @@ func (pgc *PermissionGroupCreate) sqlSave(ctx context.Context) (*PermissionGroup
 func (pgc *PermissionGroupCreate) createSpec() (*PermissionGroup, *sqlgraph.CreateSpec) {
 	var (
 		_node = &PermissionGroup{config: pgc.config}
-		_spec = sqlgraph.NewCreateSpec(permissiongroup.Table, sqlgraph.NewFieldSpec(permissiongroup.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(permissiongroup.Table, sqlgraph.NewFieldSpec(permissiongroup.FieldID, field.TypeInt64))
 	)
 	if id, ok := pgc.mutation.ID(); ok {
 		_node.ID = id
@@ -346,7 +346,7 @@ func (pgcb *PermissionGroupCreateBulk) Save(ctx context.Context) ([]*PermissionG
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

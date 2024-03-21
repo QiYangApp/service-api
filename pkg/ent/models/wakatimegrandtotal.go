@@ -15,7 +15,7 @@ import (
 type WakatimeGrandTotal struct {
 	config
 	// ID of the ent.
-	ID           int `json:"id,omitempty"`
+	ID           int64 `json:"id,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -46,7 +46,7 @@ func (wgt *WakatimeGrandTotal) assignValues(columns []string, values []any) erro
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			wgt.ID = int(value.Int64)
+			wgt.ID = int64(value.Int64)
 		default:
 			wgt.selectValues.Set(columns[i], values[i])
 		}

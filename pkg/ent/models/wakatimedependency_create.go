@@ -90,16 +90,8 @@ func (wdc *WakatimeDependencyCreate) SetNillableTotalSeconds(i *int64) *Wakatime
 }
 
 // SetID sets the "id" field.
-func (wdc *WakatimeDependencyCreate) SetID(u uuid.UUID) *WakatimeDependencyCreate {
-	wdc.mutation.SetID(u)
-	return wdc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (wdc *WakatimeDependencyCreate) SetNillableID(u *uuid.UUID) *WakatimeDependencyCreate {
-	if u != nil {
-		wdc.SetID(*u)
-	}
+func (wdc *WakatimeDependencyCreate) SetID(i int64) *WakatimeDependencyCreate {
+	wdc.mutation.SetID(i)
 	return wdc
 }
 
@@ -154,10 +146,6 @@ func (wdc *WakatimeDependencyCreate) defaults() {
 		v := wakatimedependency.DefaultTotalSeconds
 		wdc.mutation.SetTotalSeconds(v)
 	}
-	if _, ok := wdc.mutation.ID(); !ok {
-		v := wakatimedependency.DefaultID()
-		wdc.mutation.SetID(v)
-	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -199,12 +187,9 @@ func (wdc *WakatimeDependencyCreate) sqlSave(ctx context.Context) (*WakatimeDepe
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int64(id)
 	}
 	wdc.mutation.id = &_node.ID
 	wdc.mutation.done = true
@@ -214,11 +199,11 @@ func (wdc *WakatimeDependencyCreate) sqlSave(ctx context.Context) (*WakatimeDepe
 func (wdc *WakatimeDependencyCreate) createSpec() (*WakatimeDependency, *sqlgraph.CreateSpec) {
 	var (
 		_node = &WakatimeDependency{config: wdc.config}
-		_spec = sqlgraph.NewCreateSpec(wakatimedependency.Table, sqlgraph.NewFieldSpec(wakatimedependency.FieldID, field.TypeUUID))
+		_spec = sqlgraph.NewCreateSpec(wakatimedependency.Table, sqlgraph.NewFieldSpec(wakatimedependency.FieldID, field.TypeInt64))
 	)
 	if id, ok := wdc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := wdc.mutation.CreateTime(); ok {
 		_spec.SetField(wakatimedependency.FieldCreateTime, field.TypeTime, value)
@@ -292,6 +277,10 @@ func (wdcb *WakatimeDependencyCreateBulk) Save(ctx context.Context) ([]*Wakatime
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int64(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})

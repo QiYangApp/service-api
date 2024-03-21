@@ -112,7 +112,7 @@ func (prru *PermissionRelatedRouterUpdate) defaults() {
 }
 
 func (prru *PermissionRelatedRouterUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := sqlgraph.NewUpdateSpec(permissionrelatedrouter.Table, permissionrelatedrouter.Columns, sqlgraph.NewFieldSpec(permissionrelatedrouter.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(permissionrelatedrouter.Table, permissionrelatedrouter.Columns, sqlgraph.NewFieldSpec(permissionrelatedrouter.FieldID, field.TypeInt64))
 	if ps := prru.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -248,7 +248,7 @@ func (prruo *PermissionRelatedRouterUpdateOne) defaults() {
 }
 
 func (prruo *PermissionRelatedRouterUpdateOne) sqlSave(ctx context.Context) (_node *PermissionRelatedRouter, err error) {
-	_spec := sqlgraph.NewUpdateSpec(permissionrelatedrouter.Table, permissionrelatedrouter.Columns, sqlgraph.NewFieldSpec(permissionrelatedrouter.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(permissionrelatedrouter.Table, permissionrelatedrouter.Columns, sqlgraph.NewFieldSpec(permissionrelatedrouter.FieldID, field.TypeInt64))
 	id, ok := prruo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`models: missing "PermissionRelatedRouter.id" for update`)}

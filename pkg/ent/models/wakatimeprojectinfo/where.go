@@ -9,47 +9,47 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.WakatimeProjectInfo {
+func ID(id int64) predicate.WakatimeProjectInfo {
 	return predicate.WakatimeProjectInfo(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.WakatimeProjectInfo {
+func IDEQ(id int64) predicate.WakatimeProjectInfo {
 	return predicate.WakatimeProjectInfo(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.WakatimeProjectInfo {
+func IDNEQ(id int64) predicate.WakatimeProjectInfo {
 	return predicate.WakatimeProjectInfo(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.WakatimeProjectInfo {
+func IDIn(ids ...int64) predicate.WakatimeProjectInfo {
 	return predicate.WakatimeProjectInfo(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.WakatimeProjectInfo {
+func IDNotIn(ids ...int64) predicate.WakatimeProjectInfo {
 	return predicate.WakatimeProjectInfo(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.WakatimeProjectInfo {
+func IDGT(id int64) predicate.WakatimeProjectInfo {
 	return predicate.WakatimeProjectInfo(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.WakatimeProjectInfo {
+func IDGTE(id int64) predicate.WakatimeProjectInfo {
 	return predicate.WakatimeProjectInfo(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.WakatimeProjectInfo {
+func IDLT(id int64) predicate.WakatimeProjectInfo {
 	return predicate.WakatimeProjectInfo(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.WakatimeProjectInfo {
+func IDLTE(id int64) predicate.WakatimeProjectInfo {
 	return predicate.WakatimeProjectInfo(sql.FieldLTE(FieldID, id))
 }
 

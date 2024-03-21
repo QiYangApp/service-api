@@ -1947,7 +1947,7 @@ type MemberRoleRelatedPermissionMutation struct {
 	config
 	op                  Op
 	typ                 string
-	id                  *int
+	id                  *int64
 	role_id             *uuid.UUID
 	permission_group_id *uuid.UUID
 	create_time         *time.Time
@@ -1978,7 +1978,7 @@ func newMemberRoleRelatedPermissionMutation(c config, op Op, opts ...memberroler
 }
 
 // withMemberRoleRelatedPermissionID sets the ID field of the mutation.
-func withMemberRoleRelatedPermissionID(id int) memberrolerelatedpermissionOption {
+func withMemberRoleRelatedPermissionID(id int64) memberrolerelatedpermissionOption {
 	return func(m *MemberRoleRelatedPermissionMutation) {
 		var (
 			err   error
@@ -2030,13 +2030,13 @@ func (m MemberRoleRelatedPermissionMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of MemberRoleRelatedPermission entities.
-func (m *MemberRoleRelatedPermissionMutation) SetID(id int) {
+func (m *MemberRoleRelatedPermissionMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *MemberRoleRelatedPermissionMutation) ID() (id int, exists bool) {
+func (m *MemberRoleRelatedPermissionMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -2047,12 +2047,12 @@ func (m *MemberRoleRelatedPermissionMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *MemberRoleRelatedPermissionMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *MemberRoleRelatedPermissionMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -2441,7 +2441,7 @@ type PermissionGroupMutation struct {
 	config
 	op              Op
 	typ             string
-	id              *int
+	id              *int64
 	permission_name *string
 	ioc             *string
 	sort            *int32
@@ -2482,7 +2482,7 @@ func newPermissionGroupMutation(c config, op Op, opts ...permissiongroupOption) 
 }
 
 // withPermissionGroupID sets the ID field of the mutation.
-func withPermissionGroupID(id int) permissiongroupOption {
+func withPermissionGroupID(id int64) permissiongroupOption {
 	return func(m *PermissionGroupMutation) {
 		var (
 			err   error
@@ -2534,13 +2534,13 @@ func (m PermissionGroupMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of PermissionGroup entities.
-func (m *PermissionGroupMutation) SetID(id int) {
+func (m *PermissionGroupMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *PermissionGroupMutation) ID() (id int, exists bool) {
+func (m *PermissionGroupMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -2551,12 +2551,12 @@ func (m *PermissionGroupMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *PermissionGroupMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *PermissionGroupMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -3352,7 +3352,7 @@ type PermissionRelatedRouterMutation struct {
 	config
 	op                  Op
 	typ                 string
-	id                  *int
+	id                  *int64
 	router_id           *uuid.UUID
 	permission_group_id *uuid.UUID
 	create_time         *timeutil.TimeStamp
@@ -3385,7 +3385,7 @@ func newPermissionRelatedRouterMutation(c config, op Op, opts ...permissionrelat
 }
 
 // withPermissionRelatedRouterID sets the ID field of the mutation.
-func withPermissionRelatedRouterID(id int) permissionrelatedrouterOption {
+func withPermissionRelatedRouterID(id int64) permissionrelatedrouterOption {
 	return func(m *PermissionRelatedRouterMutation) {
 		var (
 			err   error
@@ -3437,13 +3437,13 @@ func (m PermissionRelatedRouterMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of PermissionRelatedRouter entities.
-func (m *PermissionRelatedRouterMutation) SetID(id int) {
+func (m *PermissionRelatedRouterMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *PermissionRelatedRouterMutation) ID() (id int, exists bool) {
+func (m *PermissionRelatedRouterMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -3454,12 +3454,12 @@ func (m *PermissionRelatedRouterMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *PermissionRelatedRouterMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *PermissionRelatedRouterMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -3915,7 +3915,7 @@ type RouterMutation struct {
 	config
 	op             Op
 	typ            string
-	id             *int
+	id             *int64
 	route_name     *string
 	route          *string
 	description    *string
@@ -3951,7 +3951,7 @@ func newRouterMutation(c config, op Op, opts ...routerOption) *RouterMutation {
 }
 
 // withRouterID sets the ID field of the mutation.
-func withRouterID(id int) routerOption {
+func withRouterID(id int64) routerOption {
 	return func(m *RouterMutation) {
 		var (
 			err   error
@@ -4003,13 +4003,13 @@ func (m RouterMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Router entities.
-func (m *RouterMutation) SetID(id int) {
+func (m *RouterMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *RouterMutation) ID() (id int, exists bool) {
+func (m *RouterMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -4020,12 +4020,12 @@ func (m *RouterMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *RouterMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *RouterMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -5377,7 +5377,7 @@ type SourceDataMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	user_id       *uuid.UUID
 	_type         *string
 	sub_type      *string
@@ -5411,7 +5411,7 @@ func newSourceDataMutation(c config, op Op, opts ...sourcedataOption) *SourceDat
 }
 
 // withSourceDataID sets the ID field of the mutation.
-func withSourceDataID(id int) sourcedataOption {
+func withSourceDataID(id int64) sourcedataOption {
 	return func(m *SourceDataMutation) {
 		var (
 			err   error
@@ -5463,13 +5463,13 @@ func (m SourceDataMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of SourceData entities.
-func (m *SourceDataMutation) SetID(id int) {
+func (m *SourceDataMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *SourceDataMutation) ID() (id int, exists bool) {
+func (m *SourceDataMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -5480,12 +5480,12 @@ func (m *SourceDataMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *SourceDataMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *SourceDataMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -6033,7 +6033,7 @@ type UserMutation struct {
 	config
 	op               Op
 	typ              string
-	id               *int
+	id               *int64
 	avatar           *string
 	email            *string
 	name             *string
@@ -6079,7 +6079,7 @@ func newUserMutation(c config, op Op, opts ...userOption) *UserMutation {
 }
 
 // withUserID sets the ID field of the mutation.
-func withUserID(id int) userOption {
+func withUserID(id int64) userOption {
 	return func(m *UserMutation) {
 		var (
 			err   error
@@ -6131,13 +6131,13 @@ func (m UserMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of User entities.
-func (m *UserMutation) SetID(id int) {
+func (m *UserMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *UserMutation) ID() (id int, exists bool) {
+func (m *UserMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -6148,12 +6148,12 @@ func (m *UserMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *UserMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *UserMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -7298,7 +7298,7 @@ type UserAuthSourceMutation struct {
 	config
 	op              Op
 	typ             string
-	id              *int
+	id              *int64
 	user_id         *uuid.UUID
 	token           *string
 	channel         *string
@@ -7340,7 +7340,7 @@ func newUserAuthSourceMutation(c config, op Op, opts ...userauthsourceOption) *U
 }
 
 // withUserAuthSourceID sets the ID field of the mutation.
-func withUserAuthSourceID(id int) userauthsourceOption {
+func withUserAuthSourceID(id int64) userauthsourceOption {
 	return func(m *UserAuthSourceMutation) {
 		var (
 			err   error
@@ -7392,13 +7392,13 @@ func (m UserAuthSourceMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of UserAuthSource entities.
-func (m *UserAuthSourceMutation) SetID(id int) {
+func (m *UserAuthSourceMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *UserAuthSourceMutation) ID() (id int, exists bool) {
+func (m *UserAuthSourceMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -7409,12 +7409,12 @@ func (m *UserAuthSourceMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *UserAuthSourceMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *UserAuthSourceMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -8347,7 +8347,7 @@ type UserRelatedRoleMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	user_id       *uuid.UUID
 	role_id       *uuid.UUID
 	create_time   *time.Time
@@ -8378,7 +8378,7 @@ func newUserRelatedRoleMutation(c config, op Op, opts ...userrelatedroleOption) 
 }
 
 // withUserRelatedRoleID sets the ID field of the mutation.
-func withUserRelatedRoleID(id int) userrelatedroleOption {
+func withUserRelatedRoleID(id int64) userrelatedroleOption {
 	return func(m *UserRelatedRoleMutation) {
 		var (
 			err   error
@@ -8430,13 +8430,13 @@ func (m UserRelatedRoleMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of UserRelatedRole entities.
-func (m *UserRelatedRoleMutation) SetID(id int) {
+func (m *UserRelatedRoleMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *UserRelatedRoleMutation) ID() (id int, exists bool) {
+func (m *UserRelatedRoleMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -8447,12 +8447,12 @@ func (m *UserRelatedRoleMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *UserRelatedRoleMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *UserRelatedRoleMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -8841,7 +8841,7 @@ type UserRoleMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	role_name     *string
 	state         *state.SwitchState
 	addstate      *state.SwitchState
@@ -8873,7 +8873,7 @@ func newUserRoleMutation(c config, op Op, opts ...userroleOption) *UserRoleMutat
 }
 
 // withUserRoleID sets the ID field of the mutation.
-func withUserRoleID(id int) userroleOption {
+func withUserRoleID(id int64) userroleOption {
 	return func(m *UserRoleMutation) {
 		var (
 			err   error
@@ -8925,13 +8925,13 @@ func (m UserRoleMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of UserRole entities.
-func (m *UserRoleMutation) SetID(id int) {
+func (m *UserRoleMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *UserRoleMutation) ID() (id int, exists bool) {
+func (m *UserRoleMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -8942,12 +8942,12 @@ func (m *UserRoleMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *UserRoleMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *UserRoleMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -9371,7 +9371,7 @@ type WakatimeMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	user_id       *uuid.UUID
 	key           *string
 	api           *string
@@ -9404,7 +9404,7 @@ func newWakatimeMutation(c config, op Op, opts ...wakatimeOption) *WakatimeMutat
 }
 
 // withWakatimeID sets the ID field of the mutation.
-func withWakatimeID(id int) wakatimeOption {
+func withWakatimeID(id int64) wakatimeOption {
 	return func(m *WakatimeMutation) {
 		var (
 			err   error
@@ -9456,13 +9456,13 @@ func (m WakatimeMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Wakatime entities.
-func (m *WakatimeMutation) SetID(id int) {
+func (m *WakatimeMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeMutation) ID() (id int, exists bool) {
+func (m *WakatimeMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -9473,12 +9473,12 @@ func (m *WakatimeMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -9973,7 +9973,7 @@ type WakatimeCategoryMutation struct {
 	config
 	op               Op
 	typ              string
-	id               *uuid.UUID
+	id               *int64
 	create_time      *time.Time
 	update_time      *time.Time
 	wakatime_id      *uuid.UUID
@@ -10007,7 +10007,7 @@ func newWakatimeCategoryMutation(c config, op Op, opts ...wakatimecategoryOption
 }
 
 // withWakatimeCategoryID sets the ID field of the mutation.
-func withWakatimeCategoryID(id uuid.UUID) wakatimecategoryOption {
+func withWakatimeCategoryID(id int64) wakatimecategoryOption {
 	return func(m *WakatimeCategoryMutation) {
 		var (
 			err   error
@@ -10059,13 +10059,13 @@ func (m WakatimeCategoryMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of WakatimeCategory entities.
-func (m *WakatimeCategoryMutation) SetID(id uuid.UUID) {
+func (m *WakatimeCategoryMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeCategoryMutation) ID() (id uuid.UUID, exists bool) {
+func (m *WakatimeCategoryMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -10076,12 +10076,12 @@ func (m *WakatimeCategoryMutation) ID() (id uuid.UUID, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeCategoryMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+func (m *WakatimeCategoryMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uuid.UUID{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -10611,7 +10611,7 @@ type WakatimeDependencyMutation struct {
 	config
 	op               Op
 	typ              string
-	id               *uuid.UUID
+	id               *int64
 	create_time      *time.Time
 	update_time      *time.Time
 	wakatime_id      *uuid.UUID
@@ -10645,7 +10645,7 @@ func newWakatimeDependencyMutation(c config, op Op, opts ...wakatimedependencyOp
 }
 
 // withWakatimeDependencyID sets the ID field of the mutation.
-func withWakatimeDependencyID(id uuid.UUID) wakatimedependencyOption {
+func withWakatimeDependencyID(id int64) wakatimedependencyOption {
 	return func(m *WakatimeDependencyMutation) {
 		var (
 			err   error
@@ -10697,13 +10697,13 @@ func (m WakatimeDependencyMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of WakatimeDependency entities.
-func (m *WakatimeDependencyMutation) SetID(id uuid.UUID) {
+func (m *WakatimeDependencyMutation) SetID(id int64) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeDependencyMutation) ID() (id uuid.UUID, exists bool) {
+func (m *WakatimeDependencyMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -10714,12 +10714,12 @@ func (m *WakatimeDependencyMutation) ID() (id uuid.UUID, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeDependencyMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+func (m *WakatimeDependencyMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uuid.UUID{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -11249,7 +11249,7 @@ type WakatimeDurationMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*WakatimeDuration, error)
@@ -11276,7 +11276,7 @@ func newWakatimeDurationMutation(c config, op Op, opts ...wakatimedurationOption
 }
 
 // withWakatimeDurationID sets the ID field of the mutation.
-func withWakatimeDurationID(id int) wakatimedurationOption {
+func withWakatimeDurationID(id int64) wakatimedurationOption {
 	return func(m *WakatimeDurationMutation) {
 		var (
 			err   error
@@ -11328,7 +11328,7 @@ func (m WakatimeDurationMutation) Tx() (*Tx, error) {
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeDurationMutation) ID() (id int, exists bool) {
+func (m *WakatimeDurationMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -11339,12 +11339,12 @@ func (m *WakatimeDurationMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeDurationMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeDurationMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -11513,7 +11513,7 @@ type WakatimeEditorMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*WakatimeEditor, error)
@@ -11540,7 +11540,7 @@ func newWakatimeEditorMutation(c config, op Op, opts ...wakatimeeditorOption) *W
 }
 
 // withWakatimeEditorID sets the ID field of the mutation.
-func withWakatimeEditorID(id int) wakatimeeditorOption {
+func withWakatimeEditorID(id int64) wakatimeeditorOption {
 	return func(m *WakatimeEditorMutation) {
 		var (
 			err   error
@@ -11592,7 +11592,7 @@ func (m WakatimeEditorMutation) Tx() (*Tx, error) {
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeEditorMutation) ID() (id int, exists bool) {
+func (m *WakatimeEditorMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -11603,12 +11603,12 @@ func (m *WakatimeEditorMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeEditorMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeEditorMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -11777,7 +11777,7 @@ type WakatimeEntityMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*WakatimeEntity, error)
@@ -11804,7 +11804,7 @@ func newWakatimeEntityMutation(c config, op Op, opts ...wakatimeentityOption) *W
 }
 
 // withWakatimeEntityID sets the ID field of the mutation.
-func withWakatimeEntityID(id int) wakatimeentityOption {
+func withWakatimeEntityID(id int64) wakatimeentityOption {
 	return func(m *WakatimeEntityMutation) {
 		var (
 			err   error
@@ -11856,7 +11856,7 @@ func (m WakatimeEntityMutation) Tx() (*Tx, error) {
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeEntityMutation) ID() (id int, exists bool) {
+func (m *WakatimeEntityMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -11867,12 +11867,12 @@ func (m *WakatimeEntityMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeEntityMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeEntityMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -12041,7 +12041,7 @@ type WakatimeGrandTotalMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*WakatimeGrandTotal, error)
@@ -12068,7 +12068,7 @@ func newWakatimeGrandTotalMutation(c config, op Op, opts ...wakatimegrandtotalOp
 }
 
 // withWakatimeGrandTotalID sets the ID field of the mutation.
-func withWakatimeGrandTotalID(id int) wakatimegrandtotalOption {
+func withWakatimeGrandTotalID(id int64) wakatimegrandtotalOption {
 	return func(m *WakatimeGrandTotalMutation) {
 		var (
 			err   error
@@ -12120,7 +12120,7 @@ func (m WakatimeGrandTotalMutation) Tx() (*Tx, error) {
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeGrandTotalMutation) ID() (id int, exists bool) {
+func (m *WakatimeGrandTotalMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -12131,12 +12131,12 @@ func (m *WakatimeGrandTotalMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeGrandTotalMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeGrandTotalMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -12305,7 +12305,7 @@ type WakatimeHeartBeatMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*WakatimeHeartBeat, error)
@@ -12332,7 +12332,7 @@ func newWakatimeHeartBeatMutation(c config, op Op, opts ...wakatimeheartbeatOpti
 }
 
 // withWakatimeHeartBeatID sets the ID field of the mutation.
-func withWakatimeHeartBeatID(id int) wakatimeheartbeatOption {
+func withWakatimeHeartBeatID(id int64) wakatimeheartbeatOption {
 	return func(m *WakatimeHeartBeatMutation) {
 		var (
 			err   error
@@ -12384,7 +12384,7 @@ func (m WakatimeHeartBeatMutation) Tx() (*Tx, error) {
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeHeartBeatMutation) ID() (id int, exists bool) {
+func (m *WakatimeHeartBeatMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -12395,12 +12395,12 @@ func (m *WakatimeHeartBeatMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeHeartBeatMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeHeartBeatMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -12569,7 +12569,7 @@ type WakatimeLanguageMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*WakatimeLanguage, error)
@@ -12596,7 +12596,7 @@ func newWakatimeLanguageMutation(c config, op Op, opts ...wakatimelanguageOption
 }
 
 // withWakatimeLanguageID sets the ID field of the mutation.
-func withWakatimeLanguageID(id int) wakatimelanguageOption {
+func withWakatimeLanguageID(id int64) wakatimelanguageOption {
 	return func(m *WakatimeLanguageMutation) {
 		var (
 			err   error
@@ -12648,7 +12648,7 @@ func (m WakatimeLanguageMutation) Tx() (*Tx, error) {
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeLanguageMutation) ID() (id int, exists bool) {
+func (m *WakatimeLanguageMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -12659,12 +12659,12 @@ func (m *WakatimeLanguageMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeLanguageMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeLanguageMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -12833,7 +12833,7 @@ type WakatimeProjectMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*WakatimeProject, error)
@@ -12860,7 +12860,7 @@ func newWakatimeProjectMutation(c config, op Op, opts ...wakatimeprojectOption) 
 }
 
 // withWakatimeProjectID sets the ID field of the mutation.
-func withWakatimeProjectID(id int) wakatimeprojectOption {
+func withWakatimeProjectID(id int64) wakatimeprojectOption {
 	return func(m *WakatimeProjectMutation) {
 		var (
 			err   error
@@ -12912,7 +12912,7 @@ func (m WakatimeProjectMutation) Tx() (*Tx, error) {
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeProjectMutation) ID() (id int, exists bool) {
+func (m *WakatimeProjectMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -12923,12 +12923,12 @@ func (m *WakatimeProjectMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeProjectMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeProjectMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -13097,7 +13097,7 @@ type WakatimeProjectDurationMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*WakatimeProjectDuration, error)
@@ -13124,7 +13124,7 @@ func newWakatimeProjectDurationMutation(c config, op Op, opts ...wakatimeproject
 }
 
 // withWakatimeProjectDurationID sets the ID field of the mutation.
-func withWakatimeProjectDurationID(id int) wakatimeprojectdurationOption {
+func withWakatimeProjectDurationID(id int64) wakatimeprojectdurationOption {
 	return func(m *WakatimeProjectDurationMutation) {
 		var (
 			err   error
@@ -13176,7 +13176,7 @@ func (m WakatimeProjectDurationMutation) Tx() (*Tx, error) {
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeProjectDurationMutation) ID() (id int, exists bool) {
+func (m *WakatimeProjectDurationMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -13187,12 +13187,12 @@ func (m *WakatimeProjectDurationMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeProjectDurationMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeProjectDurationMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -13361,7 +13361,7 @@ type WakatimeProjectInfoMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*WakatimeProjectInfo, error)
@@ -13388,7 +13388,7 @@ func newWakatimeProjectInfoMutation(c config, op Op, opts ...wakatimeprojectinfo
 }
 
 // withWakatimeProjectInfoID sets the ID field of the mutation.
-func withWakatimeProjectInfoID(id int) wakatimeprojectinfoOption {
+func withWakatimeProjectInfoID(id int64) wakatimeprojectinfoOption {
 	return func(m *WakatimeProjectInfoMutation) {
 		var (
 			err   error
@@ -13440,7 +13440,7 @@ func (m WakatimeProjectInfoMutation) Tx() (*Tx, error) {
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeProjectInfoMutation) ID() (id int, exists bool) {
+func (m *WakatimeProjectInfoMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -13451,12 +13451,12 @@ func (m *WakatimeProjectInfoMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeProjectInfoMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeProjectInfoMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -13625,7 +13625,7 @@ type WakatimeSystemMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int64
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*WakatimeSystem, error)
@@ -13652,7 +13652,7 @@ func newWakatimeSystemMutation(c config, op Op, opts ...wakatimesystemOption) *W
 }
 
 // withWakatimeSystemID sets the ID field of the mutation.
-func withWakatimeSystemID(id int) wakatimesystemOption {
+func withWakatimeSystemID(id int64) wakatimesystemOption {
 	return func(m *WakatimeSystemMutation) {
 		var (
 			err   error
@@ -13704,7 +13704,7 @@ func (m WakatimeSystemMutation) Tx() (*Tx, error) {
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WakatimeSystemMutation) ID() (id int, exists bool) {
+func (m *WakatimeSystemMutation) ID() (id int64, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -13715,12 +13715,12 @@ func (m *WakatimeSystemMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WakatimeSystemMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *WakatimeSystemMutation) IDs(ctx context.Context) ([]int64, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int64{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):

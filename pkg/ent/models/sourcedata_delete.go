@@ -40,7 +40,7 @@ func (sdd *SourceDataDelete) ExecX(ctx context.Context) int {
 }
 
 func (sdd *SourceDataDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(sourcedata.Table, sqlgraph.NewFieldSpec(sourcedata.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(sourcedata.Table, sqlgraph.NewFieldSpec(sourcedata.FieldID, field.TypeInt64))
 	if ps := sdd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

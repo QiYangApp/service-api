@@ -16,7 +16,7 @@ type SourceData struct {
 // Fields of the SourceData.
 func (SourceData) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.UUID("user_id", uuid.UUID{}).Comment("会员id"),
 		field.String("type").MaxLen(32).Default("").NotEmpty().Comment("类型"),
 		field.String("sub_type").MaxLen(32).Default("").Comment("子类型"),

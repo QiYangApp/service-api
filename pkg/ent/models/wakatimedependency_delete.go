@@ -40,7 +40,7 @@ func (wdd *WakatimeDependencyDelete) ExecX(ctx context.Context) int {
 }
 
 func (wdd *WakatimeDependencyDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(wakatimedependency.Table, sqlgraph.NewFieldSpec(wakatimedependency.FieldID, field.TypeUUID))
+	_spec := sqlgraph.NewDeleteSpec(wakatimedependency.Table, sqlgraph.NewFieldSpec(wakatimedependency.FieldID, field.TypeInt64))
 	if ps := wdd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

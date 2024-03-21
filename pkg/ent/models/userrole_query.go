@@ -21,6 +21,8 @@ type UserRoleQuery struct {
 	order      []userrole.OrderOption
 	inters     []Interceptor
 	predicates []predicate.UserRole
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*UserRole) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (urq *UserRoleQuery) FirstX(ctx context.Context) *UserRole {
 
 // FirstID returns the first UserRole ID from the query.
 // Returns a *NotFoundError when no UserRole ID was found.
-func (urq *UserRoleQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (urq *UserRoleQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = urq.Limit(1).IDs(setContextOp(ctx, urq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (urq *UserRoleQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (urq *UserRoleQuery) FirstIDX(ctx context.Context) int {
+func (urq *UserRoleQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := urq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (urq *UserRoleQuery) OnlyX(ctx context.Context) *UserRole {
 // OnlyID is like Only, but returns the only UserRole ID in the query.
 // Returns a *NotSingularError when more than one UserRole ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (urq *UserRoleQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (urq *UserRoleQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = urq.Limit(2).IDs(setContextOp(ctx, urq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (urq *UserRoleQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (urq *UserRoleQuery) OnlyIDX(ctx context.Context) int {
+func (urq *UserRoleQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := urq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (urq *UserRoleQuery) AllX(ctx context.Context) []*UserRole {
 }
 
 // IDs executes the query and returns a list of UserRole IDs.
-func (urq *UserRoleQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (urq *UserRoleQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if urq.ctx.Unique == nil && urq.path != nil {
 		urq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (urq *UserRoleQuery) IDs(ctx context.Context) (ids []int, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (urq *UserRoleQuery) IDsX(ctx context.Context) []int {
+func (urq *UserRoleQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := urq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -342,6 +344,9 @@ func (urq *UserRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Us
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(urq.modifiers) > 0 {
+		_spec.Modifiers = urq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -351,11 +356,19 @@ func (urq *UserRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Us
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range urq.loadTotal {
+		if err := urq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (urq *UserRoleQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := urq.querySpec()
+	if len(urq.modifiers) > 0 {
+		_spec.Modifiers = urq.modifiers
+	}
 	_spec.Node.Columns = urq.ctx.Fields
 	if len(urq.ctx.Fields) > 0 {
 		_spec.Unique = urq.ctx.Unique != nil && *urq.ctx.Unique
@@ -364,7 +377,7 @@ func (urq *UserRoleQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (urq *UserRoleQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(userrole.Table, userrole.Columns, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(userrole.Table, userrole.Columns, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64))
 	_spec.From = urq.sql
 	if unique := urq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

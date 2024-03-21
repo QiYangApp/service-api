@@ -67,7 +67,7 @@ func (whbc *WakatimeHeartBeatCreate) sqlSave(ctx context.Context) (*WakatimeHear
 		return nil, err
 	}
 	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	_node.ID = int64(id)
 	whbc.mutation.id = &_node.ID
 	whbc.mutation.done = true
 	return _node, nil
@@ -76,7 +76,7 @@ func (whbc *WakatimeHeartBeatCreate) sqlSave(ctx context.Context) (*WakatimeHear
 func (whbc *WakatimeHeartBeatCreate) createSpec() (*WakatimeHeartBeat, *sqlgraph.CreateSpec) {
 	var (
 		_node = &WakatimeHeartBeat{config: whbc.config}
-		_spec = sqlgraph.NewCreateSpec(wakatimeheartbeat.Table, sqlgraph.NewFieldSpec(wakatimeheartbeat.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(wakatimeheartbeat.Table, sqlgraph.NewFieldSpec(wakatimeheartbeat.FieldID, field.TypeInt64))
 	)
 	return _node, _spec
 }
@@ -127,7 +127,7 @@ func (whbcb *WakatimeHeartBeatCreateBulk) Save(ctx context.Context) ([]*Wakatime
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

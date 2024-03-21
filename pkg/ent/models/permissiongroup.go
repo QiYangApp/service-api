@@ -17,7 +17,7 @@ import (
 type PermissionGroup struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// 权限名称
 	PermissionName string `json:"permission_name,omitempty"`
 	// Ioc holds the value of the "ioc" field.
@@ -66,7 +66,7 @@ func (pg *PermissionGroup) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			pg.ID = int(value.Int64)
+			pg.ID = int64(value.Int64)
 		case permissiongroup.FieldPermissionName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_name", values[i])

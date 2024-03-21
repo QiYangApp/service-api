@@ -11,47 +11,47 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.UserRelatedRole {
+func ID(id int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.UserRelatedRole {
+func IDEQ(id int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.UserRelatedRole {
+func IDNEQ(id int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.UserRelatedRole {
+func IDIn(ids ...int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.UserRelatedRole {
+func IDNotIn(ids ...int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.UserRelatedRole {
+func IDGT(id int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.UserRelatedRole {
+func IDGTE(id int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.UserRelatedRole {
+func IDLT(id int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.UserRelatedRole {
+func IDLTE(id int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldLTE(FieldID, id))
 }
 

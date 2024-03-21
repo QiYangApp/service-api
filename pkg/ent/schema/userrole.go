@@ -16,7 +16,7 @@ type UserRole struct {
 // Fields of the MemberRole.
 func (UserRole) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.String("role_name").MaxLen(64).NotEmpty().Comment("规则名称"),
 		field.Int("state").GoType(state.SwitchState(0)).Default(1),
 		field.Time("create_time").Default(time.Now).Immutable(),

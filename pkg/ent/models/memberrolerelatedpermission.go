@@ -17,7 +17,7 @@ import (
 type MemberRoleRelatedPermission struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// 规则id
 	RoleID uuid.UUID `json:"role_id,omitempty"`
 	// 权限分组id
@@ -60,7 +60,7 @@ func (mrrp *MemberRoleRelatedPermission) assignValues(columns []string, values [
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			mrrp.ID = int(value.Int64)
+			mrrp.ID = int64(value.Int64)
 		case memberrolerelatedpermission.FieldRoleID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field role_id", values[i])

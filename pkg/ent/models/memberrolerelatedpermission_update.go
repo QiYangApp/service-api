@@ -105,7 +105,7 @@ func (mrrpu *MemberRoleRelatedPermissionUpdate) defaults() {
 }
 
 func (mrrpu *MemberRoleRelatedPermissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := sqlgraph.NewUpdateSpec(memberrolerelatedpermission.Table, memberrolerelatedpermission.Columns, sqlgraph.NewFieldSpec(memberrolerelatedpermission.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(memberrolerelatedpermission.Table, memberrolerelatedpermission.Columns, sqlgraph.NewFieldSpec(memberrolerelatedpermission.FieldID, field.TypeInt64))
 	if ps := mrrpu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -231,7 +231,7 @@ func (mrrpuo *MemberRoleRelatedPermissionUpdateOne) defaults() {
 }
 
 func (mrrpuo *MemberRoleRelatedPermissionUpdateOne) sqlSave(ctx context.Context) (_node *MemberRoleRelatedPermission, err error) {
-	_spec := sqlgraph.NewUpdateSpec(memberrolerelatedpermission.Table, memberrolerelatedpermission.Columns, sqlgraph.NewFieldSpec(memberrolerelatedpermission.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(memberrolerelatedpermission.Table, memberrolerelatedpermission.Columns, sqlgraph.NewFieldSpec(memberrolerelatedpermission.FieldID, field.TypeInt64))
 	id, ok := mrrpuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`models: missing "MemberRoleRelatedPermission.id" for update`)}

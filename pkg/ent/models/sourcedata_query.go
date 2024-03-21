@@ -21,6 +21,8 @@ type SourceDataQuery struct {
 	order      []sourcedata.OrderOption
 	inters     []Interceptor
 	predicates []predicate.SourceData
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*SourceData) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (sdq *SourceDataQuery) FirstX(ctx context.Context) *SourceData {
 
 // FirstID returns the first SourceData ID from the query.
 // Returns a *NotFoundError when no SourceData ID was found.
-func (sdq *SourceDataQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (sdq *SourceDataQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = sdq.Limit(1).IDs(setContextOp(ctx, sdq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (sdq *SourceDataQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (sdq *SourceDataQuery) FirstIDX(ctx context.Context) int {
+func (sdq *SourceDataQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := sdq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (sdq *SourceDataQuery) OnlyX(ctx context.Context) *SourceData {
 // OnlyID is like Only, but returns the only SourceData ID in the query.
 // Returns a *NotSingularError when more than one SourceData ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (sdq *SourceDataQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (sdq *SourceDataQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = sdq.Limit(2).IDs(setContextOp(ctx, sdq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (sdq *SourceDataQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (sdq *SourceDataQuery) OnlyIDX(ctx context.Context) int {
+func (sdq *SourceDataQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := sdq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (sdq *SourceDataQuery) AllX(ctx context.Context) []*SourceData {
 }
 
 // IDs executes the query and returns a list of SourceData IDs.
-func (sdq *SourceDataQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (sdq *SourceDataQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if sdq.ctx.Unique == nil && sdq.path != nil {
 		sdq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (sdq *SourceDataQuery) IDs(ctx context.Context) (ids []int, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (sdq *SourceDataQuery) IDsX(ctx context.Context) []int {
+func (sdq *SourceDataQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := sdq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -342,6 +344,9 @@ func (sdq *SourceDataQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(sdq.modifiers) > 0 {
+		_spec.Modifiers = sdq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -351,11 +356,19 @@ func (sdq *SourceDataQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range sdq.loadTotal {
+		if err := sdq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (sdq *SourceDataQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := sdq.querySpec()
+	if len(sdq.modifiers) > 0 {
+		_spec.Modifiers = sdq.modifiers
+	}
 	_spec.Node.Columns = sdq.ctx.Fields
 	if len(sdq.ctx.Fields) > 0 {
 		_spec.Unique = sdq.ctx.Unique != nil && *sdq.ctx.Unique
@@ -364,7 +377,7 @@ func (sdq *SourceDataQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (sdq *SourceDataQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(sourcedata.Table, sourcedata.Columns, sqlgraph.NewFieldSpec(sourcedata.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(sourcedata.Table, sourcedata.Columns, sqlgraph.NewFieldSpec(sourcedata.FieldID, field.TypeInt64))
 	_spec.From = sdq.sql
 	if unique := sdq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

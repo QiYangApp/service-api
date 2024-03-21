@@ -60,7 +60,7 @@ func (weu *WakatimeEditorUpdate) ExecX(ctx context.Context) {
 }
 
 func (weu *WakatimeEditorUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := sqlgraph.NewUpdateSpec(wakatimeeditor.Table, wakatimeeditor.Columns, sqlgraph.NewFieldSpec(wakatimeeditor.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(wakatimeeditor.Table, wakatimeeditor.Columns, sqlgraph.NewFieldSpec(wakatimeeditor.FieldID, field.TypeInt64))
 	if ps := weu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -134,7 +134,7 @@ func (weuo *WakatimeEditorUpdateOne) ExecX(ctx context.Context) {
 }
 
 func (weuo *WakatimeEditorUpdateOne) sqlSave(ctx context.Context) (_node *WakatimeEditor, err error) {
-	_spec := sqlgraph.NewUpdateSpec(wakatimeeditor.Table, wakatimeeditor.Columns, sqlgraph.NewFieldSpec(wakatimeeditor.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(wakatimeeditor.Table, wakatimeeditor.Columns, sqlgraph.NewFieldSpec(wakatimeeditor.FieldID, field.TypeInt64))
 	id, ok := weuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`models: missing "WakatimeEditor.id" for update`)}

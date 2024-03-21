@@ -60,7 +60,7 @@ func (wlu *WakatimeLanguageUpdate) ExecX(ctx context.Context) {
 }
 
 func (wlu *WakatimeLanguageUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := sqlgraph.NewUpdateSpec(wakatimelanguage.Table, wakatimelanguage.Columns, sqlgraph.NewFieldSpec(wakatimelanguage.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(wakatimelanguage.Table, wakatimelanguage.Columns, sqlgraph.NewFieldSpec(wakatimelanguage.FieldID, field.TypeInt64))
 	if ps := wlu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -134,7 +134,7 @@ func (wluo *WakatimeLanguageUpdateOne) ExecX(ctx context.Context) {
 }
 
 func (wluo *WakatimeLanguageUpdateOne) sqlSave(ctx context.Context) (_node *WakatimeLanguage, err error) {
-	_spec := sqlgraph.NewUpdateSpec(wakatimelanguage.Table, wakatimelanguage.Columns, sqlgraph.NewFieldSpec(wakatimelanguage.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(wakatimelanguage.Table, wakatimelanguage.Columns, sqlgraph.NewFieldSpec(wakatimelanguage.FieldID, field.TypeInt64))
 	id, ok := wluo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`models: missing "WakatimeLanguage.id" for update`)}

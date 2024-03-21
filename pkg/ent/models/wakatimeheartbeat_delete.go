@@ -40,7 +40,7 @@ func (whbd *WakatimeHeartBeatDelete) ExecX(ctx context.Context) int {
 }
 
 func (whbd *WakatimeHeartBeatDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(wakatimeheartbeat.Table, sqlgraph.NewFieldSpec(wakatimeheartbeat.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(wakatimeheartbeat.Table, sqlgraph.NewFieldSpec(wakatimeheartbeat.FieldID, field.TypeInt64))
 	if ps := whbd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

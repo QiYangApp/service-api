@@ -67,7 +67,7 @@ func (wgtc *WakatimeGrandTotalCreate) sqlSave(ctx context.Context) (*WakatimeGra
 		return nil, err
 	}
 	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	_node.ID = int64(id)
 	wgtc.mutation.id = &_node.ID
 	wgtc.mutation.done = true
 	return _node, nil
@@ -76,7 +76,7 @@ func (wgtc *WakatimeGrandTotalCreate) sqlSave(ctx context.Context) (*WakatimeGra
 func (wgtc *WakatimeGrandTotalCreate) createSpec() (*WakatimeGrandTotal, *sqlgraph.CreateSpec) {
 	var (
 		_node = &WakatimeGrandTotal{config: wgtc.config}
-		_spec = sqlgraph.NewCreateSpec(wakatimegrandtotal.Table, sqlgraph.NewFieldSpec(wakatimegrandtotal.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(wakatimegrandtotal.Table, sqlgraph.NewFieldSpec(wakatimegrandtotal.FieldID, field.TypeInt64))
 	)
 	return _node, _spec
 }
@@ -127,7 +127,7 @@ func (wgtcb *WakatimeGrandTotalCreateBulk) Save(ctx context.Context) ([]*Wakatim
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

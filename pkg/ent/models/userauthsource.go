@@ -17,7 +17,7 @@ import (
 type UserAuthSource struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// member UUID of the
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// 授权token
@@ -80,7 +80,7 @@ func (uas *UserAuthSource) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			uas.ID = int(value.Int64)
+			uas.ID = int64(value.Int64)
 		case userauthsource.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])

@@ -67,7 +67,7 @@ func (wpic *WakatimeProjectInfoCreate) sqlSave(ctx context.Context) (*WakatimePr
 		return nil, err
 	}
 	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	_node.ID = int64(id)
 	wpic.mutation.id = &_node.ID
 	wpic.mutation.done = true
 	return _node, nil
@@ -76,7 +76,7 @@ func (wpic *WakatimeProjectInfoCreate) sqlSave(ctx context.Context) (*WakatimePr
 func (wpic *WakatimeProjectInfoCreate) createSpec() (*WakatimeProjectInfo, *sqlgraph.CreateSpec) {
 	var (
 		_node = &WakatimeProjectInfo{config: wpic.config}
-		_spec = sqlgraph.NewCreateSpec(wakatimeprojectinfo.Table, sqlgraph.NewFieldSpec(wakatimeprojectinfo.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(wakatimeprojectinfo.Table, sqlgraph.NewFieldSpec(wakatimeprojectinfo.FieldID, field.TypeInt64))
 	)
 	return _node, _spec
 }
@@ -127,7 +127,7 @@ func (wpicb *WakatimeProjectInfoCreateBulk) Save(ctx context.Context) ([]*Wakati
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

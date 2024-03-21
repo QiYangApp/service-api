@@ -16,7 +16,7 @@ type UserAuthSource struct {
 // Fields of the MemberAuthorizeLog.
 func (UserAuthSource) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.UUID("user_id", uuid.UUID{}).Default(uuid.New).Comment("member UUID of the"),
 		field.String("token").NotEmpty().Comment("授权token").MaxLen(254),
 		field.String("channel").MaxLen(64).Comment("登录渠道"),

@@ -60,7 +60,7 @@ func (whbu *WakatimeHeartBeatUpdate) ExecX(ctx context.Context) {
 }
 
 func (whbu *WakatimeHeartBeatUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := sqlgraph.NewUpdateSpec(wakatimeheartbeat.Table, wakatimeheartbeat.Columns, sqlgraph.NewFieldSpec(wakatimeheartbeat.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(wakatimeheartbeat.Table, wakatimeheartbeat.Columns, sqlgraph.NewFieldSpec(wakatimeheartbeat.FieldID, field.TypeInt64))
 	if ps := whbu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -134,7 +134,7 @@ func (whbuo *WakatimeHeartBeatUpdateOne) ExecX(ctx context.Context) {
 }
 
 func (whbuo *WakatimeHeartBeatUpdateOne) sqlSave(ctx context.Context) (_node *WakatimeHeartBeat, err error) {
-	_spec := sqlgraph.NewUpdateSpec(wakatimeheartbeat.Table, wakatimeheartbeat.Columns, sqlgraph.NewFieldSpec(wakatimeheartbeat.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(wakatimeheartbeat.Table, wakatimeheartbeat.Columns, sqlgraph.NewFieldSpec(wakatimeheartbeat.FieldID, field.TypeInt64))
 	id, ok := whbuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`models: missing "WakatimeHeartBeat.id" for update`)}

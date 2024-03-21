@@ -12,7 +12,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/uuid"
 )
 
 // WakatimeDependencyQuery is the builder for querying WakatimeDependency entities.
@@ -22,6 +21,8 @@ type WakatimeDependencyQuery struct {
 	order      []wakatimedependency.OrderOption
 	inters     []Interceptor
 	predicates []predicate.WakatimeDependency
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*WakatimeDependency) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -82,8 +83,8 @@ func (wdq *WakatimeDependencyQuery) FirstX(ctx context.Context) *WakatimeDepende
 
 // FirstID returns the first WakatimeDependency ID from the query.
 // Returns a *NotFoundError when no WakatimeDependency ID was found.
-func (wdq *WakatimeDependencyQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (wdq *WakatimeDependencyQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wdq.Limit(1).IDs(setContextOp(ctx, wdq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -95,7 +96,7 @@ func (wdq *WakatimeDependencyQuery) FirstID(ctx context.Context) (id uuid.UUID, 
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wdq *WakatimeDependencyQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (wdq *WakatimeDependencyQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := wdq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -133,8 +134,8 @@ func (wdq *WakatimeDependencyQuery) OnlyX(ctx context.Context) *WakatimeDependen
 // OnlyID is like Only, but returns the only WakatimeDependency ID in the query.
 // Returns a *NotSingularError when more than one WakatimeDependency ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wdq *WakatimeDependencyQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (wdq *WakatimeDependencyQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wdq.Limit(2).IDs(setContextOp(ctx, wdq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -150,7 +151,7 @@ func (wdq *WakatimeDependencyQuery) OnlyID(ctx context.Context) (id uuid.UUID, e
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wdq *WakatimeDependencyQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (wdq *WakatimeDependencyQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := wdq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -178,7 +179,7 @@ func (wdq *WakatimeDependencyQuery) AllX(ctx context.Context) []*WakatimeDepende
 }
 
 // IDs executes the query and returns a list of WakatimeDependency IDs.
-func (wdq *WakatimeDependencyQuery) IDs(ctx context.Context) (ids []uuid.UUID, err error) {
+func (wdq *WakatimeDependencyQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if wdq.ctx.Unique == nil && wdq.path != nil {
 		wdq.Unique(true)
 	}
@@ -190,7 +191,7 @@ func (wdq *WakatimeDependencyQuery) IDs(ctx context.Context) (ids []uuid.UUID, e
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wdq *WakatimeDependencyQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (wdq *WakatimeDependencyQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := wdq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -343,6 +344,9 @@ func (wdq *WakatimeDependencyQuery) sqlAll(ctx context.Context, hooks ...queryHo
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(wdq.modifiers) > 0 {
+		_spec.Modifiers = wdq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -352,11 +356,19 @@ func (wdq *WakatimeDependencyQuery) sqlAll(ctx context.Context, hooks ...queryHo
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range wdq.loadTotal {
+		if err := wdq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (wdq *WakatimeDependencyQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wdq.querySpec()
+	if len(wdq.modifiers) > 0 {
+		_spec.Modifiers = wdq.modifiers
+	}
 	_spec.Node.Columns = wdq.ctx.Fields
 	if len(wdq.ctx.Fields) > 0 {
 		_spec.Unique = wdq.ctx.Unique != nil && *wdq.ctx.Unique
@@ -365,7 +377,7 @@ func (wdq *WakatimeDependencyQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (wdq *WakatimeDependencyQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatimedependency.Table, wakatimedependency.Columns, sqlgraph.NewFieldSpec(wakatimedependency.FieldID, field.TypeUUID))
+	_spec := sqlgraph.NewQuerySpec(wakatimedependency.Table, wakatimedependency.Columns, sqlgraph.NewFieldSpec(wakatimedependency.FieldID, field.TypeInt64))
 	_spec.From = wdq.sql
 	if unique := wdq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

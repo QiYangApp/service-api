@@ -15,7 +15,7 @@ import (
 type WakatimeProjectDuration struct {
 	config
 	// ID of the ent.
-	ID           int `json:"id,omitempty"`
+	ID           int64 `json:"id,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -46,7 +46,7 @@ func (wpd *WakatimeProjectDuration) assignValues(columns []string, values []any)
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			wpd.ID = int(value.Int64)
+			wpd.ID = int64(value.Int64)
 		default:
 			wpd.selectValues.Set(columns[i], values[i])
 		}

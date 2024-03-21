@@ -21,6 +21,8 @@ type WakatimeLanguageQuery struct {
 	order      []wakatimelanguage.OrderOption
 	inters     []Interceptor
 	predicates []predicate.WakatimeLanguage
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*WakatimeLanguage) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (wlq *WakatimeLanguageQuery) FirstX(ctx context.Context) *WakatimeLanguage 
 
 // FirstID returns the first WakatimeLanguage ID from the query.
 // Returns a *NotFoundError when no WakatimeLanguage ID was found.
-func (wlq *WakatimeLanguageQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wlq *WakatimeLanguageQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wlq.Limit(1).IDs(setContextOp(ctx, wlq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (wlq *WakatimeLanguageQuery) FirstID(ctx context.Context) (id int, err erro
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wlq *WakatimeLanguageQuery) FirstIDX(ctx context.Context) int {
+func (wlq *WakatimeLanguageQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := wlq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (wlq *WakatimeLanguageQuery) OnlyX(ctx context.Context) *WakatimeLanguage {
 // OnlyID is like Only, but returns the only WakatimeLanguage ID in the query.
 // Returns a *NotSingularError when more than one WakatimeLanguage ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wlq *WakatimeLanguageQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wlq *WakatimeLanguageQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wlq.Limit(2).IDs(setContextOp(ctx, wlq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (wlq *WakatimeLanguageQuery) OnlyID(ctx context.Context) (id int, err error
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wlq *WakatimeLanguageQuery) OnlyIDX(ctx context.Context) int {
+func (wlq *WakatimeLanguageQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := wlq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (wlq *WakatimeLanguageQuery) AllX(ctx context.Context) []*WakatimeLanguage 
 }
 
 // IDs executes the query and returns a list of WakatimeLanguage IDs.
-func (wlq *WakatimeLanguageQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (wlq *WakatimeLanguageQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if wlq.ctx.Unique == nil && wlq.path != nil {
 		wlq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (wlq *WakatimeLanguageQuery) IDs(ctx context.Context) (ids []int, err error
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wlq *WakatimeLanguageQuery) IDsX(ctx context.Context) []int {
+func (wlq *WakatimeLanguageQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := wlq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -320,6 +322,9 @@ func (wlq *WakatimeLanguageQuery) sqlAll(ctx context.Context, hooks ...queryHook
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(wlq.modifiers) > 0 {
+		_spec.Modifiers = wlq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -329,11 +334,19 @@ func (wlq *WakatimeLanguageQuery) sqlAll(ctx context.Context, hooks ...queryHook
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range wlq.loadTotal {
+		if err := wlq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (wlq *WakatimeLanguageQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wlq.querySpec()
+	if len(wlq.modifiers) > 0 {
+		_spec.Modifiers = wlq.modifiers
+	}
 	_spec.Node.Columns = wlq.ctx.Fields
 	if len(wlq.ctx.Fields) > 0 {
 		_spec.Unique = wlq.ctx.Unique != nil && *wlq.ctx.Unique
@@ -342,7 +355,7 @@ func (wlq *WakatimeLanguageQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (wlq *WakatimeLanguageQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatimelanguage.Table, wakatimelanguage.Columns, sqlgraph.NewFieldSpec(wakatimelanguage.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(wakatimelanguage.Table, wakatimelanguage.Columns, sqlgraph.NewFieldSpec(wakatimelanguage.FieldID, field.TypeInt64))
 	_spec.From = wlq.sql
 	if unique := wlq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

@@ -21,6 +21,8 @@ type PermissionRelatedRouterQuery struct {
 	order      []permissionrelatedrouter.OrderOption
 	inters     []Interceptor
 	predicates []predicate.PermissionRelatedRouter
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*PermissionRelatedRouter) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (prrq *PermissionRelatedRouterQuery) FirstX(ctx context.Context) *Permissio
 
 // FirstID returns the first PermissionRelatedRouter ID from the query.
 // Returns a *NotFoundError when no PermissionRelatedRouter ID was found.
-func (prrq *PermissionRelatedRouterQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (prrq *PermissionRelatedRouterQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = prrq.Limit(1).IDs(setContextOp(ctx, prrq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (prrq *PermissionRelatedRouterQuery) FirstID(ctx context.Context) (id int, 
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (prrq *PermissionRelatedRouterQuery) FirstIDX(ctx context.Context) int {
+func (prrq *PermissionRelatedRouterQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := prrq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (prrq *PermissionRelatedRouterQuery) OnlyX(ctx context.Context) *Permission
 // OnlyID is like Only, but returns the only PermissionRelatedRouter ID in the query.
 // Returns a *NotSingularError when more than one PermissionRelatedRouter ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (prrq *PermissionRelatedRouterQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (prrq *PermissionRelatedRouterQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = prrq.Limit(2).IDs(setContextOp(ctx, prrq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (prrq *PermissionRelatedRouterQuery) OnlyID(ctx context.Context) (id int, e
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (prrq *PermissionRelatedRouterQuery) OnlyIDX(ctx context.Context) int {
+func (prrq *PermissionRelatedRouterQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := prrq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (prrq *PermissionRelatedRouterQuery) AllX(ctx context.Context) []*Permissio
 }
 
 // IDs executes the query and returns a list of PermissionRelatedRouter IDs.
-func (prrq *PermissionRelatedRouterQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (prrq *PermissionRelatedRouterQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if prrq.ctx.Unique == nil && prrq.path != nil {
 		prrq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (prrq *PermissionRelatedRouterQuery) IDs(ctx context.Context) (ids []int, e
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (prrq *PermissionRelatedRouterQuery) IDsX(ctx context.Context) []int {
+func (prrq *PermissionRelatedRouterQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := prrq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -342,6 +344,9 @@ func (prrq *PermissionRelatedRouterQuery) sqlAll(ctx context.Context, hooks ...q
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(prrq.modifiers) > 0 {
+		_spec.Modifiers = prrq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -351,11 +356,19 @@ func (prrq *PermissionRelatedRouterQuery) sqlAll(ctx context.Context, hooks ...q
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range prrq.loadTotal {
+		if err := prrq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (prrq *PermissionRelatedRouterQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := prrq.querySpec()
+	if len(prrq.modifiers) > 0 {
+		_spec.Modifiers = prrq.modifiers
+	}
 	_spec.Node.Columns = prrq.ctx.Fields
 	if len(prrq.ctx.Fields) > 0 {
 		_spec.Unique = prrq.ctx.Unique != nil && *prrq.ctx.Unique
@@ -364,7 +377,7 @@ func (prrq *PermissionRelatedRouterQuery) sqlCount(ctx context.Context) (int, er
 }
 
 func (prrq *PermissionRelatedRouterQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(permissionrelatedrouter.Table, permissionrelatedrouter.Columns, sqlgraph.NewFieldSpec(permissionrelatedrouter.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(permissionrelatedrouter.Table, permissionrelatedrouter.Columns, sqlgraph.NewFieldSpec(permissionrelatedrouter.FieldID, field.TypeInt64))
 	_spec.From = prrq.sql
 	if unique := prrq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

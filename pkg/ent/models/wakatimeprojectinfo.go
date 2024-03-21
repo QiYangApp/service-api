@@ -15,7 +15,7 @@ import (
 type WakatimeProjectInfo struct {
 	config
 	// ID of the ent.
-	ID           int `json:"id,omitempty"`
+	ID           int64 `json:"id,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -46,7 +46,7 @@ func (wpi *WakatimeProjectInfo) assignValues(columns []string, values []any) err
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			wpi.ID = int(value.Int64)
+			wpi.ID = int64(value.Int64)
 		default:
 			wpi.selectValues.Set(columns[i], values[i])
 		}

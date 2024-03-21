@@ -17,7 +17,7 @@ import (
 type UserRelatedRole struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// 会员id
 	UserID uuid.UUID `json:"user_id,omitempty"`
 	// 角色
@@ -60,7 +60,7 @@ func (urr *UserRelatedRole) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			urr.ID = int(value.Int64)
+			urr.ID = int64(value.Int64)
 		case userrelatedrole.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])

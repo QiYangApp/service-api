@@ -54,7 +54,7 @@ func (prrc *PermissionRelatedRouterCreate) SetUpdateTime(ts timeutil.TimeStamp) 
 }
 
 // SetID sets the "id" field.
-func (prrc *PermissionRelatedRouterCreate) SetID(i int) *PermissionRelatedRouterCreate {
+func (prrc *PermissionRelatedRouterCreate) SetID(i int64) *PermissionRelatedRouterCreate {
 	prrc.mutation.SetID(i)
 	return prrc
 }
@@ -130,7 +130,7 @@ func (prrc *PermissionRelatedRouterCreate) sqlSave(ctx context.Context) (*Permis
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	prrc.mutation.id = &_node.ID
 	prrc.mutation.done = true
@@ -140,7 +140,7 @@ func (prrc *PermissionRelatedRouterCreate) sqlSave(ctx context.Context) (*Permis
 func (prrc *PermissionRelatedRouterCreate) createSpec() (*PermissionRelatedRouter, *sqlgraph.CreateSpec) {
 	var (
 		_node = &PermissionRelatedRouter{config: prrc.config}
-		_spec = sqlgraph.NewCreateSpec(permissionrelatedrouter.Table, sqlgraph.NewFieldSpec(permissionrelatedrouter.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(permissionrelatedrouter.Table, sqlgraph.NewFieldSpec(permissionrelatedrouter.FieldID, field.TypeInt64))
 	)
 	if id, ok := prrc.mutation.ID(); ok {
 		_node.ID = id
@@ -212,7 +212,7 @@ func (prrcb *PermissionRelatedRouterCreateBulk) Save(ctx context.Context) ([]*Pe
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

@@ -21,6 +21,8 @@ type WakatimeSystemQuery struct {
 	order      []wakatimesystem.OrderOption
 	inters     []Interceptor
 	predicates []predicate.WakatimeSystem
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*WakatimeSystem) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -81,8 +83,8 @@ func (wsq *WakatimeSystemQuery) FirstX(ctx context.Context) *WakatimeSystem {
 
 // FirstID returns the first WakatimeSystem ID from the query.
 // Returns a *NotFoundError when no WakatimeSystem ID was found.
-func (wsq *WakatimeSystemQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wsq *WakatimeSystemQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wsq.Limit(1).IDs(setContextOp(ctx, wsq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -94,7 +96,7 @@ func (wsq *WakatimeSystemQuery) FirstID(ctx context.Context) (id int, err error)
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wsq *WakatimeSystemQuery) FirstIDX(ctx context.Context) int {
+func (wsq *WakatimeSystemQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := wsq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -132,8 +134,8 @@ func (wsq *WakatimeSystemQuery) OnlyX(ctx context.Context) *WakatimeSystem {
 // OnlyID is like Only, but returns the only WakatimeSystem ID in the query.
 // Returns a *NotSingularError when more than one WakatimeSystem ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wsq *WakatimeSystemQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (wsq *WakatimeSystemQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = wsq.Limit(2).IDs(setContextOp(ctx, wsq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -149,7 +151,7 @@ func (wsq *WakatimeSystemQuery) OnlyID(ctx context.Context) (id int, err error) 
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wsq *WakatimeSystemQuery) OnlyIDX(ctx context.Context) int {
+func (wsq *WakatimeSystemQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := wsq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -177,7 +179,7 @@ func (wsq *WakatimeSystemQuery) AllX(ctx context.Context) []*WakatimeSystem {
 }
 
 // IDs executes the query and returns a list of WakatimeSystem IDs.
-func (wsq *WakatimeSystemQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (wsq *WakatimeSystemQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if wsq.ctx.Unique == nil && wsq.path != nil {
 		wsq.Unique(true)
 	}
@@ -189,7 +191,7 @@ func (wsq *WakatimeSystemQuery) IDs(ctx context.Context) (ids []int, err error) 
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wsq *WakatimeSystemQuery) IDsX(ctx context.Context) []int {
+func (wsq *WakatimeSystemQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := wsq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -320,6 +322,9 @@ func (wsq *WakatimeSystemQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
+	if len(wsq.modifiers) > 0 {
+		_spec.Modifiers = wsq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -329,11 +334,19 @@ func (wsq *WakatimeSystemQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	for i := range wsq.loadTotal {
+		if err := wsq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (wsq *WakatimeSystemQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wsq.querySpec()
+	if len(wsq.modifiers) > 0 {
+		_spec.Modifiers = wsq.modifiers
+	}
 	_spec.Node.Columns = wsq.ctx.Fields
 	if len(wsq.ctx.Fields) > 0 {
 		_spec.Unique = wsq.ctx.Unique != nil && *wsq.ctx.Unique
@@ -342,7 +355,7 @@ func (wsq *WakatimeSystemQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (wsq *WakatimeSystemQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(wakatimesystem.Table, wakatimesystem.Columns, sqlgraph.NewFieldSpec(wakatimesystem.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(wakatimesystem.Table, wakatimesystem.Columns, sqlgraph.NewFieldSpec(wakatimesystem.FieldID, field.TypeInt64))
 	_spec.From = wsq.sql
 	if unique := wsq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

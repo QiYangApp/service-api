@@ -16,7 +16,7 @@ type MemberRoleRelatedPermission struct {
 // Fields of the MemberRoleRelatedPermission.
 func (MemberRoleRelatedPermission) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id"),
+		field.Int64("id"),
 		field.UUID("role_id", uuid.UUID{}).Comment("规则id"),
 		field.UUID("permission_group_id", uuid.UUID{}).Comment("权限分组id"),
 		field.Time("create_time").Default(time.Now).Immutable(),

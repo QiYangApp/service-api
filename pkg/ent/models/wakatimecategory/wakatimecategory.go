@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/uuid"
 )
 
 const (
@@ -64,8 +63,6 @@ var (
 	NameValidator func(string) error
 	// DefaultTotalSeconds holds the default value on creation for the "total_seconds" field.
 	DefaultTotalSeconds int64
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
 )
 
 // OrderOption defines the ordering options for the WakatimeCategory queries.
