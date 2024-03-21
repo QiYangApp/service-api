@@ -10,7 +10,6 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/uuid"
 )
 
 // SourceData is the model entity for the SourceData schema.
@@ -18,8 +17,8 @@ type SourceData struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int64 `json:"id,omitempty"`
-	// 会员id
-	UserID uuid.UUID `json:"user_id,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID int64 `json:"user_id,omitempty"`
 	// 类型
 	Type string `json:"type,omitempty"`
 	// 子类型
@@ -40,14 +39,12 @@ func (*SourceData) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case sourcedata.FieldID:
+		case sourcedata.FieldID, sourcedata.FieldUserID:
 			values[i] = new(sql.NullInt64)
 		case sourcedata.FieldType, sourcedata.FieldSubType, sourcedata.FieldInfo, sourcedata.FieldSnapshot:
 			values[i] = new(sql.NullString)
 		case sourcedata.FieldCreateTime, sourcedata.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
-		case sourcedata.FieldUserID:
-			values[i] = new(uuid.UUID)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -70,10 +67,10 @@ func (sd *SourceData) assignValues(columns []string, values []any) error {
 			}
 			sd.ID = int64(value.Int64)
 		case sourcedata.FieldUserID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value != nil {
-				sd.UserID = *value
+			} else if value.Valid {
+				sd.UserID = value.Int64
 			}
 		case sourcedata.FieldType:
 			if value, ok := values[i].(*sql.NullString); !ok {

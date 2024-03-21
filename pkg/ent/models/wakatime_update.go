@@ -13,7 +13,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/uuid"
 )
 
 // WakatimeUpdate is the builder for updating Wakatime entities.
@@ -30,16 +29,23 @@ func (wu *WakatimeUpdate) Where(ps ...predicate.Wakatime) *WakatimeUpdate {
 }
 
 // SetUserID sets the "user_id" field.
-func (wu *WakatimeUpdate) SetUserID(u uuid.UUID) *WakatimeUpdate {
-	wu.mutation.SetUserID(u)
+func (wu *WakatimeUpdate) SetUserID(i int64) *WakatimeUpdate {
+	wu.mutation.ResetUserID()
+	wu.mutation.SetUserID(i)
 	return wu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wu *WakatimeUpdate) SetNillableUserID(u *uuid.UUID) *WakatimeUpdate {
-	if u != nil {
-		wu.SetUserID(*u)
+func (wu *WakatimeUpdate) SetNillableUserID(i *int64) *WakatimeUpdate {
+	if i != nil {
+		wu.SetUserID(*i)
 	}
+	return wu
+}
+
+// AddUserID adds i to the "user_id" field.
+func (wu *WakatimeUpdate) AddUserID(i int64) *WakatimeUpdate {
+	wu.mutation.AddUserID(i)
 	return wu
 }
 
@@ -165,7 +171,10 @@ func (wu *WakatimeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := wu.mutation.UserID(); ok {
-		_spec.SetField(wakatime.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(wakatime.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := wu.mutation.AddedUserID(); ok {
+		_spec.AddField(wakatime.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := wu.mutation.Key(); ok {
 		_spec.SetField(wakatime.FieldKey, field.TypeString, value)
@@ -200,16 +209,23 @@ type WakatimeUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (wuo *WakatimeUpdateOne) SetUserID(u uuid.UUID) *WakatimeUpdateOne {
-	wuo.mutation.SetUserID(u)
+func (wuo *WakatimeUpdateOne) SetUserID(i int64) *WakatimeUpdateOne {
+	wuo.mutation.ResetUserID()
+	wuo.mutation.SetUserID(i)
 	return wuo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wuo *WakatimeUpdateOne) SetNillableUserID(u *uuid.UUID) *WakatimeUpdateOne {
-	if u != nil {
-		wuo.SetUserID(*u)
+func (wuo *WakatimeUpdateOne) SetNillableUserID(i *int64) *WakatimeUpdateOne {
+	if i != nil {
+		wuo.SetUserID(*i)
 	}
+	return wuo
+}
+
+// AddUserID adds i to the "user_id" field.
+func (wuo *WakatimeUpdateOne) AddUserID(i int64) *WakatimeUpdateOne {
+	wuo.mutation.AddUserID(i)
 	return wuo
 }
 
@@ -365,7 +381,10 @@ func (wuo *WakatimeUpdateOne) sqlSave(ctx context.Context) (_node *Wakatime, err
 		}
 	}
 	if value, ok := wuo.mutation.UserID(); ok {
-		_spec.SetField(wakatime.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(wakatime.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := wuo.mutation.AddedUserID(); ok {
+		_spec.AddField(wakatime.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := wuo.mutation.Key(); ok {
 		_spec.SetField(wakatime.FieldKey, field.TypeString, value)

@@ -12,7 +12,7 @@ var (
 	// AccessTokensColumns holds the columns for the "access_tokens" table.
 	AccessTokensColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "user_id", Type: field.TypeInt},
+		{Name: "user_id", Type: field.TypeInt64},
 		{Name: "name", Type: field.TypeString},
 		{Name: "token", Type: field.TypeString},
 		{Name: "token_hash", Type: field.TypeString, Unique: true},
@@ -21,7 +21,7 @@ var (
 		{Name: "scope", Type: field.TypeString},
 		{Name: "has_recent_activity", Type: field.TypeString},
 		{Name: "has_used", Type: field.TypeString},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711032727},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// AccessTokensTable holds the schema information for the "access_tokens" table.
@@ -55,14 +55,14 @@ var (
 	// AccountsColumns holds the columns for the "accounts" table.
 	AccountsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "user_id", Type: field.TypeInt},
+		{Name: "user_id", Type: field.TypeInt64},
 		{Name: "account", Type: field.TypeString},
 		{Name: "type", Type: field.TypeUint8},
 		{Name: "desc", Type: field.TypeString},
 		{Name: "is_private", Type: field.TypeBool, Default: true},
 		{Name: "is_activated", Type: field.TypeBool},
 		{Name: "is_primary", Type: field.TypeBool, Default: false},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711032727},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// AccountsTable holds the schema information for the "accounts" table.
@@ -113,7 +113,7 @@ var (
 		{Name: "left", Type: field.TypeInt32, Default: 0},
 		{Name: "right", Type: field.TypeInt32, Default: 0},
 		{Name: "state", Type: field.TypeInt, Default: 1},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711032727},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// PermissionGroupsTable holds the schema information for the "permission_groups" table.
@@ -139,7 +139,7 @@ var (
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "router_id", Type: field.TypeUUID},
 		{Name: "permission_group_id", Type: field.TypeUUID},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711032727},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// PermissionRelatedRoutersTable holds the schema information for the "permission_related_routers" table.
@@ -162,7 +162,7 @@ var (
 		{Name: "route", Type: field.TypeString, Size: 254, Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 254, Default: ""},
 		{Name: "state", Type: field.TypeInt, Default: 1},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711032727},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// RoutersTable holds the schema information for the "routers" table.
@@ -191,7 +191,7 @@ var (
 		{Name: "is_active", Type: field.TypeBool},
 		{Name: "is_sync_enabled", Type: field.TypeBool},
 		{Name: "cfg", Type: field.TypeJSON},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711016848},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711032727},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// SourcesTable holds the schema information for the "sources" table.
@@ -225,7 +225,7 @@ var (
 	// SourceDataColumns holds the columns for the "source_data" table.
 	SourceDataColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeInt64},
 		{Name: "type", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "sub_type", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "info", Type: field.TypeString, Default: ""},
@@ -289,7 +289,7 @@ var (
 	// UserAuthSourcesColumns holds the columns for the "user_auth_sources" table.
 	UserAuthSourcesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeInt64},
 		{Name: "token", Type: field.TypeString, Size: 254},
 		{Name: "channel", Type: field.TypeString, Size: 64},
 		{Name: "device", Type: field.TypeString, Size: 64},
@@ -319,7 +319,7 @@ var (
 	// UserRelatedRolesColumns holds the columns for the "user_related_roles" table.
 	UserRelatedRolesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeInt64},
 		{Name: "role_id", Type: field.TypeUUID},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
@@ -361,7 +361,7 @@ var (
 	// WakatimesColumns holds the columns for the "wakatimes" table.
 	WakatimesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
-		{Name: "user_id", Type: field.TypeUUID},
+		{Name: "user_id", Type: field.TypeInt64},
 		{Name: "key", Type: field.TypeString},
 		{Name: "api", Type: field.TypeString},
 		{Name: "state", Type: field.TypeString},
@@ -392,7 +392,7 @@ var (
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "wakatime_id", Type: field.TypeUUID, Comment: "wakatime id"},
-		{Name: "user_id", Type: field.TypeUUID, Comment: "会员id"},
+		{Name: "user_id", Type: field.TypeInt64},
 		{Name: "name", Type: field.TypeString, Comment: "名称", Default: ""},
 		{Name: "total_seconds", Type: field.TypeInt64, Comment: "总时长(秒", Default: 0},
 	}
@@ -421,7 +421,7 @@ var (
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "wakatime_id", Type: field.TypeUUID, Comment: "wakatime id"},
-		{Name: "user_id", Type: field.TypeUUID, Comment: "会员id"},
+		{Name: "user_id", Type: field.TypeInt64},
 		{Name: "name", Type: field.TypeString, Comment: "名称", Default: ""},
 		{Name: "total_seconds", Type: field.TypeInt64, Comment: "总时长(秒", Default: 0},
 	}

@@ -263,7 +263,7 @@ func (uasq *UserAuthSourceQuery) Clone() *UserAuthSourceQuery {
 // Example:
 //
 //	var v []struct {
-//		UserID uuid.UUID `json:"user_id,omitempty"`
+//		UserID int64 `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -286,7 +286,7 @@ func (uasq *UserAuthSourceQuery) GroupBy(field string, fields ...string) *UserAu
 // Example:
 //
 //	var v []struct {
-//		UserID uuid.UUID `json:"user_id,omitempty"`
+//		UserID int64 `json:"user_id,omitempty"`
 //	}
 //
 //	client.UserAuthSource.Query().

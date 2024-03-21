@@ -56,8 +56,8 @@ func (wcc *WakatimeCategoryCreate) SetWakatimeID(u uuid.UUID) *WakatimeCategoryC
 }
 
 // SetUserID sets the "user_id" field.
-func (wcc *WakatimeCategoryCreate) SetUserID(u uuid.UUID) *WakatimeCategoryCreate {
-	wcc.mutation.SetUserID(u)
+func (wcc *WakatimeCategoryCreate) SetUserID(i int64) *WakatimeCategoryCreate {
+	wcc.mutation.SetUserID(i)
 	return wcc
 }
 
@@ -218,7 +218,7 @@ func (wcc *WakatimeCategoryCreate) createSpec() (*WakatimeCategory, *sqlgraph.Cr
 		_node.WakatimeID = value
 	}
 	if value, ok := wcc.mutation.UserID(); ok {
-		_spec.SetField(wakatimecategory.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(wakatimecategory.FieldUserID, field.TypeInt64, value)
 		_node.UserID = value
 	}
 	if value, ok := wcc.mutation.Name(); ok {

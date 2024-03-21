@@ -11,7 +11,6 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/uuid"
 )
 
 // WakatimeCreate is the builder for creating a Wakatime entity.
@@ -22,8 +21,8 @@ type WakatimeCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (wc *WakatimeCreate) SetUserID(u uuid.UUID) *WakatimeCreate {
-	wc.mutation.SetUserID(u)
+func (wc *WakatimeCreate) SetUserID(i int64) *WakatimeCreate {
+	wc.mutation.SetUserID(i)
 	return wc
 }
 
@@ -192,7 +191,7 @@ func (wc *WakatimeCreate) createSpec() (*Wakatime, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = id
 	}
 	if value, ok := wc.mutation.UserID(); ok {
-		_spec.SetField(wakatime.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(wakatime.FieldUserID, field.TypeInt64, value)
 		_node.UserID = value
 	}
 	if value, ok := wc.mutation.Key(); ok {

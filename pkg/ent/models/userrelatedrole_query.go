@@ -263,7 +263,7 @@ func (urrq *UserRelatedRoleQuery) Clone() *UserRelatedRoleQuery {
 // Example:
 //
 //	var v []struct {
-//		UserID uuid.UUID `json:"user_id,omitempty"`
+//		UserID int64 `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -286,7 +286,7 @@ func (urrq *UserRelatedRoleQuery) GroupBy(field string, fields ...string) *UserR
 // Example:
 //
 //	var v []struct {
-//		UserID uuid.UUID `json:"user_id,omitempty"`
+//		UserID int64 `json:"user_id,omitempty"`
 //	}
 //
 //	client.UserRelatedRole.Query().

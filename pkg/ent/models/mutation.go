@@ -75,8 +75,8 @@ type AccessTokenMutation struct {
 	op                  Op
 	typ                 string
 	id                  *int64
-	user_id             *int
-	adduser_id          *int
+	user_id             *int64
+	adduser_id          *int64
 	name                *string
 	token               *string
 	token_hash          *string
@@ -200,13 +200,13 @@ func (m *AccessTokenMutation) IDs(ctx context.Context) ([]int64, error) {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *AccessTokenMutation) SetUserID(i int) {
+func (m *AccessTokenMutation) SetUserID(i int64) {
 	m.user_id = &i
 	m.adduser_id = nil
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *AccessTokenMutation) UserID() (r int, exists bool) {
+func (m *AccessTokenMutation) UserID() (r int64, exists bool) {
 	v := m.user_id
 	if v == nil {
 		return
@@ -217,7 +217,7 @@ func (m *AccessTokenMutation) UserID() (r int, exists bool) {
 // OldUserID returns the old "user_id" field's value of the AccessToken entity.
 // If the AccessToken object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AccessTokenMutation) OldUserID(ctx context.Context) (v int, err error) {
+func (m *AccessTokenMutation) OldUserID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -232,7 +232,7 @@ func (m *AccessTokenMutation) OldUserID(ctx context.Context) (v int, err error) 
 }
 
 // AddUserID adds i to the "user_id" field.
-func (m *AccessTokenMutation) AddUserID(i int) {
+func (m *AccessTokenMutation) AddUserID(i int64) {
 	if m.adduser_id != nil {
 		*m.adduser_id += i
 	} else {
@@ -241,7 +241,7 @@ func (m *AccessTokenMutation) AddUserID(i int) {
 }
 
 // AddedUserID returns the value that was added to the "user_id" field in this mutation.
-func (m *AccessTokenMutation) AddedUserID() (r int, exists bool) {
+func (m *AccessTokenMutation) AddedUserID() (r int64, exists bool) {
 	v := m.adduser_id
 	if v == nil {
 		return
@@ -794,7 +794,7 @@ func (m *AccessTokenMutation) OldField(ctx context.Context, name string) (ent.Va
 func (m *AccessTokenMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case accesstoken.FieldUserID:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -911,7 +911,7 @@ func (m *AccessTokenMutation) AddedField(name string) (ent.Value, bool) {
 func (m *AccessTokenMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	case accesstoken.FieldUserID:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1049,8 +1049,8 @@ type AccountsMutation struct {
 	op             Op
 	typ            string
 	id             *int64
-	user_id        *int
-	adduser_id     *int
+	user_id        *int64
+	adduser_id     *int64
 	account        *string
 	_type          *uint8
 	add_type       *int8
@@ -1173,13 +1173,13 @@ func (m *AccountsMutation) IDs(ctx context.Context) ([]int64, error) {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *AccountsMutation) SetUserID(i int) {
+func (m *AccountsMutation) SetUserID(i int64) {
 	m.user_id = &i
 	m.adduser_id = nil
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *AccountsMutation) UserID() (r int, exists bool) {
+func (m *AccountsMutation) UserID() (r int64, exists bool) {
 	v := m.user_id
 	if v == nil {
 		return
@@ -1190,7 +1190,7 @@ func (m *AccountsMutation) UserID() (r int, exists bool) {
 // OldUserID returns the old "user_id" field's value of the Accounts entity.
 // If the Accounts object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AccountsMutation) OldUserID(ctx context.Context) (v int, err error) {
+func (m *AccountsMutation) OldUserID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -1205,7 +1205,7 @@ func (m *AccountsMutation) OldUserID(ctx context.Context) (v int, err error) {
 }
 
 // AddUserID adds i to the "user_id" field.
-func (m *AccountsMutation) AddUserID(i int) {
+func (m *AccountsMutation) AddUserID(i int64) {
 	if m.adduser_id != nil {
 		*m.adduser_id += i
 	} else {
@@ -1214,7 +1214,7 @@ func (m *AccountsMutation) AddUserID(i int) {
 }
 
 // AddedUserID returns the value that was added to the "user_id" field in this mutation.
-func (m *AccountsMutation) AddedUserID() (r int, exists bool) {
+func (m *AccountsMutation) AddedUserID() (r int64, exists bool) {
 	v := m.adduser_id
 	if v == nil {
 		return
@@ -1701,7 +1701,7 @@ func (m *AccountsMutation) OldField(ctx context.Context, name string) (ent.Value
 func (m *AccountsMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case accounts.FieldUserID:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1809,7 +1809,7 @@ func (m *AccountsMutation) AddedField(name string) (ent.Value, bool) {
 func (m *AccountsMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	case accounts.FieldUserID:
-		v, ok := value.(int)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -5378,7 +5378,8 @@ type SourceDataMutation struct {
 	op            Op
 	typ           string
 	id            *int64
-	user_id       *uuid.UUID
+	user_id       *int64
+	adduser_id    *int64
 	_type         *string
 	sub_type      *string
 	info          *string
@@ -5496,12 +5497,13 @@ func (m *SourceDataMutation) IDs(ctx context.Context) ([]int64, error) {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *SourceDataMutation) SetUserID(u uuid.UUID) {
-	m.user_id = &u
+func (m *SourceDataMutation) SetUserID(i int64) {
+	m.user_id = &i
+	m.adduser_id = nil
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *SourceDataMutation) UserID() (r uuid.UUID, exists bool) {
+func (m *SourceDataMutation) UserID() (r int64, exists bool) {
 	v := m.user_id
 	if v == nil {
 		return
@@ -5512,7 +5514,7 @@ func (m *SourceDataMutation) UserID() (r uuid.UUID, exists bool) {
 // OldUserID returns the old "user_id" field's value of the SourceData entity.
 // If the SourceData object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *SourceDataMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *SourceDataMutation) OldUserID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -5526,9 +5528,28 @@ func (m *SourceDataMutation) OldUserID(ctx context.Context) (v uuid.UUID, err er
 	return oldValue.UserID, nil
 }
 
+// AddUserID adds i to the "user_id" field.
+func (m *SourceDataMutation) AddUserID(i int64) {
+	if m.adduser_id != nil {
+		*m.adduser_id += i
+	} else {
+		m.adduser_id = &i
+	}
+}
+
+// AddedUserID returns the value that was added to the "user_id" field in this mutation.
+func (m *SourceDataMutation) AddedUserID() (r int64, exists bool) {
+	v := m.adduser_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *SourceDataMutation) ResetUserID() {
 	m.user_id = nil
+	m.adduser_id = nil
 }
 
 // SetType sets the "type" field.
@@ -5858,7 +5879,7 @@ func (m *SourceDataMutation) OldField(ctx context.Context, name string) (ent.Val
 func (m *SourceDataMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case sourcedata.FieldUserID:
-		v, ok := value.(uuid.UUID)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -5913,13 +5934,21 @@ func (m *SourceDataMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *SourceDataMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.adduser_id != nil {
+		fields = append(fields, sourcedata.FieldUserID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *SourceDataMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case sourcedata.FieldUserID:
+		return m.AddedUserID()
+	}
 	return nil, false
 }
 
@@ -5928,6 +5957,13 @@ func (m *SourceDataMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *SourceDataMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case sourcedata.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUserID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown SourceData numeric field %s", name)
 }
@@ -7299,7 +7335,8 @@ type UserAuthSourceMutation struct {
 	op              Op
 	typ             string
 	id              *int64
-	user_id         *uuid.UUID
+	user_id         *int64
+	adduser_id      *int64
 	token           *string
 	channel         *string
 	device          *string
@@ -7425,12 +7462,13 @@ func (m *UserAuthSourceMutation) IDs(ctx context.Context) ([]int64, error) {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *UserAuthSourceMutation) SetUserID(u uuid.UUID) {
-	m.user_id = &u
+func (m *UserAuthSourceMutation) SetUserID(i int64) {
+	m.user_id = &i
+	m.adduser_id = nil
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *UserAuthSourceMutation) UserID() (r uuid.UUID, exists bool) {
+func (m *UserAuthSourceMutation) UserID() (r int64, exists bool) {
 	v := m.user_id
 	if v == nil {
 		return
@@ -7441,7 +7479,7 @@ func (m *UserAuthSourceMutation) UserID() (r uuid.UUID, exists bool) {
 // OldUserID returns the old "user_id" field's value of the UserAuthSource entity.
 // If the UserAuthSource object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserAuthSourceMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *UserAuthSourceMutation) OldUserID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -7455,9 +7493,28 @@ func (m *UserAuthSourceMutation) OldUserID(ctx context.Context) (v uuid.UUID, er
 	return oldValue.UserID, nil
 }
 
+// AddUserID adds i to the "user_id" field.
+func (m *UserAuthSourceMutation) AddUserID(i int64) {
+	if m.adduser_id != nil {
+		*m.adduser_id += i
+	} else {
+		m.adduser_id = &i
+	}
+}
+
+// AddedUserID returns the value that was added to the "user_id" field in this mutation.
+func (m *UserAuthSourceMutation) AddedUserID() (r int64, exists bool) {
+	v := m.adduser_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *UserAuthSourceMutation) ResetUserID() {
 	m.user_id = nil
+	m.adduser_id = nil
 }
 
 // SetToken sets the "token" field.
@@ -8085,7 +8142,7 @@ func (m *UserAuthSourceMutation) OldField(ctx context.Context, name string) (ent
 func (m *UserAuthSourceMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case userauthsource.FieldUserID:
-		v, ok := value.(uuid.UUID)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -8183,6 +8240,9 @@ func (m *UserAuthSourceMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *UserAuthSourceMutation) AddedFields() []string {
 	var fields []string
+	if m.adduser_id != nil {
+		fields = append(fields, userauthsource.FieldUserID)
+	}
 	if m.addlogin_source != nil {
 		fields = append(fields, userauthsource.FieldLoginSource)
 	}
@@ -8197,6 +8257,8 @@ func (m *UserAuthSourceMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *UserAuthSourceMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
+	case userauthsource.FieldUserID:
+		return m.AddedUserID()
 	case userauthsource.FieldLoginSource:
 		return m.AddedLoginSource()
 	case userauthsource.FieldLoginType:
@@ -8210,6 +8272,13 @@ func (m *UserAuthSourceMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *UserAuthSourceMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case userauthsource.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUserID(v)
+		return nil
 	case userauthsource.FieldLoginSource:
 		v, ok := value.(int)
 		if !ok {
@@ -8348,7 +8417,8 @@ type UserRelatedRoleMutation struct {
 	op            Op
 	typ           string
 	id            *int64
-	user_id       *uuid.UUID
+	user_id       *int64
+	adduser_id    *int64
 	role_id       *uuid.UUID
 	create_time   *time.Time
 	update_time   *time.Time
@@ -8463,12 +8533,13 @@ func (m *UserRelatedRoleMutation) IDs(ctx context.Context) ([]int64, error) {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *UserRelatedRoleMutation) SetUserID(u uuid.UUID) {
-	m.user_id = &u
+func (m *UserRelatedRoleMutation) SetUserID(i int64) {
+	m.user_id = &i
+	m.adduser_id = nil
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *UserRelatedRoleMutation) UserID() (r uuid.UUID, exists bool) {
+func (m *UserRelatedRoleMutation) UserID() (r int64, exists bool) {
 	v := m.user_id
 	if v == nil {
 		return
@@ -8479,7 +8550,7 @@ func (m *UserRelatedRoleMutation) UserID() (r uuid.UUID, exists bool) {
 // OldUserID returns the old "user_id" field's value of the UserRelatedRole entity.
 // If the UserRelatedRole object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserRelatedRoleMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *UserRelatedRoleMutation) OldUserID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -8493,9 +8564,28 @@ func (m *UserRelatedRoleMutation) OldUserID(ctx context.Context) (v uuid.UUID, e
 	return oldValue.UserID, nil
 }
 
+// AddUserID adds i to the "user_id" field.
+func (m *UserRelatedRoleMutation) AddUserID(i int64) {
+	if m.adduser_id != nil {
+		*m.adduser_id += i
+	} else {
+		m.adduser_id = &i
+	}
+}
+
+// AddedUserID returns the value that was added to the "user_id" field in this mutation.
+func (m *UserRelatedRoleMutation) AddedUserID() (r int64, exists bool) {
+	v := m.adduser_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *UserRelatedRoleMutation) ResetUserID() {
 	m.user_id = nil
+	m.adduser_id = nil
 }
 
 // SetRoleID sets the "role_id" field.
@@ -8696,7 +8786,7 @@ func (m *UserRelatedRoleMutation) OldField(ctx context.Context, name string) (en
 func (m *UserRelatedRoleMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case userrelatedrole.FieldUserID:
-		v, ok := value.(uuid.UUID)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -8730,13 +8820,21 @@ func (m *UserRelatedRoleMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *UserRelatedRoleMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.adduser_id != nil {
+		fields = append(fields, userrelatedrole.FieldUserID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *UserRelatedRoleMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case userrelatedrole.FieldUserID:
+		return m.AddedUserID()
+	}
 	return nil, false
 }
 
@@ -8745,6 +8843,13 @@ func (m *UserRelatedRoleMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *UserRelatedRoleMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case userrelatedrole.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUserID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown UserRelatedRole numeric field %s", name)
 }
@@ -9372,7 +9477,8 @@ type WakatimeMutation struct {
 	op            Op
 	typ           string
 	id            *int64
-	user_id       *uuid.UUID
+	user_id       *int64
+	adduser_id    *int64
 	key           *string
 	api           *string
 	state         *string
@@ -9489,12 +9595,13 @@ func (m *WakatimeMutation) IDs(ctx context.Context) ([]int64, error) {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *WakatimeMutation) SetUserID(u uuid.UUID) {
-	m.user_id = &u
+func (m *WakatimeMutation) SetUserID(i int64) {
+	m.user_id = &i
+	m.adduser_id = nil
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *WakatimeMutation) UserID() (r uuid.UUID, exists bool) {
+func (m *WakatimeMutation) UserID() (r int64, exists bool) {
 	v := m.user_id
 	if v == nil {
 		return
@@ -9505,7 +9612,7 @@ func (m *WakatimeMutation) UserID() (r uuid.UUID, exists bool) {
 // OldUserID returns the old "user_id" field's value of the Wakatime entity.
 // If the Wakatime object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WakatimeMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *WakatimeMutation) OldUserID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -9519,9 +9626,28 @@ func (m *WakatimeMutation) OldUserID(ctx context.Context) (v uuid.UUID, err erro
 	return oldValue.UserID, nil
 }
 
+// AddUserID adds i to the "user_id" field.
+func (m *WakatimeMutation) AddUserID(i int64) {
+	if m.adduser_id != nil {
+		*m.adduser_id += i
+	} else {
+		m.adduser_id = &i
+	}
+}
+
+// AddedUserID returns the value that was added to the "user_id" field in this mutation.
+func (m *WakatimeMutation) AddedUserID() (r int64, exists bool) {
+	v := m.adduser_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *WakatimeMutation) ResetUserID() {
 	m.user_id = nil
+	m.adduser_id = nil
 }
 
 // SetKey sets the "key" field.
@@ -9808,7 +9934,7 @@ func (m *WakatimeMutation) OldField(ctx context.Context, name string) (ent.Value
 func (m *WakatimeMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case wakatime.FieldUserID:
-		v, ok := value.(uuid.UUID)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -9856,13 +9982,21 @@ func (m *WakatimeMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *WakatimeMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.adduser_id != nil {
+		fields = append(fields, wakatime.FieldUserID)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *WakatimeMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case wakatime.FieldUserID:
+		return m.AddedUserID()
+	}
 	return nil, false
 }
 
@@ -9871,6 +10005,13 @@ func (m *WakatimeMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *WakatimeMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case wakatime.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUserID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Wakatime numeric field %s", name)
 }
@@ -9977,7 +10118,8 @@ type WakatimeCategoryMutation struct {
 	create_time      *time.Time
 	update_time      *time.Time
 	wakatime_id      *uuid.UUID
-	user_id          *uuid.UUID
+	user_id          *int64
+	adduser_id       *int64
 	name             *string
 	total_seconds    *int64
 	addtotal_seconds *int64
@@ -10200,12 +10342,13 @@ func (m *WakatimeCategoryMutation) ResetWakatimeID() {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *WakatimeCategoryMutation) SetUserID(u uuid.UUID) {
-	m.user_id = &u
+func (m *WakatimeCategoryMutation) SetUserID(i int64) {
+	m.user_id = &i
+	m.adduser_id = nil
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *WakatimeCategoryMutation) UserID() (r uuid.UUID, exists bool) {
+func (m *WakatimeCategoryMutation) UserID() (r int64, exists bool) {
 	v := m.user_id
 	if v == nil {
 		return
@@ -10216,7 +10359,7 @@ func (m *WakatimeCategoryMutation) UserID() (r uuid.UUID, exists bool) {
 // OldUserID returns the old "user_id" field's value of the WakatimeCategory entity.
 // If the WakatimeCategory object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WakatimeCategoryMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *WakatimeCategoryMutation) OldUserID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -10230,9 +10373,28 @@ func (m *WakatimeCategoryMutation) OldUserID(ctx context.Context) (v uuid.UUID, 
 	return oldValue.UserID, nil
 }
 
+// AddUserID adds i to the "user_id" field.
+func (m *WakatimeCategoryMutation) AddUserID(i int64) {
+	if m.adduser_id != nil {
+		*m.adduser_id += i
+	} else {
+		m.adduser_id = &i
+	}
+}
+
+// AddedUserID returns the value that was added to the "user_id" field in this mutation.
+func (m *WakatimeCategoryMutation) AddedUserID() (r int64, exists bool) {
+	v := m.adduser_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *WakatimeCategoryMutation) ResetUserID() {
 	m.user_id = nil
+	m.adduser_id = nil
 }
 
 // SetName sets the "name" field.
@@ -10452,7 +10614,7 @@ func (m *WakatimeCategoryMutation) SetField(name string, value ent.Value) error 
 		m.SetWakatimeID(v)
 		return nil
 	case wakatimecategory.FieldUserID:
-		v, ok := value.(uuid.UUID)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -10480,6 +10642,9 @@ func (m *WakatimeCategoryMutation) SetField(name string, value ent.Value) error 
 // this mutation.
 func (m *WakatimeCategoryMutation) AddedFields() []string {
 	var fields []string
+	if m.adduser_id != nil {
+		fields = append(fields, wakatimecategory.FieldUserID)
+	}
 	if m.addtotal_seconds != nil {
 		fields = append(fields, wakatimecategory.FieldTotalSeconds)
 	}
@@ -10491,6 +10656,8 @@ func (m *WakatimeCategoryMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *WakatimeCategoryMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
+	case wakatimecategory.FieldUserID:
+		return m.AddedUserID()
 	case wakatimecategory.FieldTotalSeconds:
 		return m.AddedTotalSeconds()
 	}
@@ -10502,6 +10669,13 @@ func (m *WakatimeCategoryMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *WakatimeCategoryMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case wakatimecategory.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUserID(v)
+		return nil
 	case wakatimecategory.FieldTotalSeconds:
 		v, ok := value.(int64)
 		if !ok {
@@ -10615,7 +10789,8 @@ type WakatimeDependencyMutation struct {
 	create_time      *time.Time
 	update_time      *time.Time
 	wakatime_id      *uuid.UUID
-	user_id          *uuid.UUID
+	user_id          *int64
+	adduser_id       *int64
 	name             *string
 	total_seconds    *int64
 	addtotal_seconds *int64
@@ -10838,12 +11013,13 @@ func (m *WakatimeDependencyMutation) ResetWakatimeID() {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *WakatimeDependencyMutation) SetUserID(u uuid.UUID) {
-	m.user_id = &u
+func (m *WakatimeDependencyMutation) SetUserID(i int64) {
+	m.user_id = &i
+	m.adduser_id = nil
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *WakatimeDependencyMutation) UserID() (r uuid.UUID, exists bool) {
+func (m *WakatimeDependencyMutation) UserID() (r int64, exists bool) {
 	v := m.user_id
 	if v == nil {
 		return
@@ -10854,7 +11030,7 @@ func (m *WakatimeDependencyMutation) UserID() (r uuid.UUID, exists bool) {
 // OldUserID returns the old "user_id" field's value of the WakatimeDependency entity.
 // If the WakatimeDependency object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WakatimeDependencyMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *WakatimeDependencyMutation) OldUserID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -10868,9 +11044,28 @@ func (m *WakatimeDependencyMutation) OldUserID(ctx context.Context) (v uuid.UUID
 	return oldValue.UserID, nil
 }
 
+// AddUserID adds i to the "user_id" field.
+func (m *WakatimeDependencyMutation) AddUserID(i int64) {
+	if m.adduser_id != nil {
+		*m.adduser_id += i
+	} else {
+		m.adduser_id = &i
+	}
+}
+
+// AddedUserID returns the value that was added to the "user_id" field in this mutation.
+func (m *WakatimeDependencyMutation) AddedUserID() (r int64, exists bool) {
+	v := m.adduser_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetUserID resets all changes to the "user_id" field.
 func (m *WakatimeDependencyMutation) ResetUserID() {
 	m.user_id = nil
+	m.adduser_id = nil
 }
 
 // SetName sets the "name" field.
@@ -11090,7 +11285,7 @@ func (m *WakatimeDependencyMutation) SetField(name string, value ent.Value) erro
 		m.SetWakatimeID(v)
 		return nil
 	case wakatimedependency.FieldUserID:
-		v, ok := value.(uuid.UUID)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -11118,6 +11313,9 @@ func (m *WakatimeDependencyMutation) SetField(name string, value ent.Value) erro
 // this mutation.
 func (m *WakatimeDependencyMutation) AddedFields() []string {
 	var fields []string
+	if m.adduser_id != nil {
+		fields = append(fields, wakatimedependency.FieldUserID)
+	}
 	if m.addtotal_seconds != nil {
 		fields = append(fields, wakatimedependency.FieldTotalSeconds)
 	}
@@ -11129,6 +11327,8 @@ func (m *WakatimeDependencyMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *WakatimeDependencyMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
+	case wakatimedependency.FieldUserID:
+		return m.AddedUserID()
 	case wakatimedependency.FieldTotalSeconds:
 		return m.AddedTotalSeconds()
 	}
@@ -11140,6 +11340,13 @@ func (m *WakatimeDependencyMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *WakatimeDependencyMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case wakatimedependency.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUserID(v)
+		return nil
 	case wakatimedependency.FieldTotalSeconds:
 		v, ok := value.(int64)
 		if !ok {

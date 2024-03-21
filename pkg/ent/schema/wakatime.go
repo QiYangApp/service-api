@@ -4,7 +4,6 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"github.com/google/uuid"
 	"time"
 )
 
@@ -17,7 +16,7 @@ type Wakatime struct {
 func (Wakatime) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
-		field.UUID("user_id", uuid.UUID{}).Comment("会员id"),
+		field.Int64("user_id"),
 		field.String("key").NotEmpty().Comment("密钥"),
 		field.String("api").NotEmpty().Comment("地址"),
 		field.String("state").NotEmpty().Comment("状态"),

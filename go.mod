@@ -10,6 +10,8 @@ replace ent => ./pkg/ent
 
 require (
 	ent v0.0.0-00010101000000-000000000000
+	entgo.io/contrib v0.4.5
+	entgo.io/ent v0.13.1
 	framework v0.0.0-00010101000000-000000000000
 	github.com/dustin/go-humanize v1.0.1
 	github.com/gin-contrib/i18n v1.1.1
@@ -30,8 +32,6 @@ require (
 
 require (
 	ariga.io/atlas v0.19.2 // indirect
-	entgo.io/contrib v0.4.5 // indirect
-	entgo.io/ent v0.13.1 // indirect
 	github.com/99designs/gqlgen v0.17.5-0.20220428154617-9250f9ac1f90 // indirect
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
@@ -64,6 +64,8 @@ require (
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/hashicorp/errwrap v1.0.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.20.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect

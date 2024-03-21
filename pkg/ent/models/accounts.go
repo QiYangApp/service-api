@@ -18,7 +18,7 @@ type Accounts struct {
 	// ID of the ent.
 	ID int64 `json:"id,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID int `json:"user_id,omitempty"`
+	UserID int64 `json:"user_id,omitempty"`
 	// Account holds the value of the "account" field.
 	Account string `json:"account,omitempty"`
 	// Type holds the value of the "type" field.
@@ -74,7 +74,7 @@ func (a *Accounts) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				a.UserID = int(value.Int64)
+				a.UserID = value.Int64
 			}
 		case accounts.FieldAccount:
 			if value, ok := values[i].(*sql.NullString); !ok {

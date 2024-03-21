@@ -263,7 +263,7 @@ func (atq *AccessTokenQuery) Clone() *AccessTokenQuery {
 // Example:
 //
 //	var v []struct {
-//		UserID int `json:"user_id,omitempty"`
+//		UserID int64 `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -286,7 +286,7 @@ func (atq *AccessTokenQuery) GroupBy(field string, fields ...string) *AccessToke
 // Example:
 //
 //	var v []struct {
-//		UserID int `json:"user_id,omitempty"`
+//		UserID int64 `json:"user_id,omitempty"`
 //	}
 //
 //	client.AccessToken.Query().

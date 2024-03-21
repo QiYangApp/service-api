@@ -6,13 +6,13 @@ import (
 	"sync"
 )
 
-var instance *Manage = nil
-var once = sync.Once{}
-var Client *zap.Logger = nil
-
 func init() {
 	Instance()
 }
+
+var instance *Manage = nil
+var once = sync.Once{}
+var Client *zap.Logger = Instance().Client
 
 func Instance() *Manage {
 	once.Do(func() {
@@ -28,8 +28,6 @@ func Instance() *Manage {
 			},
 		}
 		instance.Builder()
-
-		Client = instance.Client
 	})
 
 	return instance

@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/uuid"
 )
 
 const (
@@ -73,8 +72,6 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// DefaultUserID holds the default value on creation for the "user_id" field.
-	DefaultUserID func() uuid.UUID
 	// TokenValidator is a validator for the "token" field. It is called by the builders before save.
 	TokenValidator func(string) error
 	// ChannelValidator is a validator for the "channel" field. It is called by the builders before save.

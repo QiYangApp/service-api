@@ -55,7 +55,7 @@ func IDLTE(id int64) predicate.AccessToken {
 }
 
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
-func UserID(v int) predicate.AccessToken {
+func UserID(v int64) predicate.AccessToken {
 	return predicate.AccessToken(sql.FieldEQ(FieldUserID, v))
 }
 
@@ -112,42 +112,42 @@ func UpdateTime(v timeutil.TimeStamp) predicate.AccessToken {
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.
-func UserIDEQ(v int) predicate.AccessToken {
+func UserIDEQ(v int64) predicate.AccessToken {
 	return predicate.AccessToken(sql.FieldEQ(FieldUserID, v))
 }
 
 // UserIDNEQ applies the NEQ predicate on the "user_id" field.
-func UserIDNEQ(v int) predicate.AccessToken {
+func UserIDNEQ(v int64) predicate.AccessToken {
 	return predicate.AccessToken(sql.FieldNEQ(FieldUserID, v))
 }
 
 // UserIDIn applies the In predicate on the "user_id" field.
-func UserIDIn(vs ...int) predicate.AccessToken {
+func UserIDIn(vs ...int64) predicate.AccessToken {
 	return predicate.AccessToken(sql.FieldIn(FieldUserID, vs...))
 }
 
 // UserIDNotIn applies the NotIn predicate on the "user_id" field.
-func UserIDNotIn(vs ...int) predicate.AccessToken {
+func UserIDNotIn(vs ...int64) predicate.AccessToken {
 	return predicate.AccessToken(sql.FieldNotIn(FieldUserID, vs...))
 }
 
 // UserIDGT applies the GT predicate on the "user_id" field.
-func UserIDGT(v int) predicate.AccessToken {
+func UserIDGT(v int64) predicate.AccessToken {
 	return predicate.AccessToken(sql.FieldGT(FieldUserID, v))
 }
 
 // UserIDGTE applies the GTE predicate on the "user_id" field.
-func UserIDGTE(v int) predicate.AccessToken {
+func UserIDGTE(v int64) predicate.AccessToken {
 	return predicate.AccessToken(sql.FieldGTE(FieldUserID, v))
 }
 
 // UserIDLT applies the LT predicate on the "user_id" field.
-func UserIDLT(v int) predicate.AccessToken {
+func UserIDLT(v int64) predicate.AccessToken {
 	return predicate.AccessToken(sql.FieldLT(FieldUserID, v))
 }
 
 // UserIDLTE applies the LTE predicate on the "user_id" field.
-func UserIDLTE(v int) predicate.AccessToken {
+func UserIDLTE(v int64) predicate.AccessToken {
 	return predicate.AccessToken(sql.FieldLTE(FieldUserID, v))
 }
 

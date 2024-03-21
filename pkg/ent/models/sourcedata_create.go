@@ -11,7 +11,6 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/uuid"
 )
 
 // SourceDataCreate is the builder for creating a SourceData entity.
@@ -22,8 +21,8 @@ type SourceDataCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (sdc *SourceDataCreate) SetUserID(u uuid.UUID) *SourceDataCreate {
-	sdc.mutation.SetUserID(u)
+func (sdc *SourceDataCreate) SetUserID(i int64) *SourceDataCreate {
+	sdc.mutation.SetUserID(i)
 	return sdc
 }
 
@@ -244,7 +243,7 @@ func (sdc *SourceDataCreate) createSpec() (*SourceData, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = id
 	}
 	if value, ok := sdc.mutation.UserID(); ok {
-		_spec.SetField(sourcedata.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(sourcedata.FieldUserID, field.TypeInt64, value)
 		_node.UserID = value
 	}
 	if value, ok := sdc.mutation.GetType(); ok {

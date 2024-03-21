@@ -55,7 +55,7 @@ func IDLTE(id int64) predicate.Accounts {
 }
 
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
-func UserID(v int) predicate.Accounts {
+func UserID(v int64) predicate.Accounts {
 	return predicate.Accounts(sql.FieldEQ(FieldUserID, v))
 }
 
@@ -102,42 +102,42 @@ func UpdateTime(v timeutil.TimeStamp) predicate.Accounts {
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.
-func UserIDEQ(v int) predicate.Accounts {
+func UserIDEQ(v int64) predicate.Accounts {
 	return predicate.Accounts(sql.FieldEQ(FieldUserID, v))
 }
 
 // UserIDNEQ applies the NEQ predicate on the "user_id" field.
-func UserIDNEQ(v int) predicate.Accounts {
+func UserIDNEQ(v int64) predicate.Accounts {
 	return predicate.Accounts(sql.FieldNEQ(FieldUserID, v))
 }
 
 // UserIDIn applies the In predicate on the "user_id" field.
-func UserIDIn(vs ...int) predicate.Accounts {
+func UserIDIn(vs ...int64) predicate.Accounts {
 	return predicate.Accounts(sql.FieldIn(FieldUserID, vs...))
 }
 
 // UserIDNotIn applies the NotIn predicate on the "user_id" field.
-func UserIDNotIn(vs ...int) predicate.Accounts {
+func UserIDNotIn(vs ...int64) predicate.Accounts {
 	return predicate.Accounts(sql.FieldNotIn(FieldUserID, vs...))
 }
 
 // UserIDGT applies the GT predicate on the "user_id" field.
-func UserIDGT(v int) predicate.Accounts {
+func UserIDGT(v int64) predicate.Accounts {
 	return predicate.Accounts(sql.FieldGT(FieldUserID, v))
 }
 
 // UserIDGTE applies the GTE predicate on the "user_id" field.
-func UserIDGTE(v int) predicate.Accounts {
+func UserIDGTE(v int64) predicate.Accounts {
 	return predicate.Accounts(sql.FieldGTE(FieldUserID, v))
 }
 
 // UserIDLT applies the LT predicate on the "user_id" field.
-func UserIDLT(v int) predicate.Accounts {
+func UserIDLT(v int64) predicate.Accounts {
 	return predicate.Accounts(sql.FieldLT(FieldUserID, v))
 }
 
 // UserIDLTE applies the LTE predicate on the "user_id" field.
-func UserIDLTE(v int) predicate.Accounts {
+func UserIDLTE(v int64) predicate.Accounts {
 	return predicate.Accounts(sql.FieldLTE(FieldUserID, v))
 }
 

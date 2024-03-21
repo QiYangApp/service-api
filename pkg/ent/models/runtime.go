@@ -22,8 +22,6 @@ import (
 	"ent/schema"
 	"ent/utils/timeutil"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 // The init function reads all schema descriptors with runtime code
@@ -454,10 +452,6 @@ func init() {
 	user.UpdateDefaultUpdateTime = userDescUpdateTime.UpdateDefault.(func() time.Time)
 	userauthsourceFields := schema.UserAuthSource{}.Fields()
 	_ = userauthsourceFields
-	// userauthsourceDescUserID is the schema descriptor for user_id field.
-	userauthsourceDescUserID := userauthsourceFields[1].Descriptor()
-	// userauthsource.DefaultUserID holds the default value on creation for the user_id field.
-	userauthsource.DefaultUserID = userauthsourceDescUserID.Default.(func() uuid.UUID)
 	// userauthsourceDescToken is the schema descriptor for token field.
 	userauthsourceDescToken := userauthsourceFields[2].Descriptor()
 	// userauthsource.TokenValidator is a validator for the "token" field. It is called by the builders before save.

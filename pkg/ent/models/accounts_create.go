@@ -21,7 +21,7 @@ type AccountsCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (ac *AccountsCreate) SetUserID(i int) *AccountsCreate {
+func (ac *AccountsCreate) SetUserID(i int64) *AccountsCreate {
 	ac.mutation.SetUserID(i)
 	return ac
 }
@@ -215,7 +215,7 @@ func (ac *AccountsCreate) createSpec() (*Accounts, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = id
 	}
 	if value, ok := ac.mutation.UserID(); ok {
-		_spec.SetField(accounts.FieldUserID, field.TypeInt, value)
+		_spec.SetField(accounts.FieldUserID, field.TypeInt64, value)
 		_node.UserID = value
 	}
 	if value, ok := ac.mutation.Account(); ok {

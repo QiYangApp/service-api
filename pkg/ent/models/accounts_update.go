@@ -29,14 +29,14 @@ func (au *AccountsUpdate) Where(ps ...predicate.Accounts) *AccountsUpdate {
 }
 
 // SetUserID sets the "user_id" field.
-func (au *AccountsUpdate) SetUserID(i int) *AccountsUpdate {
+func (au *AccountsUpdate) SetUserID(i int64) *AccountsUpdate {
 	au.mutation.ResetUserID()
 	au.mutation.SetUserID(i)
 	return au
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (au *AccountsUpdate) SetNillableUserID(i *int) *AccountsUpdate {
+func (au *AccountsUpdate) SetNillableUserID(i *int64) *AccountsUpdate {
 	if i != nil {
 		au.SetUserID(*i)
 	}
@@ -44,7 +44,7 @@ func (au *AccountsUpdate) SetNillableUserID(i *int) *AccountsUpdate {
 }
 
 // AddUserID adds i to the "user_id" field.
-func (au *AccountsUpdate) AddUserID(i int) *AccountsUpdate {
+func (au *AccountsUpdate) AddUserID(i int64) *AccountsUpdate {
 	au.mutation.AddUserID(i)
 	return au
 }
@@ -204,10 +204,10 @@ func (au *AccountsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := au.mutation.UserID(); ok {
-		_spec.SetField(accounts.FieldUserID, field.TypeInt, value)
+		_spec.SetField(accounts.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := au.mutation.AddedUserID(); ok {
-		_spec.AddField(accounts.FieldUserID, field.TypeInt, value)
+		_spec.AddField(accounts.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := au.mutation.Account(); ok {
 		_spec.SetField(accounts.FieldAccount, field.TypeString, value)
@@ -257,14 +257,14 @@ type AccountsUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (auo *AccountsUpdateOne) SetUserID(i int) *AccountsUpdateOne {
+func (auo *AccountsUpdateOne) SetUserID(i int64) *AccountsUpdateOne {
 	auo.mutation.ResetUserID()
 	auo.mutation.SetUserID(i)
 	return auo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (auo *AccountsUpdateOne) SetNillableUserID(i *int) *AccountsUpdateOne {
+func (auo *AccountsUpdateOne) SetNillableUserID(i *int64) *AccountsUpdateOne {
 	if i != nil {
 		auo.SetUserID(*i)
 	}
@@ -272,7 +272,7 @@ func (auo *AccountsUpdateOne) SetNillableUserID(i *int) *AccountsUpdateOne {
 }
 
 // AddUserID adds i to the "user_id" field.
-func (auo *AccountsUpdateOne) AddUserID(i int) *AccountsUpdateOne {
+func (auo *AccountsUpdateOne) AddUserID(i int64) *AccountsUpdateOne {
 	auo.mutation.AddUserID(i)
 	return auo
 }
@@ -462,10 +462,10 @@ func (auo *AccountsUpdateOne) sqlSave(ctx context.Context) (_node *Accounts, err
 		}
 	}
 	if value, ok := auo.mutation.UserID(); ok {
-		_spec.SetField(accounts.FieldUserID, field.TypeInt, value)
+		_spec.SetField(accounts.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := auo.mutation.AddedUserID(); ok {
-		_spec.AddField(accounts.FieldUserID, field.TypeInt, value)
+		_spec.AddField(accounts.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := auo.mutation.Account(); ok {
 		_spec.SetField(accounts.FieldAccount, field.TypeString, value)

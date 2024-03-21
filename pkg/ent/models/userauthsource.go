@@ -10,7 +10,6 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/uuid"
 )
 
 // UserAuthSource is the model entity for the UserAuthSource schema.
@@ -18,8 +17,8 @@ type UserAuthSource struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int64 `json:"id,omitempty"`
-	// member UUID of the
-	UserID uuid.UUID `json:"user_id,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID int64 `json:"user_id,omitempty"`
 	// 授权token
 	Token string `json:"token,omitempty"`
 	// 登录渠道
@@ -52,14 +51,12 @@ func (*UserAuthSource) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case userauthsource.FieldID, userauthsource.FieldLoginSource, userauthsource.FieldLoginType:
+		case userauthsource.FieldID, userauthsource.FieldUserID, userauthsource.FieldLoginSource, userauthsource.FieldLoginType:
 			values[i] = new(sql.NullInt64)
 		case userauthsource.FieldToken, userauthsource.FieldChannel, userauthsource.FieldDevice, userauthsource.FieldDeviceDetail, userauthsource.FieldClientIP, userauthsource.FieldRemoteIP, userauthsource.FieldSnapshot, userauthsource.FieldLoginName:
 			values[i] = new(sql.NullString)
 		case userauthsource.FieldCreateTime, userauthsource.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
-		case userauthsource.FieldUserID:
-			values[i] = new(uuid.UUID)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -82,10 +79,10 @@ func (uas *UserAuthSource) assignValues(columns []string, values []any) error {
 			}
 			uas.ID = int64(value.Int64)
 		case userauthsource.FieldUserID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value != nil {
-				uas.UserID = *value
+			} else if value.Valid {
+				uas.UserID = value.Int64
 			}
 		case userauthsource.FieldToken:
 			if value, ok := values[i].(*sql.NullString); !ok {

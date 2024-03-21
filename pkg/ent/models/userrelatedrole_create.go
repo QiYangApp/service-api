@@ -22,8 +22,8 @@ type UserRelatedRoleCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (urrc *UserRelatedRoleCreate) SetUserID(u uuid.UUID) *UserRelatedRoleCreate {
-	urrc.mutation.SetUserID(u)
+func (urrc *UserRelatedRoleCreate) SetUserID(i int64) *UserRelatedRoleCreate {
+	urrc.mutation.SetUserID(i)
 	return urrc
 }
 
@@ -159,7 +159,7 @@ func (urrc *UserRelatedRoleCreate) createSpec() (*UserRelatedRole, *sqlgraph.Cre
 		_spec.ID.Value = id
 	}
 	if value, ok := urrc.mutation.UserID(); ok {
-		_spec.SetField(userrelatedrole.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(userrelatedrole.FieldUserID, field.TypeInt64, value)
 		_node.UserID = value
 	}
 	if value, ok := urrc.mutation.RoleID(); ok {

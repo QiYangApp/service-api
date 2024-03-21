@@ -56,7 +56,7 @@ func NewClient(opts []models.Option, debug, schemaInit bool) *models.Client {
 	)
 
 	if err != nil {
-		log.Client.Sugar().Panicf("failed creating schema resources: %v", err)
+t 		log.Client.Sugar().Panicf("failed creating schema resources: %v", err)
 	}
 
 	if schemaInit {

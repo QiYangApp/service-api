@@ -29,14 +29,14 @@ func (atu *AccessTokenUpdate) Where(ps ...predicate.AccessToken) *AccessTokenUpd
 }
 
 // SetUserID sets the "user_id" field.
-func (atu *AccessTokenUpdate) SetUserID(i int) *AccessTokenUpdate {
+func (atu *AccessTokenUpdate) SetUserID(i int64) *AccessTokenUpdate {
 	atu.mutation.ResetUserID()
 	atu.mutation.SetUserID(i)
 	return atu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (atu *AccessTokenUpdate) SetNillableUserID(i *int) *AccessTokenUpdate {
+func (atu *AccessTokenUpdate) SetNillableUserID(i *int64) *AccessTokenUpdate {
 	if i != nil {
 		atu.SetUserID(*i)
 	}
@@ -44,7 +44,7 @@ func (atu *AccessTokenUpdate) SetNillableUserID(i *int) *AccessTokenUpdate {
 }
 
 // AddUserID adds i to the "user_id" field.
-func (atu *AccessTokenUpdate) AddUserID(i int) *AccessTokenUpdate {
+func (atu *AccessTokenUpdate) AddUserID(i int64) *AccessTokenUpdate {
 	atu.mutation.AddUserID(i)
 	return atu
 }
@@ -225,10 +225,10 @@ func (atu *AccessTokenUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := atu.mutation.UserID(); ok {
-		_spec.SetField(accesstoken.FieldUserID, field.TypeInt, value)
+		_spec.SetField(accesstoken.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := atu.mutation.AddedUserID(); ok {
-		_spec.AddField(accesstoken.FieldUserID, field.TypeInt, value)
+		_spec.AddField(accesstoken.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := atu.mutation.Name(); ok {
 		_spec.SetField(accesstoken.FieldName, field.TypeString, value)
@@ -281,14 +281,14 @@ type AccessTokenUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (atuo *AccessTokenUpdateOne) SetUserID(i int) *AccessTokenUpdateOne {
+func (atuo *AccessTokenUpdateOne) SetUserID(i int64) *AccessTokenUpdateOne {
 	atuo.mutation.ResetUserID()
 	atuo.mutation.SetUserID(i)
 	return atuo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (atuo *AccessTokenUpdateOne) SetNillableUserID(i *int) *AccessTokenUpdateOne {
+func (atuo *AccessTokenUpdateOne) SetNillableUserID(i *int64) *AccessTokenUpdateOne {
 	if i != nil {
 		atuo.SetUserID(*i)
 	}
@@ -296,7 +296,7 @@ func (atuo *AccessTokenUpdateOne) SetNillableUserID(i *int) *AccessTokenUpdateOn
 }
 
 // AddUserID adds i to the "user_id" field.
-func (atuo *AccessTokenUpdateOne) AddUserID(i int) *AccessTokenUpdateOne {
+func (atuo *AccessTokenUpdateOne) AddUserID(i int64) *AccessTokenUpdateOne {
 	atuo.mutation.AddUserID(i)
 	return atuo
 }
@@ -507,10 +507,10 @@ func (atuo *AccessTokenUpdateOne) sqlSave(ctx context.Context) (_node *AccessTok
 		}
 	}
 	if value, ok := atuo.mutation.UserID(); ok {
-		_spec.SetField(accesstoken.FieldUserID, field.TypeInt, value)
+		_spec.SetField(accesstoken.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := atuo.mutation.AddedUserID(); ok {
-		_spec.AddField(accesstoken.FieldUserID, field.TypeInt, value)
+		_spec.AddField(accesstoken.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := atuo.mutation.Name(); ok {
 		_spec.SetField(accesstoken.FieldName, field.TypeString, value)

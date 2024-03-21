@@ -18,8 +18,8 @@ type UserRelatedRole struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int64 `json:"id,omitempty"`
-	// 会员id
-	UserID uuid.UUID `json:"user_id,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID int64 `json:"user_id,omitempty"`
 	// 角色
 	RoleID uuid.UUID `json:"role_id,omitempty"`
 	// CreateTime holds the value of the "create_time" field.
@@ -34,11 +34,11 @@ func (*UserRelatedRole) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case userrelatedrole.FieldID:
+		case userrelatedrole.FieldID, userrelatedrole.FieldUserID:
 			values[i] = new(sql.NullInt64)
 		case userrelatedrole.FieldCreateTime, userrelatedrole.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
-		case userrelatedrole.FieldUserID, userrelatedrole.FieldRoleID:
+		case userrelatedrole.FieldRoleID:
 			values[i] = new(uuid.UUID)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -62,10 +62,10 @@ func (urr *UserRelatedRole) assignValues(columns []string, values []any) error {
 			}
 			urr.ID = int64(value.Int64)
 		case userrelatedrole.FieldUserID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value != nil {
-				urr.UserID = *value
+			} else if value.Valid {
+				urr.UserID = value.Int64
 			}
 		case userrelatedrole.FieldRoleID:
 			if value, ok := values[i].(*uuid.UUID); !ok {

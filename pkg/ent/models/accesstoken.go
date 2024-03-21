@@ -18,7 +18,7 @@ type AccessToken struct {
 	// ID of the ent.
 	ID int64 `json:"id,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID int `json:"user_id,omitempty"`
+	UserID int64 `json:"user_id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Token holds the value of the "token" field.
@@ -76,7 +76,7 @@ func (at *AccessToken) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				at.UserID = int(value.Int64)
+				at.UserID = value.Int64
 			}
 		case accesstoken.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {

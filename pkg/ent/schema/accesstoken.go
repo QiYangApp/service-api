@@ -16,7 +16,7 @@ type AccessToken struct {
 func (AccessToken) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
-		field.Int("user_id"),
+		field.Int64("user_id"),
 		field.String("name"),
 		field.String("token"),
 		field.String("token_hash").Unique(),

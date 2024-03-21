@@ -11,7 +11,6 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/uuid"
 )
 
 // UserAuthSourceCreate is the builder for creating a UserAuthSource entity.
@@ -22,16 +21,8 @@ type UserAuthSourceCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (uasc *UserAuthSourceCreate) SetUserID(u uuid.UUID) *UserAuthSourceCreate {
-	uasc.mutation.SetUserID(u)
-	return uasc
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (uasc *UserAuthSourceCreate) SetNillableUserID(u *uuid.UUID) *UserAuthSourceCreate {
-	if u != nil {
-		uasc.SetUserID(*u)
-	}
+func (uasc *UserAuthSourceCreate) SetUserID(i int64) *UserAuthSourceCreate {
+	uasc.mutation.SetUserID(i)
 	return uasc
 }
 
@@ -180,10 +171,6 @@ func (uasc *UserAuthSourceCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uasc *UserAuthSourceCreate) defaults() {
-	if _, ok := uasc.mutation.UserID(); !ok {
-		v := userauthsource.DefaultUserID()
-		uasc.mutation.SetUserID(v)
-	}
 	if _, ok := uasc.mutation.LoginSource(); !ok {
 		v := userauthsource.DefaultLoginSource
 		uasc.mutation.SetLoginSource(v)
@@ -316,7 +303,7 @@ func (uasc *UserAuthSourceCreate) createSpec() (*UserAuthSource, *sqlgraph.Creat
 		_spec.ID.Value = id
 	}
 	if value, ok := uasc.mutation.UserID(); ok {
-		_spec.SetField(userauthsource.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(userauthsource.FieldUserID, field.TypeInt64, value)
 		_node.UserID = value
 	}
 	if value, ok := uasc.mutation.Token(); ok {

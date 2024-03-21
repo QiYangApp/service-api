@@ -21,7 +21,7 @@ type AccessTokenCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (atc *AccessTokenCreate) SetUserID(i int) *AccessTokenCreate {
+func (atc *AccessTokenCreate) SetUserID(i int64) *AccessTokenCreate {
 	atc.mutation.SetUserID(i)
 	return atc
 }
@@ -209,7 +209,7 @@ func (atc *AccessTokenCreate) createSpec() (*AccessToken, *sqlgraph.CreateSpec) 
 		_spec.ID.Value = id
 	}
 	if value, ok := atc.mutation.UserID(); ok {
-		_spec.SetField(accesstoken.FieldUserID, field.TypeInt, value)
+		_spec.SetField(accesstoken.FieldUserID, field.TypeInt64, value)
 		_node.UserID = value
 	}
 	if value, ok := atc.mutation.Name(); ok {

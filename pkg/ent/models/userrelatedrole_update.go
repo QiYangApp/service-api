@@ -30,16 +30,23 @@ func (urru *UserRelatedRoleUpdate) Where(ps ...predicate.UserRelatedRole) *UserR
 }
 
 // SetUserID sets the "user_id" field.
-func (urru *UserRelatedRoleUpdate) SetUserID(u uuid.UUID) *UserRelatedRoleUpdate {
-	urru.mutation.SetUserID(u)
+func (urru *UserRelatedRoleUpdate) SetUserID(i int64) *UserRelatedRoleUpdate {
+	urru.mutation.ResetUserID()
+	urru.mutation.SetUserID(i)
 	return urru
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (urru *UserRelatedRoleUpdate) SetNillableUserID(u *uuid.UUID) *UserRelatedRoleUpdate {
-	if u != nil {
-		urru.SetUserID(*u)
+func (urru *UserRelatedRoleUpdate) SetNillableUserID(i *int64) *UserRelatedRoleUpdate {
+	if i != nil {
+		urru.SetUserID(*i)
 	}
+	return urru
+}
+
+// AddUserID adds i to the "user_id" field.
+func (urru *UserRelatedRoleUpdate) AddUserID(i int64) *UserRelatedRoleUpdate {
+	urru.mutation.AddUserID(i)
 	return urru
 }
 
@@ -114,7 +121,10 @@ func (urru *UserRelatedRoleUpdate) sqlSave(ctx context.Context) (n int, err erro
 		}
 	}
 	if value, ok := urru.mutation.UserID(); ok {
-		_spec.SetField(userrelatedrole.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(userrelatedrole.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := urru.mutation.AddedUserID(); ok {
+		_spec.AddField(userrelatedrole.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := urru.mutation.RoleID(); ok {
 		_spec.SetField(userrelatedrole.FieldRoleID, field.TypeUUID, value)
@@ -143,16 +153,23 @@ type UserRelatedRoleUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (urruo *UserRelatedRoleUpdateOne) SetUserID(u uuid.UUID) *UserRelatedRoleUpdateOne {
-	urruo.mutation.SetUserID(u)
+func (urruo *UserRelatedRoleUpdateOne) SetUserID(i int64) *UserRelatedRoleUpdateOne {
+	urruo.mutation.ResetUserID()
+	urruo.mutation.SetUserID(i)
 	return urruo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (urruo *UserRelatedRoleUpdateOne) SetNillableUserID(u *uuid.UUID) *UserRelatedRoleUpdateOne {
-	if u != nil {
-		urruo.SetUserID(*u)
+func (urruo *UserRelatedRoleUpdateOne) SetNillableUserID(i *int64) *UserRelatedRoleUpdateOne {
+	if i != nil {
+		urruo.SetUserID(*i)
 	}
+	return urruo
+}
+
+// AddUserID adds i to the "user_id" field.
+func (urruo *UserRelatedRoleUpdateOne) AddUserID(i int64) *UserRelatedRoleUpdateOne {
+	urruo.mutation.AddUserID(i)
 	return urruo
 }
 
@@ -257,7 +274,10 @@ func (urruo *UserRelatedRoleUpdateOne) sqlSave(ctx context.Context) (_node *User
 		}
 	}
 	if value, ok := urruo.mutation.UserID(); ok {
-		_spec.SetField(userrelatedrole.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(userrelatedrole.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := urruo.mutation.AddedUserID(); ok {
+		_spec.AddField(userrelatedrole.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := urruo.mutation.RoleID(); ok {
 		_spec.SetField(userrelatedrole.FieldRoleID, field.TypeUUID, value)

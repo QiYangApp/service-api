@@ -50,16 +50,23 @@ func (wcu *WakatimeCategoryUpdate) SetNillableWakatimeID(u *uuid.UUID) *Wakatime
 }
 
 // SetUserID sets the "user_id" field.
-func (wcu *WakatimeCategoryUpdate) SetUserID(u uuid.UUID) *WakatimeCategoryUpdate {
-	wcu.mutation.SetUserID(u)
+func (wcu *WakatimeCategoryUpdate) SetUserID(i int64) *WakatimeCategoryUpdate {
+	wcu.mutation.ResetUserID()
+	wcu.mutation.SetUserID(i)
 	return wcu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wcu *WakatimeCategoryUpdate) SetNillableUserID(u *uuid.UUID) *WakatimeCategoryUpdate {
-	if u != nil {
-		wcu.SetUserID(*u)
+func (wcu *WakatimeCategoryUpdate) SetNillableUserID(i *int64) *WakatimeCategoryUpdate {
+	if i != nil {
+		wcu.SetUserID(*i)
 	}
+	return wcu
+}
+
+// AddUserID adds i to the "user_id" field.
+func (wcu *WakatimeCategoryUpdate) AddUserID(i int64) *WakatimeCategoryUpdate {
+	wcu.mutation.AddUserID(i)
 	return wcu
 }
 
@@ -168,7 +175,10 @@ func (wcu *WakatimeCategoryUpdate) sqlSave(ctx context.Context) (n int, err erro
 		_spec.SetField(wakatimecategory.FieldWakatimeID, field.TypeUUID, value)
 	}
 	if value, ok := wcu.mutation.UserID(); ok {
-		_spec.SetField(wakatimecategory.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(wakatimecategory.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := wcu.mutation.AddedUserID(); ok {
+		_spec.AddField(wakatimecategory.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := wcu.mutation.Name(); ok {
 		_spec.SetField(wakatimecategory.FieldName, field.TypeString, value)
@@ -220,16 +230,23 @@ func (wcuo *WakatimeCategoryUpdateOne) SetNillableWakatimeID(u *uuid.UUID) *Waka
 }
 
 // SetUserID sets the "user_id" field.
-func (wcuo *WakatimeCategoryUpdateOne) SetUserID(u uuid.UUID) *WakatimeCategoryUpdateOne {
-	wcuo.mutation.SetUserID(u)
+func (wcuo *WakatimeCategoryUpdateOne) SetUserID(i int64) *WakatimeCategoryUpdateOne {
+	wcuo.mutation.ResetUserID()
+	wcuo.mutation.SetUserID(i)
 	return wcuo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wcuo *WakatimeCategoryUpdateOne) SetNillableUserID(u *uuid.UUID) *WakatimeCategoryUpdateOne {
-	if u != nil {
-		wcuo.SetUserID(*u)
+func (wcuo *WakatimeCategoryUpdateOne) SetNillableUserID(i *int64) *WakatimeCategoryUpdateOne {
+	if i != nil {
+		wcuo.SetUserID(*i)
 	}
+	return wcuo
+}
+
+// AddUserID adds i to the "user_id" field.
+func (wcuo *WakatimeCategoryUpdateOne) AddUserID(i int64) *WakatimeCategoryUpdateOne {
+	wcuo.mutation.AddUserID(i)
 	return wcuo
 }
 
@@ -368,7 +385,10 @@ func (wcuo *WakatimeCategoryUpdateOne) sqlSave(ctx context.Context) (_node *Waka
 		_spec.SetField(wakatimecategory.FieldWakatimeID, field.TypeUUID, value)
 	}
 	if value, ok := wcuo.mutation.UserID(); ok {
-		_spec.SetField(wakatimecategory.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(wakatimecategory.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := wcuo.mutation.AddedUserID(); ok {
+		_spec.AddField(wakatimecategory.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := wcuo.mutation.Name(); ok {
 		_spec.SetField(wakatimecategory.FieldName, field.TypeString, value)

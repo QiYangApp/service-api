@@ -1,0 +1,2 @@
+{"level":"panic","time":"2024-03-21 22:53:00","msg":"failed creating schema resources: sql/schema: ERROR: invalid input syntax for type integer: \"ON\" (SQLSTATE 22P02)","time":"2024-03-21 22:53:00","level":""}
+{"level":"panic","time":"2024-03-21 22:54:57","msg":"failed creating schema resources: sql/schema: ERROR: invalid input syntax for type integer: \"ON\" (SQLSTATE 22P02)","time":"2024-03-21 22:54:57","level":""}

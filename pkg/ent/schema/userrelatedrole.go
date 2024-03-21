@@ -17,7 +17,7 @@ type UserRelatedRole struct {
 func (UserRelatedRole) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
-		field.UUID("user_id", uuid.UUID{}).Comment("会员id"),
+		field.Int64("user_id"),
 		field.UUID("role_id", uuid.UUID{}).Comment("角色"),
 		field.Time("create_time").Default(time.Now).Immutable(),
 		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),

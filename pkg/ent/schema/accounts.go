@@ -16,7 +16,7 @@ type Accounts struct {
 func (Accounts) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
-		field.Int("user_id"),
+		field.Int64("user_id"),
 		field.String("account"),
 		field.Uint8("type"),
 		field.String("desc"),

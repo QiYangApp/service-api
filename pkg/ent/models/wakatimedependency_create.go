@@ -56,8 +56,8 @@ func (wdc *WakatimeDependencyCreate) SetWakatimeID(u uuid.UUID) *WakatimeDepende
 }
 
 // SetUserID sets the "user_id" field.
-func (wdc *WakatimeDependencyCreate) SetUserID(u uuid.UUID) *WakatimeDependencyCreate {
-	wdc.mutation.SetUserID(u)
+func (wdc *WakatimeDependencyCreate) SetUserID(i int64) *WakatimeDependencyCreate {
+	wdc.mutation.SetUserID(i)
 	return wdc
 }
 
@@ -218,7 +218,7 @@ func (wdc *WakatimeDependencyCreate) createSpec() (*WakatimeDependency, *sqlgrap
 		_node.WakatimeID = value
 	}
 	if value, ok := wdc.mutation.UserID(); ok {
-		_spec.SetField(wakatimedependency.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(wakatimedependency.FieldUserID, field.TypeInt64, value)
 		_node.UserID = value
 	}
 	if value, ok := wdc.mutation.Name(); ok {

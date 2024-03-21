@@ -50,16 +50,23 @@ func (wdu *WakatimeDependencyUpdate) SetNillableWakatimeID(u *uuid.UUID) *Wakati
 }
 
 // SetUserID sets the "user_id" field.
-func (wdu *WakatimeDependencyUpdate) SetUserID(u uuid.UUID) *WakatimeDependencyUpdate {
-	wdu.mutation.SetUserID(u)
+func (wdu *WakatimeDependencyUpdate) SetUserID(i int64) *WakatimeDependencyUpdate {
+	wdu.mutation.ResetUserID()
+	wdu.mutation.SetUserID(i)
 	return wdu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wdu *WakatimeDependencyUpdate) SetNillableUserID(u *uuid.UUID) *WakatimeDependencyUpdate {
-	if u != nil {
-		wdu.SetUserID(*u)
+func (wdu *WakatimeDependencyUpdate) SetNillableUserID(i *int64) *WakatimeDependencyUpdate {
+	if i != nil {
+		wdu.SetUserID(*i)
 	}
+	return wdu
+}
+
+// AddUserID adds i to the "user_id" field.
+func (wdu *WakatimeDependencyUpdate) AddUserID(i int64) *WakatimeDependencyUpdate {
+	wdu.mutation.AddUserID(i)
 	return wdu
 }
 
@@ -168,7 +175,10 @@ func (wdu *WakatimeDependencyUpdate) sqlSave(ctx context.Context) (n int, err er
 		_spec.SetField(wakatimedependency.FieldWakatimeID, field.TypeUUID, value)
 	}
 	if value, ok := wdu.mutation.UserID(); ok {
-		_spec.SetField(wakatimedependency.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(wakatimedependency.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := wdu.mutation.AddedUserID(); ok {
+		_spec.AddField(wakatimedependency.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := wdu.mutation.Name(); ok {
 		_spec.SetField(wakatimedependency.FieldName, field.TypeString, value)
@@ -220,16 +230,23 @@ func (wduo *WakatimeDependencyUpdateOne) SetNillableWakatimeID(u *uuid.UUID) *Wa
 }
 
 // SetUserID sets the "user_id" field.
-func (wduo *WakatimeDependencyUpdateOne) SetUserID(u uuid.UUID) *WakatimeDependencyUpdateOne {
-	wduo.mutation.SetUserID(u)
+func (wduo *WakatimeDependencyUpdateOne) SetUserID(i int64) *WakatimeDependencyUpdateOne {
+	wduo.mutation.ResetUserID()
+	wduo.mutation.SetUserID(i)
 	return wduo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wduo *WakatimeDependencyUpdateOne) SetNillableUserID(u *uuid.UUID) *WakatimeDependencyUpdateOne {
-	if u != nil {
-		wduo.SetUserID(*u)
+func (wduo *WakatimeDependencyUpdateOne) SetNillableUserID(i *int64) *WakatimeDependencyUpdateOne {
+	if i != nil {
+		wduo.SetUserID(*i)
 	}
+	return wduo
+}
+
+// AddUserID adds i to the "user_id" field.
+func (wduo *WakatimeDependencyUpdateOne) AddUserID(i int64) *WakatimeDependencyUpdateOne {
+	wduo.mutation.AddUserID(i)
 	return wduo
 }
 
@@ -368,7 +385,10 @@ func (wduo *WakatimeDependencyUpdateOne) sqlSave(ctx context.Context) (_node *Wa
 		_spec.SetField(wakatimedependency.FieldWakatimeID, field.TypeUUID, value)
 	}
 	if value, ok := wduo.mutation.UserID(); ok {
-		_spec.SetField(wakatimedependency.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(wakatimedependency.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := wduo.mutation.AddedUserID(); ok {
+		_spec.AddField(wakatimedependency.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := wduo.mutation.Name(); ok {
 		_spec.SetField(wakatimedependency.FieldName, field.TypeString, value)

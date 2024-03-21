@@ -4,7 +4,6 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"github.com/google/uuid"
 	"time"
 )
 
@@ -17,7 +16,7 @@ type UserAuthSource struct {
 func (UserAuthSource) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
-		field.UUID("user_id", uuid.UUID{}).Default(uuid.New).Comment("member UUID of the"),
+		field.Int64("user_id"),
 		field.String("token").NotEmpty().Comment("授权token").MaxLen(254),
 		field.String("channel").MaxLen(64).Comment("登录渠道"),
 		field.String("device").MaxLen(64).Comment("登录设备"),

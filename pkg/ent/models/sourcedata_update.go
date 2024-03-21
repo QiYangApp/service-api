@@ -13,7 +13,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/uuid"
 )
 
 // SourceDataUpdate is the builder for updating SourceData entities.
@@ -30,16 +29,23 @@ func (sdu *SourceDataUpdate) Where(ps ...predicate.SourceData) *SourceDataUpdate
 }
 
 // SetUserID sets the "user_id" field.
-func (sdu *SourceDataUpdate) SetUserID(u uuid.UUID) *SourceDataUpdate {
-	sdu.mutation.SetUserID(u)
+func (sdu *SourceDataUpdate) SetUserID(i int64) *SourceDataUpdate {
+	sdu.mutation.ResetUserID()
+	sdu.mutation.SetUserID(i)
 	return sdu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (sdu *SourceDataUpdate) SetNillableUserID(u *uuid.UUID) *SourceDataUpdate {
-	if u != nil {
-		sdu.SetUserID(*u)
+func (sdu *SourceDataUpdate) SetNillableUserID(i *int64) *SourceDataUpdate {
+	if i != nil {
+		sdu.SetUserID(*i)
 	}
+	return sdu
+}
+
+// AddUserID adds i to the "user_id" field.
+func (sdu *SourceDataUpdate) AddUserID(i int64) *SourceDataUpdate {
+	sdu.mutation.AddUserID(i)
 	return sdu
 }
 
@@ -174,7 +180,10 @@ func (sdu *SourceDataUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := sdu.mutation.UserID(); ok {
-		_spec.SetField(sourcedata.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(sourcedata.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := sdu.mutation.AddedUserID(); ok {
+		_spec.AddField(sourcedata.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := sdu.mutation.GetType(); ok {
 		_spec.SetField(sourcedata.FieldType, field.TypeString, value)
@@ -212,16 +221,23 @@ type SourceDataUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (sduo *SourceDataUpdateOne) SetUserID(u uuid.UUID) *SourceDataUpdateOne {
-	sduo.mutation.SetUserID(u)
+func (sduo *SourceDataUpdateOne) SetUserID(i int64) *SourceDataUpdateOne {
+	sduo.mutation.ResetUserID()
+	sduo.mutation.SetUserID(i)
 	return sduo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (sduo *SourceDataUpdateOne) SetNillableUserID(u *uuid.UUID) *SourceDataUpdateOne {
-	if u != nil {
-		sduo.SetUserID(*u)
+func (sduo *SourceDataUpdateOne) SetNillableUserID(i *int64) *SourceDataUpdateOne {
+	if i != nil {
+		sduo.SetUserID(*i)
 	}
+	return sduo
+}
+
+// AddUserID adds i to the "user_id" field.
+func (sduo *SourceDataUpdateOne) AddUserID(i int64) *SourceDataUpdateOne {
+	sduo.mutation.AddUserID(i)
 	return sduo
 }
 
@@ -386,7 +402,10 @@ func (sduo *SourceDataUpdateOne) sqlSave(ctx context.Context) (_node *SourceData
 		}
 	}
 	if value, ok := sduo.mutation.UserID(); ok {
-		_spec.SetField(sourcedata.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(sourcedata.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := sduo.mutation.AddedUserID(); ok {
+		_spec.AddField(sourcedata.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := sduo.mutation.GetType(); ok {
 		_spec.SetField(sourcedata.FieldType, field.TypeString, value)

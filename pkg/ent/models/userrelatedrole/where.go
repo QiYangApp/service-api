@@ -56,7 +56,7 @@ func IDLTE(id int64) predicate.UserRelatedRole {
 }
 
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
-func UserID(v uuid.UUID) predicate.UserRelatedRole {
+func UserID(v int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldEQ(FieldUserID, v))
 }
 
@@ -76,42 +76,42 @@ func UpdateTime(v time.Time) predicate.UserRelatedRole {
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.
-func UserIDEQ(v uuid.UUID) predicate.UserRelatedRole {
+func UserIDEQ(v int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldEQ(FieldUserID, v))
 }
 
 // UserIDNEQ applies the NEQ predicate on the "user_id" field.
-func UserIDNEQ(v uuid.UUID) predicate.UserRelatedRole {
+func UserIDNEQ(v int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldNEQ(FieldUserID, v))
 }
 
 // UserIDIn applies the In predicate on the "user_id" field.
-func UserIDIn(vs ...uuid.UUID) predicate.UserRelatedRole {
+func UserIDIn(vs ...int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldIn(FieldUserID, vs...))
 }
 
 // UserIDNotIn applies the NotIn predicate on the "user_id" field.
-func UserIDNotIn(vs ...uuid.UUID) predicate.UserRelatedRole {
+func UserIDNotIn(vs ...int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldNotIn(FieldUserID, vs...))
 }
 
 // UserIDGT applies the GT predicate on the "user_id" field.
-func UserIDGT(v uuid.UUID) predicate.UserRelatedRole {
+func UserIDGT(v int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldGT(FieldUserID, v))
 }
 
 // UserIDGTE applies the GTE predicate on the "user_id" field.
-func UserIDGTE(v uuid.UUID) predicate.UserRelatedRole {
+func UserIDGTE(v int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldGTE(FieldUserID, v))
 }
 
 // UserIDLT applies the LT predicate on the "user_id" field.
-func UserIDLT(v uuid.UUID) predicate.UserRelatedRole {
+func UserIDLT(v int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldLT(FieldUserID, v))
 }
 
 // UserIDLTE applies the LTE predicate on the "user_id" field.
-func UserIDLTE(v uuid.UUID) predicate.UserRelatedRole {
+func UserIDLTE(v int64) predicate.UserRelatedRole {
 	return predicate.UserRelatedRole(sql.FieldLTE(FieldUserID, v))
 }
 

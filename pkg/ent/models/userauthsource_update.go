@@ -13,7 +13,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/uuid"
 )
 
 // UserAuthSourceUpdate is the builder for updating UserAuthSource entities.
@@ -30,16 +29,23 @@ func (uasu *UserAuthSourceUpdate) Where(ps ...predicate.UserAuthSource) *UserAut
 }
 
 // SetUserID sets the "user_id" field.
-func (uasu *UserAuthSourceUpdate) SetUserID(u uuid.UUID) *UserAuthSourceUpdate {
-	uasu.mutation.SetUserID(u)
+func (uasu *UserAuthSourceUpdate) SetUserID(i int64) *UserAuthSourceUpdate {
+	uasu.mutation.ResetUserID()
+	uasu.mutation.SetUserID(i)
 	return uasu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (uasu *UserAuthSourceUpdate) SetNillableUserID(u *uuid.UUID) *UserAuthSourceUpdate {
-	if u != nil {
-		uasu.SetUserID(*u)
+func (uasu *UserAuthSourceUpdate) SetNillableUserID(i *int64) *UserAuthSourceUpdate {
+	if i != nil {
+		uasu.SetUserID(*i)
 	}
+	return uasu
+}
+
+// AddUserID adds i to the "user_id" field.
+func (uasu *UserAuthSourceUpdate) AddUserID(i int64) *UserAuthSourceUpdate {
+	uasu.mutation.AddUserID(i)
 	return uasu
 }
 
@@ -302,7 +308,10 @@ func (uasu *UserAuthSourceUpdate) sqlSave(ctx context.Context) (n int, err error
 		}
 	}
 	if value, ok := uasu.mutation.UserID(); ok {
-		_spec.SetField(userauthsource.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(userauthsource.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := uasu.mutation.AddedUserID(); ok {
+		_spec.AddField(userauthsource.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := uasu.mutation.Token(); ok {
 		_spec.SetField(userauthsource.FieldToken, field.TypeString, value)
@@ -364,16 +373,23 @@ type UserAuthSourceUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (uasuo *UserAuthSourceUpdateOne) SetUserID(u uuid.UUID) *UserAuthSourceUpdateOne {
-	uasuo.mutation.SetUserID(u)
+func (uasuo *UserAuthSourceUpdateOne) SetUserID(i int64) *UserAuthSourceUpdateOne {
+	uasuo.mutation.ResetUserID()
+	uasuo.mutation.SetUserID(i)
 	return uasuo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (uasuo *UserAuthSourceUpdateOne) SetNillableUserID(u *uuid.UUID) *UserAuthSourceUpdateOne {
-	if u != nil {
-		uasuo.SetUserID(*u)
+func (uasuo *UserAuthSourceUpdateOne) SetNillableUserID(i *int64) *UserAuthSourceUpdateOne {
+	if i != nil {
+		uasuo.SetUserID(*i)
 	}
+	return uasuo
+}
+
+// AddUserID adds i to the "user_id" field.
+func (uasuo *UserAuthSourceUpdateOne) AddUserID(i int64) *UserAuthSourceUpdateOne {
+	uasuo.mutation.AddUserID(i)
 	return uasuo
 }
 
@@ -666,7 +682,10 @@ func (uasuo *UserAuthSourceUpdateOne) sqlSave(ctx context.Context) (_node *UserA
 		}
 	}
 	if value, ok := uasuo.mutation.UserID(); ok {
-		_spec.SetField(userauthsource.FieldUserID, field.TypeUUID, value)
+		_spec.SetField(userauthsource.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := uasuo.mutation.AddedUserID(); ok {
+		_spec.AddField(userauthsource.FieldUserID, field.TypeInt64, value)
 	}
 	if value, ok := uasuo.mutation.Token(); ok {
 		_spec.SetField(userauthsource.FieldToken, field.TypeString, value)

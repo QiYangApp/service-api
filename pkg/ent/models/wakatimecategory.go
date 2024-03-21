@@ -24,8 +24,8 @@ type WakatimeCategory struct {
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// wakatime id
 	WakatimeID uuid.UUID `json:"wakatime_id,omitempty"`
-	// 会员id
-	UserID uuid.UUID `json:"user_id,omitempty"`
+	// UserID holds the value of the "user_id" field.
+	UserID int64 `json:"user_id,omitempty"`
 	// 名称
 	Name string `json:"name,omitempty"`
 	// 总时长(秒
@@ -38,13 +38,13 @@ func (*WakatimeCategory) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case wakatimecategory.FieldID, wakatimecategory.FieldTotalSeconds:
+		case wakatimecategory.FieldID, wakatimecategory.FieldUserID, wakatimecategory.FieldTotalSeconds:
 			values[i] = new(sql.NullInt64)
 		case wakatimecategory.FieldName:
 			values[i] = new(sql.NullString)
 		case wakatimecategory.FieldCreateTime, wakatimecategory.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
-		case wakatimecategory.FieldWakatimeID, wakatimecategory.FieldUserID:
+		case wakatimecategory.FieldWakatimeID:
 			values[i] = new(uuid.UUID)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -86,10 +86,10 @@ func (wc *WakatimeCategory) assignValues(columns []string, values []any) error {
 				wc.WakatimeID = *value
 			}
 		case wakatimecategory.FieldUserID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value != nil {
-				wc.UserID = *value
+			} else if value.Valid {
+				wc.UserID = value.Int64
 			}
 		case wakatimecategory.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {

@@ -4,7 +4,6 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"github.com/google/uuid"
 	"time"
 )
 
@@ -17,7 +16,7 @@ type SourceData struct {
 func (SourceData) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
-		field.UUID("user_id", uuid.UUID{}).Comment("会员id"),
+		field.Int64("user_id"),
 		field.String("type").MaxLen(32).Default("").NotEmpty().Comment("类型"),
 		field.String("sub_type").MaxLen(32).Default("").Comment("子类型"),
 		field.String("info").Default("").Comment("信息"),
