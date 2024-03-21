@@ -44,6 +44,20 @@ func (ac *AccountsCreate) SetDesc(s string) *AccountsCreate {
 	return ac
 }
 
+// SetIsPrivate sets the "is_private" field.
+func (ac *AccountsCreate) SetIsPrivate(b bool) *AccountsCreate {
+	ac.mutation.SetIsPrivate(b)
+	return ac
+}
+
+// SetNillableIsPrivate sets the "is_private" field if the given value is not nil.
+func (ac *AccountsCreate) SetNillableIsPrivate(b *bool) *AccountsCreate {
+	if b != nil {
+		ac.SetIsPrivate(*b)
+	}
+	return ac
+}
+
 // SetIsActivated sets the "is_activated" field.
 func (ac *AccountsCreate) SetIsActivated(b bool) *AccountsCreate {
 	ac.mutation.SetIsActivated(b)
@@ -125,6 +139,10 @@ func (ac *AccountsCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (ac *AccountsCreate) defaults() {
+	if _, ok := ac.mutation.IsPrivate(); !ok {
+		v := accounts.DefaultIsPrivate
+		ac.mutation.SetIsPrivate(v)
+	}
 	if _, ok := ac.mutation.IsPrimary(); !ok {
 		v := accounts.DefaultIsPrimary
 		ac.mutation.SetIsPrimary(v)
@@ -148,6 +166,9 @@ func (ac *AccountsCreate) check() error {
 	}
 	if _, ok := ac.mutation.Desc(); !ok {
 		return &ValidationError{Name: "desc", err: errors.New(`models: missing required field "Accounts.desc"`)}
+	}
+	if _, ok := ac.mutation.IsPrivate(); !ok {
+		return &ValidationError{Name: "is_private", err: errors.New(`models: missing required field "Accounts.is_private"`)}
 	}
 	if _, ok := ac.mutation.IsActivated(); !ok {
 		return &ValidationError{Name: "is_activated", err: errors.New(`models: missing required field "Accounts.is_activated"`)}
@@ -208,6 +229,10 @@ func (ac *AccountsCreate) createSpec() (*Accounts, *sqlgraph.CreateSpec) {
 	if value, ok := ac.mutation.Desc(); ok {
 		_spec.SetField(accounts.FieldDesc, field.TypeString, value)
 		_node.Desc = value
+	}
+	if value, ok := ac.mutation.IsPrivate(); ok {
+		_spec.SetField(accounts.FieldIsPrivate, field.TypeBool, value)
+		_node.IsPrivate = value
 	}
 	if value, ok := ac.mutation.IsActivated(); ok {
 		_spec.SetField(accounts.FieldIsActivated, field.TypeBool, value)

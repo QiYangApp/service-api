@@ -9,6 +9,9 @@ import (
 	"fmt"
 )
 
+var ErrAuthSourceNotActivated = errors.New("auth source is not activated")
+var ErrUnsupportedLoginType = errors.New("Login source is unknown")
+
 // ErrUserAlreadyExist represents a "user already exists" error.
 type ErrUserAlreadyExist struct {
 	Name string

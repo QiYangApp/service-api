@@ -13,18 +13,22 @@ const (
 	Label = "user"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldEmail holds the string denoting the email field in the database.
-	FieldEmail = "email"
 	// FieldAvatar holds the string denoting the avatar field in the database.
 	FieldAvatar = "avatar"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
+	// FieldName holds the string denoting the name field in the database.
+	FieldName = "name"
+	// FieldLowerName holds the string denoting the lower_name field in the database.
+	FieldLowerName = "lower_name"
+	// FieldFullName holds the string denoting the full_name field in the database.
+	FieldFullName = "full_name"
 	// FieldPasswdSalt holds the string denoting the passwd_salt field in the database.
 	FieldPasswdSalt = "passwd_salt"
 	// FieldPasswdHashAlgo holds the string denoting the passwd_hash_algo field in the database.
 	FieldPasswdHashAlgo = "passwd_hash_algo"
 	// FieldPasswd holds the string denoting the passwd field in the database.
 	FieldPasswd = "passwd"
-	// FieldNickname holds the string denoting the nickname field in the database.
-	FieldNickname = "nickname"
 	// FieldLanguage holds the string denoting the language field in the database.
 	FieldLanguage = "language"
 	// FieldLoginName holds the string denoting the login_name field in the database.
@@ -50,12 +54,14 @@ const (
 // Columns holds all SQL columns for user fields.
 var Columns = []string{
 	FieldID,
-	FieldEmail,
 	FieldAvatar,
+	FieldEmail,
+	FieldName,
+	FieldLowerName,
+	FieldFullName,
 	FieldPasswdSalt,
 	FieldPasswdHashAlgo,
 	FieldPasswd,
-	FieldNickname,
 	FieldLanguage,
 	FieldLoginName,
 	FieldLoginSource,
@@ -80,14 +86,18 @@ func ValidColumn(column string) bool {
 var (
 	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	EmailValidator func(string) error
+	// NameValidator is a validator for the "name" field. It is called by the builders before save.
+	NameValidator func(string) error
+	// LowerNameValidator is a validator for the "lower_name" field. It is called by the builders before save.
+	LowerNameValidator func(string) error
+	// FullNameValidator is a validator for the "full_name" field. It is called by the builders before save.
+	FullNameValidator func(string) error
 	// PasswdSaltValidator is a validator for the "passwd_salt" field. It is called by the builders before save.
 	PasswdSaltValidator func(string) error
 	// PasswdHashAlgoValidator is a validator for the "passwd_hash_algo" field. It is called by the builders before save.
 	PasswdHashAlgoValidator func(string) error
 	// PasswdValidator is a validator for the "passwd" field. It is called by the builders before save.
 	PasswdValidator func(string) error
-	// NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
-	NicknameValidator func(string) error
 	// LanguageValidator is a validator for the "language" field. It is called by the builders before save.
 	LanguageValidator func(string) error
 	// LoginNameValidator is a validator for the "login_name" field. It is called by the builders before save.
@@ -116,14 +126,29 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
+// ByAvatar orders the results by the avatar field.
+func ByAvatar(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAvatar, opts...).ToFunc()
+}
+
 // ByEmail orders the results by the email field.
 func ByEmail(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEmail, opts...).ToFunc()
 }
 
-// ByAvatar orders the results by the avatar field.
-func ByAvatar(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldAvatar, opts...).ToFunc()
+// ByName orders the results by the name field.
+func ByName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByLowerName orders the results by the lower_name field.
+func ByLowerName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLowerName, opts...).ToFunc()
+}
+
+// ByFullName orders the results by the full_name field.
+func ByFullName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFullName, opts...).ToFunc()
 }
 
 // ByPasswdSalt orders the results by the passwd_salt field.
@@ -139,11 +164,6 @@ func ByPasswdHashAlgo(opts ...sql.OrderTermOption) OrderOption {
 // ByPasswd orders the results by the passwd field.
 func ByPasswd(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPasswd, opts...).ToFunc()
-}
-
-// ByNickname orders the results by the nickname field.
-func ByNickname(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldNickname, opts...).ToFunc()
 }
 
 // ByLanguage orders the results by the language field.

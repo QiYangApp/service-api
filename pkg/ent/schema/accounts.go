@@ -20,6 +20,7 @@ func (Accounts) Fields() []ent.Field {
 		field.String("account"),
 		field.Uint8("type"),
 		field.String("desc"),
+		field.Bool("is_private").Default(true),
 		field.Bool("is_activated"),
 		field.Bool("is_primary").Default(false),
 		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),

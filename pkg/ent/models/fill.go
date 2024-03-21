@@ -22,6 +22,7 @@ func (ac *AccountsCreate) SetAccounts(input *Accounts) *AccountsCreate {
 	ac.SetAccount(input.Account)
 	ac.SetType(input.Type)
 	ac.SetDesc(input.Desc)
+	ac.SetIsPrivate(input.IsPrivate)
 	ac.SetIsActivated(input.IsActivated)
 	ac.SetIsPrimary(input.IsPrimary)
 	ac.SetCreateTime(input.CreateTime)
@@ -90,12 +91,14 @@ func (sdc *SourceDataCreate) SetSourceData(input *SourceData) *SourceDataCreate 
 }
 
 func (uc *UserCreate) SetUser(input *User) *UserCreate {
-	uc.SetEmail(input.Email)
 	uc.SetAvatar(input.Avatar)
+	uc.SetEmail(input.Email)
+	uc.SetName(input.Name)
+	uc.SetLowerName(input.LowerName)
+	uc.SetFullName(input.FullName)
 	uc.SetPasswdSalt(input.PasswdSalt)
 	uc.SetPasswdHashAlgo(input.PasswdHashAlgo)
 	uc.SetPasswd(input.Passwd)
-	uc.SetNickname(input.Nickname)
 	uc.SetLanguage(input.Language)
 	uc.SetLoginName(input.LoginName)
 	uc.SetLoginSource(input.LoginSource)

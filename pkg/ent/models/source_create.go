@@ -46,7 +46,7 @@ func (sc *SourceCreate) SetIsSyncEnabled(b bool) *SourceCreate {
 }
 
 // SetCfg sets the "cfg" field.
-func (sc *SourceCreate) SetCfg(a auth.Config) *SourceCreate {
+func (sc *SourceCreate) SetCfg(a auth.Config[interface{}]) *SourceCreate {
 	sc.mutation.SetCfg(a)
 	return sc
 }

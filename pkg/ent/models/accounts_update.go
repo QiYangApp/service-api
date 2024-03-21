@@ -98,6 +98,20 @@ func (au *AccountsUpdate) SetNillableDesc(s *string) *AccountsUpdate {
 	return au
 }
 
+// SetIsPrivate sets the "is_private" field.
+func (au *AccountsUpdate) SetIsPrivate(b bool) *AccountsUpdate {
+	au.mutation.SetIsPrivate(b)
+	return au
+}
+
+// SetNillableIsPrivate sets the "is_private" field if the given value is not nil.
+func (au *AccountsUpdate) SetNillableIsPrivate(b *bool) *AccountsUpdate {
+	if b != nil {
+		au.SetIsPrivate(*b)
+	}
+	return au
+}
+
 // SetIsActivated sets the "is_activated" field.
 func (au *AccountsUpdate) SetIsActivated(b bool) *AccountsUpdate {
 	au.mutation.SetIsActivated(b)
@@ -207,6 +221,9 @@ func (au *AccountsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := au.mutation.Desc(); ok {
 		_spec.SetField(accounts.FieldDesc, field.TypeString, value)
 	}
+	if value, ok := au.mutation.IsPrivate(); ok {
+		_spec.SetField(accounts.FieldIsPrivate, field.TypeBool, value)
+	}
 	if value, ok := au.mutation.IsActivated(); ok {
 		_spec.SetField(accounts.FieldIsActivated, field.TypeBool, value)
 	}
@@ -305,6 +322,20 @@ func (auo *AccountsUpdateOne) SetDesc(s string) *AccountsUpdateOne {
 func (auo *AccountsUpdateOne) SetNillableDesc(s *string) *AccountsUpdateOne {
 	if s != nil {
 		auo.SetDesc(*s)
+	}
+	return auo
+}
+
+// SetIsPrivate sets the "is_private" field.
+func (auo *AccountsUpdateOne) SetIsPrivate(b bool) *AccountsUpdateOne {
+	auo.mutation.SetIsPrivate(b)
+	return auo
+}
+
+// SetNillableIsPrivate sets the "is_private" field if the given value is not nil.
+func (auo *AccountsUpdateOne) SetNillableIsPrivate(b *bool) *AccountsUpdateOne {
+	if b != nil {
+		auo.SetIsPrivate(*b)
 	}
 	return auo
 }
@@ -447,6 +478,9 @@ func (auo *AccountsUpdateOne) sqlSave(ctx context.Context) (_node *Accounts, err
 	}
 	if value, ok := auo.mutation.Desc(); ok {
 		_spec.SetField(accounts.FieldDesc, field.TypeString, value)
+	}
+	if value, ok := auo.mutation.IsPrivate(); ok {
+		_spec.SetField(accounts.FieldIsPrivate, field.TypeBool, value)
 	}
 	if value, ok := auo.mutation.IsActivated(); ok {
 		_spec.SetField(accounts.FieldIsActivated, field.TypeBool, value)

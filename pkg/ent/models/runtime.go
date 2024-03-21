@@ -42,16 +42,20 @@ func init() {
 	accesstoken.UpdateDefaultUpdateTime = accesstokenDescUpdateTime.UpdateDefault.(func() timeutil.TimeStamp)
 	accountsFields := schema.Accounts{}.Fields()
 	_ = accountsFields
+	// accountsDescIsPrivate is the schema descriptor for is_private field.
+	accountsDescIsPrivate := accountsFields[5].Descriptor()
+	// accounts.DefaultIsPrivate holds the default value on creation for the is_private field.
+	accounts.DefaultIsPrivate = accountsDescIsPrivate.Default.(bool)
 	// accountsDescIsPrimary is the schema descriptor for is_primary field.
-	accountsDescIsPrimary := accountsFields[6].Descriptor()
+	accountsDescIsPrimary := accountsFields[7].Descriptor()
 	// accounts.DefaultIsPrimary holds the default value on creation for the is_primary field.
 	accounts.DefaultIsPrimary = accountsDescIsPrimary.Default.(bool)
 	// accountsDescCreateTime is the schema descriptor for create_time field.
-	accountsDescCreateTime := accountsFields[7].Descriptor()
+	accountsDescCreateTime := accountsFields[8].Descriptor()
 	// accounts.DefaultCreateTime holds the default value on creation for the create_time field.
 	accounts.DefaultCreateTime = timeutil.TimeStamp(accountsDescCreateTime.Default.(int64))
 	// accountsDescUpdateTime is the schema descriptor for update_time field.
-	accountsDescUpdateTime := accountsFields[8].Descriptor()
+	accountsDescUpdateTime := accountsFields[9].Descriptor()
 	// accounts.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	accounts.UpdateDefaultUpdateTime = accountsDescUpdateTime.UpdateDefault.(func() timeutil.TimeStamp)
 	memberrolerelatedpermissionFields := schema.MemberRoleRelatedPermission{}.Fields()
@@ -275,7 +279,7 @@ func init() {
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescEmail is the schema descriptor for email field.
-	userDescEmail := userFields[1].Descriptor()
+	userDescEmail := userFields[2].Descriptor()
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	user.EmailValidator = func() func(string) error {
 		validators := userDescEmail.Validators
@@ -292,8 +296,62 @@ func init() {
 			return nil
 		}
 	}()
+	// userDescName is the schema descriptor for name field.
+	userDescName := userFields[3].Descriptor()
+	// user.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	user.NameValidator = func() func(string) error {
+		validators := userDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// userDescLowerName is the schema descriptor for lower_name field.
+	userDescLowerName := userFields[4].Descriptor()
+	// user.LowerNameValidator is a validator for the "lower_name" field. It is called by the builders before save.
+	user.LowerNameValidator = func() func(string) error {
+		validators := userDescLowerName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(lower_name string) error {
+			for _, fn := range fns {
+				if err := fn(lower_name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// userDescFullName is the schema descriptor for full_name field.
+	userDescFullName := userFields[5].Descriptor()
+	// user.FullNameValidator is a validator for the "full_name" field. It is called by the builders before save.
+	user.FullNameValidator = func() func(string) error {
+		validators := userDescFullName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(full_name string) error {
+			for _, fn := range fns {
+				if err := fn(full_name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// userDescPasswdSalt is the schema descriptor for passwd_salt field.
-	userDescPasswdSalt := userFields[3].Descriptor()
+	userDescPasswdSalt := userFields[6].Descriptor()
 	// user.PasswdSaltValidator is a validator for the "passwd_salt" field. It is called by the builders before save.
 	user.PasswdSaltValidator = func() func(string) error {
 		validators := userDescPasswdSalt.Validators
@@ -311,7 +369,7 @@ func init() {
 		}
 	}()
 	// userDescPasswdHashAlgo is the schema descriptor for passwd_hash_algo field.
-	userDescPasswdHashAlgo := userFields[4].Descriptor()
+	userDescPasswdHashAlgo := userFields[7].Descriptor()
 	// user.PasswdHashAlgoValidator is a validator for the "passwd_hash_algo" field. It is called by the builders before save.
 	user.PasswdHashAlgoValidator = func() func(string) error {
 		validators := userDescPasswdHashAlgo.Validators
@@ -329,7 +387,7 @@ func init() {
 		}
 	}()
 	// userDescPasswd is the schema descriptor for passwd field.
-	userDescPasswd := userFields[5].Descriptor()
+	userDescPasswd := userFields[8].Descriptor()
 	// user.PasswdValidator is a validator for the "passwd" field. It is called by the builders before save.
 	user.PasswdValidator = func() func(string) error {
 		validators := userDescPasswd.Validators
@@ -346,26 +404,8 @@ func init() {
 			return nil
 		}
 	}()
-	// userDescNickname is the schema descriptor for nickname field.
-	userDescNickname := userFields[6].Descriptor()
-	// user.NicknameValidator is a validator for the "nickname" field. It is called by the builders before save.
-	user.NicknameValidator = func() func(string) error {
-		validators := userDescNickname.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(nickname string) error {
-			for _, fn := range fns {
-				if err := fn(nickname); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
 	// userDescLanguage is the schema descriptor for language field.
-	userDescLanguage := userFields[7].Descriptor()
+	userDescLanguage := userFields[9].Descriptor()
 	// user.LanguageValidator is a validator for the "language" field. It is called by the builders before save.
 	user.LanguageValidator = func() func(string) error {
 		validators := userDescLanguage.Validators
@@ -383,31 +423,31 @@ func init() {
 		}
 	}()
 	// userDescLoginName is the schema descriptor for login_name field.
-	userDescLoginName := userFields[8].Descriptor()
+	userDescLoginName := userFields[10].Descriptor()
 	// user.LoginNameValidator is a validator for the "login_name" field. It is called by the builders before save.
 	user.LoginNameValidator = userDescLoginName.Validators[0].(func(string) error)
 	// userDescLoginSource is the schema descriptor for login_source field.
-	userDescLoginSource := userFields[9].Descriptor()
+	userDescLoginSource := userFields[11].Descriptor()
 	// user.DefaultLoginSource holds the default value on creation for the login_source field.
 	user.DefaultLoginSource = userDescLoginSource.Default.(int64)
 	// userDescIsRestricted is the schema descriptor for is_restricted field.
-	userDescIsRestricted := userFields[11].Descriptor()
+	userDescIsRestricted := userFields[13].Descriptor()
 	// user.DefaultIsRestricted holds the default value on creation for the is_restricted field.
 	user.DefaultIsRestricted = userDescIsRestricted.Default.(bool)
 	// userDescIsActive is the schema descriptor for is_active field.
-	userDescIsActive := userFields[12].Descriptor()
+	userDescIsActive := userFields[14].Descriptor()
 	// user.DefaultIsActive holds the default value on creation for the is_active field.
 	user.DefaultIsActive = userDescIsActive.Default.(bool)
 	// userDescProhibitLogin is the schema descriptor for prohibit_login field.
-	userDescProhibitLogin := userFields[13].Descriptor()
+	userDescProhibitLogin := userFields[15].Descriptor()
 	// user.DefaultProhibitLogin holds the default value on creation for the prohibit_login field.
 	user.DefaultProhibitLogin = userDescProhibitLogin.Default.(bool)
 	// userDescCreateTime is the schema descriptor for create_time field.
-	userDescCreateTime := userFields[14].Descriptor()
+	userDescCreateTime := userFields[16].Descriptor()
 	// user.DefaultCreateTime holds the default value on creation for the create_time field.
 	user.DefaultCreateTime = userDescCreateTime.Default.(func() time.Time)
 	// userDescUpdateTime is the schema descriptor for update_time field.
-	userDescUpdateTime := userFields[15].Descriptor()
+	userDescUpdateTime := userFields[17].Descriptor()
 	// user.DefaultUpdateTime holds the default value on creation for the update_time field.
 	user.DefaultUpdateTime = userDescUpdateTime.Default.(func() time.Time)
 	// user.UpdateDefaultUpdateTime holds the default value on update for the update_time field.

@@ -21,15 +21,33 @@ type UserCreate struct {
 	hooks    []Hook
 }
 
+// SetAvatar sets the "avatar" field.
+func (uc *UserCreate) SetAvatar(s string) *UserCreate {
+	uc.mutation.SetAvatar(s)
+	return uc
+}
+
 // SetEmail sets the "email" field.
 func (uc *UserCreate) SetEmail(s string) *UserCreate {
 	uc.mutation.SetEmail(s)
 	return uc
 }
 
-// SetAvatar sets the "avatar" field.
-func (uc *UserCreate) SetAvatar(s string) *UserCreate {
-	uc.mutation.SetAvatar(s)
+// SetName sets the "name" field.
+func (uc *UserCreate) SetName(s string) *UserCreate {
+	uc.mutation.SetName(s)
+	return uc
+}
+
+// SetLowerName sets the "lower_name" field.
+func (uc *UserCreate) SetLowerName(s string) *UserCreate {
+	uc.mutation.SetLowerName(s)
+	return uc
+}
+
+// SetFullName sets the "full_name" field.
+func (uc *UserCreate) SetFullName(s string) *UserCreate {
+	uc.mutation.SetFullName(s)
 	return uc
 }
 
@@ -48,12 +66,6 @@ func (uc *UserCreate) SetPasswdHashAlgo(s string) *UserCreate {
 // SetPasswd sets the "passwd" field.
 func (uc *UserCreate) SetPasswd(s string) *UserCreate {
 	uc.mutation.SetPasswd(s)
-	return uc
-}
-
-// SetNickname sets the "nickname" field.
-func (uc *UserCreate) SetNickname(s string) *UserCreate {
-	uc.mutation.SetNickname(s)
 	return uc
 }
 
@@ -228,6 +240,9 @@ func (uc *UserCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (uc *UserCreate) check() error {
+	if _, ok := uc.mutation.Avatar(); !ok {
+		return &ValidationError{Name: "avatar", err: errors.New(`models: missing required field "User.avatar"`)}
+	}
 	if _, ok := uc.mutation.Email(); !ok {
 		return &ValidationError{Name: "email", err: errors.New(`models: missing required field "User.email"`)}
 	}
@@ -236,8 +251,29 @@ func (uc *UserCreate) check() error {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`models: validator failed for field "User.email": %w`, err)}
 		}
 	}
-	if _, ok := uc.mutation.Avatar(); !ok {
-		return &ValidationError{Name: "avatar", err: errors.New(`models: missing required field "User.avatar"`)}
+	if _, ok := uc.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`models: missing required field "User.name"`)}
+	}
+	if v, ok := uc.mutation.Name(); ok {
+		if err := user.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`models: validator failed for field "User.name": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.LowerName(); !ok {
+		return &ValidationError{Name: "lower_name", err: errors.New(`models: missing required field "User.lower_name"`)}
+	}
+	if v, ok := uc.mutation.LowerName(); ok {
+		if err := user.LowerNameValidator(v); err != nil {
+			return &ValidationError{Name: "lower_name", err: fmt.Errorf(`models: validator failed for field "User.lower_name": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.FullName(); !ok {
+		return &ValidationError{Name: "full_name", err: errors.New(`models: missing required field "User.full_name"`)}
+	}
+	if v, ok := uc.mutation.FullName(); ok {
+		if err := user.FullNameValidator(v); err != nil {
+			return &ValidationError{Name: "full_name", err: fmt.Errorf(`models: validator failed for field "User.full_name": %w`, err)}
+		}
 	}
 	if _, ok := uc.mutation.PasswdSalt(); !ok {
 		return &ValidationError{Name: "passwd_salt", err: errors.New(`models: missing required field "User.passwd_salt"`)}
@@ -261,14 +297,6 @@ func (uc *UserCreate) check() error {
 	if v, ok := uc.mutation.Passwd(); ok {
 		if err := user.PasswdValidator(v); err != nil {
 			return &ValidationError{Name: "passwd", err: fmt.Errorf(`models: validator failed for field "User.passwd": %w`, err)}
-		}
-	}
-	if _, ok := uc.mutation.Nickname(); !ok {
-		return &ValidationError{Name: "nickname", err: errors.New(`models: missing required field "User.nickname"`)}
-	}
-	if v, ok := uc.mutation.Nickname(); ok {
-		if err := user.NicknameValidator(v); err != nil {
-			return &ValidationError{Name: "nickname", err: fmt.Errorf(`models: validator failed for field "User.nickname": %w`, err)}
 		}
 	}
 	if _, ok := uc.mutation.Language(); !ok {
@@ -340,13 +368,25 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
+	if value, ok := uc.mutation.Avatar(); ok {
+		_spec.SetField(user.FieldAvatar, field.TypeString, value)
+		_node.Avatar = value
+	}
 	if value, ok := uc.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 		_node.Email = value
 	}
-	if value, ok := uc.mutation.Avatar(); ok {
-		_spec.SetField(user.FieldAvatar, field.TypeString, value)
-		_node.Avatar = value
+	if value, ok := uc.mutation.Name(); ok {
+		_spec.SetField(user.FieldName, field.TypeString, value)
+		_node.Name = value
+	}
+	if value, ok := uc.mutation.LowerName(); ok {
+		_spec.SetField(user.FieldLowerName, field.TypeString, value)
+		_node.LowerName = value
+	}
+	if value, ok := uc.mutation.FullName(); ok {
+		_spec.SetField(user.FieldFullName, field.TypeString, value)
+		_node.FullName = value
 	}
 	if value, ok := uc.mutation.PasswdSalt(); ok {
 		_spec.SetField(user.FieldPasswdSalt, field.TypeString, value)
@@ -359,10 +399,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.Passwd(); ok {
 		_spec.SetField(user.FieldPasswd, field.TypeString, value)
 		_node.Passwd = value
-	}
-	if value, ok := uc.mutation.Nickname(); ok {
-		_spec.SetField(user.FieldNickname, field.TypeString, value)
-		_node.Nickname = value
 	}
 	if value, ok := uc.mutation.Language(); ok {
 		_spec.SetField(user.FieldLanguage, field.TypeString, value)

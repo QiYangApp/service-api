@@ -74,6 +74,11 @@ func Desc(v string) predicate.Accounts {
 	return predicate.Accounts(sql.FieldEQ(FieldDesc, v))
 }
 
+// IsPrivate applies equality check predicate on the "is_private" field. It's identical to IsPrivateEQ.
+func IsPrivate(v bool) predicate.Accounts {
+	return predicate.Accounts(sql.FieldEQ(FieldIsPrivate, v))
+}
+
 // IsActivated applies equality check predicate on the "is_activated" field. It's identical to IsActivatedEQ.
 func IsActivated(v bool) predicate.Accounts {
 	return predicate.Accounts(sql.FieldEQ(FieldIsActivated, v))
@@ -304,6 +309,16 @@ func DescEqualFold(v string) predicate.Accounts {
 // DescContainsFold applies the ContainsFold predicate on the "desc" field.
 func DescContainsFold(v string) predicate.Accounts {
 	return predicate.Accounts(sql.FieldContainsFold(FieldDesc, v))
+}
+
+// IsPrivateEQ applies the EQ predicate on the "is_private" field.
+func IsPrivateEQ(v bool) predicate.Accounts {
+	return predicate.Accounts(sql.FieldEQ(FieldIsPrivate, v))
+}
+
+// IsPrivateNEQ applies the NEQ predicate on the "is_private" field.
+func IsPrivateNEQ(v bool) predicate.Accounts {
+	return predicate.Accounts(sql.FieldNEQ(FieldIsPrivate, v))
 }
 
 // IsActivatedEQ applies the EQ predicate on the "is_activated" field.

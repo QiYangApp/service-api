@@ -18,18 +18,22 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Email holds the value of the "email" field.
-	Email string `json:"email,omitempty"`
 	// Avatar holds the value of the "avatar" field.
 	Avatar string `json:"avatar,omitempty"`
+	// Email holds the value of the "email" field.
+	Email string `json:"email,omitempty"`
+	// Name holds the value of the "name" field.
+	Name string `json:"name,omitempty"`
+	// LowerName holds the value of the "lower_name" field.
+	LowerName string `json:"lower_name,omitempty"`
+	// FullName holds the value of the "full_name" field.
+	FullName string `json:"full_name,omitempty"`
 	// PasswdSalt holds the value of the "passwd_salt" field.
 	PasswdSalt string `json:"passwd_salt,omitempty"`
 	// PasswdHashAlgo holds the value of the "passwd_hash_algo" field.
 	PasswdHashAlgo string `json:"passwd_hash_algo,omitempty"`
 	// Passwd holds the value of the "passwd" field.
 	Passwd string `json:"passwd,omitempty"`
-	// Nickname holds the value of the "nickname" field.
-	Nickname string `json:"nickname,omitempty"`
 	// Language holds the value of the "language" field.
 	Language string `json:"language,omitempty"`
 	// LoginName holds the value of the "login_name" field.
@@ -60,7 +64,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case user.FieldID, user.FieldLoginSource, user.FieldLoginType:
 			values[i] = new(sql.NullInt64)
-		case user.FieldEmail, user.FieldAvatar, user.FieldPasswdSalt, user.FieldPasswdHashAlgo, user.FieldPasswd, user.FieldNickname, user.FieldLanguage, user.FieldLoginName:
+		case user.FieldAvatar, user.FieldEmail, user.FieldName, user.FieldLowerName, user.FieldFullName, user.FieldPasswdSalt, user.FieldPasswdHashAlgo, user.FieldPasswd, user.FieldLanguage, user.FieldLoginName:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -85,17 +89,35 @@ func (u *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			u.ID = int(value.Int64)
+		case user.FieldAvatar:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field avatar", values[i])
+			} else if value.Valid {
+				u.Avatar = value.String
+			}
 		case user.FieldEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field email", values[i])
 			} else if value.Valid {
 				u.Email = value.String
 			}
-		case user.FieldAvatar:
+		case user.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field avatar", values[i])
+				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				u.Avatar = value.String
+				u.Name = value.String
+			}
+		case user.FieldLowerName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field lower_name", values[i])
+			} else if value.Valid {
+				u.LowerName = value.String
+			}
+		case user.FieldFullName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field full_name", values[i])
+			} else if value.Valid {
+				u.FullName = value.String
 			}
 		case user.FieldPasswdSalt:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -114,12 +136,6 @@ func (u *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field passwd", values[i])
 			} else if value.Valid {
 				u.Passwd = value.String
-			}
-		case user.FieldNickname:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field nickname", values[i])
-			} else if value.Valid {
-				u.Nickname = value.String
 			}
 		case user.FieldLanguage:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -211,11 +227,20 @@ func (u *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", u.ID))
+	builder.WriteString("avatar=")
+	builder.WriteString(u.Avatar)
+	builder.WriteString(", ")
 	builder.WriteString("email=")
 	builder.WriteString(u.Email)
 	builder.WriteString(", ")
-	builder.WriteString("avatar=")
-	builder.WriteString(u.Avatar)
+	builder.WriteString("name=")
+	builder.WriteString(u.Name)
+	builder.WriteString(", ")
+	builder.WriteString("lower_name=")
+	builder.WriteString(u.LowerName)
+	builder.WriteString(", ")
+	builder.WriteString("full_name=")
+	builder.WriteString(u.FullName)
 	builder.WriteString(", ")
 	builder.WriteString("passwd_salt=")
 	builder.WriteString(u.PasswdSalt)
@@ -225,9 +250,6 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("passwd=")
 	builder.WriteString(u.Passwd)
-	builder.WriteString(", ")
-	builder.WriteString("nickname=")
-	builder.WriteString(u.Nickname)
 	builder.WriteString(", ")
 	builder.WriteString("language=")
 	builder.WriteString(u.Language)

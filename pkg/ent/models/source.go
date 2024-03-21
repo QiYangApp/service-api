@@ -28,7 +28,7 @@ type Source struct {
 	// IsSyncEnabled holds the value of the "is_sync_enabled" field.
 	IsSyncEnabled bool `json:"is_sync_enabled,omitempty"`
 	// Cfg holds the value of the "cfg" field.
-	Cfg auth.Config `json:"cfg,omitempty"`
+	Cfg auth.Config[interface{}] `json:"cfg,omitempty"`
 	// CreateTime holds the value of the "create_time" field.
 	CreateTime timeutil.TimeStamp `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.

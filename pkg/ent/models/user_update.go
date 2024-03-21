@@ -29,6 +29,20 @@ func (uu *UserUpdate) Where(ps ...predicate.User) *UserUpdate {
 	return uu
 }
 
+// SetAvatar sets the "avatar" field.
+func (uu *UserUpdate) SetAvatar(s string) *UserUpdate {
+	uu.mutation.SetAvatar(s)
+	return uu
+}
+
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableAvatar(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetAvatar(*s)
+	}
+	return uu
+}
+
 // SetEmail sets the "email" field.
 func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
 	uu.mutation.SetEmail(s)
@@ -43,16 +57,44 @@ func (uu *UserUpdate) SetNillableEmail(s *string) *UserUpdate {
 	return uu
 }
 
-// SetAvatar sets the "avatar" field.
-func (uu *UserUpdate) SetAvatar(s string) *UserUpdate {
-	uu.mutation.SetAvatar(s)
+// SetName sets the "name" field.
+func (uu *UserUpdate) SetName(s string) *UserUpdate {
+	uu.mutation.SetName(s)
 	return uu
 }
 
-// SetNillableAvatar sets the "avatar" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableAvatar(s *string) *UserUpdate {
+// SetNillableName sets the "name" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
 	if s != nil {
-		uu.SetAvatar(*s)
+		uu.SetName(*s)
+	}
+	return uu
+}
+
+// SetLowerName sets the "lower_name" field.
+func (uu *UserUpdate) SetLowerName(s string) *UserUpdate {
+	uu.mutation.SetLowerName(s)
+	return uu
+}
+
+// SetNillableLowerName sets the "lower_name" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableLowerName(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetLowerName(*s)
+	}
+	return uu
+}
+
+// SetFullName sets the "full_name" field.
+func (uu *UserUpdate) SetFullName(s string) *UserUpdate {
+	uu.mutation.SetFullName(s)
+	return uu
+}
+
+// SetNillableFullName sets the "full_name" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableFullName(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetFullName(*s)
 	}
 	return uu
 }
@@ -95,20 +137,6 @@ func (uu *UserUpdate) SetPasswd(s string) *UserUpdate {
 func (uu *UserUpdate) SetNillablePasswd(s *string) *UserUpdate {
 	if s != nil {
 		uu.SetPasswd(*s)
-	}
-	return uu
-}
-
-// SetNickname sets the "nickname" field.
-func (uu *UserUpdate) SetNickname(s string) *UserUpdate {
-	uu.mutation.SetNickname(s)
-	return uu
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableNickname(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetNickname(*s)
 	}
 	return uu
 }
@@ -279,6 +307,21 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`models: validator failed for field "User.email": %w`, err)}
 		}
 	}
+	if v, ok := uu.mutation.Name(); ok {
+		if err := user.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`models: validator failed for field "User.name": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.LowerName(); ok {
+		if err := user.LowerNameValidator(v); err != nil {
+			return &ValidationError{Name: "lower_name", err: fmt.Errorf(`models: validator failed for field "User.lower_name": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.FullName(); ok {
+		if err := user.FullNameValidator(v); err != nil {
+			return &ValidationError{Name: "full_name", err: fmt.Errorf(`models: validator failed for field "User.full_name": %w`, err)}
+		}
+	}
 	if v, ok := uu.mutation.PasswdSalt(); ok {
 		if err := user.PasswdSaltValidator(v); err != nil {
 			return &ValidationError{Name: "passwd_salt", err: fmt.Errorf(`models: validator failed for field "User.passwd_salt": %w`, err)}
@@ -292,11 +335,6 @@ func (uu *UserUpdate) check() error {
 	if v, ok := uu.mutation.Passwd(); ok {
 		if err := user.PasswdValidator(v); err != nil {
 			return &ValidationError{Name: "passwd", err: fmt.Errorf(`models: validator failed for field "User.passwd": %w`, err)}
-		}
-	}
-	if v, ok := uu.mutation.Nickname(); ok {
-		if err := user.NicknameValidator(v); err != nil {
-			return &ValidationError{Name: "nickname", err: fmt.Errorf(`models: validator failed for field "User.nickname": %w`, err)}
 		}
 	}
 	if v, ok := uu.mutation.Language(); ok {
@@ -324,11 +362,20 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := uu.mutation.Avatar(); ok {
+		_spec.SetField(user.FieldAvatar, field.TypeString, value)
+	}
 	if value, ok := uu.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
-	if value, ok := uu.mutation.Avatar(); ok {
-		_spec.SetField(user.FieldAvatar, field.TypeString, value)
+	if value, ok := uu.mutation.Name(); ok {
+		_spec.SetField(user.FieldName, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.LowerName(); ok {
+		_spec.SetField(user.FieldLowerName, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.FullName(); ok {
+		_spec.SetField(user.FieldFullName, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.PasswdSalt(); ok {
 		_spec.SetField(user.FieldPasswdSalt, field.TypeString, value)
@@ -338,9 +385,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.Passwd(); ok {
 		_spec.SetField(user.FieldPasswd, field.TypeString, value)
-	}
-	if value, ok := uu.mutation.Nickname(); ok {
-		_spec.SetField(user.FieldNickname, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Language(); ok {
 		_spec.SetField(user.FieldLanguage, field.TypeString, value)
@@ -392,6 +436,20 @@ type UserUpdateOne struct {
 	mutation *UserMutation
 }
 
+// SetAvatar sets the "avatar" field.
+func (uuo *UserUpdateOne) SetAvatar(s string) *UserUpdateOne {
+	uuo.mutation.SetAvatar(s)
+	return uuo
+}
+
+// SetNillableAvatar sets the "avatar" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableAvatar(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetAvatar(*s)
+	}
+	return uuo
+}
+
 // SetEmail sets the "email" field.
 func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
 	uuo.mutation.SetEmail(s)
@@ -406,16 +464,44 @@ func (uuo *UserUpdateOne) SetNillableEmail(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// SetAvatar sets the "avatar" field.
-func (uuo *UserUpdateOne) SetAvatar(s string) *UserUpdateOne {
-	uuo.mutation.SetAvatar(s)
+// SetName sets the "name" field.
+func (uuo *UserUpdateOne) SetName(s string) *UserUpdateOne {
+	uuo.mutation.SetName(s)
 	return uuo
 }
 
-// SetNillableAvatar sets the "avatar" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableAvatar(s *string) *UserUpdateOne {
+// SetNillableName sets the "name" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
 	if s != nil {
-		uuo.SetAvatar(*s)
+		uuo.SetName(*s)
+	}
+	return uuo
+}
+
+// SetLowerName sets the "lower_name" field.
+func (uuo *UserUpdateOne) SetLowerName(s string) *UserUpdateOne {
+	uuo.mutation.SetLowerName(s)
+	return uuo
+}
+
+// SetNillableLowerName sets the "lower_name" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableLowerName(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetLowerName(*s)
+	}
+	return uuo
+}
+
+// SetFullName sets the "full_name" field.
+func (uuo *UserUpdateOne) SetFullName(s string) *UserUpdateOne {
+	uuo.mutation.SetFullName(s)
+	return uuo
+}
+
+// SetNillableFullName sets the "full_name" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableFullName(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetFullName(*s)
 	}
 	return uuo
 }
@@ -458,20 +544,6 @@ func (uuo *UserUpdateOne) SetPasswd(s string) *UserUpdateOne {
 func (uuo *UserUpdateOne) SetNillablePasswd(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetPasswd(*s)
-	}
-	return uuo
-}
-
-// SetNickname sets the "nickname" field.
-func (uuo *UserUpdateOne) SetNickname(s string) *UserUpdateOne {
-	uuo.mutation.SetNickname(s)
-	return uuo
-}
-
-// SetNillableNickname sets the "nickname" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableNickname(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetNickname(*s)
 	}
 	return uuo
 }
@@ -655,6 +727,21 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`models: validator failed for field "User.email": %w`, err)}
 		}
 	}
+	if v, ok := uuo.mutation.Name(); ok {
+		if err := user.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`models: validator failed for field "User.name": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.LowerName(); ok {
+		if err := user.LowerNameValidator(v); err != nil {
+			return &ValidationError{Name: "lower_name", err: fmt.Errorf(`models: validator failed for field "User.lower_name": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.FullName(); ok {
+		if err := user.FullNameValidator(v); err != nil {
+			return &ValidationError{Name: "full_name", err: fmt.Errorf(`models: validator failed for field "User.full_name": %w`, err)}
+		}
+	}
 	if v, ok := uuo.mutation.PasswdSalt(); ok {
 		if err := user.PasswdSaltValidator(v); err != nil {
 			return &ValidationError{Name: "passwd_salt", err: fmt.Errorf(`models: validator failed for field "User.passwd_salt": %w`, err)}
@@ -668,11 +755,6 @@ func (uuo *UserUpdateOne) check() error {
 	if v, ok := uuo.mutation.Passwd(); ok {
 		if err := user.PasswdValidator(v); err != nil {
 			return &ValidationError{Name: "passwd", err: fmt.Errorf(`models: validator failed for field "User.passwd": %w`, err)}
-		}
-	}
-	if v, ok := uuo.mutation.Nickname(); ok {
-		if err := user.NicknameValidator(v); err != nil {
-			return &ValidationError{Name: "nickname", err: fmt.Errorf(`models: validator failed for field "User.nickname": %w`, err)}
 		}
 	}
 	if v, ok := uuo.mutation.Language(); ok {
@@ -717,11 +799,20 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			}
 		}
 	}
+	if value, ok := uuo.mutation.Avatar(); ok {
+		_spec.SetField(user.FieldAvatar, field.TypeString, value)
+	}
 	if value, ok := uuo.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
-	if value, ok := uuo.mutation.Avatar(); ok {
-		_spec.SetField(user.FieldAvatar, field.TypeString, value)
+	if value, ok := uuo.mutation.Name(); ok {
+		_spec.SetField(user.FieldName, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.LowerName(); ok {
+		_spec.SetField(user.FieldLowerName, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.FullName(); ok {
+		_spec.SetField(user.FieldFullName, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.PasswdSalt(); ok {
 		_spec.SetField(user.FieldPasswdSalt, field.TypeString, value)
@@ -731,9 +822,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.Passwd(); ok {
 		_spec.SetField(user.FieldPasswd, field.TypeString, value)
-	}
-	if value, ok := uuo.mutation.Nickname(); ok {
-		_spec.SetField(user.FieldNickname, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Language(); ok {
 		_spec.SetField(user.FieldLanguage, field.TypeString, value)

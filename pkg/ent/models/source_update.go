@@ -93,13 +93,13 @@ func (su *SourceUpdate) SetNillableIsSyncEnabled(b *bool) *SourceUpdate {
 }
 
 // SetCfg sets the "cfg" field.
-func (su *SourceUpdate) SetCfg(a auth.Config) *SourceUpdate {
+func (su *SourceUpdate) SetCfg(a auth.Config[interface{}]) *SourceUpdate {
 	su.mutation.SetCfg(a)
 	return su
 }
 
 // SetNillableCfg sets the "cfg" field if the given value is not nil.
-func (su *SourceUpdate) SetNillableCfg(a *auth.Config) *SourceUpdate {
+func (su *SourceUpdate) SetNillableCfg(a *auth.Config[interface{}]) *SourceUpdate {
 	if a != nil {
 		su.SetCfg(*a)
 	}
@@ -277,13 +277,13 @@ func (suo *SourceUpdateOne) SetNillableIsSyncEnabled(b *bool) *SourceUpdateOne {
 }
 
 // SetCfg sets the "cfg" field.
-func (suo *SourceUpdateOne) SetCfg(a auth.Config) *SourceUpdateOne {
+func (suo *SourceUpdateOne) SetCfg(a auth.Config[interface{}]) *SourceUpdateOne {
 	suo.mutation.SetCfg(a)
 	return suo
 }
 
 // SetNillableCfg sets the "cfg" field if the given value is not nil.
-func (suo *SourceUpdateOne) SetNillableCfg(a *auth.Config) *SourceUpdateOne {
+func (suo *SourceUpdateOne) SetNillableCfg(a *auth.Config[interface{}]) *SourceUpdateOne {
 	if a != nil {
 		suo.SetCfg(*a)
 	}

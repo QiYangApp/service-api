@@ -30,12 +30,14 @@ func (User) Annotations() []schema.Annotation {
 func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id"),
-		field.String("email").NotEmpty().MaxLen(128),
 		field.String("avatar"),
+		field.String("email").NotEmpty().MaxLen(128),
+		field.String("name").NotEmpty().MaxLen(32),
+		field.String("lower_name").NotEmpty().MaxLen(32),
+		field.String("full_name").NotEmpty().MaxLen(32),
 		field.String("passwd_salt").NotEmpty().MaxLen(120),
 		field.String("passwd_hash_algo").NotEmpty().MaxLen(32),
 		field.String("passwd").NotEmpty().MaxLen(32),
-		field.String("nickname").NotEmpty().MaxLen(32),
 		field.String("language").NotEmpty().MaxLen(32),
 		field.String("login_name").NotEmpty(),
 		field.Int64("login_source").Default(0),

@@ -21,6 +21,8 @@ const (
 	FieldType = "type"
 	// FieldDesc holds the string denoting the desc field in the database.
 	FieldDesc = "desc"
+	// FieldIsPrivate holds the string denoting the is_private field in the database.
+	FieldIsPrivate = "is_private"
 	// FieldIsActivated holds the string denoting the is_activated field in the database.
 	FieldIsActivated = "is_activated"
 	// FieldIsPrimary holds the string denoting the is_primary field in the database.
@@ -40,6 +42,7 @@ var Columns = []string{
 	FieldAccount,
 	FieldType,
 	FieldDesc,
+	FieldIsPrivate,
 	FieldIsActivated,
 	FieldIsPrimary,
 	FieldCreateTime,
@@ -57,6 +60,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultIsPrivate holds the default value on creation for the "is_private" field.
+	DefaultIsPrivate bool
 	// DefaultIsPrimary holds the default value on creation for the "is_primary" field.
 	DefaultIsPrimary bool
 	// DefaultCreateTime holds the default value on creation for the "create_time" field.
@@ -91,6 +96,11 @@ func ByType(opts ...sql.OrderTermOption) OrderOption {
 // ByDesc orders the results by the desc field.
 func ByDesc(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDesc, opts...).ToFunc()
+}
+
+// ByIsPrivate orders the results by the is_private field.
+func ByIsPrivate(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsPrivate, opts...).ToFunc()
 }
 
 // ByIsActivated orders the results by the is_activated field.

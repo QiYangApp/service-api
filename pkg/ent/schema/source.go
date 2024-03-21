@@ -21,7 +21,7 @@ func (Source) Fields() []ent.Field {
 		field.String("name"),
 		field.Bool("is_active"),
 		field.Bool("is_sync_enabled"),
-		field.JSON("cfg", auth.Config{}),
+		field.JSON("cfg", auth.Config[any]{}),
 		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
 		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}

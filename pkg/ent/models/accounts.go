@@ -25,6 +25,8 @@ type Accounts struct {
 	Type uint8 `json:"type,omitempty"`
 	// Desc holds the value of the "desc" field.
 	Desc string `json:"desc,omitempty"`
+	// IsPrivate holds the value of the "is_private" field.
+	IsPrivate bool `json:"is_private,omitempty"`
 	// IsActivated holds the value of the "is_activated" field.
 	IsActivated bool `json:"is_activated,omitempty"`
 	// IsPrimary holds the value of the "is_primary" field.
@@ -41,7 +43,7 @@ func (*Accounts) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case accounts.FieldIsActivated, accounts.FieldIsPrimary:
+		case accounts.FieldIsPrivate, accounts.FieldIsActivated, accounts.FieldIsPrimary:
 			values[i] = new(sql.NullBool)
 		case accounts.FieldID, accounts.FieldUserID, accounts.FieldType, accounts.FieldCreateTime, accounts.FieldUpdateTime:
 			values[i] = new(sql.NullInt64)
@@ -91,6 +93,12 @@ func (a *Accounts) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field desc", values[i])
 			} else if value.Valid {
 				a.Desc = value.String
+			}
+		case accounts.FieldIsPrivate:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_private", values[i])
+			} else if value.Valid {
+				a.IsPrivate = value.Bool
 			}
 		case accounts.FieldIsActivated:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -163,6 +171,9 @@ func (a *Accounts) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("desc=")
 	builder.WriteString(a.Desc)
+	builder.WriteString(", ")
+	builder.WriteString("is_private=")
+	builder.WriteString(fmt.Sprintf("%v", a.IsPrivate))
 	builder.WriteString(", ")
 	builder.WriteString("is_activated=")
 	builder.WriteString(fmt.Sprintf("%v", a.IsActivated))
