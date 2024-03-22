@@ -64,7 +64,7 @@ func UserSingIn(ctx context.Context, username, passwd string) (*models.User, *mo
 
 		var authenticator PasswordAuthenticator
 		var ok bool
-		if authenticator, ok = sourceType.Cfg.Cfg.(PasswordAuthenticator); !ok {
+		if authenticator, ok = sourceType.Cfg.Value().(PasswordAuthenticator); !ok {
 			return nil, nil, authtype.ErrUnsupportedLoginType
 		}
 
@@ -102,7 +102,7 @@ func UserSingInAllSource(ctx context.Context, username, passwd string) (*models.
 
 		var authenticator PasswordAuthenticator
 		var ok bool
-		if authenticator, ok = source.Cfg.Cfg.(PasswordAuthenticator); !ok {
+		if authenticator, ok = source.Cfg.Value().(PasswordAuthenticator); !ok {
 			continue
 		}
 

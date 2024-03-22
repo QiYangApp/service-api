@@ -1,15 +1,14 @@
 package auth
 
-import (
-	"database/sql/driver"
-)
+type ConfigType[T any] interface {
+	Value() T
+}
 
 // Config represents login config as far as the db is concerned
 type Config[T any] struct {
-	Cfg T
+	Val T
 }
 
-// Value implements the TypeValueScanner.Value method.
-func (p *Config[T]) Value() (driver.Value, error) {
-	return p.Cfg, nil
+func (c *Config[T]) Value() T {
+	return c.Val
 }
