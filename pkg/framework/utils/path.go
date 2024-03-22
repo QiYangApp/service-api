@@ -27,7 +27,7 @@ func (p *PathHelpers) init() *PathHelpers {
 	p.StoragePath = p.JoinCurrentRunRootPath("/storage")
 	p.ResourcePath = p.JoinCurrentRunRootPath("/resources")
 	p.PublicPath = p.JoinCurrentRunRootPath("/public")
-	p.LogPath = p.Join(p.StoragePath, "/log")
+	p.LogPath = p.Join(p.StoragePath, "/logs")
 	p.I18Path = p.Join(p.ResourcePath, "/lang")
 
 	return p

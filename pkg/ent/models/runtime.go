@@ -350,6 +350,8 @@ func init() {
 	}()
 	// userDescPasswdSalt is the schema descriptor for passwd_salt field.
 	userDescPasswdSalt := userFields[6].Descriptor()
+	// user.DefaultPasswdSalt holds the default value on creation for the passwd_salt field.
+	user.DefaultPasswdSalt = userDescPasswdSalt.Default.(string)
 	// user.PasswdSaltValidator is a validator for the "passwd_salt" field. It is called by the builders before save.
 	user.PasswdSaltValidator = func() func(string) error {
 		validators := userDescPasswdSalt.Validators

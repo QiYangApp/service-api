@@ -9,13 +9,16 @@ import (
 	"ent/models"
 	authtype "ent/types/auth"
 	usertype "ent/types/user"
+	"framework/log"
 	"service-api/internal/repo"
+	authmodel "service-api/internal/repo/auth"
 	usermodel "service-api/internal/repo/user"
 	"strings"
 )
 
 func UserSingIn(ctx context.Context, username, passwd string) (*models.User, *models.Source, error) {
 	var user *models.User
+	var sourceType *models.Source
 	var err error
 
 	trimmedUsername := strings.TrimSpace(username)
@@ -36,10 +39,14 @@ func UserSingIn(ctx context.Context, username, passwd string) (*models.User, *mo
 	}
 
 	// verify user account is exist and is active
-	if account == nil || !account.IsActivated {
+	if account == nil {
 		return nil, nil, usertype.ErrAccountNotExist{
 			Account: username,
 		}
+	}
+
+	if !account.IsActivated {
+		return nil, nil, authtype.ErrAuthSourceNotActivated
 	}
 
 	if user, err = repo.Client.User.Get(ctx, account.UserID); err != nil {
@@ -47,7 +54,6 @@ func UserSingIn(ctx context.Context, username, passwd string) (*models.User, *mo
 	}
 
 	if user != nil {
-		var sourceType *models.Source
 		if sourceType, err = repo.Client.Source.Get(ctx, user.LoginSource); err != nil {
 			return nil, nil, err
 		}
@@ -73,17 +79,49 @@ func UserSingIn(ctx context.Context, username, passwd string) (*models.User, *mo
 		return user, sourceType, nil
 	}
 
-	//if userSourceType == authtype.SMTP {
-	//	log.Client.Sugar().Debugf("Failed to login '%s' via '%s': %v", username, source.Name, err)
-	//} else {
-	//	log.Client.Sugar().Warnf("Failed to login '%s' via '%s': %v", username, source.Name, err)
-	//}
+	user, sourceType, err = UserSingInAllSource(ctx, username, passwd)
+	if err == nil {
+		return user, sourceType, nil
+	}
 
-	return nil, nil, nil
+	if userSourceType == authtype.SMTP {
+		return nil, nil, usertype.ErrAccountNotExist{Account: username}
+	}
+
+	return nil, nil, err
 }
 
 func UserSingInAllSource(ctx context.Context, username, passwd string) (*models.User, *models.Source, error) {
-	//sources, err :=
+	var sources []*models.Source
+	var err error
+	if sources, err = authmodel.GetAllSourceByIsActive(ctx, true); err != nil {
+		return nil, nil, err
+	}
 
-	return nil, nil, nil
+	for _, source := range sources {
+
+		var authenticator PasswordAuthenticator
+		var ok bool
+		if authenticator, ok = source.Cfg.Cfg.(PasswordAuthenticator); !ok {
+			continue
+		}
+
+		var user *models.User
+		if user, err = authenticator.Authenticate(ctx, nil, username, passwd); err != nil || user == nil {
+			continue
+		}
+
+		if !user.ProhibitLogin {
+			return user, source, nil
+		}
+
+		err = usertype.ErrUserProhibitLogin{UserId: user.ID, Name: user.Name}
+		if usertype.IsErrUserNotExist(err) {
+			log.Client.Sugar().Debugf("Failed to login '%s' via '%s': %v", username, source.Name, err)
+		} else {
+			log.Client.Sugar().Warnf("Failed to login '%s' via '%s': %v", username, source.Name, err)
+		}
+	}
+
+	return nil, nil, usertype.ErrUserNotExist{Name: username}
 }

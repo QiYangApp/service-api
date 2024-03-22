@@ -57,6 +57,14 @@ func (uc *UserCreate) SetPasswdSalt(s string) *UserCreate {
 	return uc
 }
 
+// SetNillablePasswdSalt sets the "passwd_salt" field if the given value is not nil.
+func (uc *UserCreate) SetNillablePasswdSalt(s *string) *UserCreate {
+	if s != nil {
+		uc.SetPasswdSalt(*s)
+	}
+	return uc
+}
+
 // SetPasswdHashAlgo sets the "passwd_hash_algo" field.
 func (uc *UserCreate) SetPasswdHashAlgo(s string) *UserCreate {
 	uc.mutation.SetPasswdHashAlgo(s)
@@ -212,6 +220,10 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
+	if _, ok := uc.mutation.PasswdSalt(); !ok {
+		v := user.DefaultPasswdSalt
+		uc.mutation.SetPasswdSalt(v)
+	}
 	if _, ok := uc.mutation.LoginSource(); !ok {
 		v := user.DefaultLoginSource
 		uc.mutation.SetLoginSource(v)

@@ -92,6 +92,8 @@ var (
 	LowerNameValidator func(string) error
 	// FullNameValidator is a validator for the "full_name" field. It is called by the builders before save.
 	FullNameValidator func(string) error
+	// DefaultPasswdSalt holds the default value on creation for the "passwd_salt" field.
+	DefaultPasswdSalt string
 	// PasswdSaltValidator is a validator for the "passwd_salt" field. It is called by the builders before save.
 	PasswdSaltValidator func(string) error
 	// PasswdHashAlgoValidator is a validator for the "passwd_hash_algo" field. It is called by the builders before save.

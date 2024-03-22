@@ -4,12 +4,7 @@ import (
 	"context"
 	"ent/models"
 	"ent/models/migrate"
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent/dialect/sql/schema"
-	"entgo.io/ent/entc"
-	"entgo.io/ent/entc/gen"
-	"errors"
-	"fmt"
 	"framework/config"
 	"framework/db"
 	"framework/log"
@@ -34,17 +29,16 @@ func Init() {
 				models.Driver(&db.MultiDriver{R: conns.Read(), W: conns.Write()}),
 			},
 			config.Client.GetBool("debug"),
-			config.Client.GetBool("database.schema_init"),
 		)
 	})
 }
 
-func New(opts []models.Option, debug, schemaInit bool) *models.Client {
+func New(opts []models.Option, debug bool) *models.Client {
 	models.SetDebugState(debug)
-	return NewClient(opts, debug, schemaInit)
+	return NewClient(opts)
 }
 
-func NewClient(opts []models.Option, debug, schemaInit bool) *models.Client {
+func NewClient(opts []models.Option) *models.Client {
 	client := models.NewClient(opts...)
 
 	err := client.Schema.Create(
@@ -56,13 +50,7 @@ func NewClient(opts []models.Option, debug, schemaInit bool) *models.Client {
 	)
 
 	if err != nil {
-t 		log.Client.Sugar().Panicf("failed creating schema resources: %v", err)
-	}
-
-	if schemaInit {
-		if err := schemaInitRun(); err != nil {
-			log.Client.Sugar().Panicf("failed init schema: %v", err)
-		}
+		log.Client.Sugar().Panicf("failed creating schema resources: %v", err)
 	}
 
 	err = write(utils.Path.Join(utils.Path.StoragePath, "migrate.sql"), client)
@@ -84,32 +72,6 @@ func write(path string, client *models.Client) error {
 
 	if err := client.Schema.WriteTo(context.Background(), f); err != nil {
 		return err
-	}
-
-	return nil
-}
-
-func schemaInitRun() error {
-	ex, err := entgql.NewExtension()
-	if err != nil {
-		log.Client.Sugar().Fatalf("creating entgql extension: %v", err)
-	}
-
-	schemaDir := utils.Path.Join(utils.Path.RootPath, "/pkg/ent/schema")
-	targetDir := utils.Path.Join(utils.Path.RootPath, "/pkg/ent/models")
-	templateDir := utils.Path.Join(utils.Path.RootPath, "/pkg/ent/template/gen")
-
-	opts := []entc.Option{
-		entc.TemplateDir(templateDir),
-		entc.Extensions(ex),
-	}
-
-	if err := entc.Generate(schemaDir, &gen.Config{
-		Schema:    schemaDir,
-		Target:    targetDir,
-		Templates: entgql.AllTemplates,
-	}, opts...); err != nil {
-		return errors.New(fmt.Sprintf("running ent code generate: %v", err))
 	}
 
 	return nil

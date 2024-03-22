@@ -35,7 +35,7 @@ func (User) Fields() []ent.Field {
 		field.String("name").NotEmpty().MaxLen(32),
 		field.String("lower_name").NotEmpty().MaxLen(32),
 		field.String("full_name").NotEmpty().MaxLen(32),
-		field.String("passwd_salt").NotEmpty().MaxLen(120),
+		field.String("passwd_salt").Default("argon2").NotEmpty().MaxLen(120),
 		field.String("passwd_hash_algo").NotEmpty().MaxLen(32),
 		field.String("passwd").NotEmpty().MaxLen(32),
 		field.String("language").NotEmpty().MaxLen(32),

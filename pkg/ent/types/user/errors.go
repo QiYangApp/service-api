@@ -47,3 +47,25 @@ func (err ErrUserProhibitLogin) Error() string {
 func (err ErrUserProhibitLogin) Unwrap() error {
 	return util.ErrPermissionDenied
 }
+
+// ErrUserNotExist represents a "UserNotExist" kind of error.
+type ErrUserNotExist struct {
+	UID  int64
+	Name string
+}
+
+// IsErrUserNotExist checks if an error is a ErrUserNotExist.
+func IsErrUserNotExist(err error) bool {
+	var errUserNotExist ErrUserNotExist
+	ok := errors.As(err, &errUserNotExist)
+	return ok
+}
+
+func (err ErrUserNotExist) Error() string {
+	return fmt.Sprintf("user does not exist [uid: %d, name: %s]", err.UID, err.Name)
+}
+
+// Unwrap unwraps this error as a ErrNotExist error
+func (err ErrUserNotExist) Unwrap() error {
+	return util.ErrNotExist
+}

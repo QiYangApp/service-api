@@ -9,10 +9,10 @@ import (
 )
 
 func main() {
-	ex, err := entgql.NewExtension()
-	if err != nil {
-		log.Fatalf("creating entgql extension: %v", err)
-	}
+	//ex, err := entgql.NewExtension()
+	//if err != nil {
+	//	log.Fatalf("creating entgql extension: %v", err)
+	//}
 
 	schemaDir := "./schema"
 	targetDir := "./models"
@@ -22,7 +22,7 @@ func main() {
 
 	opts := []entc.Option{
 		entc.TemplateDir(templateDir),
-		entc.Extensions(ex),
+		//entc.Extensions(ex),
 	}
 
 	if err := entc.Generate(schemaDir, &gen.Config{

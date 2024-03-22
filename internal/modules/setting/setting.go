@@ -18,6 +18,7 @@ func LoadCommonSettings() {
 
 // loadCommonSettingsFrom loads common configurations from a configuration provider.
 func loadCommonSettingsFrom(cfg *viper.Viper) error {
+	loadSecret(cfg.Sub("security"))
 	loadTimeFrom(cfg)
 
 	return nil

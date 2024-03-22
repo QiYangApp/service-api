@@ -48,7 +48,7 @@ func (b *Manage) core() zapcore.Core {
 		TimeKey:       "time",
 		NameKey:       "logger",
 		CallerKey:     "file",
-		StacktraceKey: "stacktrace",
+		StacktraceKey: "trace",
 		LineEnding:    zapcore.DefaultLineEnding,
 		EncodeLevel:   zapcore.LowercaseLevelEncoder, //zapcore.LowercaseLevelEncoder,
 		// EncodeTime:     zapcore.ISO8601TimeEncoder,
