@@ -10,7 +10,22 @@ import (
 )
 
 // DataStore represents a data store
-type DataStore any
+type DataStore interface {
+	GetData() ContextData
+}
+
+type ContextData map[string]any
+
+func (ds ContextData) GetData() ContextData {
+	return ds
+}
+
+func (ds ContextData) MergeFrom(other ContextData) ContextData {
+	for k, v := range other {
+		ds[k] = v
+	}
+	return ds
+}
 
 // SessionStore represents a session store
 type SessionStore any
@@ -23,7 +38,7 @@ type Method interface {
 	// in the authentication data (username or email).
 	// Second argument returns err if verification fails, otherwise
 	// First return argument returns nil if no matched verification condition
-	Verify(http *http.Request, w http.ResponseWriter, store DataStore, sess SessionStore) (*models.User, error)
+	Verify(http *http.Request, w http.ResponseWriter, store DataStore) (*models.User, error)
 
 	Name() string
 }

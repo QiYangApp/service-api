@@ -6,6 +6,12 @@
 {{ $pkg := base $.Config.Package }}
 {{ template "header" $ }}
 
+var debugState = false
+
+func SetDebugState(debug bool) {
+	debugState = debug
+}
+
 {{/* 循环遍历所有节点，并且给配置项添加 "Debug" 方法 */}}
 {{ range $n := $.Nodes }}
     {{ $client := print $n.Name "Client" }}

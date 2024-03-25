@@ -78,7 +78,7 @@ func (t *WebServer) Run(cmd *WebCmd) {
 
 	_ = t.Engine.SetTrustedProxies(nil)
 
-	addr := config.Client.GetString("ADDR")
+	addr := config.Client.GetString("addr")
 
 	log.Client.Sugar().Infof("Server addr %s", addr)
 
@@ -86,8 +86,8 @@ func (t *WebServer) Run(cmd *WebCmd) {
 		Addr:                         addr,
 		Handler:                      t.Engine,
 		DisableGeneralOptionsHandler: true,
-		ReadTimeout:                  time.Duration(config.Client.GetInt("READ_TIMEOUT")) * time.Second,
-		WriteTimeout:                 time.Duration(config.Client.GetInt("WRITE_TIMEOUT")) * time.Second,
+		ReadTimeout:                  time.Duration(config.Client.GetInt("read_timeout")) * time.Second,
+		WriteTimeout:                 time.Duration(config.Client.GetInt("write_timeout")) * time.Second,
 	}
 
 	go func() {
@@ -117,6 +117,7 @@ func WebServerClient() *WebServer {
 		webSingleton = &WebServer{
 			Engine: gin.New(),
 			Providers: []providers.Provider{
+				&providers.LogProviders{},
 				&providers.CacheProviders{},
 				&providers.CronProviders{},
 			},

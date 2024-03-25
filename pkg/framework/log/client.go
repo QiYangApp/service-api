@@ -11,13 +11,13 @@ import (
 )
 
 type Param struct {
-	Level       string
-	MaxSize     int
-	MaxAge      int
-	MaxBackups  int
-	Debug       bool
-	Compress    bool
-	LogFileName string
+	Level      Level `mapstructure:"level"`
+	MaxSize    int   `mapstructure:"max_size"`
+	MaxAge     int   `mapstructure:"max_age"`
+	MaxBackups int   `mapstructure:"max_backups"`
+	Debug      bool
+	Compress   bool   `mapstructure:"compress"`
+	FileName   string `mapstructure:"file_name"`
 }
 
 type Manage struct {
@@ -62,7 +62,7 @@ func (b *Manage) core() zapcore.Core {
 
 	// 设置日志级别
 	atomicLevel := zap.NewAtomicLevel()
-	atomicLevel.SetLevel(b.GetLevel(b.Level))
+	atomicLevel.SetLevel(b.Level.Name())
 
 	core := zapcore.NewCore(
 		zapcore.NewJSONEncoder(encoderConfig),
@@ -98,11 +98,11 @@ func (b *Manage) hook() []zapcore.WriteSyncer {
 	hooks := []zapcore.WriteSyncer{
 		zapcore.AddSync(
 			&lumberjack.Logger{
-				Filename:   utils.Path.Join(utils.Path.LogPath, b.LogFileName), // 日志文件路径
-				MaxSize:    b.MaxSize,                                          // 每个日志文件保存的大小 单位:M
-				MaxAge:     b.MaxAge,                                           // 文件最多保存多少天
-				MaxBackups: b.MaxBackups,                                       // 日志文件最多保存多少个备份
-				Compress:   b.Compress,                                         // 是否压缩
+				Filename:   utils.Path.Join(utils.Path.LogPath, b.FileName), // 日志文件路径
+				MaxSize:    b.MaxSize,                                       // 每个日志文件保存的大小 单位:M
+				MaxAge:     b.MaxAge,                                        // 文件最多保存多少天
+				MaxBackups: b.MaxBackups,                                    // 日志文件最多保存多少个备份
+				Compress:   b.Compress,                                      // 是否压缩
 			},
 		),
 	}

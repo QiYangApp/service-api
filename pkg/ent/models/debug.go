@@ -4,6 +4,12 @@ package models
 
 import "entgo.io/ent/dialect"
 
+var debugState = false
+
+func SetDebugState(debug bool) {
+	debugState = debug
+}
+
 func (c *AccessTokenClient) Debug() *AccessTokenClient {
 	if c.debug {
 		return c

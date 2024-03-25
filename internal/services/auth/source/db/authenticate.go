@@ -58,7 +58,7 @@ func Authenticate(ctx context.Context, user *models.User, login, password string
 	// Update password hash if server password hash algorithm have changed
 	// Or update the password when the salt length doesn't match the current
 	// recommended salt length, this in order to migrate user's salts to a more secure salt.
-	if user.PasswdHashAlgo != setting.SecretSetting.PasswdHashAlgo || len(user.PasswdSalt) != usermodel.SaltByteLength*2 {
+	if user.PasswdHashAlgo != setting.SecretSettingConfig.PasswdHashAlgo || len(user.PasswdSalt) != usermodel.SaltByteLength*2 {
 		if err := usermodel.SetPassword(user, password); err != nil {
 			return nil, err
 		}

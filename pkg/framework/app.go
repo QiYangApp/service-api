@@ -3,7 +3,7 @@ package framework
 import (
 	"framework/cmd"
 	"github.com/urfave/cli"
-	"log"
+	"go.uber.org/zap"
 	"os"
 )
 
@@ -25,6 +25,6 @@ func NewApp() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatalf("Failed to start application: %v", err)
+		zap.S().Fatalf("Failed to start application: %v", err)
 	}
 }

@@ -15,14 +15,14 @@ var DefaultUILocation = time.Local
 
 func loadTimeFrom(cfg *viper.Viper) {
 	timeutil.DefaultUILocation = DefaultUILocation
-	zone := cfg.GetString("default_ui_location")
+	zone := cfg.GetString("time_zones")
 	if zone != "" {
 		var err error
 		DefaultUILocation, err = time.LoadLocation(zone)
 		if err != nil {
 			log.Client.Sugar().Fatalf("Load time zone failed: %v", err)
 		} else {
-			log.Client.Sugar().Infof("Default UI Location is %v", zone)
+			log.Client.Sugar().Infof("Default time zones is %v", zone)
 		}
 	}
 	if DefaultUILocation == nil {

@@ -21,7 +21,7 @@ var (
 		{Name: "scope", Type: field.TypeString},
 		{Name: "has_recent_activity", Type: field.TypeString},
 		{Name: "has_used", Type: field.TypeString},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711103960},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711336956},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// AccessTokensTable holds the schema information for the "access_tokens" table.
@@ -62,7 +62,7 @@ var (
 		{Name: "is_private", Type: field.TypeBool, Default: true},
 		{Name: "is_activated", Type: field.TypeBool},
 		{Name: "is_primary", Type: field.TypeBool, Default: false},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711103960},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711336956},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// AccountsTable holds the schema information for the "accounts" table.
@@ -113,7 +113,7 @@ var (
 		{Name: "left", Type: field.TypeInt32, Default: 0},
 		{Name: "right", Type: field.TypeInt32, Default: 0},
 		{Name: "state", Type: field.TypeInt, Default: 1},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711103960},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711336956},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// PermissionGroupsTable holds the schema information for the "permission_groups" table.
@@ -139,7 +139,7 @@ var (
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "router_id", Type: field.TypeUUID},
 		{Name: "permission_group_id", Type: field.TypeUUID},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711103960},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711336956},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// PermissionRelatedRoutersTable holds the schema information for the "permission_related_routers" table.
@@ -162,7 +162,7 @@ var (
 		{Name: "route", Type: field.TypeString, Size: 254, Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 254, Default: ""},
 		{Name: "state", Type: field.TypeInt, Default: 1},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711103960},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711336956},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// RoutersTable holds the schema information for the "routers" table.
@@ -191,7 +191,7 @@ var (
 		{Name: "is_active", Type: field.TypeBool},
 		{Name: "is_sync_enabled", Type: field.TypeBool},
 		{Name: "cfg", Type: field.TypeJSON},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711103960},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711336956},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// SourcesTable holds the schema information for the "sources" table.
