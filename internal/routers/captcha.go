@@ -9,13 +9,9 @@ import (
 type CaptchaRouter struct {
 }
 
-func (c *CaptchaRouter) IsPrivate() bool {
-	return false
-}
-
-func (*CaptchaRouter) Handle(r *gin.RouterGroup) {
+func (*CaptchaRouter) Handle(privateRoute, publicRoute *gin.RouterGroup) {
 	// 获取验证码
-	r.GET("/captcha/:type", router.Bind(api.Client.CaptchaApi.Index))
+	publicRoute.GET("/captcha/:type", router.Bind(api.Client.CaptchaApi.Index))
 	// 验证验证码
-	r.POST("/captcha/:type", router.Bind(api.Client.CaptchaApi.Verify))
+	publicRoute.POST("/captcha/:type", router.Bind(api.Client.CaptchaApi.Verify))
 }

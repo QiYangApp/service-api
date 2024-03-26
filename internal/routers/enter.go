@@ -22,16 +22,14 @@ func Register(app *cmd.WebServer) {
 
 	r.Use(funcs...)
 
-	private := r.Group("")
-	private.Use(middlewares.Auth())
+	privateRoute := r.Group("")
+	privateRoute.Use(middlewares.Auth())
 
-	public := r.Group("")
+	publicRoute := r.Group("")
 
 	for _, r := range RouterGroup {
-		if r.IsPrivate() {
-			r.Handle(private)
-		} else {
-			r.Handle(public)
-		}
+
+		r.Handle(privateRoute, publicRoute)
+
 	}
 }

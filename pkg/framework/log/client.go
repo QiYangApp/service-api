@@ -28,19 +28,23 @@ type Manage struct {
 func (b *Manage) Builder() *Manage {
 
 	// 设置初始化字段
-	field := zap.Fields(zap.String("time", time.Now().Format("2006-01-02 15:04:05")), zap.Any("level", b.Level))
+	//field := zap.Fields(zap.String("time", time.Now().Format("2006-01-02 15:04:05")), zap.Any("level", b.Level))
 
 	// 开启开发模式，堆栈跟踪, 文件和行号
 	if b.Debug {
-		b.Client = zap.New(b.core(), zap.AddCaller(), zap.Development(), field)
+		b.Client = zap.New(b.core(), zap.AddCaller(), zap.Development())
 	} else {
-		b.Client = zap.New(b.core(), field)
+		b.Client = zap.New(b.core())
 	}
 
 	return b
 }
 
 func (b *Manage) core() zapcore.Core {
+	encodelevel := zapcore.LowercaseLevelEncoder
+	if b.Debug {
+		encodelevel = zapcore.LowercaseColorLevelEncoder
+	}
 
 	encoderConfig := zapcore.EncoderConfig{
 		MessageKey:    "msg",
@@ -50,10 +54,10 @@ func (b *Manage) core() zapcore.Core {
 		CallerKey:     "file",
 		StacktraceKey: "trace",
 		LineEnding:    zapcore.DefaultLineEnding,
-		EncodeLevel:   zapcore.LowercaseLevelEncoder, //zapcore.LowercaseLevelEncoder,
+		EncodeLevel:   encodelevel,
 		// EncodeTime:     zapcore.ISO8601TimeEncoder,
 		EncodeTime: func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-			enc.AppendString(t.Format("2006-01-02 15:04:05"))
+			enc.AppendString("[" + t.Format("2006-01-02 15:04::05.000") + "]")
 		},
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder, // 短路径编码器
@@ -64,34 +68,18 @@ func (b *Manage) core() zapcore.Core {
 	atomicLevel := zap.NewAtomicLevel()
 	atomicLevel.SetLevel(b.Level.Name())
 
+	encoder := zapcore.NewJSONEncoder(encoderConfig)
+	if b.Debug {
+		encoder = zapcore.NewConsoleEncoder(encoderConfig)
+	}
+
 	core := zapcore.NewCore(
-		zapcore.NewJSONEncoder(encoderConfig),
+		encoder,
 		zapcore.NewMultiWriteSyncer(b.hook()...),
 		atomicLevel,
 	)
 
 	return core
-}
-func (b *Manage) GetLevel(level string) zapcore.Level {
-
-	switch level {
-	case "debug":
-		return zap.DebugLevel
-	case "info":
-		return zap.InfoLevel
-	case "warn":
-		return zap.WarnLevel
-	case "error":
-		return zap.ErrorLevel
-	case "DPanic":
-		return zap.DPanicLevel
-	case "panic":
-		return zap.PanicLevel
-	case "fatal":
-		return zap.FatalLevel
-	}
-
-	return zap.DebugLevel
 }
 
 func (b *Manage) hook() []zapcore.WriteSyncer {

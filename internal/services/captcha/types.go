@@ -1,18 +1,19 @@
 package captcha
 
 import (
-	"framework/log"
+	"errors"
 	"framework/utils"
 )
 
-func GenTokenString(t, token string) string {
+var TokenTypeNotExists = errors.New("captcha gen token string type not exists!")
+
+func GenTokenString(t, token string) (string, error) {
 	switch t {
 	case "login":
 		break
 	default:
-		log.Client.Error("captcha gen token string type not exists!")
-		return ""
+		return "", TokenTypeNotExists
 	}
 
-	return utils.Md5(t + "-" + token)
+	return utils.Md5(t + "-" + token), nil
 }

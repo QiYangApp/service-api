@@ -13,11 +13,7 @@ import (
 type SwaggerRouter struct {
 }
 
-func (c *SwaggerRouter) IsPrivate() bool {
-	return false
-}
-
-func (*SwaggerRouter) Handle(r *gin.RouterGroup) {
+func (*SwaggerRouter) Handle(private, public *gin.RouterGroup) {
 	if cmd.WebServerClient().Cmd.Debug {
 		return
 	}
@@ -25,5 +21,5 @@ func (*SwaggerRouter) Handle(r *gin.RouterGroup) {
 	swag.SwaggerInfo.Host = config.Client.GetString("addr")
 	swag.SwaggerInfo.Version = config.Client.GetString("version")
 
-	r.GET("/swagger/*any", gs.WrapHandler(swaggerfiles.Handler))
+	public.GET("/swagger/*any", gs.WrapHandler(swaggerfiles.Handler))
 }

@@ -2,8 +2,10 @@ package v1
 
 import (
 	"errors"
+	"framework/log"
 	"framework/response"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	"service-api/internal/app/api/validator"
 	"service-api/internal/services/captcha"
@@ -23,7 +25,12 @@ type CaptchaApi struct {
 // @Success 200 {object} response.Response{Data=validator.CaptchaResponse} "请求成功"
 // @Router /captcha/{type} [get]
 func (*CaptchaApi) Index(c *gin.Context, req *validator.CaptchaRequest) *gin.Context {
-	token := captcha.GenTokenString(req.Type, req.Token)
+	token, err := captcha.GenTokenString(req.Type, req.Token)
+	if err != nil {
+		log.Client.Sugar().Info(zap.String("captcha gen err", err.Error()))
+		return response.RError(c, err, http.StatusNotFound, nil).ToJson()
+	}
+
 	img, err := captcha.NewImage().Generate(token, nil)
 	if err != nil {
 		return response.RError(c, errors.New(lang.CaptchaGenerate), http.StatusInternalServerError, nil).ToJson()

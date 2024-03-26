@@ -38,7 +38,7 @@ type Method interface {
 	// in the authentication data (username or email).
 	// Second argument returns err if verification fails, otherwise
 	// First return argument returns nil if no matched verification condition
-	Verify(http *http.Request, w http.ResponseWriter, store DataStore) (*models.User, error)
+	Verify(http *http.Request, w http.ResponseWriter, store DataStore, sess SessionStore) (*models.User, error)
 
 	Name() string
 }

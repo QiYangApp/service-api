@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+	"framework/log"
 	"framework/response"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -9,8 +10,7 @@ import (
 )
 
 type Router interface {
-	Handle(r *gin.RouterGroup)
-	IsPrivate() bool
+	Handle(private *gin.RouterGroup, public *gin.RouterGroup)
 }
 
 func Bind(fun any) gin.HandlerFunc {
@@ -53,4 +53,18 @@ func Bind(fun any) gin.HandlerFunc {
 			c.Abort()
 		}
 	}
+}
+
+func unmarshal(c *gin.Context, v interface{}) error {
+	err := c.ShouldBind(v)
+	if err != nil {
+		log.Client.Sugar().Warnf("route handle fun error, method params bind, error method: %v", v)
+	}
+
+	err = c.ShouldBindUri(v)
+	if err != nil {
+		log.Client.Sugar().Warnf("route handle fun error, uri method params bind, error method: %v", v)
+	}
+
+	return err
 }

@@ -110,6 +110,8 @@ func (t *WebServer) Run(cmd *WebCmd) {
 		log.Client.Warn("Shutdown Server ...", zap.Error(err))
 	}
 	log.Client.Info("Server exiting")
+
+	defer log.Client.Sync()
 }
 
 func WebServerClient() *WebServer {
