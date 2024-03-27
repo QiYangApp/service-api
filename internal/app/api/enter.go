@@ -7,7 +7,6 @@ type AbstractController struct {
 
 type Group struct {
 	v1.CaptchaApi
-	v1.AuthApi
 }
 
 var Client = new(Group)

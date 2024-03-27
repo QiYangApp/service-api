@@ -52,7 +52,7 @@ var (
 // NewComplexity for preparation
 func NewComplexity() {
 	matchComplexityOnce.Do(func() {
-		setupComplexity(setting.SecretSettingConfig.PasswordComplexity)
+		setupComplexity(setting.SecretSetting.PasswordComplexity)
 	})
 }
 

@@ -33,7 +33,7 @@ func (err ErrIsPwnedRequest) Unwrap() error {
 // IsPwned checks whether a password has been pwned
 // If a password has not been pwned, no error is returned.
 func IsPwned(ctx context.Context, password string) error {
-	if !setting.SecretSettingConfig.PasswdCheckPwn {
+	if !setting.SecretSetting.PasswdCheckPwn {
 		return nil
 	}
 

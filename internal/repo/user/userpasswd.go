@@ -37,11 +37,11 @@ func SetPassword(user *models.User, passwd string) (err error) {
 	if user.PasswdSalt, err = GetUserSalt(); err != nil {
 		return err
 	}
-	if user.Passwd, err = hash.Parse(setting.SecretSettingConfig.PasswdHashAlgo).Hash(passwd, user.PasswdHashAlgo); err != nil {
+	if user.Passwd, err = hash.Parse(setting.SecretSetting.PasswdHashAlgo).Hash(passwd, user.PasswdHashAlgo); err != nil {
 		return err
 	}
 
-	user.PasswdHashAlgo = setting.SecretSettingConfig.PasswdHashAlgo
+	user.PasswdHashAlgo = setting.SecretSetting.PasswdHashAlgo
 
 	return nil
 }

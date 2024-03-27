@@ -1,10 +1,10 @@
-package captcha
+package base64Captcha
 
 import (
 	"fmt"
 	"framework/cache"
 	"framework/exceptions"
-	"github.com/mojocn/base64Captcha"
+	captcha "github.com/mojocn/base64Captcha"
 	"service-api/resources/lang"
 	"sync"
 	"time"
@@ -74,7 +74,7 @@ func (i *Image) Generate(scenes string, p *ImageParam) (*ImageResp, error) {
 		}
 	}
 
-	driver := base64Captcha.NewDriverDigit(
+	driver := captcha.NewDriverDigit(
 		p.Height,
 		p.Width,
 		p.Len,
@@ -82,7 +82,7 @@ func (i *Image) Generate(scenes string, p *ImageParam) (*ImageResp, error) {
 		p.dotCount,
 	)
 
-	captcha := base64Captcha.NewCaptcha(driver, i.store)
+	captcha := captcha.NewCaptcha(driver, i.store)
 	id, body, answer, err := captcha.Generate()
 	if err != nil {
 		return nil, exceptions.New(lang.CaptchaErrorGenerateCode)

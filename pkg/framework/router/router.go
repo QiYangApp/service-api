@@ -37,7 +37,7 @@ func Bind(fun any) gin.HandlerFunc {
 					GetErrorMsg(c, tmp.Interface().(Validator), err),
 					http.StatusBadRequest,
 					fmt.Sprintf("params error"),
-				).ToJson().Abort()
+				)
 				return
 			}
 
@@ -49,6 +49,7 @@ func Bind(fun any) gin.HandlerFunc {
 		}
 
 		methodValueOf.Call(append([]reflect.Value{reflect.ValueOf(c)}, reqs...))
+
 		if !c.IsAborted() {
 			c.Abort()
 		}

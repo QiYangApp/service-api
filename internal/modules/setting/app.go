@@ -5,9 +5,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var AppSettingConfig = &AppSetting{}
-
-type AppSetting struct {
+var AppSetting = &struct {
 	Name           string `mapstructure:"name"`
 	RunMode        string `mapstructure:"run_mode"`
 	RunUser        string `mapstructure:"run_user"`
@@ -20,10 +18,10 @@ type AppSetting struct {
 	MaxRequests    int    `mapstructure:"max_requests"`
 	MaxRequestTime int    `mapstructure:"max_request_time"`
 	TimeZones      string `mapstructure:"time_zones"`
-}
+}{}
 
 func loadApp(viper *viper.Viper) {
-	if err := viper.Unmarshal(AppSettingConfig); err != nil {
+	if err := viper.Unmarshal(AppSetting); err != nil {
 		log.Client.Sugar().Errorf("app config parser fail, ", err)
 	}
 }

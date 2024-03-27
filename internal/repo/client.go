@@ -5,12 +5,12 @@ import (
 	"ent/models"
 	"ent/models/migrate"
 	"entgo.io/ent/dialect/sql/schema"
-	"framework/config"
 	"framework/db"
 	"framework/log"
 	"framework/utils"
 	"os"
 	"path/filepath"
+	"service-api/internal/modules/setting"
 	"sync"
 )
 
@@ -28,7 +28,7 @@ func Init() {
 			[]models.Option{
 				models.Driver(&db.MultiDriver{R: conns.Read(), W: conns.Write()}),
 			},
-			config.Client.GetBool("debug"),
+			setting.AppSetting.Debug,
 		)
 	})
 }

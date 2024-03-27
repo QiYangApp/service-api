@@ -100,14 +100,20 @@ func (r *Response) ToStruct() *Response {
 	}
 }
 
-func (r *Response) ToJson() *gin.Context {
-	r.Context.SecureJSON(r.GetCode(), r.ToStruct())
+func (r *Response) Output() *Response {
 
-	return r.Context
+	switch r.Type {
+	default:
+	case JSON:
+		toJson(r)
+		break
+
+	}
+
+	return r
 }
 
-func (r *Response) ToStream(data []byte) *gin.Context {
-	r.Context.File(string(data))
-
-	return r.Context
+func toJson(r *Response) {
+	r.Context.JSON(r.GetCode(), r.ToStruct())
+	r.Context.Abort()
 }

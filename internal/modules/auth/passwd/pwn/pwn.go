@@ -63,7 +63,7 @@ func newRequest(ctx context.Context, method, url string, body io.ReadCloser) (*h
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("User-Agent", "QiYang "+setting.AppSettingConfig.RunMode)
+	req.Header.Add("User-Agent", "QiYang "+setting.AppSetting.RunMode)
 	return req, nil
 }
 
