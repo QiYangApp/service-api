@@ -27,6 +27,5 @@ build
 go.work
 gin-bin
 
-config.toml
-./src/config.yaml
+config.yaml
 ./src/storage/*.log
