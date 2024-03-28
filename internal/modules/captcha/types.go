@@ -1,17 +1,25 @@
 package captcha
 
-type Resp[B any, A any] interface {
-	GetKey() string
+type Type string
 
-	GetToken() string
+const (
+	Image     Type = "Image"
+	TextPoint Type = "TextPoint"
+)
 
-	GetBody() B
-
-	GetAnswer() A
+func (t Type) ToString() string {
+	return string(t)
 }
 
-type Captcha[B any, A any] interface {
-	Generate(token string) (Resp[B, A], error)
-	GenerateCustom(token string) (Resp[B, A], error)
-	Verify(token, key string, answer A, clear bool) bool
+type Store interface {
+	Get(key string, clear bool) string
+
+	Set(id string, value string) error
+
+	Verify(id string, answer string, clear bool) bool
+}
+
+type Captcha interface {
+	Generate(token string) (*Resp, error)
+	Verify(token, key string, answer any, clear bool) bool
 }

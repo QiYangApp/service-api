@@ -9,9 +9,6 @@ import (
 )
 
 var ServiceSetting = struct {
-	// Captcha
-	EnableCaptcha bool `mapsturcture:"enable_captcha"`
-	CaptchaType
 }{}
 
 func loadServiceSetting(viper *viper.Viper) {

@@ -6,13 +6,13 @@ package setting
 
 import (
 	"framework/config"
+	"framework/log"
 	"github.com/spf13/viper"
-	"log"
 )
 
 func LoadCommonSettings() {
 	if err := loadCommonSettingsFrom(config.Client); err != nil {
-		log.Fatal("Unable to load settings from config: %v", err)
+		log.Client.Sugar().Fatalf("Unable to load settings from config: %v", err)
 	}
 }
 

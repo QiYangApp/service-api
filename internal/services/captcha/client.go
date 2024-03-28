@@ -2,7 +2,6 @@ package captcha
 
 import (
 	"framework/utils"
-	"service-api/internal/modules/setting"
 )
 
 type Store struct {
@@ -13,8 +12,8 @@ func genTokenString(t, token string) (string, error) {
 }
 
 func New() {
-	if !setting.ServiceSetting.EnableCaptcha {
-		return "", CaptchaNotActived
-	}
+	//if !setting.ServiceSetting.EnableCaptcha {
+	//	return "", CaptchaNotActived
+	//}
 
 }

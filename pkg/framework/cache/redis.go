@@ -20,13 +20,13 @@ func (c *RedisDrive) Connect(ctx context.Context, cfg map[string]any) error {
 	c.storage = redis.NewClient(
 		&redis.Options{
 			Addr:             cfg["addr"].(string),
-			Password:         cfg["password"].(string),     // no password set
-			DB:               int(cfg["database"].(int64)), // use default DB
-			PoolSize:         int(cfg["pool_size"].(int64)),
-			PoolTimeout:      time.Duration(cfg["pool_timeout"].(int64)) * time.Second,
-			WriteTimeout:     time.Duration(cfg["write_timeout"].(int64)) * time.Second,
-			ReadTimeout:      time.Duration(cfg["read_timeout"].(int64)) * time.Second,
-			DialTimeout:      time.Duration(cfg["dial_timeout"].(int64)) * time.Second,
+			Password:         cfg["password"].(string), // no password set
+			DB:               cfg["database"].(int),    // use default DB
+			PoolSize:         cfg["pool_size"].(int),
+			PoolTimeout:      time.Duration(cfg["pool_timeout"].(int)) * time.Second,
+			WriteTimeout:     time.Duration(cfg["write_timeout"].(int)) * time.Second,
+			ReadTimeout:      time.Duration(cfg["read_timeout"].(int)) * time.Second,
+			DialTimeout:      time.Duration(cfg["dial_timeout"].(int)) * time.Second,
 			DisableIndentity: true,
 		},
 	)

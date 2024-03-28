@@ -78,15 +78,7 @@ func (c *Manage) Register(key string) (Drive, error) {
 		return c.drives[key], nil
 	}
 
-	conns := config.Client.Get("conns").([]interface{})
-	var conn map[string]any
-	for _, t := range conns {
-		conn = t.(map[string]any)
-		if name, ok := conn["driver"].(string); ok && name == key {
-			break
-		}
-	}
-
+	conn := config.Client.GetStringMap("conns." + key)
 	if len(conn) == 0 {
 		log.Client.Panic("cache database config conns empty")
 	}

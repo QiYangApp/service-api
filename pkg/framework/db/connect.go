@@ -16,25 +16,25 @@ type Config struct {
 }
 
 type ConfigConnsSingle struct {
-	MaxOpenConns int    `json:"max_open_conns,omitempty"`
-	MaxIdleConns int    `json:"max_idle_conns,omitempty"`
-	Host         string `json:"host,omitempty"`
-	Port         int    `json:"port,omitempty"`
-	Username     string `json:"username,omitempty"`
-	Password     string `json:"password,omitempty"`
-	Database     string `json:"database,omitempty"`
+	Host     string `json:"host,omitempty"`
+	Port     int    `json:"port,omitempty"`
+	Username string `json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
 }
 
 type ConfigConnsMany struct {
-	Read  ConfigConnsSingle `json:"read"`
-	Write ConfigConnsSingle `json:"write"`
+	Database     string            `json:"database,omitempty"`
+	MaxOpenConns int               `json:"max_open_conns,omitempty"`
+	MaxIdleConns int               `json:"max_idle_conns,omitempty"`
+	Read         ConfigConnsSingle `json:"read"`
+	Write        ConfigConnsSingle `json:"write"`
 }
 
 type Connect struct {
 }
 
-func (p *Connect) Open(t string, cfg ConfigConnsSingle) *entsql.Driver {
-	return entsql.OpenDB(p.dbType(t), p.Connect(t, cfg))
+func (p *Connect) Open(t string, cfg ConfigConnsMany, singcfg ConfigConnsSingle) *entsql.Driver {
+	return entsql.OpenDB(p.dbType(t), p.Connect(t, cfg, singcfg))
 }
 
 func (i *Connect) dbType(t string) string {
@@ -50,8 +50,8 @@ func (i *Connect) dbType(t string) string {
 	}
 }
 
-func (p *Connect) Connect(t string, cfg ConfigConnsSingle) *sql.DB {
-	db, err := sql.Open(t, p.parseUrl(cfg))
+func (p *Connect) Connect(t string, cfg ConfigConnsMany, singcfg ConfigConnsSingle) *sql.DB {
+	db, err := sql.Open(t, p.parseUrl(cfg, singcfg))
 	if err != nil {
 		log.Client.Sugar().Fatalf("connecting to the database failed %v", err)
 	}
@@ -68,12 +68,12 @@ func (p *Connect) Connect(t string, cfg ConfigConnsSingle) *sql.DB {
 	return db
 }
 
-func (p Connect) parseUrl(cfg ConfigConnsSingle) string {
+func (p Connect) parseUrl(cfg ConfigConnsMany, singcfg ConfigConnsSingle) string {
 	return fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%d sslmode=disable",
-		cfg.Username,
-		cfg.Password,
+		singcfg.Username,
+		singcfg.Password,
 		cfg.Database,
-		cfg.Host,
-		cfg.Port,
+		singcfg.Host,
+		singcfg.Port,
 	)
 }

@@ -2,7 +2,7 @@ package exceptions
 
 import (
 	"encoding/json"
-	"fmt"
+	"framework/log"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -76,12 +76,12 @@ func alarm(level string, str string) {
 	jsons, errs := json.Marshal(msg)
 
 	if errs != nil {
-		fmt.Println("json marshal error:", errs)
+		log.Client.Sugar().Warnf("json marshal error: %v", errs)
 	}
 
 	errorJsonInfo := string(jsons)
 
-	fmt.Println(errorJsonInfo)
+	log.Client.Sugar().Warn(errorJsonInfo)
 
 	if level == "EMAIL" {
 		// 执行发邮件

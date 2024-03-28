@@ -17,7 +17,7 @@ type Manage struct {
 
 func (c *Manage) ParseFile(path string) *Manage {
 
-	c.Client.SetConfigType("toml")
+	c.Client.SetConfigType("yaml")
 	c.Client.SetConfigName("config")
 	c.Client.AddConfigPath(path)
 

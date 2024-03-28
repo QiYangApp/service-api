@@ -1,7 +1,6 @@
 package db
 
 import (
-	"encoding/json"
 	entsql "entgo.io/ent/dialect/sql"
 	"framework/config"
 	"framework/log"
@@ -18,29 +17,9 @@ func (i *DB) Init() {
 		log.Client.Panic("database config type error, name: " + driver)
 	}
 
-	conns := config.Client.Get("conns").([]interface{})
-	var conn map[string]any
-	for _, t := range conns {
-		conn = t.(map[string]any)
-		if name, ok := conn["driver"].(string); ok && name == driver {
-			break
-		}
-	}
-
-	if len(conn) == 0 {
-		log.Client.Panic("database config conns database empty")
-	}
-
 	var cfg ConfigConnsMany
-	var err error
-	if _, ok := conn["driver"]; ok {
-		// 使用encoding/json包进行转换
-		jsonData, _ := json.Marshal(conn)
-		err = json.Unmarshal(jsonData, &cfg)
-	}
-
-	if err != nil {
-		log.Client.Sugar().Panic(err)
+	if err := config.Client.Sub("conns." + driver).Unmarshal(&cfg); err != nil {
+		log.Client.Sugar().Panicf("database config read fail, name: %s, err: %v", driver, err)
 	}
 
 	i.Driver = driver
@@ -48,9 +27,9 @@ func (i *DB) Init() {
 }
 
 func (i *DB) Read() *entsql.Driver {
-	return new(Connect).Open(i.Driver, i.Cfg.Read)
+	return new(Connect).Open(i.Driver, i.Cfg, i.Cfg.Read)
 }
 
 func (i *DB) Write() *entsql.Driver {
-	return new(Connect).Open(i.Driver, i.Cfg.Write)
+	return new(Connect).Open(i.Driver, i.Cfg, i.Cfg.Write)
 }

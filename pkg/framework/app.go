@@ -11,20 +11,21 @@ import (
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
+var App = cli.NewApp()
+
 const Version = "0.0.1"
 const Name = "QiYang"
 const Usage = "QiYang"
 
 func NewApp() {
-	app := cli.NewApp()
-	app.Name = Name
-	app.Usage = Usage
-	app.Version = Version
-	app.Commands = []cli.Command{
+	App.Name = Name
+	App.Usage = Usage
+	App.Version = Version
+	App.Commands = []cli.Command{
 		cmd.Web,
 	}
 
-	if err := app.Run(os.Args); err != nil {
+	if err := App.Run(os.Args); err != nil {
 		zap.S().Fatalf("Failed to start application: %v", err)
 	}
 }
