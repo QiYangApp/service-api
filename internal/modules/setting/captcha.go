@@ -12,12 +12,12 @@ import (
 	"time"
 )
 
-var CaptchaSetting = struct {
-	Enable  bool           `mapstructure:"enable"`
-	Store   string         `mapstructure:"store"`
-	Type    captcha.Type   `mapstructure:"type"`
-	EXPIRES time.Duration  `mapstructure:"expires"`
-	Drivers map[string]any `mapstructure:"drivers"`
+var CaptchaSetting = &struct {
+	Enable  bool                 `mapstructure:"enable"`
+	Store   string               `mapstructure:"store"`
+	Type    captcha.Type         `mapstructure:"type"`
+	EXPIRES time.Duration        `mapstructure:"expires"`
+	Drivers map[captcha.Type]any `mapstructure:"drivers"`
 }{
 	Enable: false,
 }
@@ -29,6 +29,7 @@ func loadCaptchaSetting(viper *viper.Viper) {
 }
 
 func GetCaptchaClient() (captcha.Captcha, error) {
+
 	var driver cache.Drive
 	var err error
 	if driver, err = cache.Instance().Register(CaptchaSetting.Store); err != nil {
@@ -37,7 +38,7 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 
 	var setting any
 	var ok bool
-	if setting, ok = CaptchaSetting.Drivers[CaptchaSetting.Type.ToString()]; !ok {
+	if setting, ok = CaptchaSetting.Drivers[CaptchaSetting.Type]; !ok {
 		log.Client.Sugar().Errorf("captcha setting type not exists, err: %v", err)
 		return nil, err
 	}

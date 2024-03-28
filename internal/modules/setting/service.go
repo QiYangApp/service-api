@@ -4,7 +4,6 @@
 package setting
 
 import (
-	"framework/log"
 	"github.com/spf13/viper"
 )
 
@@ -12,7 +11,7 @@ var ServiceSetting = struct {
 }{}
 
 func loadServiceSetting(viper *viper.Viper) {
-	if err := viper.Unmarshal(ServiceSetting); err != nil {
-		log.Client.Error("load service setting")
-	}
+	//if err := viper.Unmarshal(ServiceSetting); err != nil {
+	//	log.Client.Error("load service setting")
+	//}
 }

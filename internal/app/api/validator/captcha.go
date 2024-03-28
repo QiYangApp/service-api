@@ -15,7 +15,7 @@ type CaptchaRequest struct {
 
 type CaptchaResponse struct {
 	Id      string `json:"id"`
-	Captcha string `json:"captcha"`
+	Captcha any    `json:"captcha"`
 	Token   string `json:"token"`
 }
 

@@ -5,8 +5,8 @@ import "framework/utils/optional"
 type Type string
 
 const (
-	Image     Type = "Image"
-	TextPoint Type = "TextPoint"
+	Image     Type = "image"
+	TextPoint Type = "textpoint"
 )
 
 func (t Type) ToString() string {

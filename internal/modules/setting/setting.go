@@ -20,6 +20,7 @@ func LoadCommonSettings() {
 func loadCommonSettingsFrom(cfg *viper.Viper) error {
 	loadApp(cfg)
 	loadServiceSetting(cfg.Sub("service"))
+	loadCaptchaSetting(cfg.Sub("captcha"))
 	loadSecret(cfg.Sub("security"))
 	loadTimeFrom(cfg)
 

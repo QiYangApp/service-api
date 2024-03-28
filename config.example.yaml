@@ -12,9 +12,6 @@ MAX_REQUESTS: 10
 MAX_REQUEST_TIME: 60
 TIME_ZONES: "Asia/Shanghai"
 
-SERVICE:
-  Test: ""
-
 DATABASE:
   DRIVER: "pgx"
 
@@ -27,21 +24,21 @@ CONNS:
     DRIVER: pgx
     MAX_OPEN_CONN: 100
     MAX_IDLE_CONN: 50
-    DATABASE: "qiyang"
+    DATABASE: "qi_yang"
     READ:
       HOST: "localhost"
-      PORT: 5432
-      USERNAME: "qiyang"
-      PASSWORD: "qiyang"
+      PORT: 5430
+      USERNAME: "qi_yang"
+      PASSWORD: "qi_yang"
     WRITE:
       HOST: "localhost"
-      PORT: 5432
-      USERNAME: "qiyang"
-      PASSWORD: "qiyang"
+      PORT: 5430
+      USERNAME: "qi_yang"
+      PASSWORD: "qi_yang"
   Cache:
     DRIVER: "redis"
-    ADDR: "localhost:6379"
-    PASSWORD: ""
+    ADDR: "localhost:6301"
+    PASSWORD: "secret_redis"
     DATABASE: 0
     MAX_OPEN_CONN: 100
     MAX_IDLE_CONN: 50
@@ -53,8 +50,8 @@ CONNS:
     POOL_TIMEOUT: 30
   CAPTCHA:
     DRIVER: "redis"
-    ADDR: "localhost:6379"
-    PASSWORD: ""
+    ADDR: "localhost:6301"
+    PASSWORD: "secret_redis"
     DATABASE: 0
     MAX_OPEN_CONN: 100
     MAX_IDLE_CONN: 50
@@ -71,7 +68,7 @@ CAPTCHA:
   EXPIRES: 60
   STORE: "captcha"
   DRIVERS:
-    IMAGE:
+    Image:
       HEIGHT: 70
       WIDTH: 130
       LEN: 4
