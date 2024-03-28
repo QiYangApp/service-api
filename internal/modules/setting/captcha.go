@@ -43,6 +43,8 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 		return nil, err
 	}
 
+	var exp = CaptchaSetting.EXPIRES * time.Second
+
 	switch CaptchaSetting.Type {
 	case captcha.Image:
 		var opts base64Captcha.Opts
@@ -52,7 +54,7 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 		}
 
 		store := cache.NewOperation[string](driver)
-		return base64Captcha.New(opts, captcha.NewStoreValue(store, CaptchaSetting.EXPIRES)), nil
+		return base64Captcha.New(opts, captcha.NewStoreValue(store, exp)), nil
 	case captcha.TextPoint:
 		var opts gocaptcha.Opts
 		if err := mapstructure.Decode(setting, &opts); err != nil {
@@ -61,7 +63,7 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 		}
 
 		store := cache.NewOperation[map[int]captchaclient.CharDot](driver)
-		return gocaptcha.New(opts, captcha.NewStoreValue(store, CaptchaSetting.EXPIRES)), nil
+		return gocaptcha.New(opts, captcha.NewStoreValue(store, exp)), nil
 	}
 
 	return nil, nil
