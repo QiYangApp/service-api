@@ -5,6 +5,7 @@ import (
 	"framework/config"
 	"framework/cron"
 	"framework/log"
+	"go.uber.org/zap"
 )
 
 type Provider interface {
@@ -22,7 +23,10 @@ type CacheProviders struct {
 }
 
 func (c *CacheProviders) Register() {
-	cache.NewInstance(config.Client.GetString("CACHE.DRIVER"))
+	driver := config.Client.GetString("CACHE.DRIVER")
+	if err := cache.Client.SetDefaultDrive(driver); err != nil {
+		zap.S().Fatal(err)
+	}
 }
 
 type LogProviders struct {

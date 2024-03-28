@@ -6,7 +6,6 @@ import (
 	"framework/exceptions"
 	captcha "github.com/mojocn/base64Captcha"
 	"service-api/resources/lang"
-	"sync"
 	"time"
 )
 
@@ -21,41 +20,6 @@ type ImageResp struct {
 	Id      string `json:"id"`
 	Captcha string `json:"captcha"`
 	Answer  string `json:"answer"`
-}
-
-type ImageStore struct {
-	sync.RWMutex
-	exp time.Duration
-}
-
-func (i *ImageStore) Set(id string, value string) error {
-	if !cache.SetEx(id, value, i.exp) {
-		return exceptions.New(lang.CaptchaErrorStoreCode)
-	}
-
-	return nil
-}
-
-func (i *ImageStore) Get(id string, clear bool) (value string) {
-	i.Lock()
-	defer i.Unlock()
-
-	if !cache.Exists(id) {
-		return
-	}
-
-	err := cache.Get(id, value)
-	if err == nil && clear {
-		cache.Del(id)
-	}
-
-	return
-}
-
-func (i *ImageStore) Verify(id string, answer string, clear bool) bool {
-	key := i.Get(id, clear)
-
-	return key != "" && key == answer
 }
 
 type Image struct {

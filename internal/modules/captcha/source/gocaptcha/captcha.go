@@ -1,12 +1,14 @@
 package gocaptcha
 
 import (
+	"fmt"
 	"framework/cache"
 	"framework/exceptions"
 	"framework/log"
 	captchaclient "github.com/wenlng/go-captcha/captcha"
 	"service-api/internal/modules/captcha"
 	"service-api/resources/lang"
+	"strconv"
 )
 
 type Opts struct {
@@ -21,7 +23,7 @@ type Opts struct {
 
 type Captcha struct {
 	opts  Opts
-	store captcha.Store
+	store captcha.Store[map[int]captchaclient.CharDot]
 }
 
 func (*Captcha) getCacheKey(key, token string) string {
@@ -44,7 +46,7 @@ func (c *Captcha) Generate(token string) (*captcha.Resp, error) {
 		return nil, err
 	}
 
-	if err := c.store.Set(c.getCacheKey(token, key), key); err != nil {
+	if err := c.store.Set(c.getCacheKey(token, key), answer); err != nil {
 		return nil, exceptions.New(lang.CaptchaErrorGenerateCode)
 	}
 
@@ -60,13 +62,42 @@ func (c *Captcha) Generate(token string) (*captcha.Resp, error) {
 }
 
 func (c *Captcha) Verify(token, key string, answer any, clear bool) bool {
-	if cache.Exists(c.getCacheKey(token, key)) {
+	dots := answer.(map[int]captchaclient.CharDot)
+	if len(dots) == 0 || key == "" || token == "" {
 		return false
 	}
 
-	return c.store.Verify(key, answer, clear) == false
+	cachekey := c.getCacheKey(token, key)
+	if cache.Exists(cachekey) {
+		return false
+	}
+
+	dct := c.store.Get(cachekey, clear)
+	if !dct.Has() || len(dots)*2 != len(dct.Value()) {
+		return false
+	}
+
+	check := false
+	for i, dot := range dct.Value() {
+		j := i * 2
+		k := i*2 + 1
+		sx, _ := strconv.ParseFloat(fmt.Sprintf("%v", dots[j]), 64)
+		sy, _ := strconv.ParseFloat(fmt.Sprintf("%v", dots[k]), 64)
+
+		// 检测点位置
+		// chkRet = captcha.CheckPointDist(int64(sx), int64(sy), int64(dot.Dx), int64(dot.Dy), int64(dot.Width), int64(dot.Height))
+
+		// 校验点的位置,在原有的区域上添加额外边距进行扩张计算区域,不推荐设置过大的padding
+		// 例如：文本的宽和高为30，校验范围x为10-40，y为15-45，此时扩充5像素后校验范围宽和高为40，则校验范围x为5-45，位置y为10-50
+		check = captchaclient.CheckPointDistWithPadding(int64(sx), int64(sy), int64(dot.Dx), int64(dot.Dy), int64(dot.Width), int64(dot.Height), 5)
+		if !check {
+			break
+		}
+	}
+
+	return check
 }
 
-func New(opts Opts, store captcha.Store) captcha.Captcha {
+func New(opts Opts, store captcha.Store[map[int]captchaclient.CharDot]) captcha.Captcha {
 	return &Captcha{store: store, opts: opts}
 }

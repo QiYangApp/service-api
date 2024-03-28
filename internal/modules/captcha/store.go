@@ -1,58 +1,67 @@
 package captcha
 
 import (
-	"context"
 	"framework/cache"
 	"framework/exceptions"
+	"framework/utils/optional"
 	"service-api/resources/lang"
-	"sync"
 	"time"
 )
 
-type StoreValue struct {
-	sync.RWMutex
-	store cache.Drive
+type StoreValue[T any] struct {
+	store *cache.Operation[T]
 	exp   time.Duration
 }
 
-func (i *StoreValue) Set(id string, value string) error {
+func (i *StoreValue[T]) Set(id string, value any) error {
 	id = i.getCacheKey(id)
 
-	if _, err := i.store.SetEx(context.Background(), id, value, i.exp); err != nil {
+	if i.store.SetEx(id, value, i.exp) == false {
 		return exceptions.New(lang.CaptchaErrorStoreCode)
 	}
 
 	return nil
 }
 
-func (i *StoreValue) Get(id string, clear bool) (value string) {
-	i.Lock()
-	defer i.Unlock()
+func (i *StoreValue[T]) Get(key string, clear bool) optional.Option[T] {
+	var value optional.Option[T]
 
-	id = i.getCacheKey(id)
+	key = i.getCacheKey(key)
 
-	if !i.store.Exists(context.Background(), id) {
-		return
+	if !i.store.Exists(key) {
+		return optional.None[T]()
 	}
 
-	value, err := i.store.Get(context.Background(), id)
+	value, err := i.store.Get(key)
 	if err == nil && clear {
-		i.store.Del(context.Background(), id)
+		i.store.Del(key)
 	}
 
-	return
+	return value
 }
 
-func (i *StoreValue) Verify(id string, answer any, clear bool) bool {
-	res := i.Get(i.getCacheKey(id), clear)
+func (i *StoreValue[T]) Exist(key string) bool {
+	key = i.getCacheKey(key)
+	if !i.store.Exists(key) {
+		return false
+	}
 
-	return res != "" && key == answer
+	return true
 }
 
-func (i *StoreValue) getCacheKey(id string) string {
+func (i *StoreValue[T]) Del(key string) bool {
+	key = i.getCacheKey(key)
+	if !i.store.Exists(key) {
+		return false
+	}
+
+	return i.store.Del(key)
+}
+
+func (i *StoreValue[T]) getCacheKey(id string) string {
 	return "captcha-" + id
 }
 
-func NewStoreValue(store cache.Drive, t time.Duration) Store {
-	return &StoreValue{store: store, exp: t}
+func NewStoreValue[T any](store *cache.Operation[T], t time.Duration) Store[T] {
+	return &StoreValue[T]{store: store, exp: t}
 }

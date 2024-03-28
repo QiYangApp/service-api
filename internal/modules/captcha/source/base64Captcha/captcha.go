@@ -3,9 +3,13 @@ package base64Captcha
 import (
 	"framework/cache"
 	"framework/exceptions"
+	"framework/log"
 	captchaclient "github.com/mojocn/base64Captcha"
+	"go.uber.org/zap"
 	"service-api/internal/modules/captcha"
 	"service-api/resources/lang"
+	"sync"
+	"time"
 )
 
 // https://github.com/mojocn/base64Captcha/blob/master/store_memory.go
@@ -19,8 +23,9 @@ type Opts struct {
 }
 
 type Captcha struct {
-	Opts  Opts
-	Store captcha.Store
+	Opts         Opts
+	Store        captcha.Store[string]
+	CaptchaStore captchaclient.Store
 }
 
 func (*Captcha) getCacheKey(key, token string) string {
@@ -37,14 +42,14 @@ func (c *Captcha) Generate(token string) (*captcha.Resp, error) {
 		c.Opts.dotCount,
 	)
 
-	cli := captchaclient.NewCaptcha(driver, c.Store)
+	cli := captchaclient.NewCaptcha(driver, c.CaptchaStore)
 	id, body, answer, err := cli.Generate()
 	if err != nil {
 		return nil, exceptions.New(lang.CaptchaErrorGenerateCode)
 	}
 
 	// 生成场景存储类型错误
-	if err := c.Store.Set(c.getCacheKey(id, token), id); err != nil {
+	if err := c.Store.Set(c.getCacheKey(id, token), answer); err != nil {
 		return nil, exceptions.New(lang.CaptchaErrorGenerateCode)
 	}
 
@@ -52,13 +57,62 @@ func (c *Captcha) Generate(token string) (*captcha.Resp, error) {
 }
 
 func (c *Captcha) Verify(token, key string, answer any, clear bool) bool {
-	if cache.Exists(c.getCacheKey(key, token)) {
+	answerVal := answer.(string)
+	if len(answerVal) == 0 || key == "" || token == "" {
 		return false
 	}
 
-	return c.Store.Verify(key, answer.(string), clear)
+	key = c.getCacheKey(key, token)
+
+	if c.Store.Exist(key) {
+		return false
+	}
+
+	val := c.Store.Get(key, clear)
+	if !val.Has() {
+		return false
+	}
+
+	return val.Value() != answerVal
 }
 
-func New(opts Opts, store captcha.Store) captcha.Captcha {
-	return &Captcha{Store: store, Opts: opts}
+type Store struct {
+	sync.RWMutex
+	Store captcha.Store[string]
+	exp   time.Duration
+}
+
+func (i *Store) Set(id string, value string) error {
+	if err := i.Store.Set(id, value); err != nil {
+		log.Client.Sugar().Warn("captcha cache store fail", zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func (i *Store) Get(id string, clear bool) string {
+	i.Lock()
+	defer i.Unlock()
+
+	if !cache.Exists(id) {
+		return ""
+	}
+
+	var value = i.Store.Get(id, clear)
+	if value.Has() && clear {
+		cache.Del(id)
+	}
+
+	return value.Value()
+}
+
+func (i *Store) Verify(id string, answer string, clear bool) bool {
+	val := i.Get(id, clear)
+
+	return val != "" && val == answer
+}
+
+func New(opts Opts, store captcha.Store[string]) captcha.Captcha {
+	return &Captcha{Store: store, Opts: opts, CaptchaStore: &Store{Store: store}}
 }

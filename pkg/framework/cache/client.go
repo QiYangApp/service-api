@@ -35,26 +35,30 @@ func (c *Manage) init() *Manage {
 		c.drives = map[string]Drive{}
 	}
 
-	_, err := c.setDefaultDrive(c.drive)
-	if err != nil {
+	if len(c.drive) == 0 {
+		return c
+	}
+
+	if err := c.SetDefaultDrive(c.drive); err != nil {
 		log.Client.Sugar().Fatalf("register default cache drive fail: %v", err)
 	}
 
 	return c
 }
 
-func (c *Manage) setDefaultDrive(key string) (Drive, error) {
+func (c *Manage) SetDefaultDrive(key string) error {
 	c.drive = key
 
-	cacheDrive, err := c.Register(key)
+	_, err := c.Register(key)
 	if err != nil {
-		return nil, err
+		log.Client.Sugar().Warnf("set default cache dirver fail, err: %v", err)
+		return err
 	}
 
-	return cacheDrive, nil
+	return nil
 }
 
-func (c *Manage) GetDefaultCacheDrive() Drive {
+func (c *Manage) GetDefaultDrive() Drive {
 	var err error
 	if c.drive == "" {
 		log.Client.Fatal("drive not found")

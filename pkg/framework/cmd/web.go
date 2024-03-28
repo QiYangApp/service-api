@@ -74,16 +74,14 @@ func (t *WebServer) Run(cmd *WebCmd) {
 		provider.Register()
 	}
 
-	t.SetMode(t.Cmd.RunMode)
+	t.SetMode(cmd.RunMode)
 
 	_ = t.Engine.SetTrustedProxies(nil)
 
-	addr := config.Client.GetString("addr")
-
-	log.Client.Sugar().Infof("Server addr %s", addr)
+	log.Client.Sugar().Infof("Server addr %s", cmd.Addr)
 
 	srv := &http.Server{
-		Addr:                         addr,
+		Addr:                         cmd.Addr,
 		Handler:                      t.Engine,
 		DisableGeneralOptionsHandler: true,
 		ReadTimeout:                  time.Duration(config.Client.GetInt("read_timeout")) * time.Second,

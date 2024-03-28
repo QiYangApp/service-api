@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"framework/cache"
 	"framework/log"
+	"framework/utils/optional"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
@@ -27,11 +28,11 @@ var (
 
 func Cache(duration time.Duration, handle func(*gin.Context) string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var resp responseCache
+		var resp optional.Option[responseCache]
 		var err error
 		key := CreateKey(c.Request.URL.RequestURI())
 
-		if err = cache.Get(key, &resp); err != nil {
+		if resp, err = cache.Get[responseCache](key); err != nil {
 			// 在请求处理之后记录响应信息
 			log.Client.Sugar().Debugw(
 				"cache",
@@ -58,14 +59,19 @@ func Cache(duration time.Duration, handle func(*gin.Context) string) gin.Handler
 				_ = cache.Del(key)
 			}
 		} else {
+			if !resp.Has() {
+				log.Client.Sugar().Warn("response cache data is empty")
+				handle(c)
+				return
+			}
 
-			c.Writer.WriteHeader(resp.Status)
-			for k, vals := range resp.Header {
+			c.Writer.WriteHeader(resp.Value().Status)
+			for k, vals := range resp.Value().Header {
 				for _, v := range vals {
 					c.Writer.Header().Set(k, v)
 				}
 			}
-			_, _ = c.Writer.Write(resp.Data)
+			_, _ = c.Writer.Write(resp.Value().Data)
 
 		}
 	}
@@ -86,9 +92,9 @@ func (c *cacheWriter) Write(data []byte) (int, error) {
 	}
 
 	if c.Status() < 300 {
-		var resp responseCache
-		if err := cache.Get(c.key, &resp); err == nil {
-			data = append(resp.Data, data...)
+		var resp optional.Option[responseCache]
+		if _, err := cache.Get[responseCache](c.key); err == nil && resp.Has() {
+			data = append(resp.Value().Data, data...)
 		}
 
 		val := responseCache{

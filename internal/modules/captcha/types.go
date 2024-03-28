@@ -1,5 +1,7 @@
 package captcha
 
+import "framework/utils/optional"
+
 type Type string
 
 const (
@@ -11,12 +13,14 @@ func (t Type) ToString() string {
 	return string(t)
 }
 
-type Store interface {
-	Get(key string, clear bool) string
+type Store[T any] interface {
+	Exist(key string) bool
 
-	Set(id string, value string) error
+	Del(key string) bool
 
-	Verify(id string, answer string, clear bool) bool
+	Get(key string, clear bool) optional.Option[T]
+
+	Set(key string, value any) error
 }
 
 type Captcha interface {

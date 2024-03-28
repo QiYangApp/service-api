@@ -5,6 +5,7 @@ import (
 	"framework/log"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
+	captchaclient "github.com/wenlng/go-captcha/captcha"
 	"service-api/internal/modules/captcha"
 	"service-api/internal/modules/captcha/source/base64Captcha"
 	"service-api/internal/modules/captcha/source/gocaptcha"
@@ -28,10 +29,10 @@ func loadCaptchaSetting(viper *viper.Viper) {
 }
 
 func GetCaptchaClient() (captcha.Captcha, error) {
-	store, err := cache.Instance().Register(CaptchaSetting.Store)
-	if err != nil {
+	var driver cache.Drive
+	var err error
+	if driver, err = cache.Instance().Register(CaptchaSetting.Store); err != nil {
 		log.Client.Sugar().Errorf("captcha store driver init fail, err: %v", err)
-		return nil, err
 	}
 
 	var setting any
@@ -49,6 +50,7 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 			return nil, err
 		}
 
+		store := cache.NewOperation[string](driver)
 		return base64Captcha.New(opts, captcha.NewStoreValue(store, CaptchaSetting.EXPIRES)), nil
 	case captcha.TextPoint:
 		var opts gocaptcha.Opts
@@ -57,6 +59,7 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 			return nil, err
 		}
 
+		store := cache.NewOperation[map[int]captchaclient.CharDot](driver)
 		return gocaptcha.New(opts, captcha.NewStoreValue(store, CaptchaSetting.EXPIRES)), nil
 	}
 
