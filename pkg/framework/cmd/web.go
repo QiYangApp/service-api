@@ -11,7 +11,6 @@ import (
 	"framework/log"
 	"framework/middlewares"
 	"framework/providers"
-	"framework/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
 	"go.uber.org/zap"
@@ -41,7 +40,6 @@ type WebCmd struct {
 	RunMode string
 	Debug   bool
 	Addr    string
-	Config  string
 }
 
 type WebServer struct {
@@ -137,14 +135,6 @@ func WebServerClient() *WebServer {
 }
 
 func runWeb(c *cli.Context) {
-
-	path := utils.Path.RootPath
-	if c.IsSet("config") {
-		path = c.GlobalString("config")
-	}
-
-	config.Instance().ParseFile(path)
-
 	runCmd := &WebCmd{
 		Debug:   config.Client.GetBool("debug"),
 		RunMode: config.Client.GetString("run_mode"),

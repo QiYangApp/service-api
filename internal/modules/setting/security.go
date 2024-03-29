@@ -13,6 +13,7 @@ var SecretSetting = &struct {
 	PasswordComplexity []string `mapstructure:"password_complexity"`
 	PasswdHashAlgo     string   `mapstructure:"passwd_hash_algo"`
 	PasswdCheckPwn     bool     `mapstructure:"passwd_check_pwn"`
+	Key                string   `mapstructure:"key"`
 }{}
 
 func loadSecret(viper *viper.Viper) {

@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap"
 	"net/http"
 	"service-api/internal/app/api/validator"
+	"service-api/internal/modules/setting"
 	"service-api/internal/services/captcha"
 )
 
@@ -21,13 +22,13 @@ import (
 // @Router /captcha/{type} [get]
 func Index(c *gin.Context, req *validator.CaptchaRequest) {
 
-	key, body, err := captcha.Gen(req.Type, req.Token)
+	resp, err := captcha.Gen(setting.CaptchaFeature(req.Type), req.Token)
 	if err != nil {
 		log.Client.Sugar().Info(zap.String("captcha gen err", err.Error()))
 		response.RError(c, err, http.StatusNotFound, nil)
 		return
 	}
-	response.RSuccess(c, &validator.CaptchaResponse{Id: key, Captcha: body, Token: req.Token})
+	response.RSuccess(c, &validator.CaptchaResponse{Id: resp.GetKey(), Captcha: resp.GetBody(), Token: resp.GetToken()})
 }
 
 // Verify 校验验证码
@@ -40,6 +41,11 @@ func Index(c *gin.Context, req *validator.CaptchaRequest) {
 // @Success 200 {object} response.Response{Data=boolean} "请求成功"
 // @Router /captcha/{type} [post]
 func Verify(c *gin.Context, req *validator.CaptchaVerifyRequest) {
-	st := captcha.Verify(req.Token, req.Id, req.Answer, false)
+	st, err := captcha.Verify(setting.CaptchaFeature(req.Type), req.Token, req.Id, req.Answer, false)
+	if err != nil {
+		log.Client.Sugar().Info(zap.String("captcha verify err", err.Error()))
+		response.RError(c, err, http.StatusNotFound, nil)
+		return
+	}
 	response.RSuccess(c, st)
 }

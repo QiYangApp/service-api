@@ -8,7 +8,7 @@ import (
 
 var instance *Manage = nil
 var once = sync.Once{}
-var Client *zap.Logger = nil
+var Client *zap.Logger = Instance().Client
 
 type ConfigType struct {
 	DEBUG bool
@@ -28,8 +28,6 @@ func Instance() *Manage {
 			Param: param,
 		}
 		instance.Builder()
-
-		Client = instance.Client
 	})
 
 	return instance

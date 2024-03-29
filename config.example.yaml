@@ -1,108 +1,108 @@
 # release or debug or test
-NAME: "qiyang"
-RUN_MODE: "debug"
-RUN_USER: "git"
-DEBUG: true
-DOMAIN: "127.0.0.1"
-ADDR: "localhost:3000"
-VERSION: "v1.0.0"
-WRITE_TIMEOUT: 120
-READ_TIMEOUT: 120
-MAX_REQUESTS: 10
-MAX_REQUEST_TIME: 60
-TIME_ZONES: "Asia/Shanghai"
+name: "qiyang"
+run_mode: "debug"
+run_user: "git"
+debug: true
+domain: "127.0.0.1"
+addr: "localhost:3000"
+version: "v1.0.0"
+write_timeout: 120
+read_timeout: 120
+max_requests: 10
+max_request_time: 60
+time_zones: "Asia/Shanghai"
 
-DATABASE:
-  DRIVER: "pgx"
+database:
+  driver: "pgx"
 
-CACHE:
-  DRIVER: "cache"
-  EXPIRES: 60
+cache:
+  driver: "cache"
+  expires: 60
 
-CONNS:
-  PGX:
-    DRIVER: pgx
-    MAX_OPEN_CONN: 100
-    MAX_IDLE_CONN: 50
-    DATABASE: "qi_yang"
-    READ:
-      HOST: "localhost"
-      PORT: 5430
-      USERNAME: "qi_yang"
-      PASSWORD: "qi_yang"
-    WRITE:
-      HOST: "localhost"
-      PORT: 5430
-      USERNAME: "qi_yang"
-      PASSWORD: "qi_yang"
-  Cache:
-    DRIVER: "redis"
-    ADDR: "localhost:6301"
-    PASSWORD: "secret_redis"
-    DATABASE: 0
-    MAX_OPEN_CONN: 100
-    MAX_IDLE_CONN: 50
-    MAX_ACTIVE: 30
-    READ_TIMEOUT: 10
-    DIAL_TIMEOUT: 10
-    WRITE_TIMEOUT: 10
-    POOL_SIZE: 10
-    POOL_TIMEOUT: 30
-  CAPTCHA:
-    DRIVER: "redis"
-    ADDR: "localhost:6301"
-    PASSWORD: "secret_redis"
-    DATABASE: 0
-    MAX_OPEN_CONN: 100
-    MAX_IDLE_CONN: 50
-    MAX_ACTIVE: 30
-    READ_TIMEOUT: 10
-    DIAL_TIMEOUT: 10
-    WRITE_TIMEOUT: 10
-    POOL_SIZE: 10
-    POOL_TIMEOUT: 30
+conns:
+  pgx:
+    driver: pgx
+    max_open_conn: 100
+    max_idle_conn: 50
+    database: "qi_yang"
+    read:
+      host: "localhost"
+      port:
+      username: "qi_yang"
+      password: "qi_yang"
+    write:
+      host: "localhost"
+      port: 5432
+      username: "qi_yang"
+      password: "qi_yang"
+  cache:
+    driver: "redis"
+    addr: "localhost:6379"
+    password: ""
+    database: 0
+    max_open_conn: 100
+    max_idle_conn: 50
+    max_active: 30
+    read_timeout: 10
+    dial_timeout: 10
+    write_timeout: 10
+    pool_size: 10
+    pool_timeout: 30
+  captcha:
+    driver: "redis"
+    addr: "localhost:6379"
+    password: ""
+    database: 0
+    max_open_conn: 100
+    max_idle_conn: 50
+    max_active: 30
+    read_timeout: 10
+    dial_timeout: 10
+    write_timeout: 10
+    pool_size: 10
+    pool_timeout: 30
 
-CAPTCHA:
-  ENABLE: false
-  TYPE: "image"
-  EXPIRES: 60
-  STORE: "captcha"
-  DRIVERS:
-    Image:
-      HEIGHT: 70
-      WIDTH: 130
-      LEN: 4
-      DOT_COUNT: 100
-      MAX_SKEW: 0.8
-    TextPoint:
-      Fonts:
+captcha:
+  enable: false
+  type: "image"
+  expires: 60
+  store: "captcha"
+  drivers:
+    image:
+      height: 70
+      width: 130
+      len: 4
+      dot_count: 100
+      max_skew: 0.8
+    textpoint:
+      fonts:
         - "a"
         - "b"
-      Chars: ["你","好","呀","这","是","点","击","验","证","码","哟"]
-      Size:
+      chars: ["你","好","呀","这","是","点","击","验","证","码","哟"]
+      size:
         width: 100
         height: 100
 
 
 
-CRON:
+cron:
   #enable running cron tasks periodically.
-  ENABLED: true
+  enabled: true
   #run cron tasks when gogs starts.
-  RUN_AT_START: false
-SECURITY:
-  #Password Hash algorithm, either "argon2", "pbkdf2", "scrypt" or "bcrypt"
-  KEY: "!#@fdewrewr&*("
-  PASSWD_HASH_ALGO: "pbkdf2"
-  PASSWORD_CHECK_PWN: false
-  PASSWORD_COMPLEXITY: "off"
-LOG:
+  run_at_start: false
+security:
+  #password hash algorithm, either "argon2", "pbkdf2", "scrypt" or "bcrypt"
+  key: "!#@fdewrewr&*("
+  passwd_hash_algo: "pbkdf2"
+  password_check_pwn: false
+  password_complexity: "off"
+log:
   #debug info warn error dpanic panic fatal
-  LEVEL: "debug"
-  FILE_NAME: "record.log"
+  level: "debug"
+  file_name: "record.log"
   # default 120 m
-  MAX_SIZE: 1
+  max_size: 1
   # save days
-  MAX_AGE: 7
-  MAX_BACKUPS: 30
-  COMPRESS: true
+  max_age: 7
+  max_backups: 30
+  compress: true

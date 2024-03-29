@@ -53,7 +53,7 @@ func (c *Captcha) Generate(token string) (*captcha.Resp, error) {
 		return nil, exceptions.New(lang.CaptchaErrorGenerateCode)
 	}
 
-	return &captcha.Resp{Captcha: body, Key: id, Answer: answer, Type: captcha.Image}, nil
+	return &captcha.Resp{Token: token, Captcha: body, Key: id, Answer: answer, Type: captcha.Image}, nil
 }
 
 func (c *Captcha) Verify(token, key string, answer any, clear bool) bool {

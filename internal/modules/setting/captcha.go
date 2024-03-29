@@ -12,12 +12,24 @@ import (
 	"time"
 )
 
+type CaptchaFeature string
+
+func (t CaptchaFeature) ToString() string {
+	return string(t)
+}
+
+const (
+	CaptchaFeatureSignIn CaptchaFeature = "sign_in"
+	CaptchaFeatureSignUp CaptchaFeature = "sign_up"
+)
+
 var CaptchaSetting = &struct {
-	Enable  bool                 `mapstructure:"enable"`
-	Store   string               `mapstructure:"store"`
-	Type    captcha.Type         `mapstructure:"type"`
-	EXPIRES time.Duration        `mapstructure:"expires"`
-	Drivers map[captcha.Type]any `mapstructure:"drivers"`
+	Enable  bool                    `mapstructure:"enable"`
+	Store   string                  `mapstructure:"store"`
+	Type    captcha.Type            `mapstructure:"type"`
+	EXPIRES time.Duration           `mapstructure:"expires"`
+	Drivers map[captcha.Type]any    `mapstructure:"drivers"`
+	Feature map[CaptchaFeature]bool `mapstructure:"feature"`
 }{
 	Enable: false,
 }
@@ -67,4 +79,13 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 	}
 
 	return nil, nil
+}
+
+// CheckCaptchaFeatureEnable 校验限定功能的验证是否启用
+func CheckCaptchaFeatureEnable(t CaptchaFeature) bool {
+	if st, ok := CaptchaSetting.Feature[t]; ok {
+		return st
+	}
+
+	return false
 }

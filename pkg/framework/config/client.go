@@ -15,11 +15,11 @@ type Manage struct {
 	Client *viper.Viper
 }
 
-func (c *Manage) ParseFile(path string) *Manage {
+func (c *Manage) ParseFile() *Manage {
 
 	c.Client.SetConfigType("yaml")
 	c.Client.SetConfigName("config")
-	c.Client.AddConfigPath(path)
+	c.Client.AddConfigPath("./")
 
 	// 读取配置文件
 	if err := c.Client.ReadInConfig(); err != nil {
@@ -39,6 +39,8 @@ func Instance() *Manage {
 		singleton = &Manage{
 			Client: viper.New(),
 		}
+
+		singleton.ParseFile()
 	})
 
 	return singleton
