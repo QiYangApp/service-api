@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-func UserSingIn(ctx context.Context, username, passwd string) (*models.User, *models.Source, error) {
+func UserSignIn(ctx context.Context, username, passwd string) (*models.User, *models.Source, error) {
 	var user *models.User
 	var sourceType *models.Source
 	var err error

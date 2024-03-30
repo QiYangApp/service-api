@@ -38,14 +38,11 @@ func Limiter() gin.HandlerFunc {
 				zap.Int("status", c.Writer.Status()),
 			)
 
-			c.AbortWithStatusJSON(
+			response.RFail(
+				c,
+				"",
 				http.StatusTooManyRequests,
-				response.RFail(
-					c,
-					"",
-					http.StatusTooManyRequests,
-					"TooManyRequests",
-				).ToStruct(),
+				"TooManyRequests",
 			)
 		}
 

@@ -4,34 +4,25 @@
 
 ### conf
 
-CP ./config.example.toml ./config.toml
+CP ./config.example.yaml ./config.yaml
 
 ### Using Default
 
 1. edit `./config.toml`
-
-2. generate token ras
 
 ```bash
 openssl genpkey -algorithm RSA -out private_key.pem -aes256
 openssl rsa -pubout -in private_key.pem -out public_key.pem
 ```
 
-3. run script update database schema
-
-* win
+2. run script update database schema
 
 ```bash
-go generate .\pkg\ent\gen.go
+cd .\pkg\ent
+go generate .\gen.go
 ```
 
-* linux or mac
-
-```bash
-go generate ./pkg/ent/gen.go
-```
-
-4. start
+3. start
 
 * default
 
@@ -51,4 +42,8 @@ air
 2. vscode install docker plugin
 3. start vscode docker server
 4. go run ./src/main.go
+
+## Bug
+
+[ ] framework global config 
 

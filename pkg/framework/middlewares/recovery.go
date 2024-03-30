@@ -21,14 +21,11 @@ func Recovery() gin.HandlerFunc {
 
 			log.Client.Sugar().Errorf("url: %s, err: %s", c.Request.URL, errMsg)
 
-			c.AbortWithStatusJSON(
+			response.RFail(
+				c,
+				err,
 				http.StatusInternalServerError,
-				response.RFail(
-					c,
-					err,
-					http.StatusInternalServerError,
-					errMsg,
-				).ToSelf(),
+				errMsg,
 			)
 		}()
 		c.Next()

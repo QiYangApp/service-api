@@ -9,9 +9,9 @@ import (
 type CaptchaRouter struct {
 }
 
-func (*CaptchaRouter) Handle(privateRoute, publicRoute *gin.RouterGroup) {
+func (*CaptchaRouter) Handle(r *gin.RouterGroup) {
 	// 获取验证码
-	publicRoute.GET("/captcha/:type", router.Bind(captcha.Index))
+	r.GET("/captcha/:type", router.Bind(captcha.Index))
 	// 验证验证码
-	publicRoute.POST("/captcha/:type", router.Bind(captcha.Verify))
+	r.POST("/captcha/:type", router.Bind(captcha.Verify))
 }

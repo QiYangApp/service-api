@@ -59,12 +59,11 @@ func (r *Response) GetMessage() string {
 		return ""
 	}
 
-	msg := i18n.MustGetMessage(r.Context, r.Message)
-	if msg == "" {
-		return r.Message
+	if msg, err := i18n.GetMessage(r.Context, r.Message); err != nil || len(msg) > 0 {
+		return msg
 	}
 
-	return msg
+	return r.Message
 }
 
 func (r *Response) SetState(state StateEnum) *Response {

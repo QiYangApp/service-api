@@ -10,7 +10,7 @@ import (
 )
 
 type Router interface {
-	Handle(private *gin.RouterGroup, public *gin.RouterGroup)
+	Handle(r *gin.RouterGroup)
 }
 
 func Bind(fun any) gin.HandlerFunc {
@@ -32,12 +32,17 @@ func Bind(fun any) gin.HandlerFunc {
 			}
 
 			if err := unmarshal(c, tmp.Interface()); err != nil { // Return error message.返回错误信息
+				var d map[string]string
+				if p, ok := tmp.Interface().(Validator); ok {
+					d = GetErrorMsg(c, p, err)
+				}
 				response.RFail(
 					c,
-					GetErrorMsg(c, tmp.Interface().(Validator), err),
+					d,
 					http.StatusBadRequest,
 					fmt.Sprintf("params error"),
 				)
+
 				return
 			}
 
@@ -57,15 +62,15 @@ func Bind(fun any) gin.HandlerFunc {
 }
 
 func unmarshal(c *gin.Context, v interface{}) error {
-	err := c.ShouldBind(v)
-	if err != nil {
+	if err := c.ShouldBind(v); err != nil {
 		log.Client.Sugar().Warnf("route handle fun error, method params bind, error method: %v", v)
+		return err
 	}
 
-	err = c.ShouldBindUri(v)
-	if err != nil {
+	if err := c.ShouldBindUri(v); err != nil {
 		log.Client.Sugar().Warnf("route handle fun error, uri method params bind, error method: %v", v)
+		return err
 	}
 
-	return err
+	return nil
 }

@@ -4,13 +4,14 @@ import (
 	"framework/router"
 	"github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
+	"service-api/internal/modules/setting"
 	"service-api/resources/lang"
 )
 
 type CaptchaRequest struct {
 	Msg
 	Token string `form:"token" binding:"required"`
-	Type  string `uri:"type" `
+	Type  string `uri:"type"`
 }
 
 type CaptchaResponse struct {
@@ -21,10 +22,11 @@ type CaptchaResponse struct {
 
 type CaptchaVerifyRequest struct {
 	Msg
-	Type   string `uri:"type"`
-	Token  string `form:"token" binding:"required"`
-	Id     string `form:"id" binding:"required"`
-	Answer string `form:"answer" binding:"required"`
+	Key    string                 `uri:"key"`
+	Type   setting.CaptchaFeature `uri:"type"`
+	Token  string                 `form:"token" binding:"required"`
+	Id     string                 `form:"id" binding:"required"`
+	Answer string                 `form:"answer" binding:"required"`
 }
 
 type Msg struct {

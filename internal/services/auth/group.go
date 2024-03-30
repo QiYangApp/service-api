@@ -40,11 +40,11 @@ func (b *Group) Name() string {
 	return strings.Join(names, ",")
 }
 
-func (b *Group) Verify(req *http.Request, w http.ResponseWriter, store DataStore) (*models.User, error) {
+func (b *Group) Verify(req *http.Request, w http.ResponseWriter, store DataStore, sess SessionStore) (*models.User, error) {
 	// Try to sign in with each of the enabled plugins
 	var retErr error
 	for _, m := range b.methods {
-		user, err := m.Verify(req, w, store)
+		user, err := m.Verify(req, w, store, sess)
 		if err != nil {
 			if retErr == nil {
 				retErr = err

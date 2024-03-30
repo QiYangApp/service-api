@@ -26,12 +26,16 @@ func R[T interface{}](
 	return New(c).SetType(t).SetState(s).SetMessage(m).SetCode(code).SetData(data)
 }
 
-func RSuccess[T interface{}](c *gin.Context, data T) *Response {
-	return New(c).SetState(Success).SetCode(http.StatusOK).SetType(JSON).SetMessage("STATE.SUCCESS").SetData(data).Output()
+func RSuccess(c *gin.Context, data any) {
+	New(c).SetState(Success).SetCode(http.StatusOK).SetType(JSON).SetMessage("STATE.SUCCESS").SetData(data).Output()
 }
 
-func RFail[T interface{}](c *gin.Context, data T, code int, mes string) *Response {
-	return New(c).SetState(Fail).SetType(JSON).SetCode(code).SetMessage(mes).SetData(data).Output()
+func RSuccessWithMsg(c *gin.Context, data any, msg string) {
+	New(c).SetState(Success).SetCode(http.StatusOK).SetType(JSON).SetMessage(msg).SetData(data).Output()
+}
+
+func RFail(c *gin.Context, data any, code int, mes string) {
+	New(c).SetState(Fail).SetType(JSON).SetCode(code).SetMessage(mes).SetData(data).Output()
 }
 
 func RError(
@@ -39,6 +43,10 @@ func RError(
 	err error,
 	code int,
 	data any,
-) *Response {
-	return New(c).SetType(JSON).SetState(Error).SetMessage(err.Error()).SetCode(code).SetData(data).Output()
+) {
+	New(c).SetType(JSON).SetState(Error).SetMessage(err.Error()).SetCode(code).SetData(data).Output()
+}
+
+func RJump(c *gin.Context, data any, msg string) {
+	New(c).SetType(JSON).SetState(Error).SetMessage(msg).SetCode(http.StatusSeeOther).SetData(data).Output()
 }

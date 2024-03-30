@@ -11,8 +11,8 @@ type ErrAccountNotExist struct {
 	Account string
 }
 
-// IsErrEmailAddressNotExist checks if an error is an ErrEmailAddressNotExist
-func IsErrEmailAddressNotExist(err error) bool {
+// IsErrAccountNotExist checks if an error is an ErrEmailAddressNotExist
+func IsErrAccountNotExist(err error) bool {
 	var errAccountNotExist ErrAccountNotExist
 	var ok = errors.As(err, &errAccountNotExist)
 	return ok
@@ -68,4 +68,25 @@ func (err ErrUserNotExist) Error() string {
 // Unwrap unwraps this error as a ErrNotExist error
 func (err ErrUserNotExist) Unwrap() error {
 	return util.ErrNotExist
+}
+
+// ErrUserInactive represents a "ErrUserInactive" kind of error.
+type ErrUserInactive struct {
+	UID  int64
+	Name string
+}
+
+// IsErrUserInactive checks if an error is a ErrUserInactive
+func IsErrUserInactive(err error) bool {
+	_, ok := err.(ErrUserInactive)
+	return ok
+}
+
+func (err ErrUserInactive) Error() string {
+	return fmt.Sprintf("user is inactive [uid: %d, name: %s]", err.UID, err.Name)
+}
+
+// Unwrap unwraps this error as a ErrPermission error
+func (err ErrUserInactive) Unwrap() error {
+	return util.ErrPermissionDenied
 }

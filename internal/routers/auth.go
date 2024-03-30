@@ -9,9 +9,9 @@ import (
 type AuthRouter struct {
 }
 
-func (*AuthRouter) Handle(privateRoute, publicRoute *gin.RouterGroup) {
+func (*AuthRouter) Handle(r *gin.RouterGroup) {
 	// 获取前置数据
-	publicRoute.GET("/v1/auth/signIn", router.Bind(auth.SignIn))
+	r.GET("/v1/auth/signIn", router.Bind(auth.SignIn))
 	// 登录
-	publicRoute.GET("/v1/auth/signInPost", router.Bind(auth.SignInPost))
+	r.GET("/v1/auth/signInPost", router.Bind(auth.SignInPost))
 }

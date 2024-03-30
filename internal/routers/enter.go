@@ -10,26 +10,20 @@ import (
 var RouterGroup = []router.Router{
 	&SwaggerRouter{},
 	&CaptchaRouter{},
+	&AuthRouter{},
 }
 
 func Register(app *cmd.WebServer) {
 	r := app.Engine.Group("api")
 
-	var funcs []gin.HandlerFunc
+	var funcs []gin.HandlerFunc = []gin.HandlerFunc{middlewares.Auth()}
 	for _, middleware := range app.Middlewares {
 		funcs = append(funcs, middleware())
 	}
 
 	r.Use(funcs...)
 
-	privateRoute := r.Group("")
-	privateRoute.Use(middlewares.Auth())
-
-	publicRoute := r.Group("")
-
-	for _, r := range RouterGroup {
-
-		r.Handle(privateRoute, publicRoute)
-
+	for _, g := range RouterGroup {
+		g.Handle(r)
 	}
 }

@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"framework"
 	"framework/config"
 	swaggerfiles "github.com/swaggo/files"
 	gs "github.com/swaggo/gin-swagger"
@@ -13,13 +14,14 @@ import (
 type SwaggerRouter struct {
 }
 
-func (*SwaggerRouter) Handle(private, public *gin.RouterGroup) {
+func (*SwaggerRouter) Handle(r *gin.RouterGroup) {
 	if setting.AppSetting.Debug {
 		return
 	}
 
+	swag.SwaggerInfo.Title = config.Client.GetString("name")
 	swag.SwaggerInfo.Host = config.Client.GetString("addr")
-	swag.SwaggerInfo.Version = config.Client.GetString("version")
+	swag.SwaggerInfo.Version = framework.App.Version
 
-	public.GET("/swagger/*any", gs.WrapHandler(swaggerfiles.Handler))
+	r.GET("/swagger/*any", gs.WrapHandler(swaggerfiles.Handler))
 }
