@@ -5,6 +5,7 @@
 package auth
 
 import (
+	"ent/models"
 	usertype "ent/types/user"
 	util "ent/utils"
 	"errors"
@@ -40,7 +41,7 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 		}
 	}
 
-	_, _, err := authserver.UserSignIn(ctx, form.UserName, form.Passwd)
+	u, source, err := authserver.UserSignIn(ctx, form.UserName, form.Passwd)
 	if err != nil {
 		if errors.Is(err, util.ErrNotExist) || errors.Is(err, util.ErrInvalidArgument) {
 			log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
@@ -79,12 +80,36 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 	}
 
 	// First of all if the source can skip local two fa we're done
-	//if skipper, ok := source.Cfg.(auth_service.LocalTwoFASkipper); ok && skipper.IsSkipLocalTwoFA() {
-	//	handleSignIn(ctx, u, form.Remember)
-	//	return
-	//}
+	if skipper, ok := source.Cfg.Value().(authserver.LocalTwoFASkipper); ok && skipper.IsSkipLocalTwoFA() {
+		handleSignIn(ctx, u, form.Remember)
+		return
+	}
+
+	// No two factor auth configured we can sign in the user
+	skip2FA, err := authserver.HasUser2FA(ctx, u)
+	if err != nil {
+		response.RError(ctx, err, http.StatusBadRequest, nil)
+		return
+	}
+
+	if !skip2FA {
+		handleSignIn(ctx, u, form.Remember)
+		return
+	}
+
+	if webAuthn := authserver.HasUserWebAuthn(ctx, u.ID); webAuthn {
+		response.RJump(ctx, map[string]any{
+			"WEBAUTHN": true,
+		}, "FORM.WEBAUTHN")
+		return
+
+	}
+
+	response.RJump(ctx, map[string]any{
+		"TWO_FACTOR": true,
+	}, "FORM.TWO_FACTOR")
 }
 
-func handleSignIn(ctx *gin.Context) {
+func handleSignIn(ctx *gin.Context, u *models.User, remember bool) {
 
 }

@@ -19,6 +19,7 @@ import (
 	"ent/models/router"
 	"ent/models/source"
 	"ent/models/sourcedata"
+	"ent/models/twofactor"
 	"ent/models/user"
 	"ent/models/userauthsource"
 	"ent/models/userrelatedrole"
@@ -36,6 +37,7 @@ import (
 	"ent/models/wakatimeprojectduration"
 	"ent/models/wakatimeprojectinfo"
 	"ent/models/wakatimesystem"
+	"ent/models/webauthncredential"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -63,6 +65,8 @@ type Client struct {
 	Source *SourceClient
 	// SourceData is the client for interacting with the SourceData builders.
 	SourceData *SourceDataClient
+	// TwoFactor is the client for interacting with the TwoFactor builders.
+	TwoFactor *TwoFactorClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 	// UserAuthSource is the client for interacting with the UserAuthSource builders.
@@ -97,6 +101,8 @@ type Client struct {
 	WakatimeProjectInfo *WakatimeProjectInfoClient
 	// WakatimeSystem is the client for interacting with the WakatimeSystem builders.
 	WakatimeSystem *WakatimeSystemClient
+	// WebAuthnCredential is the client for interacting with the WebAuthnCredential builders.
+	WebAuthnCredential *WebAuthnCredentialClient
 	// additional fields for node api
 	tables tables
 }
@@ -118,6 +124,7 @@ func (c *Client) init() {
 	c.Router = NewRouterClient(c.config)
 	c.Source = NewSourceClient(c.config)
 	c.SourceData = NewSourceDataClient(c.config)
+	c.TwoFactor = NewTwoFactorClient(c.config)
 	c.User = NewUserClient(c.config)
 	c.UserAuthSource = NewUserAuthSourceClient(c.config)
 	c.UserRelatedRole = NewUserRelatedRoleClient(c.config)
@@ -135,6 +142,7 @@ func (c *Client) init() {
 	c.WakatimeProjectDuration = NewWakatimeProjectDurationClient(c.config)
 	c.WakatimeProjectInfo = NewWakatimeProjectInfoClient(c.config)
 	c.WakatimeSystem = NewWakatimeSystemClient(c.config)
+	c.WebAuthnCredential = NewWebAuthnCredentialClient(c.config)
 }
 
 type (
@@ -235,6 +243,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Router:                      NewRouterClient(cfg),
 		Source:                      NewSourceClient(cfg),
 		SourceData:                  NewSourceDataClient(cfg),
+		TwoFactor:                   NewTwoFactorClient(cfg),
 		User:                        NewUserClient(cfg),
 		UserAuthSource:              NewUserAuthSourceClient(cfg),
 		UserRelatedRole:             NewUserRelatedRoleClient(cfg),
@@ -252,6 +261,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		WakatimeProjectDuration:     NewWakatimeProjectDurationClient(cfg),
 		WakatimeProjectInfo:         NewWakatimeProjectInfoClient(cfg),
 		WakatimeSystem:              NewWakatimeSystemClient(cfg),
+		WebAuthnCredential:          NewWebAuthnCredentialClient(cfg),
 	}, nil
 }
 
@@ -279,6 +289,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Router:                      NewRouterClient(cfg),
 		Source:                      NewSourceClient(cfg),
 		SourceData:                  NewSourceDataClient(cfg),
+		TwoFactor:                   NewTwoFactorClient(cfg),
 		User:                        NewUserClient(cfg),
 		UserAuthSource:              NewUserAuthSourceClient(cfg),
 		UserRelatedRole:             NewUserRelatedRoleClient(cfg),
@@ -296,6 +307,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		WakatimeProjectDuration:     NewWakatimeProjectDurationClient(cfg),
 		WakatimeProjectInfo:         NewWakatimeProjectInfoClient(cfg),
 		WakatimeSystem:              NewWakatimeSystemClient(cfg),
+		WebAuthnCredential:          NewWebAuthnCredentialClient(cfg),
 	}, nil
 }
 
@@ -326,12 +338,12 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.AccessToken, c.Accounts, c.MemberRoleRelatedPermission, c.PermissionGroup,
-		c.PermissionRelatedRouter, c.Router, c.Source, c.SourceData, c.User,
-		c.UserAuthSource, c.UserRelatedRole, c.UserRole, c.Wakatime,
+		c.PermissionRelatedRouter, c.Router, c.Source, c.SourceData, c.TwoFactor,
+		c.User, c.UserAuthSource, c.UserRelatedRole, c.UserRole, c.Wakatime,
 		c.WakatimeCategory, c.WakatimeDependency, c.WakatimeDuration, c.WakatimeEditor,
 		c.WakatimeEntity, c.WakatimeGrandTotal, c.WakatimeHeartBeat,
 		c.WakatimeLanguage, c.WakatimeProject, c.WakatimeProjectDuration,
-		c.WakatimeProjectInfo, c.WakatimeSystem,
+		c.WakatimeProjectInfo, c.WakatimeSystem, c.WebAuthnCredential,
 	} {
 		n.Use(hooks...)
 	}
@@ -342,12 +354,12 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.AccessToken, c.Accounts, c.MemberRoleRelatedPermission, c.PermissionGroup,
-		c.PermissionRelatedRouter, c.Router, c.Source, c.SourceData, c.User,
-		c.UserAuthSource, c.UserRelatedRole, c.UserRole, c.Wakatime,
+		c.PermissionRelatedRouter, c.Router, c.Source, c.SourceData, c.TwoFactor,
+		c.User, c.UserAuthSource, c.UserRelatedRole, c.UserRole, c.Wakatime,
 		c.WakatimeCategory, c.WakatimeDependency, c.WakatimeDuration, c.WakatimeEditor,
 		c.WakatimeEntity, c.WakatimeGrandTotal, c.WakatimeHeartBeat,
 		c.WakatimeLanguage, c.WakatimeProject, c.WakatimeProjectDuration,
-		c.WakatimeProjectInfo, c.WakatimeSystem,
+		c.WakatimeProjectInfo, c.WakatimeSystem, c.WebAuthnCredential,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -372,6 +384,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Source.mutate(ctx, m)
 	case *SourceDataMutation:
 		return c.SourceData.mutate(ctx, m)
+	case *TwoFactorMutation:
+		return c.TwoFactor.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
 	case *UserAuthSourceMutation:
@@ -406,6 +420,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.WakatimeProjectInfo.mutate(ctx, m)
 	case *WakatimeSystemMutation:
 		return c.WakatimeSystem.mutate(ctx, m)
+	case *WebAuthnCredentialMutation:
+		return c.WebAuthnCredential.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("models: unknown mutation type %T", m)
 	}
@@ -1472,6 +1488,139 @@ func (c *SourceDataClient) mutate(ctx context.Context, m *SourceDataMutation) (V
 		return (&SourceDataDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("models: unknown SourceData mutation op: %q", m.Op())
+	}
+}
+
+// TwoFactorClient is a client for the TwoFactor schema.
+type TwoFactorClient struct {
+	config
+}
+
+// NewTwoFactorClient returns a client for the TwoFactor from the given config.
+func NewTwoFactorClient(c config) *TwoFactorClient {
+	return &TwoFactorClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `twofactor.Hooks(f(g(h())))`.
+func (c *TwoFactorClient) Use(hooks ...Hook) {
+	c.hooks.TwoFactor = append(c.hooks.TwoFactor, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `twofactor.Intercept(f(g(h())))`.
+func (c *TwoFactorClient) Intercept(interceptors ...Interceptor) {
+	c.inters.TwoFactor = append(c.inters.TwoFactor, interceptors...)
+}
+
+// Create returns a builder for creating a TwoFactor entity.
+func (c *TwoFactorClient) Create() *TwoFactorCreate {
+	mutation := newTwoFactorMutation(c.config, OpCreate)
+	return &TwoFactorCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of TwoFactor entities.
+func (c *TwoFactorClient) CreateBulk(builders ...*TwoFactorCreate) *TwoFactorCreateBulk {
+	return &TwoFactorCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *TwoFactorClient) MapCreateBulk(slice any, setFunc func(*TwoFactorCreate, int)) *TwoFactorCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &TwoFactorCreateBulk{err: fmt.Errorf("calling to TwoFactorClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*TwoFactorCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &TwoFactorCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for TwoFactor.
+func (c *TwoFactorClient) Update() *TwoFactorUpdate {
+	mutation := newTwoFactorMutation(c.config, OpUpdate)
+	return &TwoFactorUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TwoFactorClient) UpdateOne(tf *TwoFactor) *TwoFactorUpdateOne {
+	mutation := newTwoFactorMutation(c.config, OpUpdateOne, withTwoFactor(tf))
+	return &TwoFactorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TwoFactorClient) UpdateOneID(id int64) *TwoFactorUpdateOne {
+	mutation := newTwoFactorMutation(c.config, OpUpdateOne, withTwoFactorID(id))
+	return &TwoFactorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for TwoFactor.
+func (c *TwoFactorClient) Delete() *TwoFactorDelete {
+	mutation := newTwoFactorMutation(c.config, OpDelete)
+	return &TwoFactorDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *TwoFactorClient) DeleteOne(tf *TwoFactor) *TwoFactorDeleteOne {
+	return c.DeleteOneID(tf.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *TwoFactorClient) DeleteOneID(id int64) *TwoFactorDeleteOne {
+	builder := c.Delete().Where(twofactor.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TwoFactorDeleteOne{builder}
+}
+
+// Query returns a query builder for TwoFactor.
+func (c *TwoFactorClient) Query() *TwoFactorQuery {
+	return &TwoFactorQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeTwoFactor},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a TwoFactor entity by its id.
+func (c *TwoFactorClient) Get(ctx context.Context, id int64) (*TwoFactor, error) {
+	return c.Query().Where(twofactor.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TwoFactorClient) GetX(ctx context.Context, id int64) *TwoFactor {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *TwoFactorClient) Hooks() []Hook {
+	return c.hooks.TwoFactor
+}
+
+// Interceptors returns the client interceptors.
+func (c *TwoFactorClient) Interceptors() []Interceptor {
+	return c.inters.TwoFactor
+}
+
+func (c *TwoFactorClient) mutate(ctx context.Context, m *TwoFactorMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&TwoFactorCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&TwoFactorUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&TwoFactorUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&TwoFactorDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("models: unknown TwoFactor mutation op: %q", m.Op())
 	}
 }
 
@@ -3736,22 +3885,157 @@ func (c *WakatimeSystemClient) mutate(ctx context.Context, m *WakatimeSystemMuta
 	}
 }
 
+// WebAuthnCredentialClient is a client for the WebAuthnCredential schema.
+type WebAuthnCredentialClient struct {
+	config
+}
+
+// NewWebAuthnCredentialClient returns a client for the WebAuthnCredential from the given config.
+func NewWebAuthnCredentialClient(c config) *WebAuthnCredentialClient {
+	return &WebAuthnCredentialClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `webauthncredential.Hooks(f(g(h())))`.
+func (c *WebAuthnCredentialClient) Use(hooks ...Hook) {
+	c.hooks.WebAuthnCredential = append(c.hooks.WebAuthnCredential, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `webauthncredential.Intercept(f(g(h())))`.
+func (c *WebAuthnCredentialClient) Intercept(interceptors ...Interceptor) {
+	c.inters.WebAuthnCredential = append(c.inters.WebAuthnCredential, interceptors...)
+}
+
+// Create returns a builder for creating a WebAuthnCredential entity.
+func (c *WebAuthnCredentialClient) Create() *WebAuthnCredentialCreate {
+	mutation := newWebAuthnCredentialMutation(c.config, OpCreate)
+	return &WebAuthnCredentialCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of WebAuthnCredential entities.
+func (c *WebAuthnCredentialClient) CreateBulk(builders ...*WebAuthnCredentialCreate) *WebAuthnCredentialCreateBulk {
+	return &WebAuthnCredentialCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *WebAuthnCredentialClient) MapCreateBulk(slice any, setFunc func(*WebAuthnCredentialCreate, int)) *WebAuthnCredentialCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &WebAuthnCredentialCreateBulk{err: fmt.Errorf("calling to WebAuthnCredentialClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*WebAuthnCredentialCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &WebAuthnCredentialCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for WebAuthnCredential.
+func (c *WebAuthnCredentialClient) Update() *WebAuthnCredentialUpdate {
+	mutation := newWebAuthnCredentialMutation(c.config, OpUpdate)
+	return &WebAuthnCredentialUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *WebAuthnCredentialClient) UpdateOne(wac *WebAuthnCredential) *WebAuthnCredentialUpdateOne {
+	mutation := newWebAuthnCredentialMutation(c.config, OpUpdateOne, withWebAuthnCredential(wac))
+	return &WebAuthnCredentialUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *WebAuthnCredentialClient) UpdateOneID(id int64) *WebAuthnCredentialUpdateOne {
+	mutation := newWebAuthnCredentialMutation(c.config, OpUpdateOne, withWebAuthnCredentialID(id))
+	return &WebAuthnCredentialUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for WebAuthnCredential.
+func (c *WebAuthnCredentialClient) Delete() *WebAuthnCredentialDelete {
+	mutation := newWebAuthnCredentialMutation(c.config, OpDelete)
+	return &WebAuthnCredentialDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *WebAuthnCredentialClient) DeleteOne(wac *WebAuthnCredential) *WebAuthnCredentialDeleteOne {
+	return c.DeleteOneID(wac.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *WebAuthnCredentialClient) DeleteOneID(id int64) *WebAuthnCredentialDeleteOne {
+	builder := c.Delete().Where(webauthncredential.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &WebAuthnCredentialDeleteOne{builder}
+}
+
+// Query returns a query builder for WebAuthnCredential.
+func (c *WebAuthnCredentialClient) Query() *WebAuthnCredentialQuery {
+	return &WebAuthnCredentialQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeWebAuthnCredential},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a WebAuthnCredential entity by its id.
+func (c *WebAuthnCredentialClient) Get(ctx context.Context, id int64) (*WebAuthnCredential, error) {
+	return c.Query().Where(webauthncredential.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *WebAuthnCredentialClient) GetX(ctx context.Context, id int64) *WebAuthnCredential {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *WebAuthnCredentialClient) Hooks() []Hook {
+	return c.hooks.WebAuthnCredential
+}
+
+// Interceptors returns the client interceptors.
+func (c *WebAuthnCredentialClient) Interceptors() []Interceptor {
+	return c.inters.WebAuthnCredential
+}
+
+func (c *WebAuthnCredentialClient) mutate(ctx context.Context, m *WebAuthnCredentialMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&WebAuthnCredentialCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&WebAuthnCredentialUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&WebAuthnCredentialUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&WebAuthnCredentialDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("models: unknown WebAuthnCredential mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
 		AccessToken, Accounts, MemberRoleRelatedPermission, PermissionGroup,
-		PermissionRelatedRouter, Router, Source, SourceData, User, UserAuthSource,
-		UserRelatedRole, UserRole, Wakatime, WakatimeCategory, WakatimeDependency,
-		WakatimeDuration, WakatimeEditor, WakatimeEntity, WakatimeGrandTotal,
-		WakatimeHeartBeat, WakatimeLanguage, WakatimeProject, WakatimeProjectDuration,
-		WakatimeProjectInfo, WakatimeSystem []ent.Hook
+		PermissionRelatedRouter, Router, Source, SourceData, TwoFactor, User,
+		UserAuthSource, UserRelatedRole, UserRole, Wakatime, WakatimeCategory,
+		WakatimeDependency, WakatimeDuration, WakatimeEditor, WakatimeEntity,
+		WakatimeGrandTotal, WakatimeHeartBeat, WakatimeLanguage, WakatimeProject,
+		WakatimeProjectDuration, WakatimeProjectInfo, WakatimeSystem,
+		WebAuthnCredential []ent.Hook
 	}
 	inters struct {
 		AccessToken, Accounts, MemberRoleRelatedPermission, PermissionGroup,
-		PermissionRelatedRouter, Router, Source, SourceData, User, UserAuthSource,
-		UserRelatedRole, UserRole, Wakatime, WakatimeCategory, WakatimeDependency,
-		WakatimeDuration, WakatimeEditor, WakatimeEntity, WakatimeGrandTotal,
-		WakatimeHeartBeat, WakatimeLanguage, WakatimeProject, WakatimeProjectDuration,
-		WakatimeProjectInfo, WakatimeSystem []ent.Interceptor
+		PermissionRelatedRouter, Router, Source, SourceData, TwoFactor, User,
+		UserAuthSource, UserRelatedRole, UserRole, Wakatime, WakatimeCategory,
+		WakatimeDependency, WakatimeDuration, WakatimeEditor, WakatimeEntity,
+		WakatimeGrandTotal, WakatimeHeartBeat, WakatimeLanguage, WakatimeProject,
+		WakatimeProjectDuration, WakatimeProjectInfo, WakatimeSystem,
+		WebAuthnCredential []ent.Interceptor
 	}
 )

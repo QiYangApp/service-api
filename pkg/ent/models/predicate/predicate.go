@@ -30,6 +30,9 @@ type Source func(*sql.Selector)
 // SourceData is the predicate function for sourcedata builders.
 type SourceData func(*sql.Selector)
 
+// TwoFactor is the predicate function for twofactor builders.
+type TwoFactor func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
 
@@ -80,3 +83,6 @@ type WakatimeProjectInfo func(*sql.Selector)
 
 // WakatimeSystem is the predicate function for wakatimesystem builders.
 type WakatimeSystem func(*sql.Selector)
+
+// WebAuthnCredential is the predicate function for webauthncredential builders.
+type WebAuthnCredential func(*sql.Selector)

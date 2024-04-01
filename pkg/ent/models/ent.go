@@ -12,6 +12,7 @@ import (
 	"ent/models/router"
 	"ent/models/source"
 	"ent/models/sourcedata"
+	"ent/models/twofactor"
 	"ent/models/user"
 	"ent/models/userauthsource"
 	"ent/models/userrelatedrole"
@@ -29,6 +30,7 @@ import (
 	"ent/models/wakatimeprojectduration"
 	"ent/models/wakatimeprojectinfo"
 	"ent/models/wakatimesystem"
+	"ent/models/webauthncredential"
 	"errors"
 	"fmt"
 	"reflect"
@@ -105,6 +107,7 @@ func checkColumn(table, column string) error {
 			router.Table:                      router.ValidColumn,
 			source.Table:                      source.ValidColumn,
 			sourcedata.Table:                  sourcedata.ValidColumn,
+			twofactor.Table:                   twofactor.ValidColumn,
 			user.Table:                        user.ValidColumn,
 			userauthsource.Table:              userauthsource.ValidColumn,
 			userrelatedrole.Table:             userrelatedrole.ValidColumn,
@@ -122,6 +125,7 @@ func checkColumn(table, column string) error {
 			wakatimeprojectduration.Table:     wakatimeprojectduration.ValidColumn,
 			wakatimeprojectinfo.Table:         wakatimeprojectinfo.ValidColumn,
 			wakatimesystem.Table:              wakatimesystem.ValidColumn,
+			webauthncredential.Table:          webauthncredential.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

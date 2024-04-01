@@ -60,6 +60,13 @@ func (sd *SourceData) GoString() string {
 	return sd.String()
 }
 
+func (tf *TwoFactor) GoString() string {
+	if tf == nil {
+		return fmt.Sprintf("TwoFactor(nil)")
+	}
+	return tf.String()
+}
+
 func (u *User) GoString() string {
 	if u == nil {
 		return fmt.Sprintf("User(nil)")
@@ -177,4 +184,11 @@ func (ws *WakatimeSystem) GoString() string {
 		return fmt.Sprintf("WakatimeSystem(nil)")
 	}
 	return ws.String()
+}
+
+func (wac *WebAuthnCredential) GoString() string {
+	if wac == nil {
+		return fmt.Sprintf("WebAuthnCredential(nil)")
+	}
+	return wac.String()
 }

@@ -29,7 +29,7 @@ func Init() {
 				models.Driver(&db.MultiDriver{R: conns.Read(), W: conns.Write()}),
 			},
 			setting.AppSetting.Debug,
-		)
+		).Debug()
 	})
 }
 

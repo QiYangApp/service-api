@@ -104,6 +104,18 @@ func (f SourceDataFunc) Mutate(ctx context.Context, m models.Mutation) (models.V
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *models.SourceDataMutation", m)
 }
 
+// The TwoFactorFunc type is an adapter to allow the use of ordinary
+// function as TwoFactor mutator.
+type TwoFactorFunc func(context.Context, *models.TwoFactorMutation) (models.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TwoFactorFunc) Mutate(ctx context.Context, m models.Mutation) (models.Value, error) {
+	if mv, ok := m.(*models.TwoFactorMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *models.TwoFactorMutation", m)
+}
+
 // The UserFunc type is an adapter to allow the use of ordinary
 // function as User mutator.
 type UserFunc func(context.Context, *models.UserMutation) (models.Value, error)
@@ -306,6 +318,18 @@ func (f WakatimeSystemFunc) Mutate(ctx context.Context, m models.Mutation) (mode
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *models.WakatimeSystemMutation", m)
+}
+
+// The WebAuthnCredentialFunc type is an adapter to allow the use of ordinary
+// function as WebAuthnCredential mutator.
+type WebAuthnCredentialFunc func(context.Context, *models.WebAuthnCredentialMutation) (models.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f WebAuthnCredentialFunc) Mutate(ctx context.Context, m models.Mutation) (models.Value, error) {
+	if mv, ok := m.(*models.WebAuthnCredentialMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *models.WebAuthnCredentialMutation", m)
 }
 
 // Condition is a hook condition function.

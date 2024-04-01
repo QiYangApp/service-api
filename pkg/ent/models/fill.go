@@ -90,6 +90,17 @@ func (sdc *SourceDataCreate) SetSourceData(input *SourceData) *SourceDataCreate 
 	return sdc
 }
 
+func (tfc *TwoFactorCreate) SetTwoFactor(input *TwoFactor) *TwoFactorCreate {
+	tfc.SetUserID(input.UserID)
+	tfc.SetSecret(input.Secret)
+	tfc.SetScratchSalt(input.ScratchSalt)
+	tfc.SetScratchHash(input.ScratchHash)
+	tfc.SetLastUsedPasscode(input.LastUsedPasscode)
+	tfc.SetCreateTime(input.CreateTime)
+	tfc.SetUpdateTime(input.UpdateTime)
+	return tfc
+}
+
 func (uc *UserCreate) SetUser(input *User) *UserCreate {
 	uc.SetAvatar(input.Avatar)
 	uc.SetEmail(input.Email)
@@ -212,4 +223,19 @@ func (wpic *WakatimeProjectInfoCreate) SetWakatimeProjectInfo(input *WakatimePro
 
 func (wsc *WakatimeSystemCreate) SetWakatimeSystem(input *WakatimeSystem) *WakatimeSystemCreate {
 	return wsc
+}
+
+func (wacc *WebAuthnCredentialCreate) SetWebAuthnCredential(input *WebAuthnCredential) *WebAuthnCredentialCreate {
+	wacc.SetName(input.Name)
+	wacc.SetLowerName(input.LowerName)
+	wacc.SetUserID(input.UserID)
+	wacc.SetCredentialID(input.CredentialID)
+	wacc.SetPublicKey(input.PublicKey)
+	wacc.SetAttestationType(input.AttestationType)
+	wacc.SetAAGUID(input.AAGUID)
+	wacc.SetSignCount(input.SignCount)
+	wacc.SetCloneWarning(input.CloneWarning)
+	wacc.SetCreateTime(input.CreateTime)
+	wacc.SetUpdateTime(input.UpdateTime)
+	return wacc
 }

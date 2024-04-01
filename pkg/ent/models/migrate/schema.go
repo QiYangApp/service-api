@@ -21,7 +21,7 @@ var (
 		{Name: "scope", Type: field.TypeString},
 		{Name: "has_recent_activity", Type: field.TypeString},
 		{Name: "has_used", Type: field.TypeString},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711648924},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711959977},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// AccessTokensTable holds the schema information for the "access_tokens" table.
@@ -62,7 +62,7 @@ var (
 		{Name: "is_private", Type: field.TypeBool, Default: true},
 		{Name: "is_activated", Type: field.TypeBool},
 		{Name: "is_primary", Type: field.TypeBool, Default: false},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711648924},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711959977},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// AccountsTable holds the schema information for the "accounts" table.
@@ -113,7 +113,7 @@ var (
 		{Name: "left", Type: field.TypeInt32, Default: 0},
 		{Name: "right", Type: field.TypeInt32, Default: 0},
 		{Name: "state", Type: field.TypeInt, Default: 1},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711648924},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711959977},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// PermissionGroupsTable holds the schema information for the "permission_groups" table.
@@ -139,7 +139,7 @@ var (
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "router_id", Type: field.TypeUUID},
 		{Name: "permission_group_id", Type: field.TypeUUID},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711648924},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711959977},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// PermissionRelatedRoutersTable holds the schema information for the "permission_related_routers" table.
@@ -162,7 +162,7 @@ var (
 		{Name: "route", Type: field.TypeString, Size: 254, Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 254, Default: ""},
 		{Name: "state", Type: field.TypeInt, Default: 1},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711648924},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711959977},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// RoutersTable holds the schema information for the "routers" table.
@@ -191,7 +191,7 @@ var (
 		{Name: "is_active", Type: field.TypeBool},
 		{Name: "is_sync_enabled", Type: field.TypeBool},
 		{Name: "cfg", Type: field.TypeJSON},
-		{Name: "create_time", Type: field.TypeInt64, Default: 1711648924},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711959977},
 		{Name: "update_time", Type: field.TypeInt64},
 	}
 	// SourcesTable holds the schema information for the "sources" table.
@@ -248,6 +248,35 @@ var (
 				Name:    "sourcedata_type_sub_type",
 				Unique:  false,
 				Columns: []*schema.Column{SourceDataColumns[2], SourceDataColumns[3]},
+			},
+		},
+	}
+	// TwoFactorsColumns holds the columns for the "two_factors" table.
+	TwoFactorsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "user_id", Type: field.TypeInt64, Unique: true},
+		{Name: "secret", Type: field.TypeString},
+		{Name: "scratch_salt", Type: field.TypeString},
+		{Name: "scratch_hash", Type: field.TypeString},
+		{Name: "last_used_passcode", Type: field.TypeString},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711959977},
+		{Name: "update_time", Type: field.TypeInt64},
+	}
+	// TwoFactorsTable holds the schema information for the "two_factors" table.
+	TwoFactorsTable = &schema.Table{
+		Name:       "two_factors",
+		Columns:    TwoFactorsColumns,
+		PrimaryKey: []*schema.Column{TwoFactorsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "twofactor_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{TwoFactorsColumns[6]},
+			},
+			{
+				Name:    "twofactor_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{TwoFactorsColumns[7]},
 			},
 		},
 	}
@@ -544,6 +573,39 @@ var (
 		Columns:    WakatimeSystemsColumns,
 		PrimaryKey: []*schema.Column{WakatimeSystemsColumns[0]},
 	}
+	// WebAuthnCredentialsColumns holds the columns for the "web_authn_credentials" table.
+	WebAuthnCredentialsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Increment: true},
+		{Name: "name", Type: field.TypeString},
+		{Name: "lower_name", Type: field.TypeString},
+		{Name: "user_id", Type: field.TypeInt64, Unique: true},
+		{Name: "credential_id", Type: field.TypeBytes, Size: 1024},
+		{Name: "public_key", Type: field.TypeBytes},
+		{Name: "attestation_type", Type: field.TypeString},
+		{Name: "aaguid", Type: field.TypeBytes},
+		{Name: "sign_count", Type: field.TypeUint32},
+		{Name: "clone_warning", Type: field.TypeBool},
+		{Name: "create_time", Type: field.TypeInt64, Default: 1711959977},
+		{Name: "update_time", Type: field.TypeInt64},
+	}
+	// WebAuthnCredentialsTable holds the schema information for the "web_authn_credentials" table.
+	WebAuthnCredentialsTable = &schema.Table{
+		Name:       "web_authn_credentials",
+		Columns:    WebAuthnCredentialsColumns,
+		PrimaryKey: []*schema.Column{WebAuthnCredentialsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "webauthncredential_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{WebAuthnCredentialsColumns[10]},
+			},
+			{
+				Name:    "webauthncredential_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{WebAuthnCredentialsColumns[11]},
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AccessTokensTable,
@@ -554,6 +616,7 @@ var (
 		RoutersTable,
 		SourcesTable,
 		SourceDataTable,
+		TwoFactorsTable,
 		UsersTable,
 		UserAuthSourcesTable,
 		UserRelatedRolesTable,
@@ -571,6 +634,7 @@ var (
 		WakatimeProjectDurationsTable,
 		WakatimeProjectInfosTable,
 		WakatimeSystemsTable,
+		WebAuthnCredentialsTable,
 	}
 )
 

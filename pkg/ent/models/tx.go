@@ -28,6 +28,8 @@ type Tx struct {
 	Source *SourceClient
 	// SourceData is the client for interacting with the SourceData builders.
 	SourceData *SourceDataClient
+	// TwoFactor is the client for interacting with the TwoFactor builders.
+	TwoFactor *TwoFactorClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 	// UserAuthSource is the client for interacting with the UserAuthSource builders.
@@ -62,6 +64,8 @@ type Tx struct {
 	WakatimeProjectInfo *WakatimeProjectInfoClient
 	// WakatimeSystem is the client for interacting with the WakatimeSystem builders.
 	WakatimeSystem *WakatimeSystemClient
+	// WebAuthnCredential is the client for interacting with the WebAuthnCredential builders.
+	WebAuthnCredential *WebAuthnCredentialClient
 
 	// lazily loaded.
 	client     *Client
@@ -201,6 +205,7 @@ func (tx *Tx) init() {
 	tx.Router = NewRouterClient(tx.config)
 	tx.Source = NewSourceClient(tx.config)
 	tx.SourceData = NewSourceDataClient(tx.config)
+	tx.TwoFactor = NewTwoFactorClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 	tx.UserAuthSource = NewUserAuthSourceClient(tx.config)
 	tx.UserRelatedRole = NewUserRelatedRoleClient(tx.config)
@@ -218,6 +223,7 @@ func (tx *Tx) init() {
 	tx.WakatimeProjectDuration = NewWakatimeProjectDurationClient(tx.config)
 	tx.WakatimeProjectInfo = NewWakatimeProjectInfoClient(tx.config)
 	tx.WakatimeSystem = NewWakatimeSystemClient(tx.config)
+	tx.WebAuthnCredential = NewWebAuthnCredentialClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

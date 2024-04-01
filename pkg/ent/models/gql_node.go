@@ -12,6 +12,7 @@ import (
 	"ent/models/router"
 	"ent/models/source"
 	"ent/models/sourcedata"
+	"ent/models/twofactor"
 	"ent/models/user"
 	"ent/models/userauthsource"
 	"ent/models/userrelatedrole"
@@ -29,6 +30,7 @@ import (
 	"ent/models/wakatimeprojectduration"
 	"ent/models/wakatimeprojectinfo"
 	"ent/models/wakatimesystem"
+	"ent/models/webauthncredential"
 	"fmt"
 	"sync"
 	"sync/atomic"
@@ -70,6 +72,9 @@ func (n *Source) IsNode() {}
 
 // IsNode implements the Node interface check for GQLGen.
 func (n *SourceData) IsNode() {}
+
+// IsNode implements the Node interface check for GQLGen.
+func (n *TwoFactor) IsNode() {}
 
 // IsNode implements the Node interface check for GQLGen.
 func (n *User) IsNode() {}
@@ -121,6 +126,9 @@ func (n *WakatimeProjectInfo) IsNode() {}
 
 // IsNode implements the Node interface check for GQLGen.
 func (n *WakatimeSystem) IsNode() {}
+
+// IsNode implements the Node interface check for GQLGen.
+func (n *WebAuthnCredential) IsNode() {}
 
 var errNodeInvalidID = &NotFoundError{"node"}
 
@@ -268,6 +276,18 @@ func (c *Client) noder(ctx context.Context, table string, id int64) (Noder, erro
 		query := c.SourceData.Query().
 			Where(sourcedata.ID(id))
 		query, err := query.CollectFields(ctx, "SourceData")
+		if err != nil {
+			return nil, err
+		}
+		n, err := query.Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
+	case twofactor.Table:
+		query := c.TwoFactor.Query().
+			Where(twofactor.ID(id))
+		query, err := query.CollectFields(ctx, "TwoFactor")
 		if err != nil {
 			return nil, err
 		}
@@ -480,6 +500,18 @@ func (c *Client) noder(ctx context.Context, table string, id int64) (Noder, erro
 			return nil, err
 		}
 		return n, nil
+	case webauthncredential.Table:
+		query := c.WebAuthnCredential.Query().
+			Where(webauthncredential.ID(id))
+		query, err := query.CollectFields(ctx, "WebAuthnCredential")
+		if err != nil {
+			return nil, err
+		}
+		n, err := query.Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
 	default:
 		return nil, fmt.Errorf("cannot resolve noder from table %q: %w", table, errNodeInvalidID)
 	}
@@ -669,6 +701,22 @@ func (c *Client) noders(ctx context.Context, table string, ids []int64) ([]Noder
 		query := c.SourceData.Query().
 			Where(sourcedata.IDIn(ids...))
 		query, err := query.CollectFields(ctx, "SourceData")
+		if err != nil {
+			return nil, err
+		}
+		nodes, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
+	case twofactor.Table:
+		query := c.TwoFactor.Query().
+			Where(twofactor.IDIn(ids...))
+		query, err := query.CollectFields(ctx, "TwoFactor")
 		if err != nil {
 			return nil, err
 		}
@@ -941,6 +989,22 @@ func (c *Client) noders(ctx context.Context, table string, ids []int64) ([]Noder
 		query := c.WakatimeSystem.Query().
 			Where(wakatimesystem.IDIn(ids...))
 		query, err := query.CollectFields(ctx, "WakatimeSystem")
+		if err != nil {
+			return nil, err
+		}
+		nodes, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
+	case webauthncredential.Table:
+		query := c.WebAuthnCredential.Query().
+			Where(webauthncredential.IDIn(ids...))
+		query, err := query.CollectFields(ctx, "WebAuthnCredential")
 		if err != nil {
 			return nil, err
 		}

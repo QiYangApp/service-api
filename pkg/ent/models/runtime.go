@@ -12,6 +12,7 @@ import (
 	"ent/models/router"
 	"ent/models/source"
 	"ent/models/sourcedata"
+	"ent/models/twofactor"
 	"ent/models/user"
 	"ent/models/userauthsource"
 	"ent/models/userrelatedrole"
@@ -19,6 +20,7 @@ import (
 	"ent/models/wakatime"
 	"ent/models/wakatimecategory"
 	"ent/models/wakatimedependency"
+	"ent/models/webauthncredential"
 	"ent/schema"
 	"ent/utils/timeutil"
 	"time"
@@ -274,6 +276,16 @@ func init() {
 	sourcedata.DefaultUpdateTime = sourcedataDescUpdateTime.Default.(func() time.Time)
 	// sourcedata.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	sourcedata.UpdateDefaultUpdateTime = sourcedataDescUpdateTime.UpdateDefault.(func() time.Time)
+	twofactorFields := schema.TwoFactor{}.Fields()
+	_ = twofactorFields
+	// twofactorDescCreateTime is the schema descriptor for create_time field.
+	twofactorDescCreateTime := twofactorFields[6].Descriptor()
+	// twofactor.DefaultCreateTime holds the default value on creation for the create_time field.
+	twofactor.DefaultCreateTime = timeutil.TimeStamp(twofactorDescCreateTime.Default.(int64))
+	// twofactorDescUpdateTime is the schema descriptor for update_time field.
+	twofactorDescUpdateTime := twofactorFields[7].Descriptor()
+	// twofactor.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	twofactor.UpdateDefaultUpdateTime = twofactorDescUpdateTime.UpdateDefault.(func() timeutil.TimeStamp)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescEmail is the schema descriptor for email field.
@@ -666,4 +678,18 @@ func init() {
 	wakatimedependencyDescTotalSeconds := wakatimedependencyFields[4].Descriptor()
 	// wakatimedependency.DefaultTotalSeconds holds the default value on creation for the total_seconds field.
 	wakatimedependency.DefaultTotalSeconds = wakatimedependencyDescTotalSeconds.Default.(int64)
+	webauthncredentialFields := schema.WebAuthnCredential{}.Fields()
+	_ = webauthncredentialFields
+	// webauthncredentialDescCredentialID is the schema descriptor for credential_id field.
+	webauthncredentialDescCredentialID := webauthncredentialFields[4].Descriptor()
+	// webauthncredential.CredentialIDValidator is a validator for the "credential_id" field. It is called by the builders before save.
+	webauthncredential.CredentialIDValidator = webauthncredentialDescCredentialID.Validators[0].(func([]byte) error)
+	// webauthncredentialDescCreateTime is the schema descriptor for create_time field.
+	webauthncredentialDescCreateTime := webauthncredentialFields[10].Descriptor()
+	// webauthncredential.DefaultCreateTime holds the default value on creation for the create_time field.
+	webauthncredential.DefaultCreateTime = timeutil.TimeStamp(webauthncredentialDescCreateTime.Default.(int64))
+	// webauthncredentialDescUpdateTime is the schema descriptor for update_time field.
+	webauthncredentialDescUpdateTime := webauthncredentialFields[11].Descriptor()
+	// webauthncredential.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	webauthncredential.UpdateDefaultUpdateTime = webauthncredentialDescUpdateTime.UpdateDefault.(func() timeutil.TimeStamp)
 }

@@ -12,6 +12,7 @@ import (
 	"ent/models/router"
 	"ent/models/source"
 	"ent/models/sourcedata"
+	"ent/models/twofactor"
 	"ent/models/user"
 	"ent/models/userauthsource"
 	"ent/models/userrelatedrole"
@@ -19,6 +20,7 @@ import (
 	"ent/models/wakatime"
 	"ent/models/wakatimecategory"
 	"ent/models/wakatimedependency"
+	"ent/models/webauthncredential"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
@@ -758,6 +760,100 @@ type sourcedataPaginateArgs struct {
 
 func newSourceDataPaginateArgs(rv map[string]any) *sourcedataPaginateArgs {
 	args := &sourcedataPaginateArgs{}
+	if rv == nil {
+		return args
+	}
+	if v := rv[firstField]; v != nil {
+		args.first = v.(*int)
+	}
+	if v := rv[lastField]; v != nil {
+		args.last = v.(*int)
+	}
+	if v := rv[afterField]; v != nil {
+		args.after = v.(*Cursor)
+	}
+	if v := rv[beforeField]; v != nil {
+		args.before = v.(*Cursor)
+	}
+	return args
+}
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (tf *TwoFactorQuery) CollectFields(ctx context.Context, satisfies ...string) (*TwoFactorQuery, error) {
+	fc := graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return tf, nil
+	}
+	if err := tf.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+		return nil, err
+	}
+	return tf, nil
+}
+
+func (tf *TwoFactorQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
+	path = append([]string(nil), path...)
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(twofactor.Columns))
+		selectedFields = []string{twofactor.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
+		switch field.Name {
+		case "userID":
+			if _, ok := fieldSeen[twofactor.FieldUserID]; !ok {
+				selectedFields = append(selectedFields, twofactor.FieldUserID)
+				fieldSeen[twofactor.FieldUserID] = struct{}{}
+			}
+		case "secret":
+			if _, ok := fieldSeen[twofactor.FieldSecret]; !ok {
+				selectedFields = append(selectedFields, twofactor.FieldSecret)
+				fieldSeen[twofactor.FieldSecret] = struct{}{}
+			}
+		case "scratchSalt":
+			if _, ok := fieldSeen[twofactor.FieldScratchSalt]; !ok {
+				selectedFields = append(selectedFields, twofactor.FieldScratchSalt)
+				fieldSeen[twofactor.FieldScratchSalt] = struct{}{}
+			}
+		case "scratchHash":
+			if _, ok := fieldSeen[twofactor.FieldScratchHash]; !ok {
+				selectedFields = append(selectedFields, twofactor.FieldScratchHash)
+				fieldSeen[twofactor.FieldScratchHash] = struct{}{}
+			}
+		case "lastUsedPasscode":
+			if _, ok := fieldSeen[twofactor.FieldLastUsedPasscode]; !ok {
+				selectedFields = append(selectedFields, twofactor.FieldLastUsedPasscode)
+				fieldSeen[twofactor.FieldLastUsedPasscode] = struct{}{}
+			}
+		case "createTime":
+			if _, ok := fieldSeen[twofactor.FieldCreateTime]; !ok {
+				selectedFields = append(selectedFields, twofactor.FieldCreateTime)
+				fieldSeen[twofactor.FieldCreateTime] = struct{}{}
+			}
+		case "updateTime":
+			if _, ok := fieldSeen[twofactor.FieldUpdateTime]; !ok {
+				selectedFields = append(selectedFields, twofactor.FieldUpdateTime)
+				fieldSeen[twofactor.FieldUpdateTime] = struct{}{}
+			}
+		case "id":
+		case "__typename":
+		default:
+			unknownSeen = true
+		}
+	}
+	if !unknownSeen {
+		tf.Select(selectedFields...)
+	}
+	return nil
+}
+
+type twofactorPaginateArgs struct {
+	first, last   *int
+	after, before *Cursor
+	opts          []TwoFactorPaginateOption
+}
+
+func newTwoFactorPaginateArgs(rv map[string]any) *twofactorPaginateArgs {
+	args := &twofactorPaginateArgs{}
 	if rv == nil {
 		return args
 	}
@@ -1881,6 +1977,120 @@ type wakatimesystemPaginateArgs struct {
 
 func newWakatimeSystemPaginateArgs(rv map[string]any) *wakatimesystemPaginateArgs {
 	args := &wakatimesystemPaginateArgs{}
+	if rv == nil {
+		return args
+	}
+	if v := rv[firstField]; v != nil {
+		args.first = v.(*int)
+	}
+	if v := rv[lastField]; v != nil {
+		args.last = v.(*int)
+	}
+	if v := rv[afterField]; v != nil {
+		args.after = v.(*Cursor)
+	}
+	if v := rv[beforeField]; v != nil {
+		args.before = v.(*Cursor)
+	}
+	return args
+}
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (wac *WebAuthnCredentialQuery) CollectFields(ctx context.Context, satisfies ...string) (*WebAuthnCredentialQuery, error) {
+	fc := graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return wac, nil
+	}
+	if err := wac.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+		return nil, err
+	}
+	return wac, nil
+}
+
+func (wac *WebAuthnCredentialQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
+	path = append([]string(nil), path...)
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(webauthncredential.Columns))
+		selectedFields = []string{webauthncredential.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
+		switch field.Name {
+		case "name":
+			if _, ok := fieldSeen[webauthncredential.FieldName]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldName)
+				fieldSeen[webauthncredential.FieldName] = struct{}{}
+			}
+		case "lowerName":
+			if _, ok := fieldSeen[webauthncredential.FieldLowerName]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldLowerName)
+				fieldSeen[webauthncredential.FieldLowerName] = struct{}{}
+			}
+		case "userID":
+			if _, ok := fieldSeen[webauthncredential.FieldUserID]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldUserID)
+				fieldSeen[webauthncredential.FieldUserID] = struct{}{}
+			}
+		case "credentialID":
+			if _, ok := fieldSeen[webauthncredential.FieldCredentialID]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldCredentialID)
+				fieldSeen[webauthncredential.FieldCredentialID] = struct{}{}
+			}
+		case "publicKey":
+			if _, ok := fieldSeen[webauthncredential.FieldPublicKey]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldPublicKey)
+				fieldSeen[webauthncredential.FieldPublicKey] = struct{}{}
+			}
+		case "attestationType":
+			if _, ok := fieldSeen[webauthncredential.FieldAttestationType]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldAttestationType)
+				fieldSeen[webauthncredential.FieldAttestationType] = struct{}{}
+			}
+		case "aaguid":
+			if _, ok := fieldSeen[webauthncredential.FieldAAGUID]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldAAGUID)
+				fieldSeen[webauthncredential.FieldAAGUID] = struct{}{}
+			}
+		case "signCount":
+			if _, ok := fieldSeen[webauthncredential.FieldSignCount]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldSignCount)
+				fieldSeen[webauthncredential.FieldSignCount] = struct{}{}
+			}
+		case "cloneWarning":
+			if _, ok := fieldSeen[webauthncredential.FieldCloneWarning]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldCloneWarning)
+				fieldSeen[webauthncredential.FieldCloneWarning] = struct{}{}
+			}
+		case "createTime":
+			if _, ok := fieldSeen[webauthncredential.FieldCreateTime]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldCreateTime)
+				fieldSeen[webauthncredential.FieldCreateTime] = struct{}{}
+			}
+		case "updateTime":
+			if _, ok := fieldSeen[webauthncredential.FieldUpdateTime]; !ok {
+				selectedFields = append(selectedFields, webauthncredential.FieldUpdateTime)
+				fieldSeen[webauthncredential.FieldUpdateTime] = struct{}{}
+			}
+		case "id":
+		case "__typename":
+		default:
+			unknownSeen = true
+		}
+	}
+	if !unknownSeen {
+		wac.Select(selectedFields...)
+	}
+	return nil
+}
+
+type webauthncredentialPaginateArgs struct {
+	first, last   *int
+	after, before *Cursor
+	opts          []WebAuthnCredentialPaginateOption
+}
+
+func newWebAuthnCredentialPaginateArgs(rv map[string]any) *webauthncredentialPaginateArgs {
+	args := &webauthncredentialPaginateArgs{}
 	if rv == nil {
 		return args
 	}

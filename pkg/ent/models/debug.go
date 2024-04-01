@@ -74,6 +74,14 @@ func (c *SourceDataClient) Debug() *SourceDataClient {
 	return &SourceDataClient{config: cfg}
 }
 
+func (c *TwoFactorClient) Debug() *TwoFactorClient {
+	if c.debug {
+		return c
+	}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
+	return &TwoFactorClient{config: cfg}
+}
+
 func (c *UserClient) Debug() *UserClient {
 	if c.debug {
 		return c
@@ -208,4 +216,12 @@ func (c *WakatimeSystemClient) Debug() *WakatimeSystemClient {
 	}
 	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
 	return &WakatimeSystemClient{config: cfg}
+}
+
+func (c *WebAuthnCredentialClient) Debug() *WebAuthnCredentialClient {
+	if c.debug {
+		return c
+	}
+	cfg := config{driver: dialect.Debug(c.driver, c.log), log: c.log, debug: debugState, hooks: c.hooks}
+	return &WebAuthnCredentialClient{config: cfg}
 }

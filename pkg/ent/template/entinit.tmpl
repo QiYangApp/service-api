@@ -21,6 +21,7 @@ func ({{ . }}) Mixins() []ent.Mixin {
 // Fields of the {{ . }}.
 func ({{ . }}) Fields() []ent.Field {
     return []ent.Field{
+        field.Int64("id"),
         // Fields go here.
 		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
 		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
@@ -29,5 +30,7 @@ func ({{ . }}) Fields() []ent.Field {
 
 func ({{ . }}) Indexes() []ent.Index {
 	return []ent.Index{
+		index.Fields("create_time"),
+    	index.Fields("update_time"),
 	}
 }

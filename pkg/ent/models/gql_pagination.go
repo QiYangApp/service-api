@@ -12,6 +12,7 @@ import (
 	"ent/models/router"
 	"ent/models/source"
 	"ent/models/sourcedata"
+	"ent/models/twofactor"
 	"ent/models/user"
 	"ent/models/userauthsource"
 	"ent/models/userrelatedrole"
@@ -29,6 +30,7 @@ import (
 	"ent/models/wakatimeprojectduration"
 	"ent/models/wakatimeprojectinfo"
 	"ent/models/wakatimesystem"
+	"ent/models/webauthncredential"
 	"errors"
 
 	"entgo.io/contrib/entgql"
@@ -2084,6 +2086,252 @@ func (sd *SourceData) ToEdge(order *SourceDataOrder) *SourceDataEdge {
 	return &SourceDataEdge{
 		Node:   sd,
 		Cursor: order.Field.toCursor(sd),
+	}
+}
+
+// TwoFactorEdge is the edge representation of TwoFactor.
+type TwoFactorEdge struct {
+	Node   *TwoFactor `json:"node"`
+	Cursor Cursor     `json:"cursor"`
+}
+
+// TwoFactorConnection is the connection containing edges to TwoFactor.
+type TwoFactorConnection struct {
+	Edges      []*TwoFactorEdge `json:"edges"`
+	PageInfo   PageInfo         `json:"pageInfo"`
+	TotalCount int              `json:"totalCount"`
+}
+
+func (c *TwoFactorConnection) build(nodes []*TwoFactor, pager *twofactorPager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
+	if first != nil && *first+1 == len(nodes) {
+		c.PageInfo.HasNextPage = true
+		nodes = nodes[:len(nodes)-1]
+	} else if last != nil && *last+1 == len(nodes) {
+		c.PageInfo.HasPreviousPage = true
+		nodes = nodes[:len(nodes)-1]
+	}
+	var nodeAt func(int) *TwoFactor
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *TwoFactor {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *TwoFactor {
+			return nodes[i]
+		}
+	}
+	c.Edges = make([]*TwoFactorEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		c.Edges[i] = &TwoFactorEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+	if l := len(c.Edges); l > 0 {
+		c.PageInfo.StartCursor = &c.Edges[0].Cursor
+		c.PageInfo.EndCursor = &c.Edges[l-1].Cursor
+	}
+	if c.TotalCount == 0 {
+		c.TotalCount = len(nodes)
+	}
+}
+
+// TwoFactorPaginateOption enables pagination customization.
+type TwoFactorPaginateOption func(*twofactorPager) error
+
+// WithTwoFactorOrder configures pagination ordering.
+func WithTwoFactorOrder(order *TwoFactorOrder) TwoFactorPaginateOption {
+	if order == nil {
+		order = DefaultTwoFactorOrder
+	}
+	o := *order
+	return func(pager *twofactorPager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultTwoFactorOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithTwoFactorFilter configures pagination filter.
+func WithTwoFactorFilter(filter func(*TwoFactorQuery) (*TwoFactorQuery, error)) TwoFactorPaginateOption {
+	return func(pager *twofactorPager) error {
+		if filter == nil {
+			return errors.New("TwoFactorQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type twofactorPager struct {
+	reverse bool
+	order   *TwoFactorOrder
+	filter  func(*TwoFactorQuery) (*TwoFactorQuery, error)
+}
+
+func newTwoFactorPager(opts []TwoFactorPaginateOption, reverse bool) (*twofactorPager, error) {
+	pager := &twofactorPager{reverse: reverse}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultTwoFactorOrder
+	}
+	return pager, nil
+}
+
+func (p *twofactorPager) applyFilter(query *TwoFactorQuery) (*TwoFactorQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *twofactorPager) toCursor(tf *TwoFactor) Cursor {
+	return p.order.Field.toCursor(tf)
+}
+
+func (p *twofactorPager) applyCursors(query *TwoFactorQuery, after, before *Cursor) (*TwoFactorQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultTwoFactorOrder.Field.column, p.order.Field.column, direction) {
+		query = query.Where(predicate)
+	}
+	return query, nil
+}
+
+func (p *twofactorPager) applyOrder(query *TwoFactorQuery) *TwoFactorQuery {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
+	if p.order.Field != DefaultTwoFactorOrder.Field {
+		query = query.Order(DefaultTwoFactorOrder.Field.toTerm(direction.OrderTermOption()))
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
+	return query
+}
+
+func (p *twofactorPager) orderExpr(query *TwoFactorQuery) sql.Querier {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
+	return sql.ExprFunc(func(b *sql.Builder) {
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
+		if p.order.Field != DefaultTwoFactorOrder.Field {
+			b.Comma().Ident(DefaultTwoFactorOrder.Field.column).Pad().WriteString(string(direction))
+		}
+	})
+}
+
+// Paginate executes the query and returns a relay based cursor connection to TwoFactor.
+func (tf *TwoFactorQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...TwoFactorPaginateOption,
+) (*TwoFactorConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newTwoFactorPager(opts, last != nil)
+	if err != nil {
+		return nil, err
+	}
+	if tf, err = pager.applyFilter(tf); err != nil {
+		return nil, err
+	}
+	conn := &TwoFactorConnection{Edges: []*TwoFactorEdge{}}
+	ignoredEdges := !hasCollectedField(ctx, edgesField)
+	if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
+		hasPagination := after != nil || first != nil || before != nil || last != nil
+		if hasPagination || ignoredEdges {
+			if conn.TotalCount, err = tf.Clone().Count(ctx); err != nil {
+				return nil, err
+			}
+			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
+			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
+		}
+	}
+	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
+		return conn, nil
+	}
+	if tf, err = pager.applyCursors(tf, after, before); err != nil {
+		return nil, err
+	}
+	if limit := paginateLimit(first, last); limit != 0 {
+		tf.Limit(limit)
+	}
+	if field := collectedField(ctx, edgesField, nodeField); field != nil {
+		if err := tf.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
+			return nil, err
+		}
+	}
+	tf = pager.applyOrder(tf)
+	nodes, err := tf.All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	conn.build(nodes, pager, after, first, before, last)
+	return conn, nil
+}
+
+// TwoFactorOrderField defines the ordering field of TwoFactor.
+type TwoFactorOrderField struct {
+	// Value extracts the ordering value from the given TwoFactor.
+	Value    func(*TwoFactor) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) twofactor.OrderOption
+	toCursor func(*TwoFactor) Cursor
+}
+
+// TwoFactorOrder defines the ordering of TwoFactor.
+type TwoFactorOrder struct {
+	Direction OrderDirection       `json:"direction"`
+	Field     *TwoFactorOrderField `json:"field"`
+}
+
+// DefaultTwoFactorOrder is the default ordering of TwoFactor.
+var DefaultTwoFactorOrder = &TwoFactorOrder{
+	Direction: entgql.OrderDirectionAsc,
+	Field: &TwoFactorOrderField{
+		Value: func(tf *TwoFactor) (ent.Value, error) {
+			return tf.ID, nil
+		},
+		column: twofactor.FieldID,
+		toTerm: twofactor.ByID,
+		toCursor: func(tf *TwoFactor) Cursor {
+			return Cursor{ID: tf.ID}
+		},
+	},
+}
+
+// ToEdge converts TwoFactor into TwoFactorEdge.
+func (tf *TwoFactor) ToEdge(order *TwoFactorOrder) *TwoFactorEdge {
+	if order == nil {
+		order = DefaultTwoFactorOrder
+	}
+	return &TwoFactorEdge{
+		Node:   tf,
+		Cursor: order.Field.toCursor(tf),
 	}
 }
 
@@ -6266,5 +6514,251 @@ func (ws *WakatimeSystem) ToEdge(order *WakatimeSystemOrder) *WakatimeSystemEdge
 	return &WakatimeSystemEdge{
 		Node:   ws,
 		Cursor: order.Field.toCursor(ws),
+	}
+}
+
+// WebAuthnCredentialEdge is the edge representation of WebAuthnCredential.
+type WebAuthnCredentialEdge struct {
+	Node   *WebAuthnCredential `json:"node"`
+	Cursor Cursor              `json:"cursor"`
+}
+
+// WebAuthnCredentialConnection is the connection containing edges to WebAuthnCredential.
+type WebAuthnCredentialConnection struct {
+	Edges      []*WebAuthnCredentialEdge `json:"edges"`
+	PageInfo   PageInfo                  `json:"pageInfo"`
+	TotalCount int                       `json:"totalCount"`
+}
+
+func (c *WebAuthnCredentialConnection) build(nodes []*WebAuthnCredential, pager *webauthncredentialPager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
+	if first != nil && *first+1 == len(nodes) {
+		c.PageInfo.HasNextPage = true
+		nodes = nodes[:len(nodes)-1]
+	} else if last != nil && *last+1 == len(nodes) {
+		c.PageInfo.HasPreviousPage = true
+		nodes = nodes[:len(nodes)-1]
+	}
+	var nodeAt func(int) *WebAuthnCredential
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *WebAuthnCredential {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *WebAuthnCredential {
+			return nodes[i]
+		}
+	}
+	c.Edges = make([]*WebAuthnCredentialEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		c.Edges[i] = &WebAuthnCredentialEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+	if l := len(c.Edges); l > 0 {
+		c.PageInfo.StartCursor = &c.Edges[0].Cursor
+		c.PageInfo.EndCursor = &c.Edges[l-1].Cursor
+	}
+	if c.TotalCount == 0 {
+		c.TotalCount = len(nodes)
+	}
+}
+
+// WebAuthnCredentialPaginateOption enables pagination customization.
+type WebAuthnCredentialPaginateOption func(*webauthncredentialPager) error
+
+// WithWebAuthnCredentialOrder configures pagination ordering.
+func WithWebAuthnCredentialOrder(order *WebAuthnCredentialOrder) WebAuthnCredentialPaginateOption {
+	if order == nil {
+		order = DefaultWebAuthnCredentialOrder
+	}
+	o := *order
+	return func(pager *webauthncredentialPager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultWebAuthnCredentialOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithWebAuthnCredentialFilter configures pagination filter.
+func WithWebAuthnCredentialFilter(filter func(*WebAuthnCredentialQuery) (*WebAuthnCredentialQuery, error)) WebAuthnCredentialPaginateOption {
+	return func(pager *webauthncredentialPager) error {
+		if filter == nil {
+			return errors.New("WebAuthnCredentialQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type webauthncredentialPager struct {
+	reverse bool
+	order   *WebAuthnCredentialOrder
+	filter  func(*WebAuthnCredentialQuery) (*WebAuthnCredentialQuery, error)
+}
+
+func newWebAuthnCredentialPager(opts []WebAuthnCredentialPaginateOption, reverse bool) (*webauthncredentialPager, error) {
+	pager := &webauthncredentialPager{reverse: reverse}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultWebAuthnCredentialOrder
+	}
+	return pager, nil
+}
+
+func (p *webauthncredentialPager) applyFilter(query *WebAuthnCredentialQuery) (*WebAuthnCredentialQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *webauthncredentialPager) toCursor(wac *WebAuthnCredential) Cursor {
+	return p.order.Field.toCursor(wac)
+}
+
+func (p *webauthncredentialPager) applyCursors(query *WebAuthnCredentialQuery, after, before *Cursor) (*WebAuthnCredentialQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultWebAuthnCredentialOrder.Field.column, p.order.Field.column, direction) {
+		query = query.Where(predicate)
+	}
+	return query, nil
+}
+
+func (p *webauthncredentialPager) applyOrder(query *WebAuthnCredentialQuery) *WebAuthnCredentialQuery {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
+	if p.order.Field != DefaultWebAuthnCredentialOrder.Field {
+		query = query.Order(DefaultWebAuthnCredentialOrder.Field.toTerm(direction.OrderTermOption()))
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
+	return query
+}
+
+func (p *webauthncredentialPager) orderExpr(query *WebAuthnCredentialQuery) sql.Querier {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
+	return sql.ExprFunc(func(b *sql.Builder) {
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
+		if p.order.Field != DefaultWebAuthnCredentialOrder.Field {
+			b.Comma().Ident(DefaultWebAuthnCredentialOrder.Field.column).Pad().WriteString(string(direction))
+		}
+	})
+}
+
+// Paginate executes the query and returns a relay based cursor connection to WebAuthnCredential.
+func (wac *WebAuthnCredentialQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...WebAuthnCredentialPaginateOption,
+) (*WebAuthnCredentialConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newWebAuthnCredentialPager(opts, last != nil)
+	if err != nil {
+		return nil, err
+	}
+	if wac, err = pager.applyFilter(wac); err != nil {
+		return nil, err
+	}
+	conn := &WebAuthnCredentialConnection{Edges: []*WebAuthnCredentialEdge{}}
+	ignoredEdges := !hasCollectedField(ctx, edgesField)
+	if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
+		hasPagination := after != nil || first != nil || before != nil || last != nil
+		if hasPagination || ignoredEdges {
+			if conn.TotalCount, err = wac.Clone().Count(ctx); err != nil {
+				return nil, err
+			}
+			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
+			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
+		}
+	}
+	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
+		return conn, nil
+	}
+	if wac, err = pager.applyCursors(wac, after, before); err != nil {
+		return nil, err
+	}
+	if limit := paginateLimit(first, last); limit != 0 {
+		wac.Limit(limit)
+	}
+	if field := collectedField(ctx, edgesField, nodeField); field != nil {
+		if err := wac.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
+			return nil, err
+		}
+	}
+	wac = pager.applyOrder(wac)
+	nodes, err := wac.All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	conn.build(nodes, pager, after, first, before, last)
+	return conn, nil
+}
+
+// WebAuthnCredentialOrderField defines the ordering field of WebAuthnCredential.
+type WebAuthnCredentialOrderField struct {
+	// Value extracts the ordering value from the given WebAuthnCredential.
+	Value    func(*WebAuthnCredential) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) webauthncredential.OrderOption
+	toCursor func(*WebAuthnCredential) Cursor
+}
+
+// WebAuthnCredentialOrder defines the ordering of WebAuthnCredential.
+type WebAuthnCredentialOrder struct {
+	Direction OrderDirection                `json:"direction"`
+	Field     *WebAuthnCredentialOrderField `json:"field"`
+}
+
+// DefaultWebAuthnCredentialOrder is the default ordering of WebAuthnCredential.
+var DefaultWebAuthnCredentialOrder = &WebAuthnCredentialOrder{
+	Direction: entgql.OrderDirectionAsc,
+	Field: &WebAuthnCredentialOrderField{
+		Value: func(wac *WebAuthnCredential) (ent.Value, error) {
+			return wac.ID, nil
+		},
+		column: webauthncredential.FieldID,
+		toTerm: webauthncredential.ByID,
+		toCursor: func(wac *WebAuthnCredential) Cursor {
+			return Cursor{ID: wac.ID}
+		},
+	},
+}
+
+// ToEdge converts WebAuthnCredential into WebAuthnCredentialEdge.
+func (wac *WebAuthnCredential) ToEdge(order *WebAuthnCredentialOrder) *WebAuthnCredentialEdge {
+	if order == nil {
+		order = DefaultWebAuthnCredentialOrder
+	}
+	return &WebAuthnCredentialEdge{
+		Node:   wac,
+		Cursor: order.Field.toCursor(wac),
 	}
 }
