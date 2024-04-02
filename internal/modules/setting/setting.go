@@ -23,6 +23,7 @@ func loadCommonSettingsFrom(cfg *viper.Viper) error {
 	loadCaptchaSetting(cfg.Sub("captcha"))
 	loadSecret(cfg.Sub("security"))
 	loadTimeFrom(cfg)
+	loadAuthSetting(cfg.Sub("auth"))
 
 	return nil
 }

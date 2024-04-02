@@ -9,3 +9,13 @@ type SignInForm struct {
 	Passwd   string `form:"passwd" json:"passwd" binding:"max=255"`
 	Remember bool   `form:"remember" json:"remember"`
 }
+
+type SignIn2FAJump struct {
+	WEBAUTHN  bool `json:"WEBAUTHN"`
+	TwoFactor bool `json:"TWO_FACTOR"`
+}
+
+type SignInVerifyError struct {
+	ProhibitLogin     bool `json:"prohibitLogin,omitempty"`
+	ActiveYourAccount bool `json:"activeYourAccount,omitempty"`
+}

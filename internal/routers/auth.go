@@ -14,4 +14,8 @@ func (*AuthRouter) Handle(r *gin.RouterGroup) {
 	r.GET("/v1/auth/signIn", router.Bind(auth.SignIn))
 	// 登录
 	r.GET("/v1/auth/signInPost", router.Bind(auth.SignInPost))
+
+	// 双重校验
+	r.GET("/v1/auth/2fa", router.Bind(auth.SignIn))
+	r.GET("/v1/auth/2faPost", router.Bind(auth.SignIn))
 }

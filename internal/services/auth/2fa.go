@@ -2,7 +2,11 @@ package auth
 
 import (
 	"ent/models"
+	"errors"
+	"framework/cache"
+	"framework/utils/secret"
 	"github.com/gin-gonic/gin"
+	"service-api/internal/modules/setting"
 	"service-api/internal/repo/auth"
 )
 
@@ -24,11 +28,21 @@ func HasUser2FA(ctx *gin.Context, u *models.User) (bool, error) {
 	return hasTOTPtwofa && hasWebAuthnTwofa, nil
 }
 
-func HasUserWebAuthn(ctx *gin.Context, userId int64) bool {
-	hasWebAuthnTwofa, err := auth.HasWebAuthnRegistrationsByUID(ctx, userId)
-	if err != nil {
-		return false
+func HasUserTwoFactor(ctx *gin.Context, userId int64) (bool, error) {
+	return auth.HasTwoFactorByUID(ctx, userId)
+}
+
+func HasUserWebAuthn(ctx *gin.Context, userId int64) (bool, error) {
+	return auth.HasWebAuthnRegistrationsByUID(ctx, userId)
+}
+
+func gen2FATmpToken(u *models.User) (string, error) {
+	token := secret.Sha3Sum512Md5(u.String(), u.PasswdSalt)
+
+	if !cache.SetEx(token, u, setting.AuthSetting.TwoFA.Expires) {
+		return "", errors.New("SIGN_IN.2FA_GEN_FAIL")
 	}
 
-	return hasWebAuthnTwofa
+	return token, nil
+
 }

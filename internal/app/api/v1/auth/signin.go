@@ -12,6 +12,7 @@ import (
 	"framework/log"
 	"framework/response"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	"service-api/internal/app/api/validator"
 	"service-api/internal/app/api/validator/auth"
@@ -54,22 +55,16 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 		} else if usertype.IsErrUserProhibitLogin(err) {
 			log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
-			response.RJump(ctx, map[string]any{
-				"PROHIBIT_LOGIN": true,
-			}, "FORM.PROHIBIT_LOGIN")
+			response.RJump(ctx, auth.SignInVerifyError{ProhibitLogin: true}, "SIGN_IN.PROHIBIT_LOGIN")
 		} else if usertype.IsErrUserInactive(err) {
 			if setting.ServiceSetting.RegisterConfirm {
 				log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
-				response.RSuccessWithMsg(ctx, map[string]any{
-					"ACTIVE_YOUR_ACCOUNT": true,
-				}, "FORM.PROHIBIT_LOGIN")
+				response.RSuccessWithMsg(ctx, auth.SignInVerifyError{ActiveYourAccount: true}, "SIGN_IN.ACTIVE_YOUR_ACCOUNT")
 			} else {
 				log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
-				response.RJump(ctx, map[string]any{
-					"PROHIBIT_LOGIN": true,
-				}, "FORM.PROHIBIT_LOGIN")
+				response.RJump(ctx, auth.SignInVerifyError{ProhibitLogin: true}, "SIGN_IN.PROHIBIT_LOGIN")
 			}
 		} else {
 			log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
@@ -86,28 +81,46 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 	}
 
 	// No two factor auth configured we can sign in the user
-	skip2FA, err := authserver.HasUser2FA(ctx, u)
+	hasWebAuthnTwofa, err := authserver.HasUserWebAuthn(ctx, u.ID)
 	if err != nil {
-		response.RError(ctx, err, http.StatusBadRequest, nil)
+		log.Client.Sugar().Debug("signIn hasWebAuthnTwofa err", zap.Error(err))
+		response.RError(ctx, err, http.StatusInternalServerError, "")
 		return
 	}
 
-	if !skip2FA {
+	hasTOTPtwofa, err := authserver.HasUserTwoFactor(ctx, u.ID)
+	if err != nil {
+		log.Client.Sugar().Debug("signIn hasTOTPtwofa err", zap.Error(err))
+		response.RError(ctx, err, http.StatusInternalServerError, "")
+		return
+	}
+
+	if !hasWebAuthnTwofa && !hasTOTPtwofa {
+		log.Client.Sugar().Debug("signIn ing, ", form.UserName)
+		// No two factor auth configured we can sign in the user
 		handleSignIn(ctx, u, form.Remember)
 		return
 	}
 
-	if webAuthn := authserver.HasUserWebAuthn(ctx, u.ID); webAuthn {
-		response.RJump(ctx, map[string]any{
-			"WEBAUTHN": true,
-		}, "FORM.WEBAUTHN")
+	if hasWebAuthnTwofa {
+		response.RJump(
+			ctx,
+			auth.SignIn2FAJump{
+				WEBAUTHN: true,
+			},
+			"SIGN_IN.WEBAUTHN",
+		)
 		return
-
 	}
 
-	response.RJump(ctx, map[string]any{
-		"TWO_FACTOR": true,
-	}, "FORM.TWO_FACTOR")
+	response.RJump(
+		ctx,
+		auth.SignIn2FAJump{
+			TwoFactor: true,
+		},
+		"SIGN_IN.TWO_FACTOR",
+	)
+	return
 }
 
 func handleSignIn(ctx *gin.Context, u *models.User, remember bool) {
