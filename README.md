@@ -47,3 +47,9 @@ air
 
 [ ] framework global config 
 
+
+## doc
+
+* authorize and session
+  * https://casbin.org/zh/docs/tutorials
+  * https://tienbm90.medium.com/authentication-and-authorization-in-gin-application-with-jwt-and-casbin-a56bbbdec90b
