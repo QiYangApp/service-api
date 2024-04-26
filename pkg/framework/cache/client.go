@@ -85,6 +85,7 @@ func (c *Manage) Register(key string) (Drive, error) {
 	conn := config.Client.GetStringMap("conns." + key)
 	if len(conn) == 0 {
 		log.Client.Panic("cache database config conns empty")
+		return nil, errors.New("cache database config conns empty")
 	}
 
 	c.drives[key], err = c.Connect(key, conn["driver"].(string), conn)

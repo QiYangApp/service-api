@@ -11,30 +11,20 @@ import (
 )
 
 type Config struct {
-	Type  string                     `json:"type,omitempty"`
-	Conns map[string]ConfigConnsMany `json:"conns,omitempty"`
-}
-
-type ConfigConnsSingle struct {
-	Host     string `json:"host,omitempty"`
-	Port     int    `json:"port,omitempty"`
-	Username string `json:"username,omitempty"`
-	Password string `json:"password,omitempty"`
-}
-
-type ConfigConnsMany struct {
-	Database     string            `json:"database,omitempty"`
-	MaxOpenConns int               `json:"max_open_conns,omitempty"`
-	MaxIdleConns int               `json:"max_idle_conns,omitempty"`
-	Read         ConfigConnsSingle `json:"read"`
-	Write        ConfigConnsSingle `json:"write"`
+	Database     string `json:"database,omitempty"`
+	MaxOpenConns int    `json:"max_open_conns,omitempty"`
+	MaxIdleConns int    `json:"max_idle_conns,omitempty"`
+	Host         string `json:"host,omitempty"`
+	Port         int    `json:"port,omitempty"`
+	Username     string `json:"username,omitempty"`
+	Password     string `json:"password,omitempty"`
 }
 
 type Connect struct {
 }
 
-func (p *Connect) Open(t string, cfg ConfigConnsMany, singcfg ConfigConnsSingle) *entsql.Driver {
-	return entsql.OpenDB(p.dbType(t), p.Connect(t, cfg, singcfg))
+func (p *Connect) Open(t string, cfg Config) *entsql.Driver {
+	return entsql.OpenDB(p.dbType(t), p.Connect(t, cfg))
 }
 
 func (i *Connect) dbType(t string) string {
@@ -50,8 +40,8 @@ func (i *Connect) dbType(t string) string {
 	}
 }
 
-func (p *Connect) Connect(t string, cfg ConfigConnsMany, singcfg ConfigConnsSingle) *sql.DB {
-	db, err := sql.Open(t, p.parseUrl(cfg, singcfg))
+func (p *Connect) Connect(t string, cfg Config) *sql.DB {
+	db, err := sql.Open(t, p.parseUrl(cfg))
 	if err != nil {
 		log.Client.Sugar().Fatalf("connecting to the database failed %v", err)
 	}
@@ -68,12 +58,12 @@ func (p *Connect) Connect(t string, cfg ConfigConnsMany, singcfg ConfigConnsSing
 	return db
 }
 
-func (p Connect) parseUrl(cfg ConfigConnsMany, singcfg ConfigConnsSingle) string {
+func (p Connect) parseUrl(cfg Config) string {
 	return fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%d sslmode=disable",
-		singcfg.Username,
-		singcfg.Password,
+		cfg.Username,
+		cfg.Password,
 		cfg.Database,
-		singcfg.Host,
-		singcfg.Port,
+		cfg.Host,
+		cfg.Port,
 	)
 }

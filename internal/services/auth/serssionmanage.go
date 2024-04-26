@@ -2,27 +2,30 @@ package auth
 
 import (
 	"framework/cache"
+	"framework/utils/optional"
 )
 
-type SessionClient struct {
+type TokenStore struct {
 	Token string
 }
 
-func (s *SessionClient) client() cache.Drive {
-	return cache.Client.GetDefaultDrive()
+func (t *TokenStore) client() *cache.Operation[map[string]any] {
+	return cache.NewOperation[map[string]any](cache.Client.GetDefaultDrive())
 }
 
-func (s *SessionClient) Set(key string, val any) error {
+func (t *TokenStore) context() optional.Option[map[string]any] {
+	var data
+	if data, err := t.client().Get(t.Token); err != nil {
+		return optional.None[map[string]any]()
+	}
+
+	return
 }
 
-func (s *SessionClient) Get(key string, val any) error {
+func (t *TokenStore) Set(key, val any) error {
 
 }
 
-func (s *SessionClient) Del(key ...string) error {
-
-}
-
-func (s *SessionClient) Update(data map[string]any) error {
+func (t *TokenStore) Get(key any) any {
 
 }
