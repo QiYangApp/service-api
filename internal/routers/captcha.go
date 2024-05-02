@@ -1,7 +1,8 @@
 package routers
 
 import (
-	"framework/router"
+	"frame/modules/router"
+
 	"github.com/gin-gonic/gin"
 	"service-api/internal/app/api/v1/captcha"
 )

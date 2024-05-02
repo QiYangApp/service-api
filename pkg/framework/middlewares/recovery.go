@@ -2,11 +2,12 @@ package middlewares
 
 import (
 	"fmt"
+	"frame/modules/log"
 	"framework/config"
-	"framework/log"
 	"framework/response"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Recovery() gin.HandlerFunc {

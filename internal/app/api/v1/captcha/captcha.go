@@ -1,14 +1,15 @@
 package captcha
 
 import (
-	"framework/log"
-	"framework/response"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
+	"frame/modules/log"
+	"frame/modules/resp"
 	"net/http"
 	"service-api/internal/app/api/validator"
 	"service-api/internal/modules/setting"
 	"service-api/internal/services/captcha"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 // Index 获取验证码
@@ -22,13 +23,13 @@ import (
 // @Router /captcha/{type} [get]
 func Index(c *gin.Context, req *validator.CaptchaRequest) {
 
-	resp, err := captcha.Gen(setting.CaptchaFeature(req.Type), req.Token)
+	body, err := captcha.Gen(setting.CaptchaFeature(req.Type), req.Token)
 	if err != nil {
-		log.Client.Sugar().Info(zap.String("captcha gen err", err.Error()))
-		response.RError(c, err, http.StatusNotFound, nil)
+		log.Sugar().Info(zap.String("captcha gen err", err.Error()))
+		resp.Error(c, err, http.StatusNotFound, nil)
 		return
 	}
-	response.RSuccess(c, &validator.CaptchaResponse{Id: resp.GetKey(), Captcha: resp.GetBody(), Token: resp.GetToken()})
+	resp.Success(c, &validator.CaptchaResponse{Id: body.GetKey(), Captcha: body.GetBody(), Token: body.GetToken()})
 }
 
 // Verify 校验验证码
@@ -43,9 +44,9 @@ func Index(c *gin.Context, req *validator.CaptchaRequest) {
 func Verify(c *gin.Context, req *validator.CaptchaVerifyRequest) {
 	st, err := captcha.Verify(setting.CaptchaFeature(req.Type), req.Token, req.Id, req.Answer, false)
 	if err != nil {
-		log.Client.Sugar().Info(zap.String("captcha verify err", err.Error()))
-		response.RError(c, err, http.StatusNotFound, nil)
+		log.Sugar().Info(zap.String("captcha verify err", err.Error()))
+		resp.Error(c, err, http.StatusNotFound, nil)
 		return
 	}
-	response.RSuccess(c, st)
+	resp.Success(c, st)
 }

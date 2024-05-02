@@ -1,15 +1,16 @@
 package middlewares
 
 import (
+	"frame/modules/log"
 	"framework/config"
-	"framework/log"
 	"framework/response"
 	"framework/utils"
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"golang.org/x/time/rate"
-	"net/http"
-	"time"
 )
 
 func Limiter() gin.HandlerFunc {

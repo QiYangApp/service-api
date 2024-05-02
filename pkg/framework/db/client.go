@@ -1,9 +1,10 @@
 package db
 
 import (
-	entsql "entgo.io/ent/dialect/sql"
+	"frame/modules/log"
 	"framework/config"
-	"framework/log"
+
+	entsql "entgo.io/ent/dialect/sql"
 )
 
 type DB struct {

@@ -3,11 +3,12 @@ package auth
 import (
 	"ent/models"
 	"errors"
-	"framework/cache"
-	"framework/utils/secret"
-	"github.com/gin-gonic/gin"
+	"frame/modules/cache"
+	"frame/util/secret"
 	"service-api/internal/modules/setting"
 	"service-api/internal/repo/auth"
+
+	"github.com/gin-gonic/gin"
 )
 
 func HasUser2FA(ctx *gin.Context, u *models.User) (bool, error) {

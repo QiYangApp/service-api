@@ -1,9 +1,10 @@
 package routers
 
 import (
-	"framework/router"
-	"github.com/gin-gonic/gin"
+	"frame/modules/router"
 	"service-api/internal/app/api/v1/auth"
+
+	"github.com/gin-gonic/gin"
 )
 
 type AuthRouter struct {

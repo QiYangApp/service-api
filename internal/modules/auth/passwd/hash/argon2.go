@@ -5,7 +5,7 @@ package hash
 
 import (
 	"encoding/hex"
-	"framework/log"
+	"frame/modules/log"
 	"strings"
 
 	"golang.org/x/crypto/argon2"
@@ -56,7 +56,7 @@ func NewArgon2Hasher(config string) *Argon2Hasher {
 
 	vals := strings.SplitN(config, "$", 4)
 	if len(vals) != 4 {
-		log.Client.Sugar().Errorf("invalid argon2 hash spec %s", config)
+		log.Sugar().Errorf("invalid argon2 hash spec %s", config)
 		return nil
 	}
 

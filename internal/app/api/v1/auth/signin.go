@@ -9,21 +9,23 @@ import (
 	usertype "ent/types/user"
 	util "ent/utils"
 	"errors"
-	"framework/log"
-	"framework/response"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
+	"frame/modules/log"
+	"frame/modules/resp"
+
 	"net/http"
 	"service-api/internal/app/api/validator"
 	"service-api/internal/app/api/validator/auth"
 	"service-api/internal/modules/setting"
 	authserver "service-api/internal/services/auth"
 	"service-api/internal/services/captcha"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 // SignIn return SignIn page before data
-func SignIn(ctx *gin.Context, a validator.Test) {
-	response.RSuccess(ctx, map[string]any{
+func SignIn(ctx *gin.Context) {
+	resp.Success(ctx, map[string]any{
 		"captcha": setting.CheckCaptchaFeatureEnable(setting.CaptchaFeatureSignIn),
 	})
 }
@@ -32,12 +34,12 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 	if setting.CheckCaptchaFeatureEnable(setting.CaptchaFeatureSignIn) {
 		st, err := captcha.Verify(captchaVerify.Type, captchaVerify.Token, captchaVerify.Key, captchaVerify.Answer, false)
 		if err != nil {
-			response.RError(ctx, err, http.StatusBadRequest, nil)
+			resp.Error(ctx, err, http.StatusBadRequest, nil)
 			return
 		}
 
 		if st {
-			response.RError(ctx, captcha.CaptchaCheckFail, http.StatusBadRequest, nil)
+			resp.Error(ctx, captcha.CaptchaCheckFail, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -45,31 +47,31 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 	u, source, err := authserver.UserSignIn(ctx, form.UserName, form.Passwd)
 	if err != nil {
 		if errors.Is(err, util.ErrNotExist) || errors.Is(err, util.ErrInvalidArgument) {
-			log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
+			log.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
-			response.RFail(ctx, err.Error(), http.StatusBadRequest, "FORM.USERNAME_PASSWORD_INCORRECT")
+			resp.Fail(ctx, err.Error(), http.StatusBadRequest, "FORM.USERNAME_PASSWORD_INCORRECT")
 		} else if usertype.IsErrUserNotExist(err) {
-			log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
+			log.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
-			response.RFail(ctx, err.Error(), http.StatusBadRequest, "FORM.ACCOUNT_BEEN_USED")
+			resp.Fail(ctx, err.Error(), http.StatusBadRequest, "FORM.ACCOUNT_BEEN_USED")
 		} else if usertype.IsErrUserProhibitLogin(err) {
-			log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
+			log.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
-			response.RJump(ctx, auth.SignInVerifyError{ProhibitLogin: true}, "SIGN_IN.PROHIBIT_LOGIN")
+			resp.Jump(ctx, auth.SignInVerifyError{ProhibitLogin: true}, "SIGN_IN.PROHIBIT_LOGIN")
 		} else if usertype.IsErrUserInactive(err) {
 			if setting.ServiceSetting.RegisterConfirm {
-				log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
+				log.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
-				response.RSuccessWithMsg(ctx, auth.SignInVerifyError{ActiveYourAccount: true}, "SIGN_IN.ACTIVE_YOUR_ACCOUNT")
+				resp.SuccessWithMsg(ctx, auth.SignInVerifyError{ActiveYourAccount: true}, "SIGN_IN.ACTIVE_YOUR_ACCOUNT")
 			} else {
-				log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
+				log.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
-				response.RJump(ctx, auth.SignInVerifyError{ProhibitLogin: true}, "SIGN_IN.PROHIBIT_LOGIN")
+				resp.Jump(ctx, auth.SignInVerifyError{ProhibitLogin: true}, "SIGN_IN.PROHIBIT_LOGIN")
 			}
 		} else {
-			log.Client.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
+			log.Sugar().Info("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
-			response.RError(ctx, err, http.StatusInternalServerError, nil)
+			resp.Error(ctx, err, http.StatusInternalServerError, nil)
 		}
 		return
 	}
@@ -83,27 +85,27 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 	// No two factor auth configured we can sign in the user
 	hasWebAuthnTwofa, err := authserver.HasUserWebAuthn(ctx, u.ID)
 	if err != nil {
-		log.Client.Sugar().Debug("signIn hasWebAuthnTwofa err", zap.Error(err))
-		response.RError(ctx, err, http.StatusInternalServerError, "")
+		log.Sugar().Debug("signIn hasWebAuthnTwofa err", zap.Error(err))
+		resp.Error(ctx, err, http.StatusInternalServerError, "")
 		return
 	}
 
 	hasTOTPtwofa, err := authserver.HasUserTwoFactor(ctx, u.ID)
 	if err != nil {
-		log.Client.Sugar().Debug("signIn hasTOTPtwofa err", zap.Error(err))
-		response.RError(ctx, err, http.StatusInternalServerError, "")
+		log.Sugar().Debug("signIn hasTOTPtwofa err", zap.Error(err))
+		resp.Error(ctx, err, http.StatusInternalServerError, "")
 		return
 	}
 
 	if !hasWebAuthnTwofa && !hasTOTPtwofa {
-		log.Client.Sugar().Debug("signIn ing, ", form.UserName)
+		log.Sugar().Debug("signIn ing, ", form.UserName)
 		// No two factor auth configured we can sign in the user
 		handleSignIn(ctx, u, form.Remember)
 		return
 	}
 
 	if hasWebAuthnTwofa {
-		response.RJump(
+		resp.Jump(
 			ctx,
 			auth.SignIn2FAJump{
 				WEBAUTHN: true,
@@ -113,7 +115,7 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 		return
 	}
 
-	response.RJump(
+	resp.Jump(
 		ctx,
 		auth.SignIn2FAJump{
 			TwoFactor: true,
@@ -122,7 +124,6 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 	)
 	return
 }
-
 
 func handleSignIn(ctx *gin.Context, u *models.User, remember bool) {
 

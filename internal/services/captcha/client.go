@@ -1,7 +1,7 @@
 package captcha
 
 import (
-	"framework/utils/secret"
+	"frame/util/secret"
 	"service-api/internal/modules/captcha"
 	"service-api/internal/modules/setting"
 )

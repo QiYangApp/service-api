@@ -4,9 +4,10 @@
 package setting
 
 import (
-	"framework/log"
-	"github.com/spf13/viper"
+	"frame/modules/log"
 	"service-api/internal/modules/auth/passwd/hash"
+
+	"github.com/spf13/viper"
 )
 
 var SecretSetting = &struct {
@@ -18,7 +19,7 @@ var SecretSetting = &struct {
 
 func loadSecret(viper *viper.Viper) {
 	if err := viper.Unmarshal(SecretSetting); err != nil {
-		log.Client.Sugar().Warnf("load secret setting fail, err: %v", err)
+		log.Sugar().Warnf("load secret setting fail, err: %v", err)
 	}
 
 	loadSecretPasswdHashAlgo()
@@ -29,7 +30,7 @@ func loadSecretPasswdHashAlgo() {
 	var algorithm *hash.PasswordHashAlgorithm
 	SecretSetting.PasswdHashAlgo, algorithm = hash.SetDefaultPasswordHashAlgorithm(SecretSetting.PasswdHashAlgo)
 	if algorithm == nil {
-		log.Client.Sugar().Fatalf("The provided password hash algorithm was invalid: %s", SecretSetting.PasswdHashAlgo)
+		log.Sugar().Fatalf("The provided password hash algorithm was invalid: %s", SecretSetting.PasswdHashAlgo)
 	}
 
 }

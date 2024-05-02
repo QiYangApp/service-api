@@ -4,16 +4,17 @@
 package setting
 
 import (
-	"framework/log"
+	"frame/modules/log"
+
 	"github.com/spf13/viper"
 )
 
-var ServiceSetting = struct {
+var ServiceSetting = &struct {
 	RegisterConfirm bool `mapstructure:"register_confirm"`
 }{}
 
 func loadServiceSetting(viper *viper.Viper) {
 	if err := viper.Unmarshal(ServiceSetting); err != nil {
-		log.Client.Error("load service setting")
+		log.Sugar().Error("load service setting")
 	}
 }

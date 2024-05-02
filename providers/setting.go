@@ -2,9 +2,6 @@ package providers
 
 import "service-api/internal/modules/setting"
 
-type Setting struct {
-}
-
-func (*Setting) Register() {
+func SettingRegister() {
 	setting.LoadCommonSettings()
 }

@@ -4,9 +4,6 @@ import (
 	"service-api/internal/app/jobs"
 )
 
-type Cron struct {
-}
-
-func (*Cron) Register() {
+func CronRegister() {
 	jobs.Conf()
 }

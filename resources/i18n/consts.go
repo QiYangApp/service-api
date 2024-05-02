@@ -1,4 +1,4 @@
-package lang
+package i18n
 
 // StateSuccess 成功状态
 const StateSuccess = "STATE.SUCCESS"

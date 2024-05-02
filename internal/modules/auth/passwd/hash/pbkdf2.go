@@ -6,7 +6,8 @@ package hash
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"framework/log"
+	"frame/modules/log"
+
 	"strings"
 
 	"golang.org/x/crypto/pbkdf2"
@@ -51,7 +52,7 @@ func NewPBKDF2Hasher(config string) *PBKDF2Hasher {
 
 	vals := strings.SplitN(config, "$", 2)
 	if len(vals) != 2 {
-		log.Client.Sugar().Errorf("invalid pbkdf2 hash spec %s", config)
+		log.Sugar().Errorf("invalid pbkdf2 hash spec %s", config)
 		return nil
 	}
 

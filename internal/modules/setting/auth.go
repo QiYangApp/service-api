@@ -1,9 +1,10 @@
 package setting
 
 import (
-	"framework/log"
-	"github.com/spf13/viper"
+	"frame/modules/log"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 var AuthSetting = &struct {
@@ -13,9 +14,9 @@ var AuthSetting = &struct {
 }{}
 
 func loadAuthSetting(viper *viper.Viper) {
-	log.Client.Debug("start load auth setting")
+	log.Sugar().Debug("start load auth setting")
 	if err := viper.Unmarshal(AuthSetting); err != nil {
-		log.Client.Error("load auth setting")
+		log.Sugar().Error("load auth setting")
 	}
 
 	AuthSetting.TwoFA.Expires *= time.Minute

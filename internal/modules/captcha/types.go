@@ -1,6 +1,6 @@
 package captcha
 
-import "framework/utils/optional"
+import "frame/util/optional"
 
 type Type string
 

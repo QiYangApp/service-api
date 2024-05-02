@@ -9,7 +9,7 @@ import (
 	"ent/models"
 	authtype "ent/types/auth"
 	usertype "ent/types/user"
-	"framework/log"
+	"frame/modules/log"
 	"service-api/internal/repo"
 	authmodel "service-api/internal/repo/auth"
 	usermodel "service-api/internal/repo/user"
@@ -117,9 +117,9 @@ func UserSingInAllSource(ctx context.Context, username, passwd string) (*models.
 
 		err = usertype.ErrUserProhibitLogin{UserId: user.ID, Name: user.Name}
 		if usertype.IsErrUserNotExist(err) {
-			log.Client.Sugar().Debugf("Failed to login '%s' via '%s': %v", username, source.Name, err)
+			log.Sugar().Debugf("Failed to login '%s' via '%s': %v", username, source.Name, err)
 		} else {
-			log.Client.Sugar().Warnf("Failed to login '%s' via '%s': %v", username, source.Name, err)
+			log.Sugar().Warnf("Failed to login '%s' via '%s': %v", username, source.Name, err)
 		}
 	}
 

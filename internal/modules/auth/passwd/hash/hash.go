@@ -7,7 +7,7 @@ import (
 	"crypto/subtle"
 	"encoding/hex"
 	"fmt"
-	"framework/log"
+	"frame/modules/log"
 	"strings"
 	"sync/atomic"
 )
@@ -69,7 +69,7 @@ func (algorithm *PasswordHashAlgorithm) VerifyPassword(providedPassword, hashedP
 	// Compute the hash of the password.
 	providedPasswordHash, err := algorithm.Hash(providedPassword, salt)
 	if err != nil {
-		log.Client.Sugar().Errorf("passwordhash: %v.Hash(): %v", algorithm.Specification, err)
+		log.Sugar().Errorf("passwordhash: %v.Hash(): %v", algorithm.Specification, err)
 		return false
 	}
 

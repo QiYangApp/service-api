@@ -5,9 +5,10 @@ package setting
 
 import (
 	"ent/utils/timeutil"
-	"framework/log"
-	"github.com/spf13/viper"
+	"frame/modules/log"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 // DefaultUILocation is the location on the UI, so that we can display the time on UI.
@@ -20,9 +21,9 @@ func loadTimeFrom(cfg *viper.Viper) {
 		var err error
 		DefaultUILocation, err = time.LoadLocation(zone)
 		if err != nil {
-			log.Client.Sugar().Fatalf("Load time zone failed: %v", err)
+			log.Sugar().Fatalf("Load time zone failed: %v", err)
 		} else {
-			log.Client.Sugar().Infof("Default time zones is %v", zone)
+			log.Sugar().Infof("Default time zones is %v", zone)
 		}
 	}
 	if DefaultUILocation == nil {

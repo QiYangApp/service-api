@@ -7,18 +7,19 @@ package cmd
 import (
 	"context"
 	"errors"
+	"frame/modules/log"
 	"framework/config"
-	"framework/log"
 	"framework/middlewares"
 	"framework/providers"
-	"github.com/gin-gonic/gin"
-	"github.com/urfave/cli"
-	"go.uber.org/zap"
 	"net/http"
 	"os"
 	"os/signal"
 	"sync"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/urfave/cli"
+	"go.uber.org/zap"
 )
 
 var webSingleton *WebServer

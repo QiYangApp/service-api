@@ -1,15 +1,16 @@
 package base64Captcha
 
 import (
-	"framework/cache"
-	"framework/exceptions"
-	"framework/log"
-	captchaclient "github.com/mojocn/base64Captcha"
-	"go.uber.org/zap"
+	"errors"
+	"frame/modules/cache"
+	"frame/modules/log"
 	"service-api/internal/modules/captcha"
-	"service-api/resources/lang"
+	lang "service-api/resources/i18n"
 	"sync"
 	"time"
+
+	captchaclient "github.com/mojocn/base64Captcha"
+	"go.uber.org/zap"
 )
 
 // https://github.com/mojocn/base64Captcha/blob/master/store_memory.go
@@ -45,12 +46,12 @@ func (c *Captcha) Generate(token string) (*captcha.Resp, error) {
 	cli := captchaclient.NewCaptcha(driver, c.CaptchaStore)
 	id, body, answer, err := cli.Generate()
 	if err != nil {
-		return nil, exceptions.New(lang.CaptchaErrorGenerateCode)
+		return nil, errors.New(lang.CaptchaErrorGenerateCode)
 	}
 
 	// 生成场景存储类型错误
 	if err := c.Store.Set(c.getCacheKey(id, token), answer); err != nil {
-		return nil, exceptions.New(lang.CaptchaErrorGenerateCode)
+		return nil, errors.New(lang.CaptchaErrorGenerateCode)
 	}
 
 	return &captcha.Resp{Token: token, Captcha: body, Key: id, Answer: answer, Type: captcha.Image}, nil
@@ -84,7 +85,7 @@ type Store struct {
 
 func (i *Store) Set(id string, value string) error {
 	if err := i.Store.Set(id, value); err != nil {
-		log.Client.Sugar().Warn("captcha cache store fail", zap.Error(err))
+		log.Sugar().Warn("captcha cache store fail", zap.Error(err))
 		return err
 	}
 

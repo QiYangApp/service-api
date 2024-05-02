@@ -5,7 +5,7 @@ package hash
 
 import (
 	"encoding/hex"
-	"framework/log"
+	"frame/modules/log"
 	"strings"
 
 	"golang.org/x/crypto/scrypt"
@@ -51,7 +51,7 @@ func NewScryptHasher(config string) *ScryptHasher {
 
 	vals := strings.SplitN(config, "$", 4)
 	if len(vals) != 4 {
-		log.Client.Sugar().Error("invalid scrypt hash spec %s", config)
+		log.Sugar().Error("invalid scrypt hash spec %s", config)
 		return nil
 	}
 	var err error

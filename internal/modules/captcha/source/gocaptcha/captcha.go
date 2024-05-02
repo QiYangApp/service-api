@@ -1,14 +1,16 @@
 package gocaptcha
 
 import (
+	"errors"
 	"fmt"
-	"framework/cache"
-	"framework/exceptions"
-	"framework/log"
-	captchaclient "github.com/wenlng/go-captcha/captcha"
+	"frame/modules/cache"
+	"frame/modules/log"
+
 	"service-api/internal/modules/captcha"
-	"service-api/resources/lang"
+	lang "service-api/resources/i18n"
 	"strconv"
+
+	captchaclient "github.com/wenlng/go-captcha/captcha"
 )
 
 type Opts struct {
@@ -37,7 +39,7 @@ func (c *Captcha) Generate(token string) (*captcha.Resp, error) {
 	cli.SetRangCheckTextLen(captchaclient.RangeVal{Max: c.opts.MaxLen, Min: c.opts.MinLen})
 
 	if err := cli.SetRangChars(c.opts.Chars); err != nil {
-		log.Client.Sugar().Warn("CAPTCHA SET RANGE CHARS ERR. ", err)
+		log.Sugar().Warn("CAPTCHA SET RANGE CHARS ERR. ", err)
 		return nil, err
 	}
 
@@ -47,7 +49,7 @@ func (c *Captcha) Generate(token string) (*captcha.Resp, error) {
 	}
 
 	if err := c.store.Set(c.getCacheKey(token, key), answer); err != nil {
-		return nil, exceptions.New(lang.CaptchaErrorGenerateCode)
+		return nil, errors.New(lang.CaptchaErrorGenerateCode)
 	}
 
 	return &captcha.Resp{

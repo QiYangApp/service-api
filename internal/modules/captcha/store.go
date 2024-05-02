@@ -1,10 +1,10 @@
 package captcha
 
 import (
-	"framework/cache"
-	"framework/exceptions"
-	"framework/utils/optional"
-	"service-api/resources/lang"
+	"errors"
+	"frame/modules/cache"
+	"frame/util/optional"
+	"service-api/resources/i18n"
 	"time"
 )
 
@@ -17,7 +17,7 @@ func (i *StoreValue[T]) Set(id string, value any) error {
 	id = i.getCacheKey(id)
 
 	if i.store.SetEx(id, value, i.exp) == false {
-		return exceptions.New(lang.CaptchaErrorStoreCode)
+		return errors.New(i18n.CaptchaErrorStoreCode)
 	}
 
 	return nil

@@ -1,10 +1,11 @@
 package routers
 
 import (
-	"framework/cmd"
-	"framework/router"
-	"github.com/gin-gonic/gin"
+	"frame/cmd"
+	"frame/modules/router"
 	"service-api/internal/app/api/middlewares"
+
+	"github.com/gin-gonic/gin"
 )
 
 var RouterGroup = []router.Router{

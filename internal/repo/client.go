@@ -4,14 +4,15 @@ import (
 	"context"
 	"ent/models"
 	"ent/models/migrate"
-	"entgo.io/ent/dialect/sql/schema"
-	"framework/db"
-	"framework/log"
-	"framework/utils"
+	"frame/modules/db"
+	"frame/modules/log"
+	"frame/util/path"
 	"os"
 	"path/filepath"
 	"service-api/internal/modules/setting"
 	"sync"
+
+	"entgo.io/ent/dialect/sql/schema"
 )
 
 var once = sync.Once{}
@@ -50,12 +51,12 @@ func NewClient(opts []models.Option) *models.Client {
 	)
 
 	if err != nil {
-		log.Client.Sugar().Panicf("failed creating schema resources: %v", err)
+		log.Sugar().Panicf("failed creating schema resources: %v", err)
 	}
 
-	err = write(utils.Path.Join(utils.Path.StoragePath, "migrate.sql"), client)
+	err = write(path.JoinPath(path.RunStoragePath, "migrate.sql"), client)
 	if err != nil {
-		log.Client.Sugar().Panicf("write sql file fail: %v", err)
+		log.Sugar().Panicf("write sql file fail: %v", err)
 	}
 
 	return client

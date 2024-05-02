@@ -1,10 +1,11 @@
 package cron
 
 import (
-	"framework/log"
-	"go.uber.org/zap"
+	"frame/modules/log"
 	"strings"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 type Logger struct {

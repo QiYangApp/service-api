@@ -1,11 +1,12 @@
 package validator
 
 import (
-	"framework/router"
+	"frame/modules/router"
+	"service-api/internal/modules/setting"
+	lang "service-api/resources/i18n"
+
 	"github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
-	"service-api/internal/modules/setting"
-	"service-api/resources/lang"
 )
 
 type CaptchaRequest struct {

@@ -1,10 +1,11 @@
 package providers
 
 import (
+	"frame/modules/log"
 	"framework/cache"
 	"framework/config"
 	"framework/cron"
-	"framework/log"
+
 	"go.uber.org/zap"
 )
 

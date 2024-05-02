@@ -1,7 +1,8 @@
 package setting
 
 import (
-	"framework/log"
+	"frame/modules/log"
+
 	"github.com/spf13/viper"
 )
 
@@ -22,6 +23,6 @@ var AppSetting = &struct {
 
 func loadApp(viper *viper.Viper) {
 	if err := viper.Unmarshal(AppSetting); err != nil {
-		log.Client.Sugar().Errorf("app config parser fail, ", err)
+		log.Sugar().Errorf("app config parser fail, ", err)
 	}
 }

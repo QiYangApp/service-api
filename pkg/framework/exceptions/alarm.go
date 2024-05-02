@@ -2,7 +2,7 @@ package exceptions
 
 import (
 	"encoding/json"
-	"framework/log"
+	"frame/modules/log"
 	"path/filepath"
 	"runtime"
 	"strings"

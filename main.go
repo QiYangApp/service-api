@@ -1,9 +1,9 @@
 package main
 
 import (
-	"framework"
-	"framework/cmd"
-	providers "service-api/internal/providers"
+	"frame"
+	"frame/cmd"
+	"service-api/providers"
 )
 
 // @title QiYang
@@ -26,14 +26,14 @@ import (
 //go:generate go run -mod=mod  github.com/swaggo/swag/cmd/swag init --output  ./resources/swag
 //go:generate go run -mod=mod entgo.io/ent/cmd/ent generate "./internal/ent/schema" --template "./internal/ent/schema/template/gen"
 func main() {
-	client := cmd.WebServerClient()
 
+	client := cmd.WebCli()
 	client.Providers = append(client.Providers,
-		&providers.Setting{},
-		&providers.Cron{},
-		&providers.Database{},
-		&providers.Router{},
+		providers.SettingRegister,
+		providers.CronRegister,
+		providers.DatabaseRegister,
+		providers.RouterRegister,
 	)
 
-	framework.NewApp()
+	frame.NewApp()
 }

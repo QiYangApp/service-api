@@ -2,12 +2,13 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
+	"frame/modules/log"
+	"time"
+
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
-	"fmt"
-	"framework/log"
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"time"
 )
 
 type Config struct {

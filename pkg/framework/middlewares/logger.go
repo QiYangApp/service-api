@@ -1,11 +1,12 @@
 package middlewares
 
 import (
+	"frame/modules/log"
 	"framework/config"
-	"framework/log"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"time"
 )
 
 func Logger() gin.HandlerFunc {
