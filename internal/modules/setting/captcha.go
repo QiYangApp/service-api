@@ -62,7 +62,7 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 	case captcha.Image:
 		var opts base64Captcha.Opts
 		if err := mapstructure.Decode(setting, &opts); err != nil {
-			log.Sugar().Errorf("captcha config init fail, err: %v", err)
+			log.Sugar().Errorf("captcha config init faiinternal/services/auth/serssionmanage.gol, err: %v", err)
 			return nil, err
 		}
 

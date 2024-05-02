@@ -27,7 +27,7 @@ func Init() {
 
 		Client = New(
 			[]models.Option{
-				models.Driver(&db.MultiDriver{R: conns.Read(), W: conns.Write()}),
+				models.Driver(&db.MultiDriver{R: conns.Conn(), W: conns.Conn()}),
 			},
 			setting.AppSetting.Debug,
 		).Debug()

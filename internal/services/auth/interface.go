@@ -28,7 +28,20 @@ func (ds ContextData) MergeFrom(other ContextData) ContextData {
 }
 
 // SessionStore represents a session store
-type SessionStore any
+type SessionStore interface {
+	// Set sets value to given key in session.
+	Set(any, any) error
+	// Get gets value by given key in session.
+	Get(any) any
+	// Delete deletes a key from session.
+	Delete() error
+	// ID returns current session ID.
+	ID() string
+	// Release releases session resource and save data to provider.
+	Release() error
+	// Flush deletes all session data.
+	Flush() error
+}
 
 // Method represents an authentication method (plugin) for HTTP requests.
 type Method interface {

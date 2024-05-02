@@ -8,7 +8,7 @@ import (
 )
 
 type DB struct {
-	Cfg    ConfigConnsMany
+	Cfg    Config
 	Driver string
 }
 
@@ -18,7 +18,7 @@ func (i *DB) Init() {
 		log.Client.Panic("database config type error, name: " + driver)
 	}
 
-	var cfg ConfigConnsMany
+	var cfg Config
 	if err := config.Client.Sub("conns." + driver).Unmarshal(&cfg); err != nil {
 		log.Client.Sugar().Panicf("database config read fail, name: %s, err: %v", driver, err)
 	}
@@ -27,10 +27,6 @@ func (i *DB) Init() {
 	i.Cfg = cfg
 }
 
-func (i *DB) Read() *entsql.Driver {
-	return new(Connect).Open(i.Driver, i.Cfg, i.Cfg.Read)
-}
-
-func (i *DB) Write() *entsql.Driver {
-	return new(Connect).Open(i.Driver, i.Cfg, i.Cfg.Write)
+func (i *DB) Conn() *entsql.Driver {
+	return new(Connect).Open(i.Driver, i.Cfg)
 }
