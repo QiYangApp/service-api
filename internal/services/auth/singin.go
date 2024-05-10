@@ -49,12 +49,12 @@ func UserSignIn(ctx context.Context, username, passwd string) (*models.User, *mo
 		return nil, nil, authtype.ErrAuthSourceNotActivated
 	}
 
-	if user, err = repo.Client.User.Get(ctx, account.UserID); err != nil {
+	if user, err = repo.Client().User.Get(ctx, account.UserID); err != nil {
 		return nil, nil, err
 	}
 
 	if user != nil {
-		if sourceType, err = repo.Client.Source.Get(ctx, user.LoginSource); err != nil {
+		if sourceType, err = repo.Client().Source.Get(ctx, user.LoginSource); err != nil {
 			return nil, nil, err
 		}
 

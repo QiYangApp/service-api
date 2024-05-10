@@ -8,5 +8,5 @@ import (
 )
 
 func GetAllSourceByIsActive(ctx context.Context, isActive bool) ([]*models.Source, error) {
-	return repo.Client.Source.Query().Where(sourcefield.IsActiveEQ(isActive)).All(ctx)
+	return repo.Client().Source.Query().Where(sourcefield.IsActiveEQ(isActive)).All(ctx)
 }

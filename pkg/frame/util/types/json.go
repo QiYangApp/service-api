@@ -98,23 +98,23 @@ func (j JSONiter) Indent(dst *bytes.Buffer, src []byte, prefix, indent string) e
 	return json.Indent(dst, src, prefix, indent)
 }
 
-// Marshal converts object as bytes
-func Marshal(v any) ([]byte, error) {
+// MarshalJson converts object as bytes
+func MarshalJson(v any) ([]byte, error) {
 	return DefaultJSONHandler.Marshal(v)
 }
 
-// Unmarshal decodes object from bytes
-func Unmarshal(data []byte, v any) error {
+// UnmarshalJson decodes object from bytes
+func UnmarshalJson(data []byte, v any) error {
 	return DefaultJSONHandler.Unmarshal(data, v)
 }
 
-// NewEncoder creates an encoder to write objects to writer
-func NewEncoder(writer io.Writer) Encoder {
+// NewEncoderJson creates an encoder to write objects to writer
+func NewEncoderJson(writer io.Writer) Encoder {
 	return DefaultJSONHandler.NewEncoder(writer)
 }
 
-// NewDecoder creates a decoder to read objects from reader
-func NewDecoder(reader io.Reader) Decoder {
+// NewDecoderJson creates a decoder to read objects from reader
+func NewDecoderJson(reader io.Reader) Decoder {
 	return DefaultJSONHandler.NewDecoder(reader)
 }
 
@@ -125,7 +125,7 @@ func Indent(dst *bytes.Buffer, src []byte, prefix, indent string) error {
 
 // MarshalIndent copied from encoding/json
 func MarshalIndent(v any, prefix, indent string) ([]byte, error) {
-	b, err := Marshal(v)
+	b, err := MarshalJson(v)
 	if err != nil {
 		return nil, err
 	}
@@ -137,8 +137,8 @@ func MarshalIndent(v any, prefix, indent string) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// Valid proxy to json.Valid
-func Valid(data []byte) bool {
+// ValidJson proxy to json.Valid
+func ValidJson(data []byte) bool {
 	return json.Valid(data)
 }
 

@@ -12,6 +12,7 @@ var RouterGroup = []router.Router{
 	&SwaggerRouter{},
 	&CaptchaRouter{},
 	&AuthRouter{},
+	&TestRouter{},
 }
 
 func Register(app *cmd.WebServer) {

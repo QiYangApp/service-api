@@ -31,7 +31,6 @@ func main() {
 	client.Providers = append(client.Providers,
 		providers.SettingRegister,
 		providers.CronRegister,
-		providers.DatabaseRegister,
 		providers.RouterRegister,
 	)
 

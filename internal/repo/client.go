@@ -17,21 +17,23 @@ import (
 
 var once = sync.Once{}
 
-var Client *models.Client = nil
+var client *models.Client = nil
 
-func Init() {
+func Client() *models.Client {
 	once.Do(func() {
 		conns := db.DB{}
 
 		conns.Init()
 
-		Client = New(
+		client = New(
 			[]models.Option{
-				models.Driver(&db.MultiDriver{R: conns.Conn(), W: conns.Conn()}),
+				models.Driver(&db.MultiDriver{R: conns.Read(), W: conns.Write()}),
 			},
 			setting.AppSetting.Debug,
 		).Debug()
 	})
+
+	return client
 }
 
 func New(opts []models.Option, debug bool) *models.Client {

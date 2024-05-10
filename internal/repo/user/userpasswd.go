@@ -47,7 +47,7 @@ func SetPassword(user *models.User, passwd string) (err error) {
 }
 
 func UpdatePassword(ctx context.Context, user *models.User) (*models.User, error) {
-	return repo.Client.User.
+	return repo.Client().User.
 		UpdateOneID(user.ID).
 		SetPasswd(user.Passwd).
 		SetPasswdSalt(user.PasswdSalt).

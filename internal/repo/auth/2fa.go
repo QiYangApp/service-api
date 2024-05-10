@@ -8,9 +8,9 @@ import (
 )
 
 func HasTwoFactorByUID(ctx *gin.Context, userId int64) (bool, error) {
-	return repo.Client.TwoFactor.Query().Where(twofactor.UserIDEQ(userId)).Exist(ctx)
+	return repo.Client().TwoFactor.Query().Where(twofactor.UserIDEQ(userId)).Exist(ctx)
 }
 
 func HasWebAuthnRegistrationsByUID(ctx *gin.Context, userId int64) (bool, error) {
-	return repo.Client.WebAuthnCredential.Query().Where(webauthncredential.UserIDEQ(userId)).Exist(ctx)
+	return repo.Client().WebAuthnCredential.Query().Where(webauthncredential.UserIDEQ(userId)).Exist(ctx)
 }

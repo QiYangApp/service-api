@@ -134,6 +134,7 @@ func WebCli() *WebServer {
 				middlewares.Recovery,
 				middlewares.I18nLocal,
 				middlewares.I18nUrl,
+				middlewares.Session,
 				middlewares.Limiter,
 				middlewares.Option,
 				middlewares.Secure,

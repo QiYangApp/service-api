@@ -8,5 +8,5 @@ import (
 )
 
 func GetSingleAccountByName(ctx context.Context, account string) (*models.Accounts, error) {
-	return repo.Client.Accounts.Query().Where(accounts.AccountEQ(account)).First(ctx)
+	return repo.Client().Accounts.Query().Where(accounts.AccountEQ(account)).First(ctx)
 }
