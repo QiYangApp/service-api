@@ -5,8 +5,8 @@ import (
 	"errors"
 	"frame/modules/cache"
 	"frame/util/secret"
+	"service-api/internal/app/repo/auth"
 	"service-api/internal/modules/setting"
-	"service-api/internal/repo/auth"
 
 	"github.com/gin-gonic/gin"
 )

@@ -16,11 +16,12 @@ import (
 type Opts struct {
 	Fonts   []string `mapstructure:"fonts"`
 	Chars   []string `mapstructure:"chars"`
+	Asset   []string `mapstructure:"asset"`
 	Width   int      `mapstructure:"width"`
 	Height  int      `mapstructure:"height"`
 	Quality int      `mapstructure:"quality"`
-	MinLen  int      `mapstructure:"minlen"`
-	MaxLen  int      `mapstructure:"maxlen"`
+	MinLen  int      `mapstructure:"min_len"`
+	MaxLen  int      `mapstructure:"max_len"`
 }
 
 type Captcha struct {

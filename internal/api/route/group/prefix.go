@@ -1,5 +1,5 @@
 package group
 
 const (
-	PrefixV1 = "/api/v1"
+	PrefixV1 = "/v1"
 )

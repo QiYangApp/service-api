@@ -22,10 +22,6 @@ func Client() *Manage {
 	return singleton
 }
 
-func Instance() *Manage {
-	return singleton
-}
-
 func SetEx(key string, val any, exp time.Duration) bool {
 	return NewOperation[any](Client().GetDefaultDrive()).SetEx(key, val, exp)
 }

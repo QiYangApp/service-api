@@ -4,7 +4,7 @@ import (
 	"context"
 	"ent/models"
 	accounts "ent/models/accounts"
-	"service-api/internal/repo"
+	"service-api/internal/app/repo"
 )
 
 func GetSingleAccountByName(ctx context.Context, account string) (*models.Accounts, error) {

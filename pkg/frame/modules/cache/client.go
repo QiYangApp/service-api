@@ -30,11 +30,7 @@ type Manage struct {
 }
 
 func (c *Manage) init() *Manage {
-
-	if c.drives == nil {
-		c.drives = map[string]Drive{}
-	}
-
+	c.drives = map[string]Drive{}
 	if len(c.drive) == 0 {
 		return c
 	}

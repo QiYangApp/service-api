@@ -77,7 +77,7 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 
 	// First of all if the source can skip local two fa we're done
 	if skipper, ok := source.Cfg.Value().(authserver.LocalTwoFASkipper); ok && skipper.IsSkipLocalTwoFA() {
-		handleSignIn(ctx, u, form.Remember)
+		authserver.SignInUserSession(ctx, u, form.Remember)
 		return
 	}
 
@@ -99,7 +99,7 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 	if !hasWebAuthnTwofa && !hasTOTPtwofa {
 		log.Sugar().Debug("signIn ing, ", form.UserName)
 		// No two factor auth configured we can sign in the user
-		handleSignIn(ctx, u, form.Remember)
+		authserver.SignInUserSession(ctx, u, form.Remember)
 		return
 	}
 

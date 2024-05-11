@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/hex"
 	"ent/models"
+	"service-api/internal/app/repo"
 	"service-api/internal/modules/auth/passwd/hash"
 	"service-api/internal/modules/setting"
 	"service-api/internal/modules/util"
-	"service-api/internal/repo"
 )
 
 func IsPasswdSet(user *models.User) bool {

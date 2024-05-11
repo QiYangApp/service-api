@@ -10,9 +10,9 @@ import (
 	authtype "ent/types/auth"
 	usertype "ent/types/user"
 	"frame/modules/log"
-	"service-api/internal/repo"
-	authmodel "service-api/internal/repo/auth"
-	usermodel "service-api/internal/repo/user"
+	"service-api/internal/app/repo"
+	authmodel "service-api/internal/app/repo/auth"
+	usermodel "service-api/internal/app/repo/user"
 	"strings"
 )
 

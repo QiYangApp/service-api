@@ -4,7 +4,7 @@ import (
 	"ent/models/twofactor"
 	"ent/models/webauthncredential"
 	"github.com/gin-gonic/gin"
-	"service-api/internal/repo"
+	"service-api/internal/app/repo"
 )
 
 func HasTwoFactorByUID(ctx *gin.Context, userId int64) (bool, error) {

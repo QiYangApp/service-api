@@ -45,7 +45,7 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 
 	var driver cache.Drive
 	var err error
-	if driver, err = cache.Instance().Register(CaptchaSetting.Store); err != nil {
+	if driver, err = cache.Client().Register(CaptchaSetting.Store); err != nil {
 		log.Sugar().Errorf("captcha store driver init fail, err: %v", err)
 	}
 

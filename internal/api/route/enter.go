@@ -3,8 +3,8 @@ package route
 import (
 	"frame/cmd"
 	"frame/modules/router"
-	"service-api/internal/api/routers/group"
-	"service-api/internal/api/routers/middlewares"
+	"service-api/internal/api/route/group"
+	"service-api/internal/api/route/middlewares"
 
 	"github.com/gin-gonic/gin"
 )

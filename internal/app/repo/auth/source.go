@@ -4,7 +4,7 @@ import (
 	"context"
 	"ent/models"
 	sourcefield "ent/models/source"
-	"service-api/internal/repo"
+	"service-api/internal/app/repo"
 )
 
 func GetAllSourceByIsActive(ctx context.Context, isActive bool) ([]*models.Source, error) {

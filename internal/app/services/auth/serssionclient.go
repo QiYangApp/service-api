@@ -56,14 +56,14 @@ func SaveUserSession(c *gin.Context, u *UserSession) error {
 }
 
 func SignInUserSession(ctx *gin.Context, u *models.User, remember bool) {
-	u := &UserSession{
-		Token:      "",
-		UserId:     0,
-		RoleId:     0,
-		IsSigned:   false,
-		IsTwoFa:    false,
-		IsRegister: false,
-		Language:   "",
-		Theme:      "",
-	}
+	//u := &UserSession{
+	//	Token:      "",
+	//	UserId:     0,
+	//	RoleId:     0,
+	//	IsSigned:   false,
+	//	IsTwoFa:    false,
+	//	IsRegister: false,
+	//	Language:   "",
+	//	Theme:      "",
+	//}
 }

@@ -1,7 +1,7 @@
 package providers
 
 import (
-	"service-api/internal/app/jobs"
+	"service-api/internal/jobs"
 )
 
 func CronRegister() {

@@ -18,7 +18,9 @@ database:
 cache:
   driver: "cache"
   expires: 60
-
+session:
+  key: "QiYang"
+  store: "session"
 conns:
   pgx:
     driver: pgx
@@ -61,6 +63,12 @@ conns:
     write_timeout: 10
     pool_size: 10
     pool_timeout: 30
+  session:
+    driver: "redis"
+    addr: "localhost:6379"
+    net: "tcp"
+    password: ""
+    database: 0
 
 captcha:
   enable: false

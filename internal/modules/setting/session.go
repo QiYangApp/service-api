@@ -12,19 +12,19 @@ import (
 )
 
 var SessionSetting = &struct {
+	Store string `mapstructure:"store"`
 	Key   string `mapstructure:"key"`
-	Store string `mapstructure:"Store"`
 }{}
 
 func loadSessionSetting(cfg *viper.Viper) {
-	if err := cfg.Unmarshal(ServiceSetting); err != nil {
+	if err := cfg.Unmarshal(SessionSetting); err != nil {
 		log.Sugar().Error("load service setting")
 	}
 }
 
 func NewSessionStorage() *session.Storage {
 	store, err := newSessionStore()
-	if err == nil {
+	if err != nil {
 		log.Sugar().Error("new session storage fail")
 		return nil
 	}
@@ -43,7 +43,7 @@ func newSessionStore() (sessions.Store, error) {
 		return nil, err
 	}
 
-	drive := conn.GetString("drive")
+	drive := conn.GetString("driver")
 	if drive == "" {
 		err := errors.New("session store drive not setting")
 		log.Sugar().Error(err)
