@@ -43,11 +43,6 @@ air
 3. start vscode docker server
 4. go run ./src/main.go
 
-## Bug
-
-[ ] framework global config 
-
-
 ## doc
 
 * authorize and session
