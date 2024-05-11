@@ -5,7 +5,6 @@
 package auth
 
 import (
-	"ent/models"
 	usertype "ent/types/user"
 	util "ent/utils"
 	"errors"
@@ -123,8 +122,4 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 		"SIGN_IN.TWO_FACTOR",
 	)
 	return
-}
-
-func handleSignIn(ctx *gin.Context, u *models.User, remember bool) {
-
 }
