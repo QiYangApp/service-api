@@ -4,9 +4,9 @@ import (
 	"frame/modules/log"
 	"frame/modules/resp"
 	"net/http"
-	"service-api/internal/app/api/validator"
+	"service-api/internal/app/services/captcha"
+	"service-api/internal/app/validator"
 	"service-api/internal/modules/setting"
-	"service-api/internal/services/captcha"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

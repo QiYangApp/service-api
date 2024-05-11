@@ -2,9 +2,9 @@ package providers
 
 import (
 	"frame/cmd"
-	"service-api/internal/routers"
+	"service-api/internal/api/route"
 )
 
 func RouterRegister() {
-	routers.Register(cmd.WebCli())
+	route.Register(cmd.WebCli())
 }

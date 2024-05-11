@@ -1,4 +1,4 @@
-package routers
+package group
 
 import (
 	"service-api/internal/modules/setting"

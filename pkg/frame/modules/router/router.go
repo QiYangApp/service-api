@@ -13,7 +13,7 @@ type Router interface {
 	Handle(r *gin.RouterGroup)
 }
 
-func Bind(fun any) gin.HandlerFunc {
+func bind(fun any) gin.HandlerFunc {
 
 	methodValueOf := reflect.ValueOf(fun)
 	methodType := methodValueOf.Type()

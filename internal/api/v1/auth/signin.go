@@ -12,11 +12,11 @@ import (
 	"frame/modules/resp"
 
 	"net/http"
-	"service-api/internal/app/api/validator"
-	"service-api/internal/app/api/validator/auth"
+	authserver "service-api/internal/app/services/auth"
+	"service-api/internal/app/services/captcha"
+	"service-api/internal/app/validator"
+	"service-api/internal/app/validator/auth"
 	"service-api/internal/modules/setting"
-	authserver "service-api/internal/services/auth"
-	"service-api/internal/services/captcha"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
