@@ -1,4 +1,4 @@
-package group
+package v1
 
 import (
 	"frame/modules/router"
@@ -11,6 +11,6 @@ type CaptchaRouter struct {
 }
 
 func (*CaptchaRouter) Handle(r *gin.RouterGroup) {
-	router.GetBind(r, PrefixV1+"/captcha/:type", captcha.Index)
-	router.PostBind(r, PrefixV1+"/captcha/:type", captcha.Verify)
+	router.GetBind(r, "v1/captcha/:type", captcha.Index)
+	router.PostBind(r, "v1/captcha/:type", captcha.Verify)
 }

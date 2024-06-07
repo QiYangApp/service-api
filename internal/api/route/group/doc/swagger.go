@@ -1,4 +1,4 @@
-package group
+package doc
 
 import (
 	"service-api/internal/modules/setting"
