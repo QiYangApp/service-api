@@ -13,9 +13,8 @@ type AuthRouter struct {
 func (*AuthRouter) Handle(r *gin.RouterGroup) {
 
 	// 获取前置数据
-	router.GetBind(r, "v1/signIn", auth.SignIn)
-
 	// 登录
+	router.GetBind(r, "v1/signIn", auth.SignIn)
 	router.PostBind(r, "v1/signIn", auth.SignInPost)
 
 	// 2fa

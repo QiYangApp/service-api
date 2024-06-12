@@ -133,7 +133,7 @@ func WebCli() *WebServer {
 			Middlewares: []middlewares.Middleware{
 				middlewares.Recovery,
 				middlewares.I18nLocal,
-				middlewares.I18nUrl,
+				//middlewares.I18nUrl,
 				middlewares.Limiter,
 				middlewares.Option,
 				middlewares.Secure,

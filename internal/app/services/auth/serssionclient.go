@@ -4,9 +4,12 @@ import (
 	"ent/models"
 	"errors"
 	"frame/modules/log"
+	"frame/modules/middlewares"
 	"frame/modules/session"
 	"frame/util/types"
 	"github.com/gin-gonic/gin"
+	usermodel "service-api/internal/app/repo/user"
+	"service-api/internal/modules/setting"
 )
 
 type UserSession struct {
@@ -55,15 +58,32 @@ func SaveUserSession(c *gin.Context, u *UserSession) error {
 	}
 }
 
-func SignInUserSession(ctx *gin.Context, u *models.User, remember bool) {
-	//u := &UserSession{
-	//	Token:      "",
-	//	UserId:     0,
-	//	RoleId:     0,
-	//	IsSigned:   false,
-	//	IsTwoFa:    false,
-	//	IsRegister: false,
-	//	Language:   "",
-	//	Theme:      "",
-	//}
+func SignInUserSession(ctx *gin.Context, u *models.User, remember bool) *UserSession {
+	// TODO remember 记住用户待开发
+	userSession := &UserSession{
+		Token:      "",
+		UserId:     0,
+		RoleId:     0,
+		IsSigned:   false,
+		IsTwoFa:    false,
+		IsRegister: false,
+		Language:   "",
+		Theme:      "",
+	}
+
+	return userSession
+}
+
+func SignInInitLanguage(ctx *gin.Context, u *models.User) error {
+	if u.Language == "" {
+		u.Language = setting.AppSetting.Language.String()
+		err := usermodel.SetUserLanguage(ctx, u.ID, u.Language)
+		if err != nil {
+			return err
+		}
+	}
+
+	middlewares.SetLocaleCookie(ctx, u.Language, 0)
+
+	return nil
 }

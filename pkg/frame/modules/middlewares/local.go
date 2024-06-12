@@ -46,7 +46,7 @@ func I18nUrl() gin.HandlerFunc {
 
 		// NOTE: On June 2012, the deprecation of recommendation to use the "X-" prefix has become official as RFC 6648.
 		// https://stackoverflow.com/questions/3561381/custom-http-headers-naming-conventions
-		c.Request.Header.Set("I18n-Language", lang)
+		c.Request.Header.Set("Local-Language", lang)
 		c.Next()
 	}
 }
@@ -60,16 +60,43 @@ func I18nLocal() gin.HandlerFunc {
 			UnmarshalFunc:    toml.Unmarshal,
 			FormatBundleFile: "toml",
 		}),
-		//i18n.WithGetLngHandle(
-		//	func(r *gin.Context, defaultLng string) string {
-		//		/**
-		//		**/
-		//		lang := r.GetHeader("Accept-Language")
-		//		if lang == "" {
-		//			return defaultLng
-		//		}
-		//		return lang
-		//	},
-		//),
+		i18n.WithGetLngHandle(
+			func(r *gin.Context, defaultLng string) string {
+				// 1. Check URL arguments.
+				lang := r.Query("lang")
+				changeLang := lang != ""
+
+				// 2. Get language information from cookies.
+				if len(lang) == 0 {
+					ck, _ := r.Cookie("lang")
+					if ck != "" {
+						lang = ck
+					}
+				}
+
+				// Check again in case someone changes the supported language list.
+				if lang != "" && !i18n {
+					lang = ""
+					changeLang = false
+				}
+
+				lang := r.GetHeader("Accept-Language")
+				if lang == "" {
+					return defaultLng
+				}
+				return lang
+			},
+		),
 	)
+}
+
+// SetLocaleCookie convenience function to set the locale cookie consistently
+func SetLocaleCookie(c *gin.Context, lang string, maxAge int) {
+	SetSiteCookie(c, "lang", lang, maxAge)
+}
+
+// DeleteLocaleCookie convenience function to delete the locale cookie consistently
+// Setting the lang cookie will trigger the middleware to reset the language to previous state.
+func DeleteLocaleCookie(c *gin.Context) {
+	SetSiteCookie(c, "lang", "", -1)
 }
