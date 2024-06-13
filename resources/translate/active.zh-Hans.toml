@@ -1,6 +1,74 @@
-["STATE.SUCCESS"]
+[CAPTCHA_CREATION_FAILED]
+hash = "sha1-66de23efc58d036e513c9599e86a7d80b5b964f7"
+other = "验证码生成错误"
+
+[CAPTCHA_GENERATION_FAILED]
+hash = "sha1-ab4681a7016fbe5ce3302e65242753304cab8bf0"
+other = "验证码生成失败"
+
+[CAPTCHA_ID_EMPTY]
+hash = "sha1-e4a685518266cf385f760674fe3bc9804f47a086"
+other = "验证码ID缺失"
+
+[CAPTCHA_INPUT_EMPTY]
+hash = "sha1-0929eecbcca444c000a5ce5c5f6254279a52fade"
+other = "未提供验证码值"
+
+[CAPTCHA_NOT_ACTIVATED]
+hash = "sha1-f49fb5521ab0dbe8665e518f9d2635bce03f59e8"
+other = "验证码未激活"
+
+[CAPTCHA_STORAGE_FAILURE]
+hash = "sha1-894243986795cfbe5fb1c5b95254aa7c7523a88a"
+other = "生成的验证码存储失败"
+
+[CAPTCHA_TOKEN_MISSING]
+hash = "sha1-80db92ec37ef6dd940cabedfb0cd2c9fabe080b4"
+other = "验证码令牌缺失"
+
+[CAPTCHA_VALIDATION_FAILED]
+hash = "sha1-6c201ca96944ad3c27385013036f0463faa2cf13"
+other = "验证码验证失败"
+
+[EMAIL_IN_USE]
+hash = "sha1-4f60c630819f81703f69bea908dd0ed36bf82ac0"
+other = "该邮箱地址已被使用。"
+
+[EMAIL_NOT_FOUND]
+hash = "sha1-7831db75f8945735f3b01a868caab90d64fb00a2"
+other = "提供的邮箱地址未找到。"
+
+[REQUESTS_TOO_MANY]
+hash = "sha1-1f55c90d5ce61c6447e923443d496b137be35c63"
+other = "请求过多"
+
+["STATE.Fail"]
+hash = "sha1-1012a23facd9100596e98630047721731abd2c4a"
+other = "Fail !"
+
+[STATE_ERROR]
+hash = "sha1-30ed264f6f85affa1385923b760b1919f46539a5"
+other = "Error !"
+
+[STATE_SUCCESS]
 hash = "sha1-42a8f651d79fd005eeac0612df6442b983a01184"
-other = "成功"
+other = "Success"
+
+[USER_EMAIL_EMPTY]
+hash = "sha1-f6f8d65b564d2aea66a1e6c9062c8e4d9e2d88f1"
+other = "请提供一个邮箱地址。"
+
+[USER_EMAIL_FORMAT_INVALID]
+hash = "sha1-cb6ce5e649e80f87b574edc46e85652e74cf879f"
+other = "邮箱地址格式不正确。"
+
+[USER_PASSWORD_CHECK_FAILED]
+hash = "sha1-d5d8e871ce55a4108305db825ce4475e782f8fb3"
+other = "密码不符合要求。"
+
+[USER_PASSWORD_EMPTY]
+hash = "sha1-13c9d732467bf266a77ddfd1bbbe09dde518f9b0"
+other = "请输入密码。"
 
 [WELCOME]
 hash = "sha1-cd89430c555afc811bc7337608b30a357b60fcd0"

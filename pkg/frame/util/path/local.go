@@ -13,7 +13,7 @@ var RunInternalPath = JoinPath(RunPath, "/internal")
 var RunPublicPath = JoinPath(RunPath, "/public")
 var RunResourcePath = JoinPath(RunPath, "/resources")
 var RunStoragePath = JoinPath(RunPath, "/storage")
-var RunI18nPath = JoinPath(RunResourcePath, "/i18n")
+var RunTranslatePath = JoinPath(RunResourcePath, "/translate")
 
 func RunPathFun() string {
 	path, err := os.Getwd()

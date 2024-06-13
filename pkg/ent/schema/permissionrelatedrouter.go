@@ -32,5 +32,7 @@ func (PermissionRelatedRouter) Edges() []ent.Edge {
 func (PermissionRelatedRouter) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("permission_group_id", "router_id"),
+		index.Fields("create_time"),
+		index.Fields("update_time"),
 	}
 }

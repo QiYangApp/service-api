@@ -40,5 +40,7 @@ func (UserAuthSource) Edges() []ent.Edge {
 func (UserAuthSource) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("user_id", "channel", "device"),
+		index.Fields("create_time"),
+		index.Fields("update_time"),
 	}
 }

@@ -1,9 +1,11 @@
 package captcha
 
 import (
+	"errors"
 	"frame/util/secret"
 	"service-api/internal/modules/captcha"
 	"service-api/internal/modules/setting"
+	"service-api/resources/translate/messages"
 )
 
 func New() captcha.Captcha {
@@ -39,7 +41,7 @@ func Verify(t setting.CaptchaFeature, token, key string, answer any, clear bool)
 
 func CheckTokenType(t setting.CaptchaFeature) error {
 	if !setting.CaptchaSetting.Enable || !setting.CheckCaptchaFeatureEnable(t) {
-		return CaptchaNotActived
+		return errors.New(messages.CaptchaNotActivated.ID)
 	}
 
 	switch t {
@@ -47,7 +49,7 @@ func CheckTokenType(t setting.CaptchaFeature) error {
 	case setting.CaptchaFeatureSignUp:
 		break
 	default:
-		return TokenTypeNotExists
+		return errors.New(messages.CaptchaTokenMissing.ID)
 	}
 
 	return nil

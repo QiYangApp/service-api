@@ -5,7 +5,7 @@ go 1.22.0
 require (
 	entgo.io/ent v0.13.1
 	github.com/BurntSushi/toml v1.3.2
-	github.com/gin-contrib/i18n v1.1.2
+	github.com/gin-contrib/i18n v1.1.3
 	github.com/gin-contrib/secure v1.1.0
 	github.com/gin-contrib/sessions v1.0.1
 	github.com/gin-gonic/gin v1.10.0

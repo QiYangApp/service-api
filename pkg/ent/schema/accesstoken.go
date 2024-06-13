@@ -26,7 +26,6 @@ func (AccessToken) Fields() []ent.Field {
 		field.String("has_recent_activity"),
 		field.String("has_used"),
 		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
-		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 
@@ -40,6 +39,5 @@ func (AccessToken) Indexes() []ent.Index {
 		index.Fields("user_id"),
 		index.Fields("token_last_eight"),
 		index.Fields("create_time"),
-		index.Fields("update_time"),
 	}
 }

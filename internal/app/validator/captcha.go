@@ -3,7 +3,7 @@ package validator
 import (
 	"frame/modules/router"
 	"service-api/internal/modules/setting"
-	lang "service-api/resources/i18n"
+	"service-api/resources/translate/messages"
 
 	"github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
@@ -35,8 +35,8 @@ type Msg struct {
 
 func (Msg) GetMessage(c *gin.Context) router.ValidatorMessages {
 	return router.ValidatorMessages{
-		"Token.required":  i18n.MustGetMessage(c, lang.CaptchaEmpty),
-		"Id.required":     i18n.MustGetMessage(c, lang.CaptchaEmptyId),
-		"Answer.required": i18n.MustGetMessage(c, lang.CaptchaEmptyId),
+		"Token.required":  i18n.MustGetMessage(c, messages.CaptchaInputEmpty.ID),
+		"Id.required":     i18n.MustGetMessage(c, messages.CaptchaIdEmpty.ID),
+		"Answer.required": i18n.MustGetMessage(c, messages.CaptchaIdEmpty.ID),
 	}
 }

@@ -7,6 +7,8 @@ import (
 	"github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/text/language"
+	"os"
+	"path/filepath"
 )
 
 func I18nUrl() gin.HandlerFunc {
@@ -54,11 +56,18 @@ func I18nUrl() gin.HandlerFunc {
 func I18nLocal() gin.HandlerFunc {
 	return i18n.Localize(
 		i18n.WithBundle(&i18n.BundleCfg{
-			RootPath:         path.RunI18nPath,
-			AcceptLanguage:   []language.Tag{language.Chinese, language.SimplifiedChinese, language.English},
+			RootPath:         path.JoinPath(path.RunTranslatePath, ""),
+			AcceptLanguage:   []language.Tag{language.SimplifiedChinese, language.English},
 			DefaultLanguage:  language.SimplifiedChinese,
 			UnmarshalFunc:    toml.Unmarshal,
 			FormatBundleFile: "toml",
+			Loader: i18n.LoaderFunc(func(confPath string) ([]byte, error) {
+
+				filename := filepath.Base(confPath)
+				dir := filepath.Dir(confPath)
+
+				return os.ReadFile(path.JoinPath(dir, "active."+filename))
+			}),
 		}),
 		i18n.WithGetLngHandle(
 			func(r *gin.Context, defaultLng string) string {
@@ -80,10 +89,23 @@ func I18nLocal() gin.HandlerFunc {
 				//	changeLang = false
 				//}
 
-				lang := r.GetHeader("Accept-Language")
+				// 3. Get language information from 'Accept-Language'.
+				// The first element in the list is chosen to be the default language automatically.
+				if len(lang) == 0 {
+					tags, _, _ := language.ParseAcceptLanguage(r.GetHeader("Accept-Language"))
+					if len(tags) > 0 {
+						lang = tags[0].String()
+					}
+				}
+
+				if changeLang && lang != "" {
+					SetLocaleCookie(r, lang, 1<<31-1)
+				}
+
 				if lang == "" {
 					return defaultLng
 				}
+
 				return lang
 			},
 		),

@@ -37,5 +37,7 @@ func (PermissionGroup) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("left", "right"),
 		index.Fields("state", "sort", "permission_name"),
+		index.Fields("create_time"),
+		index.Fields("update_time"),
 	}
 }

@@ -76,7 +76,7 @@ func SignInUserSession(ctx *gin.Context, u *models.User, remember bool) *UserSes
 
 func SignInInitLanguage(ctx *gin.Context, u *models.User) error {
 	if u.Language == "" {
-		u.Language = setting.AppSetting.Language.String()
+		u.Language = setting.AppSetting.Language
 		err := usermodel.SetUserLanguage(ctx, u.ID, u.Language)
 		if err != nil {
 			return err

@@ -32,6 +32,8 @@ func (Accounts) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("user_id"),
 		index.Fields("account", "type").Unique(),
+		index.Fields("create_time"),
+		index.Fields("update_time"),
 	}
 }
 

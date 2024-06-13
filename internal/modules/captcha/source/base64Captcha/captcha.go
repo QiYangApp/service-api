@@ -5,7 +5,7 @@ import (
 	"frame/modules/cache"
 	"frame/modules/log"
 	"service-api/internal/modules/captcha"
-	lang "service-api/resources/i18n"
+	"service-api/resources/translate/messages"
 	"sync"
 	"time"
 
@@ -46,12 +46,12 @@ func (c *Captcha) Generate(token string) (*captcha.Resp, error) {
 	cli := captchaclient.NewCaptcha(driver, c.CaptchaStore)
 	id, body, answer, err := cli.Generate()
 	if err != nil {
-		return nil, errors.New(lang.CaptchaErrorGenerateCode)
+		return nil, errors.New(messages.CaptchaGenerationFailed.ID)
 	}
 
 	// 生成场景存储类型错误
 	if err := c.Store.Set(c.getCacheKey(id, token), answer); err != nil {
-		return nil, errors.New(lang.CaptchaErrorGenerateCode)
+		return nil, errors.New(messages.CaptchaStorageFAILED.ID)
 	}
 
 	return &captcha.Resp{Token: token, Captcha: body, Key: id, Answer: answer, Type: captcha.Image}, nil

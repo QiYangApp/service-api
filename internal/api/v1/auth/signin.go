@@ -10,6 +10,7 @@ import (
 	util "frame/errors"
 	"frame/modules/log"
 	"frame/modules/resp"
+	"service-api/resources/translate/messages"
 
 	"net/http"
 	authserver "service-api/internal/app/services/auth"
@@ -38,7 +39,7 @@ func SignInPost(ctx *gin.Context, form auth.SignInForm, captchaVerify *validator
 		}
 
 		if st {
-			resp.Error(ctx, captcha.CaptchaCheckFail, http.StatusBadRequest, nil)
+			resp.Error(ctx, errors.New(messages.CaptchaValidationFAILED.ID), http.StatusBadRequest, nil)
 			return
 		}
 	}

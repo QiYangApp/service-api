@@ -1,7 +1,0 @@
-["STATE.SUCCESS"]
-hash = "sha1-42a8f651d79fd005eeac0612df6442b983a01184"
-other = "成功"
-
-[WELCOME]
-hash = "sha1-cd89430c555afc811bc7337608b30a357b60fcd0"
-other = "欢迎 !"

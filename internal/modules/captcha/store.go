@@ -4,6 +4,7 @@ import (
 	"errors"
 	"frame/modules/cache"
 	"frame/util/optional"
+	"service-api/resources/translate/messages"
 	"time"
 )
 
@@ -16,7 +17,7 @@ func (i *StoreValue[T]) Set(id string, value any) error {
 	id = i.getCacheKey(id)
 
 	if i.store.SetEx(id, value, i.exp) == false {
-		return errors.New(translate.CaptchaErrorStoreCode)
+		return errors.New(messages.CaptchaStorageFAILED.ID)
 	}
 
 	return nil

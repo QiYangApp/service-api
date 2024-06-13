@@ -25,7 +25,7 @@ func Index(c *gin.Context, req *validator.CaptchaRequest) {
 
 	body, err := captcha.Gen(setting.CaptchaFeature(req.Type), req.Token)
 	if err != nil {
-		log.Sugar().Info(zap.String("captcha gen err", err.Error()))
+		log.Sugar().Info(zap.Error(err))
 		resp.Error(c, err, http.StatusNotFound, nil)
 		return
 	}

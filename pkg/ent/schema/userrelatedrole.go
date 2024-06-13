@@ -33,5 +33,7 @@ func (UserRelatedRole) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("user_id", "role_id").
 			Unique(),
+		index.Fields("create_time"),
+		index.Fields("update_time"),
 	}
 }

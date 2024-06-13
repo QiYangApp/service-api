@@ -6,9 +6,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"entgo.io/ent/schema/mixin"
 	"frame/util/timeutil"
-	"github.com/google/uuid"
 )
 
 // WakatimeDependency holds the schema definition for the WakatimeDependency entity.
@@ -23,7 +21,7 @@ func (WakatimeDependency) Edges() []ent.Edge {
 func (WakatimeDependency) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int64("id"),
-		field.UUID("wakatime_id", uuid.UUID{}).Comment("wakatime id"),
+		field.Int64("wakatime_id").Comment("wakatime id"),
 		field.Int64("user_id"),
 		field.String("name").NotEmpty().Default("").Comment("名称"),
 		field.Int64("total_seconds").Default(0).Comment("总时长(秒"),
@@ -36,12 +34,8 @@ func (WakatimeDependency) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("wakatime_id"),
 		index.Fields("user_id", "name"),
-	}
-}
-
-func (WakatimeDependency) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		mixin.Time{},
+		index.Fields("create_time"),
+		index.Fields("update_time"),
 	}
 }
 

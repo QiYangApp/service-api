@@ -33,5 +33,7 @@ func (MemberRoleRelatedPermission) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("role_id", "permission_group_id").
 			Unique(),
+		index.Fields("create_time"),
+		index.Fields("update_time"),
 	}
 }

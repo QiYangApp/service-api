@@ -35,5 +35,7 @@ func (Router) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("state", "route_name"),
 		index.Fields("state", "route"),
+		index.Fields("create_time"),
+		index.Fields("update_time"),
 	}
 }

@@ -35,5 +35,7 @@ func (SourceData) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("user_id"),
 		index.Fields("type", "sub_type"),
+		index.Fields("create_time"),
+		index.Fields("update_time"),
 	}
 }

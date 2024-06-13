@@ -83,6 +83,9 @@ captcha:
   type: "image"
   expires: 60
   store: "captcha"
+  feature:
+    sign_in: true
+    sign_up: true
   drivers:
     image:
       height: 70
@@ -94,7 +97,7 @@ captcha:
       fonts:
         - "a"
         - "b"
-      chars: ["你","好","呀","这","是","点","击","验","证","码","哟"]
+      chars: [ "你","好","呀","这","是","点","击","验","证","码","哟" ]
       size:
         width: 100
         height: 100

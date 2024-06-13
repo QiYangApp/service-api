@@ -14,7 +14,6 @@ var AuthSetting = &struct {
 }{}
 
 func loadAuthSetting(viper *viper.Viper) {
-	log.Sugar().Debug("start load auth setting")
 	if err := viper.Unmarshal(AuthSetting); err != nil {
 		log.Sugar().Error("load auth setting")
 	}

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"frame/modules/cache"
 	"frame/modules/log"
+	"service-api/resources/translate/messages"
 
 	"service-api/internal/modules/captcha"
-	lang "service-api/resources/i18n"
 	"strconv"
 
 	captchaclient "github.com/wenlng/go-captcha/captcha"
@@ -50,7 +50,7 @@ func (c *Captcha) Generate(token string) (*captcha.Resp, error) {
 	}
 
 	if err := c.store.Set(c.getCacheKey(token, key), answer); err != nil {
-		return nil, errors.New(lang.CaptchaErrorGenerateCode)
+		return nil, errors.New(messages.CaptchaStorageFAILED.ID)
 	}
 
 	return &captcha.Resp{

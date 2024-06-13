@@ -58,5 +58,7 @@ func (User) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("email").
 			Unique(),
+		index.Fields("create_time"),
+		index.Fields("update_time"),
 	}
 }
