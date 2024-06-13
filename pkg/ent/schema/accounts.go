@@ -1,10 +1,10 @@
 package schema
 
 import (
-	"ent/utils/timeutil"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"frame/util/timeutil"
 )
 
 // Accounts holds the schema definition for the UserAccounts entity.

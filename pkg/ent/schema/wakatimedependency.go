@@ -7,6 +7,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"entgo.io/ent/schema/mixin"
+	"frame/util/timeutil"
 	"github.com/google/uuid"
 )
 
@@ -26,6 +27,8 @@ func (WakatimeDependency) Fields() []ent.Field {
 		field.Int64("user_id"),
 		field.String("name").NotEmpty().Default("").Comment("名称"),
 		field.Int64("total_seconds").Default(0).Comment("总时长(秒"),
+		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 

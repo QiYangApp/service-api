@@ -4,7 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"time"
+	"frame/util/timeutil"
 )
 
 // Wakatime holds the schema definition for the Wakatime entity.
@@ -20,8 +20,8 @@ func (Wakatime) Fields() []ent.Field {
 		field.String("key").NotEmpty().Comment("密钥"),
 		field.String("api").NotEmpty().Comment("地址"),
 		field.String("state").NotEmpty().Comment("状态"),
-		field.Time("create_time").Default(time.Now).Immutable(),
-		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
+		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 

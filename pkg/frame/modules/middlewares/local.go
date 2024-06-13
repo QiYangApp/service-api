@@ -75,10 +75,10 @@ func I18nLocal() gin.HandlerFunc {
 				}
 
 				// Check again in case someone changes the supported language list.
-				if lang != "" && !i18n {
-					lang = ""
-					changeLang = false
-				}
+				//if lang != "" && !i18n.GinI18n {
+				//	lang = ""
+				//	changeLang = false
+				//}
 
 				lang := r.GetHeader("Accept-Language")
 				if lang == "" {

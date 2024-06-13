@@ -2,13 +2,12 @@ package schema
 
 import (
 	"ent/types/auth"
-	"time"
-
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	timeutil "frame/util/timeutil"
 )
 
 // User holds the schema definition for the Member entity.
@@ -45,8 +44,8 @@ func (User) Fields() []ent.Field {
 		field.Bool("is_restricted").Default(false),
 		field.Bool("is_active").Default(false).Comment("true is activated"),
 		field.Bool("prohibit_login").Default(false).Comment("is web login"),
-		field.Time("create_time").Default(time.Now).Immutable(),
-		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
+		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 

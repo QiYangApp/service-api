@@ -6,7 +6,7 @@ package auth
 
 import (
 	util "ent/utils"
-	"ent/utils/timeutil"
+	"frame/util/timeutil"
 	"net/http"
 	"service-api/internal/modules/base"
 	"service-api/internal/services/auth"

@@ -4,8 +4,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"frame/util/timeutil"
 	"github.com/google/uuid"
-	"time"
 )
 
 // UserRelatedRole holds the schema definition for the MemberRelatedRole entity.
@@ -19,8 +19,8 @@ func (UserRelatedRole) Fields() []ent.Field {
 		field.Int64("id"),
 		field.Int64("user_id"),
 		field.UUID("role_id", uuid.UUID{}).Comment("角色"),
-		field.Time("create_time").Default(time.Now).Immutable(),
-		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
+		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 

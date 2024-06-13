@@ -2,10 +2,10 @@ package schema
 
 import (
 	"ent/enums/state"
-	"ent/utils/timeutil"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"frame/util/timeutil"
 )
 
 // PermissionGroup holds the schema definition for the PermissionGroup entity.

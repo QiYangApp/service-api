@@ -5,7 +5,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"time"
+	"frame/util/timeutil"
 )
 
 // UserRole holds the schema definition for the MemberRole entity.
@@ -19,8 +19,8 @@ func (UserRole) Fields() []ent.Field {
 		field.Int64("id"),
 		field.String("role_name").MaxLen(64).NotEmpty().Comment("规则名称"),
 		field.Int("state").GoType(state.SwitchState(0)).Default(1),
-		field.Time("create_time").Default(time.Now).Immutable(),
-		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
+		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 

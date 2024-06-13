@@ -6,8 +6,8 @@ package auth
 
 import (
 	usertype "ent/types/user"
-	util "ent/utils"
 	"errors"
+	util "frame/errors"
 	"frame/modules/log"
 	"frame/modules/resp"
 

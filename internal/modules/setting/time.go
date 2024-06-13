@@ -4,8 +4,8 @@
 package setting
 
 import (
-	"ent/utils/timeutil"
 	"frame/modules/log"
+	"frame/util/timeutil"
 	"time"
 
 	"github.com/spf13/viper"

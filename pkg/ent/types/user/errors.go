@@ -1,9 +1,9 @@
 package user
 
 import (
-	util "ent/utils"
 	"errors"
 	"fmt"
+	util "frame/errors"
 )
 
 // ErrAccountNotExist user account not exist

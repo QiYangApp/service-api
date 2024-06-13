@@ -4,9 +4,9 @@
 package auth
 
 import (
-	util "ent/utils"
 	"errors"
 	"fmt"
+	util "frame/errors"
 )
 
 var ErrAuthSourceNotActivated = errors.New("auth source is not activated")

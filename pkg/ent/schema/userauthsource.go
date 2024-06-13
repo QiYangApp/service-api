@@ -4,7 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"time"
+	"frame/util/timeutil"
 )
 
 // UserAuthSource holds the schema definition for the UserAuthSource entity.
@@ -27,8 +27,8 @@ func (UserAuthSource) Fields() []ent.Field {
 		field.String("login_name").NotEmpty(),
 		field.Int("login_source").Default(0),
 		field.Int("login_type").Default(0),
-		field.Time("create_time").Default(time.Now).Immutable(),
-		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
+		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 

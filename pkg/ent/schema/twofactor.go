@@ -1,10 +1,10 @@
 package schema
 
 import (
-	"ent/utils/timeutil"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"frame/util/timeutil"
 )
 
 // TwoFactor holds the schema definition for the TwoFactor entity.
@@ -27,7 +27,6 @@ func (TwoFactor) Fields() []ent.Field {
 		field.String("scratch_hash"),
 		field.String("last_used_passcode"),
 
-		// Fields go here.
 		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
 		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}

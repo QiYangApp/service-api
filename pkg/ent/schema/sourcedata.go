@@ -4,7 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"time"
+	"frame/util/timeutil"
 )
 
 // SourceData holds the schema definition for the SourceData entity.
@@ -21,8 +21,8 @@ func (SourceData) Fields() []ent.Field {
 		field.String("sub_type").MaxLen(32).Default("").Comment("子类型"),
 		field.String("info").Default("").Comment("信息"),
 		field.Text("snapshot").Default("").Comment("数据"),
-		field.Time("create_time").Default(time.Now).Immutable(),
-		field.Time("update_time").Default(time.Now).UpdateDefault(time.Now),
+		field.Int64("create_time").GoType(timeutil.TimeStamp(0)).Default(timeutil.TimeStampNow().Int()).Immutable(),
+		field.Int64("update_time").GoType(timeutil.TimeStamp(0)).UpdateDefault(timeutil.TimeStampNow),
 	}
 }
 
