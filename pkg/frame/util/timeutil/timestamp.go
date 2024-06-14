@@ -96,6 +96,11 @@ func (ts TimeStamp) FormatDate() string {
 	return ts.Format("2006-01-02")
 }
 
+// FormatDateTime  formats a date in YYYY-MM-DD HH:i:s
+func (ts TimeStamp) FormatDateTime() string {
+	return ts.Format("2006-01-02 00:00:00")
+}
+
 // IsZero is zero time
 func (ts TimeStamp) IsZero() bool {
 	return int64(ts) == 0 || int64(ts) == timeZeroUnix

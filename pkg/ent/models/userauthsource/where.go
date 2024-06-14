@@ -64,6 +64,16 @@ func Token(v string) predicate.UserAuthSource {
 	return predicate.UserAuthSource(sql.FieldEQ(FieldToken, v))
 }
 
+// TokenSalt applies equality check predicate on the "token_salt" field. It's identical to TokenSaltEQ.
+func TokenSalt(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldEQ(FieldTokenSalt, v))
+}
+
+// TokenLastEight applies equality check predicate on the "token_last_eight" field. It's identical to TokenLastEightEQ.
+func TokenLastEight(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldEQ(FieldTokenLastEight, v))
+}
+
 // Channel applies equality check predicate on the "channel" field. It's identical to ChannelEQ.
 func Channel(v string) predicate.UserAuthSource {
 	return predicate.UserAuthSource(sql.FieldEQ(FieldChannel, v))
@@ -224,6 +234,136 @@ func TokenEqualFold(v string) predicate.UserAuthSource {
 // TokenContainsFold applies the ContainsFold predicate on the "token" field.
 func TokenContainsFold(v string) predicate.UserAuthSource {
 	return predicate.UserAuthSource(sql.FieldContainsFold(FieldToken, v))
+}
+
+// TokenSaltEQ applies the EQ predicate on the "token_salt" field.
+func TokenSaltEQ(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldEQ(FieldTokenSalt, v))
+}
+
+// TokenSaltNEQ applies the NEQ predicate on the "token_salt" field.
+func TokenSaltNEQ(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldNEQ(FieldTokenSalt, v))
+}
+
+// TokenSaltIn applies the In predicate on the "token_salt" field.
+func TokenSaltIn(vs ...string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldIn(FieldTokenSalt, vs...))
+}
+
+// TokenSaltNotIn applies the NotIn predicate on the "token_salt" field.
+func TokenSaltNotIn(vs ...string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldNotIn(FieldTokenSalt, vs...))
+}
+
+// TokenSaltGT applies the GT predicate on the "token_salt" field.
+func TokenSaltGT(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldGT(FieldTokenSalt, v))
+}
+
+// TokenSaltGTE applies the GTE predicate on the "token_salt" field.
+func TokenSaltGTE(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldGTE(FieldTokenSalt, v))
+}
+
+// TokenSaltLT applies the LT predicate on the "token_salt" field.
+func TokenSaltLT(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldLT(FieldTokenSalt, v))
+}
+
+// TokenSaltLTE applies the LTE predicate on the "token_salt" field.
+func TokenSaltLTE(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldLTE(FieldTokenSalt, v))
+}
+
+// TokenSaltContains applies the Contains predicate on the "token_salt" field.
+func TokenSaltContains(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldContains(FieldTokenSalt, v))
+}
+
+// TokenSaltHasPrefix applies the HasPrefix predicate on the "token_salt" field.
+func TokenSaltHasPrefix(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldHasPrefix(FieldTokenSalt, v))
+}
+
+// TokenSaltHasSuffix applies the HasSuffix predicate on the "token_salt" field.
+func TokenSaltHasSuffix(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldHasSuffix(FieldTokenSalt, v))
+}
+
+// TokenSaltEqualFold applies the EqualFold predicate on the "token_salt" field.
+func TokenSaltEqualFold(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldEqualFold(FieldTokenSalt, v))
+}
+
+// TokenSaltContainsFold applies the ContainsFold predicate on the "token_salt" field.
+func TokenSaltContainsFold(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldContainsFold(FieldTokenSalt, v))
+}
+
+// TokenLastEightEQ applies the EQ predicate on the "token_last_eight" field.
+func TokenLastEightEQ(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldEQ(FieldTokenLastEight, v))
+}
+
+// TokenLastEightNEQ applies the NEQ predicate on the "token_last_eight" field.
+func TokenLastEightNEQ(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldNEQ(FieldTokenLastEight, v))
+}
+
+// TokenLastEightIn applies the In predicate on the "token_last_eight" field.
+func TokenLastEightIn(vs ...string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldIn(FieldTokenLastEight, vs...))
+}
+
+// TokenLastEightNotIn applies the NotIn predicate on the "token_last_eight" field.
+func TokenLastEightNotIn(vs ...string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldNotIn(FieldTokenLastEight, vs...))
+}
+
+// TokenLastEightGT applies the GT predicate on the "token_last_eight" field.
+func TokenLastEightGT(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldGT(FieldTokenLastEight, v))
+}
+
+// TokenLastEightGTE applies the GTE predicate on the "token_last_eight" field.
+func TokenLastEightGTE(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldGTE(FieldTokenLastEight, v))
+}
+
+// TokenLastEightLT applies the LT predicate on the "token_last_eight" field.
+func TokenLastEightLT(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldLT(FieldTokenLastEight, v))
+}
+
+// TokenLastEightLTE applies the LTE predicate on the "token_last_eight" field.
+func TokenLastEightLTE(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldLTE(FieldTokenLastEight, v))
+}
+
+// TokenLastEightContains applies the Contains predicate on the "token_last_eight" field.
+func TokenLastEightContains(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldContains(FieldTokenLastEight, v))
+}
+
+// TokenLastEightHasPrefix applies the HasPrefix predicate on the "token_last_eight" field.
+func TokenLastEightHasPrefix(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldHasPrefix(FieldTokenLastEight, v))
+}
+
+// TokenLastEightHasSuffix applies the HasSuffix predicate on the "token_last_eight" field.
+func TokenLastEightHasSuffix(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldHasSuffix(FieldTokenLastEight, v))
+}
+
+// TokenLastEightEqualFold applies the EqualFold predicate on the "token_last_eight" field.
+func TokenLastEightEqualFold(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldEqualFold(FieldTokenLastEight, v))
+}
+
+// TokenLastEightContainsFold applies the ContainsFold predicate on the "token_last_eight" field.
+func TokenLastEightContainsFold(v string) predicate.UserAuthSource {
+	return predicate.UserAuthSource(sql.FieldContainsFold(FieldTokenLastEight, v))
 }
 
 // ChannelEQ applies the EQ predicate on the "channel" field.

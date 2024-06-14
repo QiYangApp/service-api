@@ -100,6 +100,11 @@ func Language(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldLanguage, v))
 }
 
+// Theme applies equality check predicate on the "theme" field. It's identical to ThemeEQ.
+func Theme(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldTheme, v))
+}
+
 // LoginName applies equality check predicate on the "login_name" field. It's identical to LoginNameEQ.
 func LoginName(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldLoginName, v))
@@ -726,6 +731,71 @@ func LanguageEqualFold(v string) predicate.User {
 // LanguageContainsFold applies the ContainsFold predicate on the "language" field.
 func LanguageContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldLanguage, v))
+}
+
+// ThemeEQ applies the EQ predicate on the "theme" field.
+func ThemeEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldTheme, v))
+}
+
+// ThemeNEQ applies the NEQ predicate on the "theme" field.
+func ThemeNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldTheme, v))
+}
+
+// ThemeIn applies the In predicate on the "theme" field.
+func ThemeIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldTheme, vs...))
+}
+
+// ThemeNotIn applies the NotIn predicate on the "theme" field.
+func ThemeNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldTheme, vs...))
+}
+
+// ThemeGT applies the GT predicate on the "theme" field.
+func ThemeGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldTheme, v))
+}
+
+// ThemeGTE applies the GTE predicate on the "theme" field.
+func ThemeGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldTheme, v))
+}
+
+// ThemeLT applies the LT predicate on the "theme" field.
+func ThemeLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldTheme, v))
+}
+
+// ThemeLTE applies the LTE predicate on the "theme" field.
+func ThemeLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldTheme, v))
+}
+
+// ThemeContains applies the Contains predicate on the "theme" field.
+func ThemeContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldTheme, v))
+}
+
+// ThemeHasPrefix applies the HasPrefix predicate on the "theme" field.
+func ThemeHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldTheme, v))
+}
+
+// ThemeHasSuffix applies the HasSuffix predicate on the "theme" field.
+func ThemeHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldTheme, v))
+}
+
+// ThemeEqualFold applies the EqualFold predicate on the "theme" field.
+func ThemeEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldTheme, v))
+}
+
+// ThemeContainsFold applies the ContainsFold predicate on the "theme" field.
+func ThemeContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldTheme, v))
 }
 
 // LoginNameEQ applies the EQ predicate on the "login_name" field.

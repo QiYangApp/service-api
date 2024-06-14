@@ -425,32 +425,50 @@ func init() {
 			return nil
 		}
 	}()
+	// userDescTheme is the schema descriptor for theme field.
+	userDescTheme := userFields[10].Descriptor()
+	// user.ThemeValidator is a validator for the "theme" field. It is called by the builders before save.
+	user.ThemeValidator = func() func(string) error {
+		validators := userDescTheme.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(theme string) error {
+			for _, fn := range fns {
+				if err := fn(theme); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// userDescLoginName is the schema descriptor for login_name field.
-	userDescLoginName := userFields[10].Descriptor()
+	userDescLoginName := userFields[11].Descriptor()
 	// user.LoginNameValidator is a validator for the "login_name" field. It is called by the builders before save.
 	user.LoginNameValidator = userDescLoginName.Validators[0].(func(string) error)
 	// userDescLoginSource is the schema descriptor for login_source field.
-	userDescLoginSource := userFields[11].Descriptor()
+	userDescLoginSource := userFields[12].Descriptor()
 	// user.DefaultLoginSource holds the default value on creation for the login_source field.
 	user.DefaultLoginSource = userDescLoginSource.Default.(int64)
 	// userDescIsRestricted is the schema descriptor for is_restricted field.
-	userDescIsRestricted := userFields[13].Descriptor()
+	userDescIsRestricted := userFields[14].Descriptor()
 	// user.DefaultIsRestricted holds the default value on creation for the is_restricted field.
 	user.DefaultIsRestricted = userDescIsRestricted.Default.(bool)
 	// userDescIsActive is the schema descriptor for is_active field.
-	userDescIsActive := userFields[14].Descriptor()
+	userDescIsActive := userFields[15].Descriptor()
 	// user.DefaultIsActive holds the default value on creation for the is_active field.
 	user.DefaultIsActive = userDescIsActive.Default.(bool)
 	// userDescProhibitLogin is the schema descriptor for prohibit_login field.
-	userDescProhibitLogin := userFields[15].Descriptor()
+	userDescProhibitLogin := userFields[16].Descriptor()
 	// user.DefaultProhibitLogin holds the default value on creation for the prohibit_login field.
 	user.DefaultProhibitLogin = userDescProhibitLogin.Default.(bool)
 	// userDescCreateTime is the schema descriptor for create_time field.
-	userDescCreateTime := userFields[16].Descriptor()
+	userDescCreateTime := userFields[17].Descriptor()
 	// user.DefaultCreateTime holds the default value on creation for the create_time field.
 	user.DefaultCreateTime = timeutil.TimeStamp(userDescCreateTime.Default.(int64))
 	// userDescUpdateTime is the schema descriptor for update_time field.
-	userDescUpdateTime := userFields[17].Descriptor()
+	userDescUpdateTime := userFields[18].Descriptor()
 	// user.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	user.UpdateDefaultUpdateTime = userDescUpdateTime.UpdateDefault.(func() timeutil.TimeStamp)
 	userauthsourceFields := schema.UserAuthSource{}.Fields()
@@ -474,19 +492,19 @@ func init() {
 		}
 	}()
 	// userauthsourceDescChannel is the schema descriptor for channel field.
-	userauthsourceDescChannel := userauthsourceFields[3].Descriptor()
+	userauthsourceDescChannel := userauthsourceFields[5].Descriptor()
 	// userauthsource.ChannelValidator is a validator for the "channel" field. It is called by the builders before save.
 	userauthsource.ChannelValidator = userauthsourceDescChannel.Validators[0].(func(string) error)
 	// userauthsourceDescDevice is the schema descriptor for device field.
-	userauthsourceDescDevice := userauthsourceFields[4].Descriptor()
+	userauthsourceDescDevice := userauthsourceFields[6].Descriptor()
 	// userauthsource.DeviceValidator is a validator for the "device" field. It is called by the builders before save.
 	userauthsource.DeviceValidator = userauthsourceDescDevice.Validators[0].(func(string) error)
 	// userauthsourceDescDeviceDetail is the schema descriptor for device_detail field.
-	userauthsourceDescDeviceDetail := userauthsourceFields[5].Descriptor()
+	userauthsourceDescDeviceDetail := userauthsourceFields[7].Descriptor()
 	// userauthsource.DeviceDetailValidator is a validator for the "device_detail" field. It is called by the builders before save.
 	userauthsource.DeviceDetailValidator = userauthsourceDescDeviceDetail.Validators[0].(func(string) error)
 	// userauthsourceDescClientIP is the schema descriptor for client_ip field.
-	userauthsourceDescClientIP := userauthsourceFields[6].Descriptor()
+	userauthsourceDescClientIP := userauthsourceFields[8].Descriptor()
 	// userauthsource.ClientIPValidator is a validator for the "client_ip" field. It is called by the builders before save.
 	userauthsource.ClientIPValidator = func() func(string) error {
 		validators := userauthsourceDescClientIP.Validators
@@ -504,7 +522,7 @@ func init() {
 		}
 	}()
 	// userauthsourceDescRemoteIP is the schema descriptor for remote_ip field.
-	userauthsourceDescRemoteIP := userauthsourceFields[7].Descriptor()
+	userauthsourceDescRemoteIP := userauthsourceFields[9].Descriptor()
 	// userauthsource.RemoteIPValidator is a validator for the "remote_ip" field. It is called by the builders before save.
 	userauthsource.RemoteIPValidator = func() func(string) error {
 		validators := userauthsourceDescRemoteIP.Validators
@@ -522,27 +540,27 @@ func init() {
 		}
 	}()
 	// userauthsourceDescSnapshot is the schema descriptor for snapshot field.
-	userauthsourceDescSnapshot := userauthsourceFields[8].Descriptor()
+	userauthsourceDescSnapshot := userauthsourceFields[10].Descriptor()
 	// userauthsource.SnapshotValidator is a validator for the "snapshot" field. It is called by the builders before save.
 	userauthsource.SnapshotValidator = userauthsourceDescSnapshot.Validators[0].(func(string) error)
 	// userauthsourceDescLoginName is the schema descriptor for login_name field.
-	userauthsourceDescLoginName := userauthsourceFields[9].Descriptor()
+	userauthsourceDescLoginName := userauthsourceFields[11].Descriptor()
 	// userauthsource.LoginNameValidator is a validator for the "login_name" field. It is called by the builders before save.
 	userauthsource.LoginNameValidator = userauthsourceDescLoginName.Validators[0].(func(string) error)
 	// userauthsourceDescLoginSource is the schema descriptor for login_source field.
-	userauthsourceDescLoginSource := userauthsourceFields[10].Descriptor()
+	userauthsourceDescLoginSource := userauthsourceFields[12].Descriptor()
 	// userauthsource.DefaultLoginSource holds the default value on creation for the login_source field.
 	userauthsource.DefaultLoginSource = userauthsourceDescLoginSource.Default.(int)
 	// userauthsourceDescLoginType is the schema descriptor for login_type field.
-	userauthsourceDescLoginType := userauthsourceFields[11].Descriptor()
+	userauthsourceDescLoginType := userauthsourceFields[13].Descriptor()
 	// userauthsource.DefaultLoginType holds the default value on creation for the login_type field.
 	userauthsource.DefaultLoginType = userauthsourceDescLoginType.Default.(int)
 	// userauthsourceDescCreateTime is the schema descriptor for create_time field.
-	userauthsourceDescCreateTime := userauthsourceFields[12].Descriptor()
+	userauthsourceDescCreateTime := userauthsourceFields[14].Descriptor()
 	// userauthsource.DefaultCreateTime holds the default value on creation for the create_time field.
 	userauthsource.DefaultCreateTime = timeutil.TimeStamp(userauthsourceDescCreateTime.Default.(int64))
 	// userauthsourceDescUpdateTime is the schema descriptor for update_time field.
-	userauthsourceDescUpdateTime := userauthsourceFields[13].Descriptor()
+	userauthsourceDescUpdateTime := userauthsourceFields[15].Descriptor()
 	// userauthsource.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	userauthsource.UpdateDefaultUpdateTime = userauthsourceDescUpdateTime.UpdateDefault.(func() timeutil.TimeStamp)
 	userrelatedroleFields := schema.UserRelatedRole{}.Fields()

@@ -32,6 +32,18 @@ func (uasc *UserAuthSourceCreate) SetToken(s string) *UserAuthSourceCreate {
 	return uasc
 }
 
+// SetTokenSalt sets the "token_salt" field.
+func (uasc *UserAuthSourceCreate) SetTokenSalt(s string) *UserAuthSourceCreate {
+	uasc.mutation.SetTokenSalt(s)
+	return uasc
+}
+
+// SetTokenLastEight sets the "token_last_eight" field.
+func (uasc *UserAuthSourceCreate) SetTokenLastEight(s string) *UserAuthSourceCreate {
+	uasc.mutation.SetTokenLastEight(s)
+	return uasc
+}
+
 // SetChannel sets the "channel" field.
 func (uasc *UserAuthSourceCreate) SetChannel(s string) *UserAuthSourceCreate {
 	uasc.mutation.SetChannel(s)
@@ -190,6 +202,12 @@ func (uasc *UserAuthSourceCreate) check() error {
 			return &ValidationError{Name: "token", err: fmt.Errorf(`models: validator failed for field "UserAuthSource.token": %w`, err)}
 		}
 	}
+	if _, ok := uasc.mutation.TokenSalt(); !ok {
+		return &ValidationError{Name: "token_salt", err: errors.New(`models: missing required field "UserAuthSource.token_salt"`)}
+	}
+	if _, ok := uasc.mutation.TokenLastEight(); !ok {
+		return &ValidationError{Name: "token_last_eight", err: errors.New(`models: missing required field "UserAuthSource.token_last_eight"`)}
+	}
 	if _, ok := uasc.mutation.Channel(); !ok {
 		return &ValidationError{Name: "channel", err: errors.New(`models: missing required field "UserAuthSource.channel"`)}
 	}
@@ -297,6 +315,14 @@ func (uasc *UserAuthSourceCreate) createSpec() (*UserAuthSource, *sqlgraph.Creat
 	if value, ok := uasc.mutation.Token(); ok {
 		_spec.SetField(userauthsource.FieldToken, field.TypeString, value)
 		_node.Token = value
+	}
+	if value, ok := uasc.mutation.TokenSalt(); ok {
+		_spec.SetField(userauthsource.FieldTokenSalt, field.TypeString, value)
+		_node.TokenSalt = value
+	}
+	if value, ok := uasc.mutation.TokenLastEight(); ok {
+		_spec.SetField(userauthsource.FieldTokenLastEight, field.TypeString, value)
+		_node.TokenLastEight = value
 	}
 	if value, ok := uasc.mutation.Channel(); ok {
 		_spec.SetField(userauthsource.FieldChannel, field.TypeString, value)

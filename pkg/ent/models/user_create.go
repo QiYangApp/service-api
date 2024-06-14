@@ -83,6 +83,12 @@ func (uc *UserCreate) SetLanguage(s string) *UserCreate {
 	return uc
 }
 
+// SetTheme sets the "theme" field.
+func (uc *UserCreate) SetTheme(s string) *UserCreate {
+	uc.mutation.SetTheme(s)
+	return uc
+}
+
 // SetLoginName sets the "login_name" field.
 func (uc *UserCreate) SetLoginName(s string) *UserCreate {
 	uc.mutation.SetLoginName(s)
@@ -307,6 +313,14 @@ func (uc *UserCreate) check() error {
 			return &ValidationError{Name: "language", err: fmt.Errorf(`models: validator failed for field "User.language": %w`, err)}
 		}
 	}
+	if _, ok := uc.mutation.Theme(); !ok {
+		return &ValidationError{Name: "theme", err: errors.New(`models: missing required field "User.theme"`)}
+	}
+	if v, ok := uc.mutation.Theme(); ok {
+		if err := user.ThemeValidator(v); err != nil {
+			return &ValidationError{Name: "theme", err: fmt.Errorf(`models: validator failed for field "User.theme": %w`, err)}
+		}
+	}
 	if _, ok := uc.mutation.LoginName(); !ok {
 		return &ValidationError{Name: "login_name", err: errors.New(`models: missing required field "User.login_name"`)}
 	}
@@ -403,6 +417,10 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.Language(); ok {
 		_spec.SetField(user.FieldLanguage, field.TypeString, value)
 		_node.Language = value
+	}
+	if value, ok := uc.mutation.Theme(); ok {
+		_spec.SetField(user.FieldTheme, field.TypeString, value)
+		_node.Theme = value
 	}
 	if value, ok := uc.mutation.LoginName(); ok {
 		_spec.SetField(user.FieldLoginName, field.TypeString, value)

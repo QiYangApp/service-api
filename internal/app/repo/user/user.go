@@ -19,3 +19,18 @@ func SetUserLanguage(ctx context.Context, uId int64, language string) error {
 
 	return nil
 }
+
+func SetUserTheme(ctx context.Context, uId int64, theme string) error {
+	u, err := repo.Client().User.Get(ctx, uId)
+	if err != nil {
+		return err
+	}
+
+	u.Theme = theme
+	u, err = repo.Client().User.UpdateOne(u).Save(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

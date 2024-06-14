@@ -3,11 +3,11 @@ package messages
 import "github.com/nicksnyder/go-i18n/v2/i18n"
 
 var (
-	EmailInUse = &i18n.Message{
+	UserEmailInUse = &i18n.Message{
 		ID:    "EMAIL_IN_USE",
 		Other: "This email address is already in use.",
 	}
-	EmailNotFound = &i18n.Message{
+	UserEmailNotFound = &i18n.Message{
 		ID:    "EMAIL_NOT_FOUND",
 		Other: "The provided email address could not be found.",
 	}
@@ -30,5 +30,10 @@ var (
 	UserPasswordCheckFailed = &i18n.Message{
 		ID:    "USER_PASSWORD_CHECK_FAILED",
 		Other: "The password does not meet the requirements.",
+	}
+
+	UserSignInInitLanguageFail = &i18n.Message{
+		ID:    "USER_SIGN_IN_INIT_LANGUAGE_FAIL",
+		Other: "Failed to initialize user's sign-in language.",
 	}
 )

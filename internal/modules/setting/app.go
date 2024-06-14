@@ -11,6 +11,7 @@ var AppSetting = &struct {
 	RunUser        string `mapstructure:"run_user"`
 	Debug          bool   `mapstructure:"debug"`
 	Language       string `mapstructure:"language"`
+	Theme          string `mapstructure:"theme"`
 	Domain         string `mapstructure:"domain"`
 	Addr           string `mapstructure:"addr"`
 	Version        string `mapstructure:"version"`

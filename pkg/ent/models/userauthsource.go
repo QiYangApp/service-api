@@ -21,6 +21,10 @@ type UserAuthSource struct {
 	UserID int64 `json:"user_id,omitempty"`
 	// 授权token
 	Token string `json:"token,omitempty"`
+	// TokenSalt holds the value of the "token_salt" field.
+	TokenSalt string `json:"token_salt,omitempty"`
+	// TokenLastEight holds the value of the "token_last_eight" field.
+	TokenLastEight string `json:"token_last_eight,omitempty"`
 	// 登录渠道
 	Channel string `json:"channel,omitempty"`
 	// 登录设备
@@ -53,7 +57,7 @@ func (*UserAuthSource) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case userauthsource.FieldID, userauthsource.FieldUserID, userauthsource.FieldLoginSource, userauthsource.FieldLoginType, userauthsource.FieldCreateTime, userauthsource.FieldUpdateTime:
 			values[i] = new(sql.NullInt64)
-		case userauthsource.FieldToken, userauthsource.FieldChannel, userauthsource.FieldDevice, userauthsource.FieldDeviceDetail, userauthsource.FieldClientIP, userauthsource.FieldRemoteIP, userauthsource.FieldSnapshot, userauthsource.FieldLoginName:
+		case userauthsource.FieldToken, userauthsource.FieldTokenSalt, userauthsource.FieldTokenLastEight, userauthsource.FieldChannel, userauthsource.FieldDevice, userauthsource.FieldDeviceDetail, userauthsource.FieldClientIP, userauthsource.FieldRemoteIP, userauthsource.FieldSnapshot, userauthsource.FieldLoginName:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -87,6 +91,18 @@ func (uas *UserAuthSource) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field token", values[i])
 			} else if value.Valid {
 				uas.Token = value.String
+			}
+		case userauthsource.FieldTokenSalt:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field token_salt", values[i])
+			} else if value.Valid {
+				uas.TokenSalt = value.String
+			}
+		case userauthsource.FieldTokenLastEight:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field token_last_eight", values[i])
+			} else if value.Valid {
+				uas.TokenLastEight = value.String
 			}
 		case userauthsource.FieldChannel:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -195,6 +211,12 @@ func (uas *UserAuthSource) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("token=")
 	builder.WriteString(uas.Token)
+	builder.WriteString(", ")
+	builder.WriteString("token_salt=")
+	builder.WriteString(uas.TokenSalt)
+	builder.WriteString(", ")
+	builder.WriteString("token_last_eight=")
+	builder.WriteString(uas.TokenLastEight)
 	builder.WriteString(", ")
 	builder.WriteString("channel=")
 	builder.WriteString(uas.Channel)

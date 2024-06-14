@@ -110,6 +110,7 @@ func (uc *UserCreate) SetUser(input *User) *UserCreate {
 	uc.SetPasswdHashAlgo(input.PasswdHashAlgo)
 	uc.SetPasswd(input.Passwd)
 	uc.SetLanguage(input.Language)
+	uc.SetTheme(input.Theme)
 	uc.SetLoginName(input.LoginName)
 	uc.SetLoginSource(input.LoginSource)
 	uc.SetLoginType(input.LoginType)
@@ -124,6 +125,8 @@ func (uc *UserCreate) SetUser(input *User) *UserCreate {
 func (uasc *UserAuthSourceCreate) SetUserAuthSource(input *UserAuthSource) *UserAuthSourceCreate {
 	uasc.SetUserID(input.UserID)
 	uasc.SetToken(input.Token)
+	uasc.SetTokenSalt(input.TokenSalt)
+	uasc.SetTokenLastEight(input.TokenLastEight)
 	uasc.SetChannel(input.Channel)
 	uasc.SetDevice(input.Device)
 	uasc.SetDeviceDetail(input.DeviceDetail)

@@ -31,6 +31,8 @@ const (
 	FieldPasswd = "passwd"
 	// FieldLanguage holds the string denoting the language field in the database.
 	FieldLanguage = "language"
+	// FieldTheme holds the string denoting the theme field in the database.
+	FieldTheme = "theme"
 	// FieldLoginName holds the string denoting the login_name field in the database.
 	FieldLoginName = "login_name"
 	// FieldLoginSource holds the string denoting the login_source field in the database.
@@ -63,6 +65,7 @@ var Columns = []string{
 	FieldPasswdHashAlgo,
 	FieldPasswd,
 	FieldLanguage,
+	FieldTheme,
 	FieldLoginName,
 	FieldLoginSource,
 	FieldLoginType,
@@ -102,6 +105,8 @@ var (
 	PasswdValidator func(string) error
 	// LanguageValidator is a validator for the "language" field. It is called by the builders before save.
 	LanguageValidator func(string) error
+	// ThemeValidator is a validator for the "theme" field. It is called by the builders before save.
+	ThemeValidator func(string) error
 	// LoginNameValidator is a validator for the "login_name" field. It is called by the builders before save.
 	LoginNameValidator func(string) error
 	// DefaultLoginSource holds the default value on creation for the "login_source" field.
@@ -169,6 +174,11 @@ func ByPasswd(opts ...sql.OrderTermOption) OrderOption {
 // ByLanguage orders the results by the language field.
 func ByLanguage(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldLanguage, opts...).ToFunc()
+}
+
+// ByTheme orders the results by the theme field.
+func ByTheme(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTheme, opts...).ToFunc()
 }
 
 // ByLoginName orders the results by the login_name field.

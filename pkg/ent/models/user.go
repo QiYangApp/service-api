@@ -36,6 +36,8 @@ type User struct {
 	Passwd string `json:"passwd,omitempty"`
 	// Language holds the value of the "language" field.
 	Language string `json:"language,omitempty"`
+	// Theme holds the value of the "theme" field.
+	Theme string `json:"theme,omitempty"`
 	// LoginName holds the value of the "login_name" field.
 	LoginName string `json:"login_name,omitempty"`
 	// LoginSource holds the value of the "login_source" field.
@@ -64,7 +66,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case user.FieldID, user.FieldLoginSource, user.FieldLoginType, user.FieldCreateTime, user.FieldUpdateTime:
 			values[i] = new(sql.NullInt64)
-		case user.FieldAvatar, user.FieldEmail, user.FieldName, user.FieldLowerName, user.FieldFullName, user.FieldPasswdSalt, user.FieldPasswdHashAlgo, user.FieldPasswd, user.FieldLanguage, user.FieldLoginName:
+		case user.FieldAvatar, user.FieldEmail, user.FieldName, user.FieldLowerName, user.FieldFullName, user.FieldPasswdSalt, user.FieldPasswdHashAlgo, user.FieldPasswd, user.FieldLanguage, user.FieldTheme, user.FieldLoginName:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -140,6 +142,12 @@ func (u *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field language", values[i])
 			} else if value.Valid {
 				u.Language = value.String
+			}
+		case user.FieldTheme:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field theme", values[i])
+			} else if value.Valid {
+				u.Theme = value.String
 			}
 		case user.FieldLoginName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -251,6 +259,9 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("language=")
 	builder.WriteString(u.Language)
+	builder.WriteString(", ")
+	builder.WriteString("theme=")
+	builder.WriteString(u.Theme)
 	builder.WriteString(", ")
 	builder.WriteString("login_name=")
 	builder.WriteString(u.LoginName)

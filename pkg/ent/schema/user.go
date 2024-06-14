@@ -38,6 +38,7 @@ func (User) Fields() []ent.Field {
 		field.String("passwd_hash_algo").NotEmpty().MaxLen(32),
 		field.String("passwd").NotEmpty().MaxLen(32),
 		field.String("language").NotEmpty().MaxLen(32),
+		field.String("theme").NotEmpty().MaxLen(32),
 		field.String("login_name").NotEmpty(),
 		field.Int64("login_source").Default(0),
 		field.Int("login_type").GoType(auth.Type(0)),

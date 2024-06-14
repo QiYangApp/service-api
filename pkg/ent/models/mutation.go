@@ -6888,6 +6888,7 @@ type UserMutation struct {
 	passwd_hash_algo *string
 	passwd           *string
 	language         *string
+	theme            *string
 	login_name       *string
 	login_source     *int64
 	addlogin_source  *int64
@@ -7334,6 +7335,42 @@ func (m *UserMutation) ResetLanguage() {
 	m.language = nil
 }
 
+// SetTheme sets the "theme" field.
+func (m *UserMutation) SetTheme(s string) {
+	m.theme = &s
+}
+
+// Theme returns the value of the "theme" field in the mutation.
+func (m *UserMutation) Theme() (r string, exists bool) {
+	v := m.theme
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTheme returns the old "theme" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldTheme(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTheme is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTheme requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTheme: %w", err)
+	}
+	return oldValue.Theme, nil
+}
+
+// ResetTheme resets all changes to the "theme" field.
+func (m *UserMutation) ResetTheme() {
+	m.theme = nil
+}
+
 // SetLoginName sets the "login_name" field.
 func (m *UserMutation) SetLoginName(s string) {
 	m.login_name = &s
@@ -7736,7 +7773,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 17)
+	fields := make([]string, 0, 18)
 	if m.avatar != nil {
 		fields = append(fields, user.FieldAvatar)
 	}
@@ -7763,6 +7800,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.language != nil {
 		fields = append(fields, user.FieldLanguage)
+	}
+	if m.theme != nil {
+		fields = append(fields, user.FieldTheme)
 	}
 	if m.login_name != nil {
 		fields = append(fields, user.FieldLoginName)
@@ -7814,6 +7854,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Passwd()
 	case user.FieldLanguage:
 		return m.Language()
+	case user.FieldTheme:
+		return m.Theme()
 	case user.FieldLoginName:
 		return m.LoginName()
 	case user.FieldLoginSource:
@@ -7857,6 +7899,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPasswd(ctx)
 	case user.FieldLanguage:
 		return m.OldLanguage(ctx)
+	case user.FieldTheme:
+		return m.OldTheme(ctx)
 	case user.FieldLoginName:
 		return m.OldLoginName(ctx)
 	case user.FieldLoginSource:
@@ -7944,6 +7988,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLanguage(v)
+		return nil
+	case user.FieldTheme:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTheme(v)
 		return nil
 	case user.FieldLoginName:
 		v, ok := value.(string)
@@ -8128,6 +8179,9 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldLanguage:
 		m.ResetLanguage()
 		return nil
+	case user.FieldTheme:
+		m.ResetTheme()
+		return nil
 	case user.FieldLoginName:
 		m.ResetLoginName()
 		return nil
@@ -8207,31 +8261,33 @@ func (m *UserMutation) ResetEdge(name string) error {
 // UserAuthSourceMutation represents an operation that mutates the UserAuthSource nodes in the graph.
 type UserAuthSourceMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *int64
-	user_id         *int64
-	adduser_id      *int64
-	token           *string
-	channel         *string
-	device          *string
-	device_detail   *string
-	client_ip       *string
-	remote_ip       *string
-	snapshot        *string
-	login_name      *string
-	login_source    *int
-	addlogin_source *int
-	login_type      *int
-	addlogin_type   *int
-	create_time     *timeutil.TimeStamp
-	addcreate_time  *timeutil.TimeStamp
-	update_time     *timeutil.TimeStamp
-	addupdate_time  *timeutil.TimeStamp
-	clearedFields   map[string]struct{}
-	done            bool
-	oldValue        func(context.Context) (*UserAuthSource, error)
-	predicates      []predicate.UserAuthSource
+	op               Op
+	typ              string
+	id               *int64
+	user_id          *int64
+	adduser_id       *int64
+	token            *string
+	token_salt       *string
+	token_last_eight *string
+	channel          *string
+	device           *string
+	device_detail    *string
+	client_ip        *string
+	remote_ip        *string
+	snapshot         *string
+	login_name       *string
+	login_source     *int
+	addlogin_source  *int
+	login_type       *int
+	addlogin_type    *int
+	create_time      *timeutil.TimeStamp
+	addcreate_time   *timeutil.TimeStamp
+	update_time      *timeutil.TimeStamp
+	addupdate_time   *timeutil.TimeStamp
+	clearedFields    map[string]struct{}
+	done             bool
+	oldValue         func(context.Context) (*UserAuthSource, error)
+	predicates       []predicate.UserAuthSource
 }
 
 var _ ent.Mutation = (*UserAuthSourceMutation)(nil)
@@ -8428,6 +8484,78 @@ func (m *UserAuthSourceMutation) OldToken(ctx context.Context) (v string, err er
 // ResetToken resets all changes to the "token" field.
 func (m *UserAuthSourceMutation) ResetToken() {
 	m.token = nil
+}
+
+// SetTokenSalt sets the "token_salt" field.
+func (m *UserAuthSourceMutation) SetTokenSalt(s string) {
+	m.token_salt = &s
+}
+
+// TokenSalt returns the value of the "token_salt" field in the mutation.
+func (m *UserAuthSourceMutation) TokenSalt() (r string, exists bool) {
+	v := m.token_salt
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTokenSalt returns the old "token_salt" field's value of the UserAuthSource entity.
+// If the UserAuthSource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserAuthSourceMutation) OldTokenSalt(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTokenSalt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTokenSalt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTokenSalt: %w", err)
+	}
+	return oldValue.TokenSalt, nil
+}
+
+// ResetTokenSalt resets all changes to the "token_salt" field.
+func (m *UserAuthSourceMutation) ResetTokenSalt() {
+	m.token_salt = nil
+}
+
+// SetTokenLastEight sets the "token_last_eight" field.
+func (m *UserAuthSourceMutation) SetTokenLastEight(s string) {
+	m.token_last_eight = &s
+}
+
+// TokenLastEight returns the value of the "token_last_eight" field in the mutation.
+func (m *UserAuthSourceMutation) TokenLastEight() (r string, exists bool) {
+	v := m.token_last_eight
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTokenLastEight returns the old "token_last_eight" field's value of the UserAuthSource entity.
+// If the UserAuthSource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserAuthSourceMutation) OldTokenLastEight(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTokenLastEight is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTokenLastEight requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTokenLastEight: %w", err)
+	}
+	return oldValue.TokenLastEight, nil
+}
+
+// ResetTokenLastEight resets all changes to the "token_last_eight" field.
+func (m *UserAuthSourceMutation) ResetTokenLastEight() {
+	m.token_last_eight = nil
 }
 
 // SetChannel sets the "channel" field.
@@ -8940,12 +9068,18 @@ func (m *UserAuthSourceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserAuthSourceMutation) Fields() []string {
-	fields := make([]string, 0, 13)
+	fields := make([]string, 0, 15)
 	if m.user_id != nil {
 		fields = append(fields, userauthsource.FieldUserID)
 	}
 	if m.token != nil {
 		fields = append(fields, userauthsource.FieldToken)
+	}
+	if m.token_salt != nil {
+		fields = append(fields, userauthsource.FieldTokenSalt)
+	}
+	if m.token_last_eight != nil {
+		fields = append(fields, userauthsource.FieldTokenLastEight)
 	}
 	if m.channel != nil {
 		fields = append(fields, userauthsource.FieldChannel)
@@ -8992,6 +9126,10 @@ func (m *UserAuthSourceMutation) Field(name string) (ent.Value, bool) {
 		return m.UserID()
 	case userauthsource.FieldToken:
 		return m.Token()
+	case userauthsource.FieldTokenSalt:
+		return m.TokenSalt()
+	case userauthsource.FieldTokenLastEight:
+		return m.TokenLastEight()
 	case userauthsource.FieldChannel:
 		return m.Channel()
 	case userauthsource.FieldDevice:
@@ -9027,6 +9165,10 @@ func (m *UserAuthSourceMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldUserID(ctx)
 	case userauthsource.FieldToken:
 		return m.OldToken(ctx)
+	case userauthsource.FieldTokenSalt:
+		return m.OldTokenSalt(ctx)
+	case userauthsource.FieldTokenLastEight:
+		return m.OldTokenLastEight(ctx)
 	case userauthsource.FieldChannel:
 		return m.OldChannel(ctx)
 	case userauthsource.FieldDevice:
@@ -9071,6 +9213,20 @@ func (m *UserAuthSourceMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetToken(v)
+		return nil
+	case userauthsource.FieldTokenSalt:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTokenSalt(v)
+		return nil
+	case userauthsource.FieldTokenLastEight:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTokenLastEight(v)
 		return nil
 	case userauthsource.FieldChannel:
 		v, ok := value.(string)
@@ -9266,6 +9422,12 @@ func (m *UserAuthSourceMutation) ResetField(name string) error {
 		return nil
 	case userauthsource.FieldToken:
 		m.ResetToken()
+		return nil
+	case userauthsource.FieldTokenSalt:
+		m.ResetTokenSalt()
+		return nil
+	case userauthsource.FieldTokenLastEight:
+		m.ResetTokenLastEight()
 		return nil
 	case userauthsource.FieldChannel:
 		m.ResetChannel()

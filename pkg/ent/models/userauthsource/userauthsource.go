@@ -17,6 +17,10 @@ const (
 	FieldUserID = "user_id"
 	// FieldToken holds the string denoting the token field in the database.
 	FieldToken = "token"
+	// FieldTokenSalt holds the string denoting the token_salt field in the database.
+	FieldTokenSalt = "token_salt"
+	// FieldTokenLastEight holds the string denoting the token_last_eight field in the database.
+	FieldTokenLastEight = "token_last_eight"
 	// FieldChannel holds the string denoting the channel field in the database.
 	FieldChannel = "channel"
 	// FieldDevice holds the string denoting the device field in the database.
@@ -48,6 +52,8 @@ var Columns = []string{
 	FieldID,
 	FieldUserID,
 	FieldToken,
+	FieldTokenSalt,
+	FieldTokenLastEight,
 	FieldChannel,
 	FieldDevice,
 	FieldDeviceDetail,
@@ -114,6 +120,16 @@ func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 // ByToken orders the results by the token field.
 func ByToken(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldToken, opts...).ToFunc()
+}
+
+// ByTokenSalt orders the results by the token_salt field.
+func ByTokenSalt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTokenSalt, opts...).ToFunc()
+}
+
+// ByTokenLastEight orders the results by the token_last_eight field.
+func ByTokenLastEight(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTokenLastEight, opts...).ToFunc()
 }
 
 // ByChannel orders the results by the channel field.

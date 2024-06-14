@@ -932,6 +932,11 @@ func (u *UserQuery) collectField(ctx context.Context, oneNode bool, opCtx *graph
 				selectedFields = append(selectedFields, user.FieldLanguage)
 				fieldSeen[user.FieldLanguage] = struct{}{}
 			}
+		case "theme":
+			if _, ok := fieldSeen[user.FieldTheme]; !ok {
+				selectedFields = append(selectedFields, user.FieldTheme)
+				fieldSeen[user.FieldTheme] = struct{}{}
+			}
 		case "loginName":
 			if _, ok := fieldSeen[user.FieldLoginName]; !ok {
 				selectedFields = append(selectedFields, user.FieldLoginName)
@@ -1040,6 +1045,16 @@ func (uas *UserAuthSourceQuery) collectField(ctx context.Context, oneNode bool, 
 			if _, ok := fieldSeen[userauthsource.FieldToken]; !ok {
 				selectedFields = append(selectedFields, userauthsource.FieldToken)
 				fieldSeen[userauthsource.FieldToken] = struct{}{}
+			}
+		case "tokenSalt":
+			if _, ok := fieldSeen[userauthsource.FieldTokenSalt]; !ok {
+				selectedFields = append(selectedFields, userauthsource.FieldTokenSalt)
+				fieldSeen[userauthsource.FieldTokenSalt] = struct{}{}
+			}
+		case "tokenLastEight":
+			if _, ok := fieldSeen[userauthsource.FieldTokenLastEight]; !ok {
+				selectedFields = append(selectedFields, userauthsource.FieldTokenLastEight)
+				fieldSeen[userauthsource.FieldTokenLastEight] = struct{}{}
 			}
 		case "channel":
 			if _, ok := fieldSeen[userauthsource.FieldChannel]; !ok {

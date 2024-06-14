@@ -18,6 +18,8 @@ func (UserAuthSource) Fields() []ent.Field {
 		field.Int64("id"),
 		field.Int64("user_id"),
 		field.String("token").NotEmpty().Comment("授权token").MaxLen(254),
+		field.String("token_salt"),
+		field.String("token_last_eight"),
 		field.String("channel").MaxLen(64).Comment("登录渠道"),
 		field.String("device").MaxLen(64).Comment("登录设备"),
 		field.Text("device_detail").MaxLen(64).Comment("登录信息"),

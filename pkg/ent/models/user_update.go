@@ -155,6 +155,20 @@ func (uu *UserUpdate) SetNillableLanguage(s *string) *UserUpdate {
 	return uu
 }
 
+// SetTheme sets the "theme" field.
+func (uu *UserUpdate) SetTheme(s string) *UserUpdate {
+	uu.mutation.SetTheme(s)
+	return uu
+}
+
+// SetNillableTheme sets the "theme" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableTheme(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetTheme(*s)
+	}
+	return uu
+}
+
 // SetLoginName sets the "login_name" field.
 func (uu *UserUpdate) SetLoginName(s string) *UserUpdate {
 	uu.mutation.SetLoginName(s)
@@ -349,6 +363,11 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "language", err: fmt.Errorf(`models: validator failed for field "User.language": %w`, err)}
 		}
 	}
+	if v, ok := uu.mutation.Theme(); ok {
+		if err := user.ThemeValidator(v); err != nil {
+			return &ValidationError{Name: "theme", err: fmt.Errorf(`models: validator failed for field "User.theme": %w`, err)}
+		}
+	}
 	if v, ok := uu.mutation.LoginName(); ok {
 		if err := user.LoginNameValidator(v); err != nil {
 			return &ValidationError{Name: "login_name", err: fmt.Errorf(`models: validator failed for field "User.login_name": %w`, err)}
@@ -395,6 +414,9 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.Language(); ok {
 		_spec.SetField(user.FieldLanguage, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Theme(); ok {
+		_spec.SetField(user.FieldTheme, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.LoginName(); ok {
 		_spec.SetField(user.FieldLoginName, field.TypeString, value)
@@ -568,6 +590,20 @@ func (uuo *UserUpdateOne) SetLanguage(s string) *UserUpdateOne {
 func (uuo *UserUpdateOne) SetNillableLanguage(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetLanguage(*s)
+	}
+	return uuo
+}
+
+// SetTheme sets the "theme" field.
+func (uuo *UserUpdateOne) SetTheme(s string) *UserUpdateOne {
+	uuo.mutation.SetTheme(s)
+	return uuo
+}
+
+// SetNillableTheme sets the "theme" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableTheme(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetTheme(*s)
 	}
 	return uuo
 }
@@ -779,6 +815,11 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "language", err: fmt.Errorf(`models: validator failed for field "User.language": %w`, err)}
 		}
 	}
+	if v, ok := uuo.mutation.Theme(); ok {
+		if err := user.ThemeValidator(v); err != nil {
+			return &ValidationError{Name: "theme", err: fmt.Errorf(`models: validator failed for field "User.theme": %w`, err)}
+		}
+	}
 	if v, ok := uuo.mutation.LoginName(); ok {
 		if err := user.LoginNameValidator(v); err != nil {
 			return &ValidationError{Name: "login_name", err: fmt.Errorf(`models: validator failed for field "User.login_name": %w`, err)}
@@ -842,6 +883,9 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.Language(); ok {
 		_spec.SetField(user.FieldLanguage, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Theme(); ok {
+		_spec.SetField(user.FieldTheme, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.LoginName(); ok {
 		_spec.SetField(user.FieldLoginName, field.TypeString, value)

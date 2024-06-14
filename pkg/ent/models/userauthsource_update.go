@@ -63,6 +63,34 @@ func (uasu *UserAuthSourceUpdate) SetNillableToken(s *string) *UserAuthSourceUpd
 	return uasu
 }
 
+// SetTokenSalt sets the "token_salt" field.
+func (uasu *UserAuthSourceUpdate) SetTokenSalt(s string) *UserAuthSourceUpdate {
+	uasu.mutation.SetTokenSalt(s)
+	return uasu
+}
+
+// SetNillableTokenSalt sets the "token_salt" field if the given value is not nil.
+func (uasu *UserAuthSourceUpdate) SetNillableTokenSalt(s *string) *UserAuthSourceUpdate {
+	if s != nil {
+		uasu.SetTokenSalt(*s)
+	}
+	return uasu
+}
+
+// SetTokenLastEight sets the "token_last_eight" field.
+func (uasu *UserAuthSourceUpdate) SetTokenLastEight(s string) *UserAuthSourceUpdate {
+	uasu.mutation.SetTokenLastEight(s)
+	return uasu
+}
+
+// SetNillableTokenLastEight sets the "token_last_eight" field if the given value is not nil.
+func (uasu *UserAuthSourceUpdate) SetNillableTokenLastEight(s *string) *UserAuthSourceUpdate {
+	if s != nil {
+		uasu.SetTokenLastEight(*s)
+	}
+	return uasu
+}
+
 // SetChannel sets the "channel" field.
 func (uasu *UserAuthSourceUpdate) SetChannel(s string) *UserAuthSourceUpdate {
 	uasu.mutation.SetChannel(s)
@@ -323,6 +351,12 @@ func (uasu *UserAuthSourceUpdate) sqlSave(ctx context.Context) (n int, err error
 	if value, ok := uasu.mutation.Token(); ok {
 		_spec.SetField(userauthsource.FieldToken, field.TypeString, value)
 	}
+	if value, ok := uasu.mutation.TokenSalt(); ok {
+		_spec.SetField(userauthsource.FieldTokenSalt, field.TypeString, value)
+	}
+	if value, ok := uasu.mutation.TokenLastEight(); ok {
+		_spec.SetField(userauthsource.FieldTokenLastEight, field.TypeString, value)
+	}
 	if value, ok := uasu.mutation.Channel(); ok {
 		_spec.SetField(userauthsource.FieldChannel, field.TypeString, value)
 	}
@@ -413,6 +447,34 @@ func (uasuo *UserAuthSourceUpdateOne) SetToken(s string) *UserAuthSourceUpdateOn
 func (uasuo *UserAuthSourceUpdateOne) SetNillableToken(s *string) *UserAuthSourceUpdateOne {
 	if s != nil {
 		uasuo.SetToken(*s)
+	}
+	return uasuo
+}
+
+// SetTokenSalt sets the "token_salt" field.
+func (uasuo *UserAuthSourceUpdateOne) SetTokenSalt(s string) *UserAuthSourceUpdateOne {
+	uasuo.mutation.SetTokenSalt(s)
+	return uasuo
+}
+
+// SetNillableTokenSalt sets the "token_salt" field if the given value is not nil.
+func (uasuo *UserAuthSourceUpdateOne) SetNillableTokenSalt(s *string) *UserAuthSourceUpdateOne {
+	if s != nil {
+		uasuo.SetTokenSalt(*s)
+	}
+	return uasuo
+}
+
+// SetTokenLastEight sets the "token_last_eight" field.
+func (uasuo *UserAuthSourceUpdateOne) SetTokenLastEight(s string) *UserAuthSourceUpdateOne {
+	uasuo.mutation.SetTokenLastEight(s)
+	return uasuo
+}
+
+// SetNillableTokenLastEight sets the "token_last_eight" field if the given value is not nil.
+func (uasuo *UserAuthSourceUpdateOne) SetNillableTokenLastEight(s *string) *UserAuthSourceUpdateOne {
+	if s != nil {
+		uasuo.SetTokenLastEight(*s)
 	}
 	return uasuo
 }
@@ -706,6 +768,12 @@ func (uasuo *UserAuthSourceUpdateOne) sqlSave(ctx context.Context) (_node *UserA
 	}
 	if value, ok := uasuo.mutation.Token(); ok {
 		_spec.SetField(userauthsource.FieldToken, field.TypeString, value)
+	}
+	if value, ok := uasuo.mutation.TokenSalt(); ok {
+		_spec.SetField(userauthsource.FieldTokenSalt, field.TypeString, value)
+	}
+	if value, ok := uasuo.mutation.TokenLastEight(); ok {
+		_spec.SetField(userauthsource.FieldTokenLastEight, field.TypeString, value)
 	}
 	if value, ok := uasuo.mutation.Channel(); ok {
 		_spec.SetField(userauthsource.FieldChannel, field.TypeString, value)

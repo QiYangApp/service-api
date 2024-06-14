@@ -12,6 +12,7 @@ max_requests: 10
 max_request_time: 60
 time_zones: "Asia/Shanghai"
 language: zh_cn
+theme: "default"
 
 database:
   driver: "pgx"
