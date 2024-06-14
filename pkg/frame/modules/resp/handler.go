@@ -1,7 +1,7 @@
 package resp
 
 import (
-	"github.com/gin-contrib/i18n"
+	"frame/modules/translate"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
@@ -59,11 +59,11 @@ func (r *Response) GetMessage() string {
 		return ""
 	}
 
-	if msg, err := i18n.GetMessage(r.Context, r.Message); err != nil || len(msg) > 0 {
+	if msg, err := translate.GetMessage(r.Context, r.Message); err != nil {
+		return r.Message
+	} else {
 		return msg
 	}
-
-	return r.Message
 }
 
 func (r *Response) SetState(state StateEnum) *Response {

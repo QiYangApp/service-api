@@ -4,7 +4,6 @@
 package errs
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -13,10 +12,10 @@ import (
 // Many Errors returned by Gitea can be tested against these errors
 // using errors.Is.
 var (
-	ErrInvalidArgument  = errors.New("invalid argument")
-	ErrPermissionDenied = errors.New("permission denied")
-	ErrAlreadyExist     = errors.New("resource already exists")
-	ErrNotExist         = errors.New("resource does not exist")
+	ErrInvalidArgument  = New("invalid argument")
+	ErrPermissionDenied = New("permission denied")
+	ErrAlreadyExist     = New("resource already exists")
+	ErrNotExist         = New("resource does not exist")
 )
 
 // SilentWrap provides a simple wrapper for a wrapped error where the wrapped error message plays no part in the error message

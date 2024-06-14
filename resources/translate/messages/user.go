@@ -12,6 +12,11 @@ var (
 		Other: "The provided email address could not be found.",
 	}
 
+	UserNameEmpty = &i18n.Message{
+		ID:    "USER_NAME_EMPTY",
+		Other: "Please provide an userName.",
+	}
+
 	UserEmailEmpty = &i18n.Message{
 		ID:    "USER_EMAIL_EMPTY",
 		Other: "Please provide an email address.",

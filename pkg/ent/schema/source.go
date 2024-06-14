@@ -38,7 +38,5 @@ func (Source) Indexes() []ent.Index {
 		index.Fields("create_time"),
 		index.Fields("update_time"),
 		index.Fields("name").Unique(),
-		index.Fields("create_time"),
-		index.Fields("update_time"),
 	}
 }

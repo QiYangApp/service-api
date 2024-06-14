@@ -2,10 +2,10 @@ package validator
 
 import (
 	"frame/modules/router"
+	"frame/modules/translate"
 	"service-api/internal/modules/setting"
 	"service-api/resources/translate/messages"
 
-	"github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,12 +22,11 @@ type CaptchaResponse struct {
 }
 
 type CaptchaVerifyRequest struct {
-	Msg
-	Key    string                 `uri:"key"`
-	Type   setting.CaptchaFeature `uri:"type"`
-	Token  string                 `form:"token" binding:"required"`
-	Id     string                 `form:"id" binding:"required"`
-	Answer string                 `form:"answer" binding:"required"`
+	Key    string                 `form:"key" json:"key"`
+	Type   setting.CaptchaFeature `form:"type" json:"type"`
+	Token  string                 `form:"token" json:"token"`
+	Id     string                 `form:"id" json:"id"`
+	Answer string                 `form:"answer" json:"answer"`
 }
 
 type Msg struct {
@@ -35,8 +34,8 @@ type Msg struct {
 
 func (Msg) GetMessage(c *gin.Context) router.ValidatorMessages {
 	return router.ValidatorMessages{
-		"Token.required":  i18n.MustGetMessage(c, messages.CaptchaInputEmpty.ID),
-		"Id.required":     i18n.MustGetMessage(c, messages.CaptchaIdEmpty.ID),
-		"Answer.required": i18n.MustGetMessage(c, messages.CaptchaIdEmpty.ID),
+		"Token.required":  translate.MustGetMessage(c, messages.CaptchaInputEmpty.ID),
+		"Id.required":     translate.MustGetMessage(c, messages.CaptchaIdEmpty.ID),
+		"Answer.required": translate.MustGetMessage(c, messages.CaptchaIdEmpty.ID),
 	}
 }

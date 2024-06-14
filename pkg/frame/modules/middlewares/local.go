@@ -2,9 +2,9 @@ package middlewares
 
 import (
 	"fmt"
+	"frame/modules/translate"
 	"frame/util/path"
 	"github.com/BurntSushi/toml"
-	"github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/text/language"
 	"os"
@@ -54,14 +54,14 @@ func I18nUrl() gin.HandlerFunc {
 }
 
 func I18nLocal() gin.HandlerFunc {
-	return i18n.Localize(
-		i18n.WithBundle(&i18n.BundleCfg{
+	return translate.Localize(
+		translate.WithBundle(&translate.BundleCfg{
 			RootPath:         path.JoinPath(path.RunTranslatePath, ""),
 			AcceptLanguage:   []language.Tag{language.SimplifiedChinese, language.English},
 			DefaultLanguage:  language.SimplifiedChinese,
 			UnmarshalFunc:    toml.Unmarshal,
 			FormatBundleFile: "toml",
-			Loader: i18n.LoaderFunc(func(confPath string) ([]byte, error) {
+			Loader: translate.LoaderFunc(func(confPath string) ([]byte, error) {
 
 				filename := filepath.Base(confPath)
 				dir := filepath.Dir(confPath)
@@ -69,7 +69,7 @@ func I18nLocal() gin.HandlerFunc {
 				return os.ReadFile(path.JoinPath(dir, "active."+filename))
 			}),
 		}),
-		i18n.WithGetLngHandle(
+		translate.WithGetLngHandle(
 			func(r *gin.Context, defaultLng string) string {
 				// 1. Check URL arguments.
 				lang := r.Query("lang")

@@ -61,7 +61,7 @@ func bind(fun any) gin.HandlerFunc {
 	}
 }
 
-func unmarshal(c *gin.Context, v interface{}) error {
+func unmarshal(c *gin.Context, v any) error {
 	if err := c.ShouldBind(v); err != nil {
 		log.Sugar().Warnf("route handle fun error, method params bind, error method: %v", v)
 		return err

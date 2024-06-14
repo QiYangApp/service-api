@@ -8,7 +8,6 @@ import (
 	"frame/modules/middlewares"
 	"frame/modules/session"
 	"frame/util/types"
-	"github.com/gin-contrib/i18n"
 	"github.com/gin-gonic/gin"
 	usermodel "service-api/internal/app/repo/user"
 	"service-api/internal/modules/setting"
@@ -75,10 +74,6 @@ func SignInUserSession(ctx *gin.Context, u *models.User, remember bool) (*UserSe
 		return nil, errs.New(messages.UserSignInInitLanguageFail.ID)
 	}
 
-	if i18n.GetLngHandler() != u.Language {
-		ctx.Locale = middleware.Locale(ctx.Resp, ctx.Req)
-	}
-
 	// TODO remember 记住用户待开发
 	userSession := &UserSession{
 		Token:      "",
@@ -86,12 +81,22 @@ func SignInUserSession(ctx *gin.Context, u *models.User, remember bool) (*UserSe
 		RoleId:     0,
 		IsSigned:   true,
 		IsTwoFa:    false,
-		IsRegister: false,
+		IsRegister: u.IsRestricted,
 		Language:   u.Language,
 		Theme:      u.Theme,
 	}
 
 	return userSession, nil
+}
+
+func SetUserSession(ctx *gin.Context, u *UserSession) error {
+	session.Client(ctx).Set("user", u)
+
+	if err := session.Client(ctx).Save(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func SignInInitTheme(ctx *gin.Context, u *models.User) error {

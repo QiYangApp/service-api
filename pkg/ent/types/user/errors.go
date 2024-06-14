@@ -3,7 +3,7 @@ package user
 import (
 	"errors"
 	"fmt"
-	util "frame/errors"
+	"frame/errs"
 )
 
 // ErrAccountNotExist user account not exist
@@ -23,7 +23,7 @@ func (err ErrAccountNotExist) Error() string {
 }
 
 func (err ErrAccountNotExist) Unwrap() error {
-	return util.ErrNotExist
+	return errs.ErrNotExist
 }
 
 // ErrUserProhibitLogin represents a "ErrUserProhibitLogin" kind of error.
@@ -45,7 +45,7 @@ func (err ErrUserProhibitLogin) Error() string {
 
 // Unwrap unwraps this error as a ErrPermission error
 func (err ErrUserProhibitLogin) Unwrap() error {
-	return util.ErrPermissionDenied
+	return errs.ErrPermissionDenied
 }
 
 // ErrUserNotExist represents a "UserNotExist" kind of error.
@@ -67,7 +67,7 @@ func (err ErrUserNotExist) Error() string {
 
 // Unwrap unwraps this error as a ErrNotExist error
 func (err ErrUserNotExist) Unwrap() error {
-	return util.ErrNotExist
+	return errs.ErrNotExist
 }
 
 // ErrUserInactive represents a "ErrUserInactive" kind of error.
@@ -88,5 +88,5 @@ func (err ErrUserInactive) Error() string {
 
 // Unwrap unwraps this error as a ErrPermission error
 func (err ErrUserInactive) Unwrap() error {
-	return util.ErrPermissionDenied
+	return errs.ErrPermissionDenied
 }

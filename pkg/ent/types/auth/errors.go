@@ -6,7 +6,7 @@ package auth
 import (
 	"errors"
 	"fmt"
-	util "frame/errors"
+	"frame/errs"
 )
 
 var ErrAuthSourceNotActivated = errors.New("auth source is not activated")
@@ -30,7 +30,7 @@ func (err ErrUserAlreadyExist) Error() string {
 
 // Unwrap unwraps this error as a ErrExist error
 func (err ErrUserAlreadyExist) Unwrap() error {
-	return util.ErrAlreadyExist
+	return errs.ErrAlreadyExist
 }
 
 // ErrUserNotExist represents a "UserNotExist" kind of error.
@@ -52,5 +52,5 @@ func (err ErrUserNotExist) Error() string {
 
 // Unwrap unwraps this error as a ErrNotExist error
 func (err ErrUserNotExist) Unwrap() error {
-	return util.ErrNotExist
+	return errs.ErrNotExist
 }

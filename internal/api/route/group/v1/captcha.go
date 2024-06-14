@@ -12,5 +12,4 @@ type CaptchaRouter struct {
 
 func (*CaptchaRouter) Handle(r *gin.RouterGroup) {
 	router.GetBind(r, "v1/captcha/:type", captcha.Index)
-	router.PostBind(r, "v1/captcha/:type", captcha.Verify)
 }

@@ -13,7 +13,6 @@ require (
 	entgo.io/ent v0.13.1
 	frame v0.0.0-00010101000000-000000000000
 	github.com/dustin/go-humanize v1.0.1
-	github.com/gin-contrib/i18n v1.1.3
 	github.com/gin-contrib/sessions v1.0.1
 	github.com/gin-gonic/gin v1.10.0
 	github.com/golang-jwt/jwt/v5 v5.2.1

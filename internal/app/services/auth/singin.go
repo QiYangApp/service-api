@@ -9,10 +9,12 @@ import (
 	"ent/models"
 	authtype "ent/types/auth"
 	usertype "ent/types/user"
+	"frame/errs"
 	"frame/modules/log"
 	"service-api/internal/app/repo"
 	authmodel "service-api/internal/app/repo/auth"
 	usermodel "service-api/internal/app/repo/user"
+	"service-api/resources/translate/messages"
 	"strings"
 )
 
@@ -35,7 +37,7 @@ func UserSignIn(ctx context.Context, username, passwd string) (*models.User, *mo
 
 	var account *models.Accounts
 	if account, err = usermodel.GetSingleAccountByName(ctx, trimmedUsername); err != nil {
-		return nil, nil, err
+		return nil, nil, errs.WithErr(messages.UserEmailNotFound.ID, err)
 	}
 
 	// verify user account is exist and is active
