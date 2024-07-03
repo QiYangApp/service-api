@@ -29,6 +29,7 @@ func main() {
 
 	client := cmd.WebCli()
 	client.Providers = append(client.Providers,
+		providers.MessageRegister,
 		providers.SettingRegister,
 		providers.CronRegister,
 		providers.RouterRegister,

@@ -15,8 +15,13 @@ var (
 		Other: "Error !",
 	}
 
+	Wrong = &i18n.Message{
+		ID:    "STATE_WRONG",
+		Other: "WRONG !",
+	}
+
 	Fail = &i18n.Message{
-		ID:    "STATE.Fail",
+		ID:    "STATE_Fail",
 		Other: "Fail !",
 	}
 )
