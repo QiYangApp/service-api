@@ -53,11 +53,31 @@ func bind(fun any) gin.HandlerFunc {
 			}
 		}
 
-		methodValueOf.Call(append([]reflect.Value{reflect.ValueOf(c)}, reqs...))
+		res := methodValueOf.Call(append([]reflect.Value{reflect.ValueOf(c)}, reqs...))
 
-		if !c.IsAborted() {
-			c.Abort()
+		handleResponse(c, res)
+	}
+}
+
+func handleResponse(ctx *gin.Context, res []reflect.Value) {
+	for _, r := range res {
+		switch t := r.Interface().(type) {
+		case string:
+			ctx.String(http.StatusOK, t)
+			break
+		case *resp.Response:
+			t.Output()
+			break
+		case resp.Response:
+			t.Output()
+			break
+		default:
+			ctx.JSON(http.StatusOK, t)
 		}
+	}
+
+	if !ctx.IsAborted() {
+		ctx.Abort()
 	}
 }
 

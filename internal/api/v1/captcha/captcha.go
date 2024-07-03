@@ -4,8 +4,8 @@ import (
 	"frame/modules/log"
 	"frame/modules/resp"
 	"net/http"
+	"service-api/internal/api/validator"
 	"service-api/internal/app/services/captcha"
-	"service-api/internal/app/validator"
 	"service-api/internal/modules/setting"
 
 	"github.com/gin-gonic/gin"

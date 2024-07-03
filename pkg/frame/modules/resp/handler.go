@@ -4,6 +4,7 @@ import (
 	"frame/modules/translate"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"net/http"
 )
 
@@ -48,22 +49,18 @@ func (r *Response) GetCode() int {
 	return http.StatusOK
 }
 
-func (r *Response) SetMessage(message string) *Response {
-	r.Message = message
+func (r *Response) SetMessage(message *i18n.Message) *Response {
+	if msg, err := translate.GetMessage(r.Context, message); err != nil {
+		r.Message = err.Error()
+	} else {
+		r.Message = msg
+	}
 
 	return r
 }
 
 func (r *Response) GetMessage() string {
-	if r.Message == "" {
-		return ""
-	}
-
-	if msg, err := translate.GetMessage(r.Context, r.Message); err != nil {
-		return r.Message
-	} else {
-		return msg
-	}
+	return r.Message
 }
 
 func (r *Response) SetState(state StateEnum) *Response {
@@ -89,14 +86,7 @@ func (r *Response) ToSelf() *Response {
 }
 
 func (r *Response) ToStruct() *Response {
-	return &Response{
-		Code:      r.GetCode(),
-		State:     r.GetState(),
-		Message:   r.GetMessage(),
-		Data:      r.Data,
-		Timestamp: r.Timestamp,
-		RequestId: r.RequestId,
-	}
+	return r
 }
 
 func (r *Response) Output() *Response {

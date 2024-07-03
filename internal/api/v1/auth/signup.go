@@ -5,11 +5,18 @@
 package auth
 
 import (
+	"frame/modules/log"
+	"frame/modules/resp"
 	"github.com/gin-gonic/gin"
+	"service-api/internal/api/validator/auth"
 )
 
 func SignUp(ctx *gin.Context) {
+
 }
 
-func SignUpPost(ctx *gin.Context) {
+func SignUpPost(ctx *gin.Context, form *auth.SignUpForm) *resp.Response {
+	log.Sugar().Info(form)
+
+	return resp.Success(ctx, form)
 }

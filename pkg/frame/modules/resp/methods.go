@@ -3,6 +3,7 @@ package resp
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"net/http"
 	"time"
 )
@@ -23,19 +24,19 @@ func R[T interface{}](
 	m string,
 	s StateEnum,
 ) *Response {
-	return New(c).SetType(t).SetState(s).SetMessage(m).SetCode(code).SetData(data)
+	return New(c).SetType(t).SetState(s).SetMessage(&i18n.Message{ID: m}).SetCode(code).SetData(data)
 }
 
-func Success(c *gin.Context, data any) {
-	New(c).SetState(SuccessState).SetCode(http.StatusOK).SetType(JSON).SetMessage("STATE.SUCCESS").SetData(data).Output()
+func Success(c *gin.Context, data any) *Response {
+	return New(c).SetState(SuccessState).SetCode(http.StatusOK).SetType(JSON).SetMessage(SuccessMessage).SetData(data)
 }
 
-func SuccessWithMsg(c *gin.Context, data any, msg string) {
-	New(c).SetState(SuccessState).SetCode(http.StatusOK).SetType(JSON).SetMessage(msg).SetData(data).Output()
+func SuccessWithMsg(c *gin.Context, data any, msg string) *Response {
+	return New(c).SetState(SuccessState).SetCode(http.StatusOK).SetType(JSON).SetMessage(&i18n.Message{ID: msg}).SetData(data)
 }
 
-func Fail(c *gin.Context, data any, code int, mes string) {
-	New(c).SetState(FailState).SetType(JSON).SetCode(code).SetMessage(mes).SetData(data).Output()
+func Fail(c *gin.Context, data any, code int, msg string) *Response {
+	return New(c).SetState(FailState).SetType(JSON).SetCode(code).SetMessage(&i18n.Message{ID: msg}).SetData(data)
 }
 
 func Error(
@@ -43,10 +44,10 @@ func Error(
 	err error,
 	code int,
 	data any,
-) {
-	New(c).SetType(JSON).SetState(ErrorState).SetMessage(err.Error()).SetCode(code).SetData(data).Output()
+) *Response {
+	return New(c).SetType(JSON).SetState(ErrorState).SetMessage(&i18n.Message{ID: err.Error()}).SetCode(code).SetData(data)
 }
 
-func Jump(c *gin.Context, data any, msg string) {
-	New(c).SetType(JSON).SetState(ErrorState).SetMessage(msg).SetCode(http.StatusSeeOther).SetData(data).Output()
+func Jump(c *gin.Context, data any, msg string) *Response {
+	return New(c).SetType(JSON).SetState(ErrorState).SetMessage(&i18n.Message{ID: msg}).SetCode(http.StatusSeeOther).SetData(data)
 }
