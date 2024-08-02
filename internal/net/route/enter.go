@@ -29,7 +29,9 @@ func Register(app *cmd.WebServer) {
 	}
 
 	r.Use(funcs...)
+}
 
+func RouterRegister(r) {
 	for _, g := range RouterGroup {
 		g.Handle(r)
 	}
