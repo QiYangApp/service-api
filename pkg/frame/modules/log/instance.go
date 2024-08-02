@@ -10,13 +10,14 @@ import (
 
 var instance *Manage = nil
 var once = sync.Once{}
+var loggerMu = sync.RWMutex{}
 
 func Client() *zap.Logger {
 	return Instance().Client
 }
 
 func Sugar() *zap.SugaredLogger {
-	return Instance().Client.Sugar()
+	return Client().Sugar()
 }
 
 type ConfigType struct {
@@ -24,8 +25,11 @@ type ConfigType struct {
 }
 
 func Instance() *Manage {
-	once.Do(func() {
+	loggerMu.RLock()
 
+	defer loggerMu.RLocker()
+
+	once.Do(func() {
 		instance = &Manage{
 			Param: builderParam(),
 		}

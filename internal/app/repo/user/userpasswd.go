@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/hex"
 	"ent/models"
+	"service-api/conf"
 	"service-api/internal/app/repo"
-	"service-api/internal/modules/auth/passwd/hash"
-	"service-api/internal/modules/setting"
-	"service-api/internal/modules/util"
+	"service-api/modules/auth/passwd/hash"
+	"service-api/modules/util"
 )
 
 func IsPasswdSet(user *models.User) bool {
@@ -37,11 +37,11 @@ func SetPassword(user *models.User, passwd string) (err error) {
 	if user.PasswdSalt, err = GetUserSalt(); err != nil {
 		return err
 	}
-	if user.Passwd, err = hash.Parse(setting.SecretSetting.PasswdHashAlgo).Hash(passwd, user.PasswdHashAlgo); err != nil {
+	if user.Passwd, err = hash.Parse(conf.SecretSetting.PasswdHashAlgo).Hash(passwd, user.PasswdHashAlgo); err != nil {
 		return err
 	}
 
-	user.PasswdHashAlgo = setting.SecretSetting.PasswdHashAlgo
+	user.PasswdHashAlgo = conf.SecretSetting.PasswdHashAlgo
 
 	return nil
 }

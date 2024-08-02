@@ -72,7 +72,7 @@ package auth
 //		ID:          t.ID,
 //		TokenHash:   hash,
 //		UserID:      t.UserID,
-//		ExpiresUnix: timeutil.TimeStampNow().AddDuration(time.Duration(setting.LogInRememberDays*24) * time.Hour),
+//		ExpiresUnix: timeutil.TimeStampNow().AddDuration(time.Duration(conf.LogInRememberDays*24) * time.Hour),
 //	}
 //
 //	if err := auth_model.UpdateAuthTokenByID(ctx, newToken); err != nil {
@@ -85,7 +85,7 @@ package auth
 //func CreateAuthTokenForUserID(ctx context.Context, userID int64) (*models.AuthToken, string, error) {
 //	t := &auth_model.AuthToken{
 //		UserID:      userID,
-//		ExpiresUnix: timeutil.TimeStampNow().AddDuration(time.Duration(setting.LogInRememberDays*24) * time.Hour),
+//		ExpiresUnix: timeutil.TimeStampNow().AddDuration(time.Duration(conf.LogInRememberDays*24) * time.Hour),
 //	}
 //
 //	var err error

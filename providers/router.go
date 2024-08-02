@@ -2,7 +2,7 @@ package providers
 
 import (
 	"frame/cmd"
-	"service-api/internal/api/route"
+	"service-api/internal/net/route"
 )
 
 func RouterRegister() {

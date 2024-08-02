@@ -4,7 +4,7 @@
 package optional_test
 
 import (
-	"service-api/internal/modules/optional"
+	"service-api/modules/optional"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

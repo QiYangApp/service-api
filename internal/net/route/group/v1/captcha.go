@@ -1,0 +1,15 @@
+package v1
+
+import (
+	"frame/modules/router"
+
+	"github.com/gin-gonic/gin"
+	"service-api/internal/net/api/v1/captcha"
+)
+
+type CaptchaRouter struct {
+}
+
+func (*CaptchaRouter) Handle(r *gin.RouterGroup) {
+	router.GetBind(r, "v1/captcha/:type", captcha.Index)
+}

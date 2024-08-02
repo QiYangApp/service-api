@@ -1,7 +1,9 @@
 package providers
 
-import "service-api/internal/modules/setting"
+import (
+	"service-api/conf"
+)
 
 func SettingRegister() {
-	setting.LoadCommonSettings()
+	conf.LoadCommonSettings()
 }

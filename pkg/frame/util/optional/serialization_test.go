@@ -5,8 +5,8 @@ package optional_test
 
 import (
 	std_json "encoding/json" //nolint:depguard
-	"service-api/internal/modules/json"
-	"service-api/internal/modules/optional"
+	"service-api/modules/json"
+	"service-api/modules/optional"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

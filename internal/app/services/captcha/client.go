@@ -3,22 +3,22 @@ package captcha
 import (
 	"errors"
 	"frame/util/secret"
-	"service-api/internal/modules/captcha"
-	"service-api/internal/modules/setting"
+	setting2 "service-api/conf"
+	"service-api/modules/captcha"
 	"service-api/resources/translate/messages"
 )
 
 func New() captcha.Captcha {
-	var client, _ = setting.GetCaptchaClient()
+	var client, _ = setting2.GetCaptchaClient()
 
 	return client
 }
 
-func genToken(t setting.CaptchaFeature, token string) string {
-	return secret.Sha1Sum(t.ToString() + " - " + setting.SecretSetting.Key + "-" + token)
+func genToken(t setting2.CaptchaFeature, token string) string {
+	return secret.Sha1Sum(t.ToString() + " - " + setting2.SecretSetting.Key + "-" + token)
 }
 
-func Gen(t setting.CaptchaFeature, token string) (*captcha.Resp, error) {
+func Gen(t setting2.CaptchaFeature, token string) (*captcha.Resp, error) {
 	if err := CheckTokenType(t); err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func Gen(t setting.CaptchaFeature, token string) (*captcha.Resp, error) {
 	return resp, nil
 }
 
-func Verify(t setting.CaptchaFeature, token, key string, answer any, clear bool) (bool, error) {
+func Verify(t setting2.CaptchaFeature, token, key string, answer any, clear bool) (bool, error) {
 	if err := CheckTokenType(t); err != nil {
 		return false, err
 	}
@@ -39,14 +39,14 @@ func Verify(t setting.CaptchaFeature, token, key string, answer any, clear bool)
 	return New().Verify(token, key, answer, clear), nil
 }
 
-func CheckTokenType(t setting.CaptchaFeature) error {
-	if !setting.CaptchaSetting.Enable || !setting.CheckCaptchaFeatureEnable(t) {
+func CheckTokenType(t setting2.CaptchaFeature) error {
+	if !setting2.CaptchaSetting.Enable || !setting2.CheckCaptchaFeatureEnable(t) {
 		return errors.New(messages.CaptchaNotActivated.ID)
 	}
 
 	switch t {
-	case setting.CaptchaFeatureSignIn:
-	case setting.CaptchaFeatureSignUp:
+	case setting2.CaptchaFeatureSignIn:
+	case setting2.CaptchaFeatureSignUp:
 		break
 	default:
 		return errors.New(messages.CaptchaTokenMissing.ID)
