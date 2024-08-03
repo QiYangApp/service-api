@@ -8,8 +8,8 @@ import (
 )
 
 type SignUpForm struct {
-	UserName string `form:"userName" json:"userName" binding:"required,max=40"`
-	Email    string `form:"email" json:"email" binding:"required,email,max=254"`
+	UserName string `form:"userName" json:"userName" binding:"required,min=6,max=40"`
+	Email    string `form:"email" json:"email" binding:"required,email,min=3,max=32"`
 	Password string `form:"password" json:"password" binding:"required,min=6,max=255"`
 	Retype   string `form:"retype" json:"retype" binding:"required,eqfield=Password"`
 }
@@ -17,9 +17,11 @@ type SignUpForm struct {
 func (SignUpForm) GetMessage(c *gin.Context) router.ValidatorMessages {
 	return router.ValidatorMessages{
 		"userName.required": translate.MustGetMessage(c, messages.UserNameEmpty),
-		"userName.max":      translate.MustGetMessage(c, messages.UserNameMaxLength),
+		"userName.min":      translate.MustGetMessage(c, messages.UserNameCheckFailed),
+		"userName.max":      translate.MustGetMessage(c, messages.UserNameCheckFailed),
 		"email.required":    translate.MustGetMessage(c, messages.UserEmailEmpty),
-		"email.max":         translate.MustGetMessage(c, messages.UserEmailMaxLength),
+		"email.min":         translate.MustGetMessage(c, messages.UserEmailCheckFailed),
+		"email.max":         translate.MustGetMessage(c, messages.UserEmailCheckFailed),
 		"email.email":       translate.MustGetMessage(c, messages.UserEmailFormatInvalid),
 		"password.required": translate.MustGetMessage(c, messages.UserPasswordEmpty),
 		"password.min":      translate.MustGetMessage(c, messages.UserPasswordCheckFailed),

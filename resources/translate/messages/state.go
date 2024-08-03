@@ -21,7 +21,7 @@ var (
 	}
 
 	Fail = &i18n.Message{
-		ID:    "STATE_Fail",
+		ID:    "STATE_FAIL",
 		Other: "Fail !",
 	}
 )

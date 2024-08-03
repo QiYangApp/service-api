@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"frame/modules/log"
 	"frame/modules/resp"
 	"github.com/gin-gonic/gin"
@@ -36,12 +35,13 @@ func bind(fun any) gin.HandlerFunc {
 				if p, ok := tmp.Interface().(Validator); ok {
 					d = GetErrorMsg(c, p, err)
 				}
+
 				resp.Fail(
 					c,
 					d,
 					http.StatusBadRequest,
-					fmt.Sprintf("params error"),
-				)
+					resp.FailMessage.ID,
+				).Output()
 
 				return
 			}

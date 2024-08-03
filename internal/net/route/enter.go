@@ -29,9 +29,11 @@ func Register(app *cmd.WebServer) {
 	}
 
 	r.Use(funcs...)
+
+	Routes(r)
 }
 
-func RouterRegister(r) {
+func Routes(r *gin.RouterGroup) {
 	for _, g := range RouterGroup {
 		g.Handle(r)
 	}
