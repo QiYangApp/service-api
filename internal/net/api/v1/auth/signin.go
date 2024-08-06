@@ -10,12 +10,10 @@ import (
 	"frame/errs"
 	"frame/modules/log"
 	"frame/modules/resp"
-	setting2 "service-api/conf"
-	"service-api/resources/translate/messages"
-
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
+	"service-api/conf"
 	authserver "service-api/internal/app/services/auth"
 	"service-api/internal/app/services/captcha"
 	"service-api/internal/net/validator/auth"
@@ -24,20 +22,13 @@ import (
 // SignIn return SignIn page before data
 func SignIn(ctx *gin.Context) *resp.Response {
 	return resp.Success(ctx, map[string]any{
-		"captcha": setting2.CheckCaptchaFeatureEnable(setting2.CaptchaFeatureSignIn),
+		"captcha": conf.IsCaptchaFeatureEnable(conf.CaptchaFeatureSignIn),
 	})
 }
 
 func SignInPost(ctx *gin.Context, form *auth.SignInForm) *resp.Response {
-	if setting2.CheckCaptchaFeatureEnable(setting2.CaptchaFeatureSignIn) {
-		st, err := captcha.Verify(form.Captcha.Type, form.Captcha.Token, form.Captcha.Key, form.Captcha.Answer, false)
-		if err != nil {
-			return resp.Error(ctx, err, http.StatusBadRequest, nil)
-		}
-
-		if st {
-			return resp.Error(ctx, errors.New(messages.CaptchaValidationFAILED.ID), http.StatusBadRequest, nil)
-		}
+	if conf.IsCaptchaFeatureEnable(conf.CaptchaFeatureSignIn) {
+		return captcha.Verify(ctx, form.Captcha.Type, form.Captcha.Token, form.Captcha.Key, form.Captcha.Answer, false)
 	}
 
 	u, source, err := authserver.UserSignIn(ctx, form.UserName, form.Passwd)
@@ -55,7 +46,7 @@ func SignInPost(ctx *gin.Context, form *auth.SignInForm) *resp.Response {
 
 			return resp.Jump(ctx, auth.SignInVerifyError{ProhibitLogin: true}, "SIGN_IN.PROHIBIT_LOGIN")
 		} else if usertype.IsErrUserInactive(err) {
-			if setting2.ServiceSetting.RegisterConfirm {
+			if conf.ServiceSetting.RegisterConfirm {
 				log.Sugar().Infof("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
 				return resp.SuccessWithMsg(ctx, auth.SignInVerifyError{ActiveYourAccount: true}, "SIGN_IN.ACTIVE_YOUR_ACCOUNT")

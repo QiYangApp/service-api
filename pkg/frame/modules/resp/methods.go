@@ -48,6 +48,15 @@ func Error(
 	return New(c).SetType(JSON).SetState(ErrorState).SetMessage(&i18n.Message{ID: err.Error()}).SetCode(code).SetData(data)
 }
 
+func ErrorWithMsg(
+	c *gin.Context,
+	msg *i18n.Message,
+	code int,
+	data any,
+) *Response {
+	return New(c).SetType(JSON).SetState(ErrorState).SetMessage(msg).SetCode(code).SetData(data)
+}
+
 func Jump(c *gin.Context, data any, msg string) *Response {
 	return New(c).SetType(JSON).SetState(ErrorState).SetMessage(&i18n.Message{ID: msg}).SetCode(http.StatusSeeOther).SetData(data)
 }

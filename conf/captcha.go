@@ -1,11 +1,13 @@
 package conf
 
 import (
+	"errors"
 	"frame/modules/cache"
 	"frame/modules/log"
 	"service-api/modules/captcha"
 	"service-api/modules/captcha/source/base64Captcha"
 	"service-api/modules/captcha/source/gocaptcha"
+	"service-api/resources/translate/messages"
 	"time"
 
 	"github.com/mitchellh/mapstructure"
@@ -82,11 +84,18 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 	return nil, nil
 }
 
-// CheckCaptchaFeatureEnable 校验限定功能的验证是否启用
-func CheckCaptchaFeatureEnable(t CaptchaFeature) bool {
+func IsCaptchaFeatureEnable(t CaptchaFeature) bool {
 	if st, ok := CaptchaSetting.Feature[t]; ok {
 		return st
 	}
 
 	return false
+}
+
+func IsCaptchaFeature(t CaptchaFeature) error {
+	if _, ok := CaptchaSetting.Feature[t]; ok {
+		return errors.New(messages.CaptchaTokenMissing.ID)
+	}
+
+	return nil
 }

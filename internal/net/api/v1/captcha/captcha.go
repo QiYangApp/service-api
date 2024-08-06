@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"service-api/conf"
 	"service-api/internal/app/services/captcha"
-	"service-api/internal/net/validator"
+	captchaValidator "service-api/internal/net/validator/captcha"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -21,7 +21,7 @@ import (
 // @Param token query string true "token"
 // @Success 200 {object} response.Response{Data=validator.CaptchaResponse} "请求成功"
 // @Router /captcha/{type} [get]
-func Index(c *gin.Context, req *validator.CaptchaRequest) {
+func Index(c *gin.Context, req *captchaValidator.CaptchaForm) {
 
 	body, err := captcha.Gen(conf.CaptchaFeature(req.Type), req.Token)
 	if err != nil {
@@ -29,5 +29,5 @@ func Index(c *gin.Context, req *validator.CaptchaRequest) {
 		resp.Error(c, err, http.StatusNotFound, nil)
 		return
 	}
-	resp.Success(c, &validator.CaptchaResponse{Id: body.GetKey(), Captcha: body.GetBody(), Token: body.GetToken()})
+	resp.Success(c, &captchaValidator.CaptchaResponse{Id: body.GetKey(), Captcha: body.GetBody(), Token: body.GetToken()})
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CaptchaRequest struct {
+type CaptchaForm struct {
 	Msg
 	Token string `form:"token" binding:"required"`
 	Type  string `uri:"type"`
@@ -21,7 +21,7 @@ type CaptchaResponse struct {
 	Token   string `json:"token"`
 }
 
-type CaptchaVerifyRequest struct {
+type CaptchaVerifyForm struct {
 	Key    string              `form:"key" json:"key"`
 	Type   conf.CaptchaFeature `form:"type" json:"type"`
 	Token  string              `form:"token" json:"token"`
