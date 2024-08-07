@@ -14,9 +14,9 @@ import (
 	"go.uber.org/zap"
 	"net/http"
 	"service-api/conf"
-	authserver "service-api/internal/app/services/auth"
-	"service-api/internal/app/services/captcha"
 	"service-api/internal/net/validator/auth"
+	authserver "service-api/internal/services/auth"
+	"service-api/internal/services/captcha"
 )
 
 // SignIn return SignIn page before data

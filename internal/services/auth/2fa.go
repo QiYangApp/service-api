@@ -6,7 +6,7 @@ import (
 	"frame/modules/cache"
 	"frame/util/secret"
 	"service-api/conf"
-	"service-api/internal/app/repo/auth"
+	"service-api/internal/repo/auth"
 
 	"github.com/gin-gonic/gin"
 )

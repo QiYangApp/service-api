@@ -1,27 +1,27 @@
-package route
+package router
 
 import (
 	"frame/cmd"
 	"frame/modules/router"
-	"service-api/internal/net/middlewares"
-	"service-api/internal/net/route/doc"
-	v1 "service-api/internal/net/route/group/v1"
+	middlewares2 "service-api/internal/net/middlewares"
+	"service-api/router/doc"
+	v12 "service-api/router/group/v1"
 
 	"github.com/gin-gonic/gin"
 )
 
 var RouterGroup = []router.Router{
 	&doc.SwaggerRouter{},
-	&v1.CaptchaRouter{},
-	&v1.AuthRouter{},
+	&v12.CaptchaRouter{},
+	&v12.AuthRouter{},
 }
 
 func Register(app *cmd.WebServer) {
 	r := app.Engine.Group("api")
 
 	var funcs = []gin.HandlerFunc{
-		middlewares.Session(),
-		middlewares.Auth(),
+		middlewares2.Session(),
+		middlewares2.Auth(),
 	}
 
 	for _, middleware := range app.Middlewares {

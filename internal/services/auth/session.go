@@ -10,7 +10,7 @@ import (
 	"frame/util/types"
 	"github.com/gin-gonic/gin"
 	"service-api/conf"
-	usermodel "service-api/internal/app/repo/user"
+	usermodel "service-api/internal/repo/user"
 	"service-api/resources/translate/messages"
 )
 

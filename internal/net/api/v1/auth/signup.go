@@ -10,15 +10,20 @@ import (
 	"service-api/conf"
 	"service-api/internal/net/validator/auth"
 	captchaValidator "service-api/internal/net/validator/captcha"
+	captchaService "service-api/internal/services/captcha"
 )
 
 func SignUp(ctx *gin.Context) *resp.Response {
 	return resp.Success(ctx, "")
 }
 
-func SignUpPost(ctx *gin.Context, form *auth.SignUpForm, captchaVerifyForm *captchaValidator.CaptchaVerifyForm) *resp.Response {
+func SignUpPost(ctx *gin.Context, form *auth.SignUpForm, captchaForm *captchaValidator.CaptchaVerifyForm) *resp.Response {
 
-	if r := captchaService.V(ctx, conf.CaptchaFeatureSignUp, captchaVerifyForm); r != nil {
+	if {
+
+	}
+
+	if r := captchaService.Verify(ctx, conf.CaptchaFeatureSignUp, captchaForm.Token, captchaForm.Key, captchaForm.Answer, true); r != nil {
 		return r
 	}
 

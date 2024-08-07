@@ -2,9 +2,9 @@ package v1
 
 import (
 	"frame/modules/router"
+	"service-api/internal/net/api/v1/captcha"
 
 	"github.com/gin-gonic/gin"
-	"service-api/internal/net/api/v1/captcha"
 )
 
 type CaptchaRouter struct {

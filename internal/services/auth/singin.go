@@ -11,9 +11,9 @@ import (
 	usertype "ent/types/user"
 	"frame/errs"
 	"frame/modules/log"
-	"service-api/internal/app/repo"
-	authmodel "service-api/internal/app/repo/auth"
-	usermodel "service-api/internal/app/repo/user"
+	"service-api/internal/repo"
+	authmodel "service-api/internal/repo/auth"
+	usermodel "service-api/internal/repo/user"
 	"service-api/resources/translate/messages"
 	"strings"
 )

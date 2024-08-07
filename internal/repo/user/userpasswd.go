@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"ent/models"
 	"service-api/conf"
-	"service-api/internal/app/repo"
+	"service-api/internal/repo"
 	"service-api/modules/auth/passwd/hash"
 	"service-api/modules/util"
 )

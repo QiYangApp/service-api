@@ -5,8 +5,8 @@ import (
 	"frame/modules/resp"
 	"net/http"
 	"service-api/conf"
-	"service-api/internal/app/services/captcha"
 	captchaValidator "service-api/internal/net/validator/captcha"
+	"service-api/internal/services/captcha"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

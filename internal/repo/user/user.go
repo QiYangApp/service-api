@@ -2,7 +2,7 @@ package user
 
 import (
 	"context"
-	"service-api/internal/app/repo"
+	"service-api/internal/repo"
 )
 
 func SetUserLanguage(ctx context.Context, uId int64, language string) error {
