@@ -5,7 +5,7 @@ import (
 	"errors"
 	"frame/modules/cache"
 	"frame/util/secret"
-	"service-api/conf"
+	"service-api/configs"
 	"service-api/internal/repo/auth"
 
 	"github.com/gin-gonic/gin"
@@ -40,7 +40,7 @@ func HasUserWebAuthn(ctx *gin.Context, userId int64) (bool, error) {
 func gen2FATmpToken(u *models.User) (string, error) {
 	token := secret.Sha3Sum512Md5(u.String(), u.PasswdSalt)
 
-	if !cache.SetEx(token, u, conf.AuthSetting.TwoFA.Expires) {
+	if !cache.SetEx(token, u, configs.AuthSetting.TwoFA.Expires) {
 		return "", errors.New("SIGN_IN.2FA_GEN_FAIL")
 	}
 

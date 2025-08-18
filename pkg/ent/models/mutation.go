@@ -620,7 +620,7 @@ func (m *AccessTokenMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *AccessTokenMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -1512,7 +1512,7 @@ func (m *AccountsMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *AccountsMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -2184,7 +2184,7 @@ func (m *MemberRoleRelatedPermissionMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *MemberRoleRelatedPermissionMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -2979,7 +2979,7 @@ func (m *PermissionGroupMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *PermissionGroupMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -3658,7 +3658,7 @@ func (m *PermissionRelatedRouterMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *PermissionRelatedRouterMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -4316,7 +4316,7 @@ func (m *RouterMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *RouterMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -5057,7 +5057,7 @@ func (m *SourceMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *SourceMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -5815,7 +5815,7 @@ func (m *SourceDataMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *SourceDataMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -6573,7 +6573,7 @@ func (m *TwoFactorMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *TwoFactorMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -7759,7 +7759,7 @@ func (m *UserMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *UserMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -9054,7 +9054,7 @@ func (m *UserAuthSourceMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *UserAuthSourceMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -9861,7 +9861,7 @@ func (m *UserRelatedRoleMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *UserRelatedRoleMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -10457,7 +10457,7 @@ func (m *UserRoleMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *UserRoleMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -11127,7 +11127,7 @@ func (m *WakatimeMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -11873,7 +11873,7 @@ func (m *WakatimeCategoryMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeCategoryMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -12643,7 +12643,7 @@ func (m *WakatimeDependencyMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeDependencyMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -13080,7 +13080,7 @@ func (m *WakatimeDurationMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeDurationMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -13344,7 +13344,7 @@ func (m *WakatimeEditorMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeEditorMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -13608,7 +13608,7 @@ func (m *WakatimeEntityMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeEntityMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -13872,7 +13872,7 @@ func (m *WakatimeGrandTotalMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeGrandTotalMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -14136,7 +14136,7 @@ func (m *WakatimeHeartBeatMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeHeartBeatMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -14400,7 +14400,7 @@ func (m *WakatimeLanguageMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeLanguageMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -14664,7 +14664,7 @@ func (m *WakatimeProjectMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeProjectMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -14928,7 +14928,7 @@ func (m *WakatimeProjectDurationMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeProjectDurationMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -15192,7 +15192,7 @@ func (m *WakatimeProjectInfoMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeProjectInfoMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -15456,7 +15456,7 @@ func (m *WakatimeSystemMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WakatimeSystemMutation) SetOp(op Op) {
 	m.op = op
 }
@@ -16217,7 +16217,7 @@ func (m *WebAuthnCredentialMutation) Op() Op {
 	return m.op
 }
 
-// SetOp allows conf the mutation operation.
+// SetOp allows configs the mutation operation.
 func (m *WebAuthnCredentialMutation) SetOp(op Op) {
 	m.op = op
 }

@@ -1,4 +1,4 @@
-package conf
+package configs
 
 import (
 	"errors"
@@ -39,7 +39,7 @@ var CaptchaSetting = &struct {
 
 func loadCaptchaSetting(viper *viper.Viper) {
 	if err := viper.Unmarshal(CaptchaSetting); err != nil {
-		log.Sugar().Error("load service conf")
+		log.Sugar().Error("load service configs")
 	}
 }
 
@@ -54,7 +54,7 @@ func GetCaptchaClient() (captcha.Captcha, error) {
 	var setting any
 	var ok bool
 	if setting, ok = CaptchaSetting.Drivers[CaptchaSetting.Type]; !ok {
-		log.Sugar().Errorf("captcha conf type not exists, err: %v", err)
+		log.Sugar().Errorf("captcha configs type not exists, err: %v", err)
 		return nil, err
 	}
 

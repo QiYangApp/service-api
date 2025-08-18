@@ -1,7 +1,7 @@
 // Copyright 2019 The Gitea Authors. All rights reserved.
 // SPDX-License-Identifier: MIT
 
-package conf
+package configs
 
 import (
 	"errors"
@@ -47,7 +47,7 @@ var SessionSetting = &struct {
 
 func loadSessionSetting(cfg *viper.Viper) {
 	if err := cfg.Unmarshal(SessionSetting); err != nil {
-		log.Sugar().Error("load service conf")
+		log.Sugar().Error("load service configs")
 	}
 
 	if SessionSetting.EnableCookieDomain {
@@ -103,7 +103,7 @@ func newSessionStore() (sessions.Store, error) {
 
 	drive := conn.GetString("driver")
 	if drive == "" {
-		err := errors.New("session store drive not conf")
+		err := errors.New("session store drive not configs")
 		log.Sugar().Error(err)
 		return nil, err
 	}

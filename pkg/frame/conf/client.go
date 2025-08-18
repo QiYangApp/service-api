@@ -16,7 +16,7 @@ func Client() *viper.Viper {
 	once.Do(func() {
 		dir, _ := os.Getwd()
 		if err := ParseLocalFile(client, dir); err != nil {
-			zap.S().Panic("conf read error, %v", err)
+			zap.S().Panic("configs read error, %v", err)
 		}
 	})
 

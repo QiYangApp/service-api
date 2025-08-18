@@ -7,7 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"service-api/conf"
+	"service-api/configs"
 	"service-api/modules/auth/passwd/pwn"
 )
 
@@ -33,7 +33,7 @@ func (err ErrIsPwnedRequest) Unwrap() error {
 // IsPwned checks whether a password has been pwned
 // If a password has not been pwned, no error is returned.
 func IsPwned(ctx context.Context, password string) error {
-	if !conf.SecretSetting.PasswdCheckPwn {
+	if !configs.SecretSetting.PasswdCheckPwn {
 		return nil
 	}
 

@@ -1,9 +1,9 @@
 package providers
 
 import (
-	"service-api/conf"
+	"service-api/configs"
 )
 
 func SettingRegister() {
-	conf.LoadCommonSettings()
+	configs.LoadCommonSettings()
 }

@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"service-api/conf"
+	"service-api/configs"
 	"strconv"
 	"strings"
 )
@@ -63,7 +63,7 @@ func newRequest(ctx context.Context, method, url string, body io.ReadCloser) (*h
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("User-Agent", "QiYang "+conf.AppSetting.RunMode)
+	req.Header.Add("User-Agent", "QiYang "+configs.AppSetting.RunMode)
 	return req, nil
 }
 

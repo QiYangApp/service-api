@@ -1,7 +1,7 @@
 // Copyright 2019 The Gitea Authors. All rights reserved.
 // SPDX-License-Identifier: MIT
 
-package conf
+package configs
 
 import (
 	"frame/modules/log"
@@ -15,6 +15,6 @@ var ServiceSetting = &struct {
 
 func loadServiceSetting(viper *viper.Viper) {
 	if err := viper.Unmarshal(ServiceSetting); err != nil {
-		log.Sugar().Error("load service conf")
+		log.Sugar().Error("load service configs")
 	}
 }

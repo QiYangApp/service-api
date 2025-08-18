@@ -108,7 +108,7 @@ func Register[T PasswordSaltHasher](name string, newFn func(config string) T) er
 // empty. At that point the default was `pbkdf2` without configuration values
 //
 // Please note this is not the same as the DefaultAlgorithm which is used
-// to determine what an empty PASSWORD_HASH_ALGO conf in the app.ini means.
+// to determine what an empty PASSWORD_HASH_ALGO configs in the app.ini means.
 // These are not the same even if they have the same apparent value and they mean different things.
 //
 // DO NOT COALESCE THESE VALUES
@@ -126,7 +126,7 @@ const defaultEmptyHashAlgorithmSpecification = "pbkdf2"
 // seamless backwards compatibility with the original configuration.
 //
 // To further labour this point, running `Parse("pbkdf2")` does not obtain the
-// same algorithm as conf `PASSWORD_HASH_ALGO=pbkdf2` in app.ini, nor is it intended to.
+// same algorithm as configs `PASSWORD_HASH_ALGO=pbkdf2` in app.ini, nor is it intended to.
 // A user that has `password_hash_algo='pbkdf2'` in the db means get the original, unconfigured algorithm
 // Users will be migrated automatically as they log-in to have the complete specification stored
 // in their `password_hash_algo` fields by other code.

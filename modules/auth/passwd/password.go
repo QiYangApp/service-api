@@ -8,7 +8,7 @@ import (
 	"crypto/rand"
 	"errors"
 	"math/big"
-	"service-api/conf"
+	"service-api/configs"
 	"strings"
 	"sync"
 )
@@ -52,7 +52,7 @@ var (
 // NewComplexity for preparation
 func NewComplexity() {
 	matchComplexityOnce.Do(func() {
-		setupComplexity(conf.SecretSetting.PasswordComplexity)
+		setupComplexity(configs.SecretSetting.PasswordComplexity)
 	})
 }
 

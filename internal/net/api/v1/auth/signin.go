@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
-	"service-api/conf"
+	"service-api/configs"
 	"service-api/internal/net/validator/auth"
 	authserver "service-api/internal/services/auth"
 	"service-api/internal/services/captcha"
@@ -22,12 +22,12 @@ import (
 // SignIn return SignIn page before data
 func SignIn(ctx *gin.Context) *resp.Response {
 	return resp.Success(ctx, map[string]any{
-		"captcha": conf.IsCaptchaFeatureEnable(conf.CaptchaFeatureSignIn),
+		"captcha": configs.IsCaptchaFeatureEnable(configs.CaptchaFeatureSignIn),
 	})
 }
 
 func SignInPost(ctx *gin.Context, form *auth.SignInForm) *resp.Response {
-	if conf.IsCaptchaFeatureEnable(conf.CaptchaFeatureSignIn) {
+	if configs.IsCaptchaFeatureEnable(configs.CaptchaFeatureSignIn) {
 		return captcha.Verify(ctx, form.Captcha.Type, form.Captcha.Token, form.Captcha.Key, form.Captcha.Answer, false)
 	}
 
@@ -46,7 +46,7 @@ func SignInPost(ctx *gin.Context, form *auth.SignInForm) *resp.Response {
 
 			return resp.Jump(ctx, auth.SignInVerifyError{ProhibitLogin: true}, "SIGN_IN.PROHIBIT_LOGIN")
 		} else if usertype.IsErrUserInactive(err) {
-			if conf.ServiceSetting.RegisterConfirm {
+			if configs.ServiceSetting.RegisterConfirm {
 				log.Sugar().Infof("Failed authentication attempt for %s from %s: %v", form.UserName, ctx.RemoteIP(), err)
 
 				return resp.SuccessWithMsg(ctx, auth.SignInVerifyError{ActiveYourAccount: true}, "SIGN_IN.ACTIVE_YOUR_ACCOUNT")

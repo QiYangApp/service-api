@@ -4,12 +4,12 @@ import (
 	"frame/modules/resp"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"service-api/conf"
+	"service-api/configs"
 	"service-api/resources/translate/messages"
 )
 
-func verify(t conf.CaptchaFeature, token, key string, answer any, clear bool) (bool, error) {
-	if err := conf.IsCaptchaFeature(t); err != nil {
+func verify(t configs.CaptchaFeature, token, key string, answer any, clear bool) (bool, error) {
+	if err := configs.IsCaptchaFeature(t); err != nil {
 		return false, err
 	}
 
@@ -21,13 +21,13 @@ func verify(t conf.CaptchaFeature, token, key string, answer any, clear bool) (b
 // and returns a response object or nil.
 // If the captcha feature is enabled and validation fails, it returns an appropriate error response.
 // If the captcha feature is not enabled, the function returns nil.
-func Verify(ctx *gin.Context, t conf.CaptchaFeature, token, key string, answer any, clear bool) *resp.Response {
-	if err := conf.IsCaptchaFeature(t); err != nil {
+func Verify(ctx *gin.Context, t configs.CaptchaFeature, token, key string, answer any, clear bool) *resp.Response {
+	if err := configs.IsCaptchaFeature(t); err != nil {
 		return resp.Error(ctx, err, http.StatusPreconditionFailed, nil)
 	}
-	
+
 	// Check if the captcha feature is enabled
-	if conf.IsCaptchaFeatureEnable(t) {
+	if configs.IsCaptchaFeatureEnable(t) {
 		// Call the captcha service to perform validation
 		st, err := verify(
 			t,

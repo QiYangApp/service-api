@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/hex"
 	"ent/models"
-	"service-api/conf"
+	"service-api/configs"
 	"service-api/internal/repo"
 	"service-api/modules/auth/passwd/hash"
 	"service-api/modules/util"
@@ -37,11 +37,11 @@ func SetPassword(user *models.User, passwd string) (err error) {
 	if user.PasswdSalt, err = GetUserSalt(); err != nil {
 		return err
 	}
-	if user.Passwd, err = hash.Parse(conf.SecretSetting.PasswdHashAlgo).Hash(passwd, user.PasswdHashAlgo); err != nil {
+	if user.Passwd, err = hash.Parse(configs.SecretSetting.PasswdHashAlgo).Hash(passwd, user.PasswdHashAlgo); err != nil {
 		return err
 	}
 
-	user.PasswdHashAlgo = conf.SecretSetting.PasswdHashAlgo
+	user.PasswdHashAlgo = configs.SecretSetting.PasswdHashAlgo
 
 	return nil
 }

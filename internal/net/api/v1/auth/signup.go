@@ -7,7 +7,7 @@ package auth
 import (
 	"frame/modules/resp"
 	"github.com/gin-gonic/gin"
-	"service-api/conf"
+	"service-api/configs"
 	"service-api/internal/net/validator/auth"
 	captchaValidator "service-api/internal/net/validator/captcha"
 	captchaService "service-api/internal/services/captcha"
@@ -23,7 +23,7 @@ func SignUpPost(ctx *gin.Context, form *auth.SignUpForm, captchaForm *captchaVal
 
 	}
 
-	if r := captchaService.Verify(ctx, conf.CaptchaFeatureSignUp, captchaForm.Token, captchaForm.Key, captchaForm.Answer, true); r != nil {
+	if r := captchaService.Verify(ctx, configs.CaptchaFeatureSignUp, captchaForm.Token, captchaForm.Key, captchaForm.Answer, true); r != nil {
 		return r
 	}
 

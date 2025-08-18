@@ -4,7 +4,7 @@ import (
 	"frame/modules/log"
 	"frame/modules/resp"
 	"net/http"
-	"service-api/conf"
+	"service-api/configs"
 	captchaValidator "service-api/internal/net/validator/captcha"
 	"service-api/internal/services/captcha"
 
@@ -23,7 +23,7 @@ import (
 // @Router /captcha/{type} [get]
 func Index(c *gin.Context, req *captchaValidator.CaptchaForm) {
 
-	body, err := captcha.Gen(conf.CaptchaFeature(req.Type), req.Token)
+	body, err := captcha.Gen(configs.CaptchaFeature(req.Type), req.Token)
 	if err != nil {
 		log.Sugar().Info(zap.Error(err))
 		resp.Error(c, err, http.StatusNotFound, nil)

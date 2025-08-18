@@ -1,4 +1,4 @@
-package conf
+package configs
 
 import (
 	"frame/modules/log"
@@ -15,7 +15,7 @@ var AuthSetting = &struct {
 
 func loadAuthSetting(viper *viper.Viper) {
 	if err := viper.Unmarshal(AuthSetting); err != nil {
-		log.Sugar().Error("load auth conf")
+		log.Sugar().Error("load auth configs")
 	}
 
 	AuthSetting.TwoFA.Expires *= time.Minute

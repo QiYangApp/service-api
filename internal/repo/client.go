@@ -9,7 +9,7 @@ import (
 	"frame/util/path"
 	"os"
 	"path/filepath"
-	"service-api/conf"
+	"service-api/configs"
 	"sync"
 
 	"entgo.io/ent/dialect/sql/schema"
@@ -29,7 +29,7 @@ func Client() *models.Client {
 			[]models.Option{
 				models.Driver(&db.MultiDriver{R: conns.Read(), W: conns.Write()}),
 			},
-			conf.AppSetting.Debug,
+			configs.AppSetting.Debug,
 		).Debug()
 	})
 

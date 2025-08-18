@@ -3,7 +3,7 @@ package validator
 import (
 	"frame/modules/router"
 	"frame/modules/translate"
-	"service-api/conf"
+	"service-api/configs"
 	"service-api/resources/translate/messages"
 
 	"github.com/gin-gonic/gin"
@@ -22,11 +22,11 @@ type CaptchaResponse struct {
 }
 
 type CaptchaVerifyForm struct {
-	Key    string              `form:"key" json:"key"`
-	Type   conf.CaptchaFeature `form:"type" json:"type"`
-	Token  string              `form:"token" json:"token"`
-	Id     string              `form:"id" json:"id"`
-	Answer string              `form:"answer" json:"answer"`
+	Key    string                 `form:"key" json:"key"`
+	Type   configs.CaptchaFeature `form:"type" json:"type"`
+	Token  string                 `form:"token" json:"token"`
+	Id     string                 `form:"id" json:"id"`
+	Answer string                 `form:"answer" json:"answer"`
 }
 
 type Msg struct {

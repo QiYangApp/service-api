@@ -9,7 +9,7 @@ import (
 	"frame/modules/session"
 	"frame/util/types"
 	"github.com/gin-gonic/gin"
-	"service-api/conf"
+	"service-api/configs"
 	usermodel "service-api/internal/repo/user"
 	"service-api/resources/translate/messages"
 )
@@ -101,7 +101,7 @@ func SetUserSession(ctx *gin.Context, u *UserSession) error {
 
 func SignInInitTheme(ctx *gin.Context, u *models.User) error {
 	if u.Theme == "" {
-		u.Theme = conf.AppSetting.Theme
+		u.Theme = configs.AppSetting.Theme
 		err := usermodel.SetUserLanguage(ctx, u.ID, u.Theme)
 		if err != nil {
 			return err
@@ -113,7 +113,7 @@ func SignInInitTheme(ctx *gin.Context, u *models.User) error {
 
 func SignInInitLanguage(ctx *gin.Context, u *models.User) error {
 	if u.Language == "" {
-		u.Language = conf.AppSetting.Language
+		u.Language = configs.AppSetting.Language
 		err := usermodel.SetUserLanguage(ctx, u.ID, u.Language)
 		if err != nil {
 			return err

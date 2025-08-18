@@ -8,7 +8,7 @@ import (
 	"frame/modules/router"
 	"frame/modules/translate"
 	"github.com/gin-gonic/gin"
-	"service-api/conf"
+	"service-api/configs"
 	"service-api/resources/translate/messages"
 )
 
@@ -17,11 +17,11 @@ type SignInForm struct {
 	Passwd   string `form:"passwd" json:"passwd" binding:"max=255"`
 	Remember bool   `form:"remember" json:"remember"`
 	Captcha  struct {
-		Key    string              `form:"key" json:"key"`
-		Type   conf.CaptchaFeature `form:"type" json:"type"`
-		Token  string              `form:"token" json:"token"`
-		Id     string              `form:"id" json:"id"`
-		Answer string              `form:"answer" json:"answer"`
+		Key    string                 `form:"key" json:"key"`
+		Type   configs.CaptchaFeature `form:"type" json:"type"`
+		Token  string                 `form:"token" json:"token"`
+		Id     string                 `form:"id" json:"id"`
+		Answer string                 `form:"answer" json:"answer"`
 	} `form:"captcha" json:"captcha"`
 }
 

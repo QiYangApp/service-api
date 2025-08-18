@@ -1,10 +1,10 @@
 package auth
 
-import "service-api/conf"
+import "service-api/configs"
 
 func IsSignUpEnable() bool {
 
-	if conf.AppSetting.SignUpEnable {
+	if configs.AppSetting.SignUpEnable {
 
 	}
 
